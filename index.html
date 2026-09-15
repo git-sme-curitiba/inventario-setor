@@ -13,9 +13,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"
-  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
     :root {
@@ -27,6 +27,7 @@
       --background: #f4f7fb;
       --success: #137333;
       --danger: #b3261e;
+      --warning: #e8a000;
     }
 
     * {
@@ -147,7 +148,7 @@
 
     .pill {
       min-width: 0;
-      padding: 11px 6px;
+      padding: 11px 5px;
       border-radius: 14px;
       background: var(--blue-light);
       color: #344054;
@@ -163,7 +164,7 @@
     }
 
     .section {
-      margin-bottom: 23px;
+      margin-bottom: 24px;
     }
 
     .section-title {
@@ -176,7 +177,7 @@
     }
 
     .field {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     label {
@@ -210,16 +211,10 @@
       resize: vertical;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
     .segments {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
     .segments label {
@@ -234,7 +229,7 @@
 
     .segments span {
       display: flex;
-      min-height: 52px;
+      min-height: 54px;
       align-items: center;
       justify-content: center;
       padding: 8px;
@@ -260,12 +255,12 @@
 
     .scan-button {
       min-width: 92px;
-      padding: 0 17px;
+      padding: 0 15px;
       border: 0;
       border-radius: 13px;
       background: var(--ink);
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
     }
 
@@ -286,6 +281,24 @@
 
     .conditional.show {
       display: block;
+    }
+
+    .secondary-box {
+      padding: 14px;
+      border: 1px dashed #b9c4d5;
+      border-radius: 14px;
+      background: #f8faff;
+    }
+
+    .secondary-title {
+      margin-bottom: 5px;
+      font-weight: 800;
+    }
+
+    .secondary-description {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .footer {
@@ -321,7 +334,7 @@
 
     button:disabled {
       cursor: wait;
-      opacity: 0.55;
+      opacity: 0.5;
     }
 
     .toast {
@@ -373,7 +386,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       padding: 12px 14px;
     }
 
@@ -424,12 +437,6 @@
       border-color: #ffffff;
       background: var(--blue);
       color: #ffffff;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
-    }
-
-    .torch-button:disabled {
-      cursor: not-allowed;
-      opacity: 0.35;
     }
 
     .camera-area {
@@ -446,7 +453,8 @@
       background: #000000;
     }
 
-    #scannerCanvas {
+    #barcodeCanvas,
+    #ocrCanvas {
       display: none;
     }
 
@@ -455,7 +463,7 @@
       top: 50%;
       left: 50%;
       width: 92%;
-      height: 145px;
+      height: 155px;
       border: 3px solid #ffffff;
       border-radius: 14px;
       box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.43);
@@ -471,40 +479,31 @@
       height: 2px;
       background: #ff334f;
       box-shadow: 0 0 10px #ff334f;
-      animation: scan 1.5s ease-in-out infinite alternate;
+      animation: scan 1.3s ease-in-out infinite alternate;
       pointer-events: none;
     }
 
     @keyframes scan {
       from {
-        transform: translateY(-53px);
+        transform: translateY(-58px);
       }
 
       to {
-        transform: translateY(53px);
+        transform: translateY(58px);
       }
     }
 
     .camera-help {
-      min-height: 66px;
+      min-height: 69px;
       padding: 13px 16px 18px;
       color: #dddddd;
       font-size: 13px;
       text-align: center;
     }
 
-    @media (max-width: 430px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .segments span {
-        font-size: 11px;
-      }
-
-      h1 {
-        font-size: 20px;
-      }
+    .scanner-status {
+      color: #8ab4f8;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -515,7 +514,9 @@
       <div class="top">
         <div>
           <h1>Inventário do Setor</h1>
-          <div class="subtitle">Cadastro rápido pelo celular</div>
+          <div class="subtitle">
+            Cadastro rápido pelo celular
+          </div>
         </div>
 
         <div class="count">
@@ -526,7 +527,7 @@
       <div class="connection" id="connectionStatus">
         <span class="connection-dot"></span>
         <span id="connectionText">
-          Conectando ao banco de dados…
+          Conectando ao banco…
         </span>
       </div>
     </header>
@@ -551,10 +552,14 @@
 
       <form id="inventoryForm">
         <section class="section">
-          <div class="section-title">Onde está</div>
+          <div class="section-title">
+            Onde está
+          </div>
 
           <div class="field">
-            <label for="ambiente">Ambiente</label>
+            <label for="ambiente">
+              Ambiente
+            </label>
 
             <select id="ambiente" required>
               <option value="Sala da Gerência">
@@ -589,61 +594,163 @@
 
         <section class="section">
           <div class="section-title">
-            Identificação
+            Identificação principal
           </div>
 
           <div class="field">
-            <label>Etiqueta patrimonial</label>
-
             <div class="segments">
               <label>
                 <input
                   type="radio"
-                  name="identificacao"
-                  value="Com etiqueta"
+                  name="tipoIdentificacao"
+                  value="PMC"
                   checked
                 >
-                <span>Com etiqueta</span>
+                <span>Patrimônio PMC</span>
               </label>
 
               <label>
                 <input
                   type="radio"
-                  name="identificacao"
-                  value="Sem etiqueta"
+                  name="tipoIdentificacao"
+                  value="ICI"
                 >
-                <span>Sem etiqueta</span>
+                <span>Etiqueta ICI</span>
               </label>
 
               <label>
                 <input
                   type="radio"
-                  name="identificacao"
-                  value="Etiqueta ilegível"
+                  name="tipoIdentificacao"
+                  value="SERIE"
                 >
-                <span>Ilegível</span>
+                <span>Número de série</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="tipoIdentificacao"
+                  value="SEM_IDENTIFICACAO"
+                >
+                <span>Sem identificação</span>
               </label>
             </div>
           </div>
 
-          <div class="field" id="patrimonioWrap">
-            <label for="patrimonio">
-              Patrimônio
+          <div class="field" id="pmcWrap">
+            <label for="patrimonioPmc">
+              Patrimônio PMC
             </label>
 
             <div class="scan-row">
               <input
-                id="patrimonio"
+                id="patrimonioPmc"
                 inputmode="numeric"
                 autocomplete="off"
                 maxlength="6"
-                placeholder="Leia ou digite os 6 números"
+                placeholder="6 números"
               >
 
               <button
                 class="scan-button"
-                id="scanButton"
                 type="button"
+                data-scan-target="PMC"
+              >
+                ▣ Ler
+              </button>
+            </div>
+
+            <div class="hint" id="pmcHint">
+              Código oficial da Prefeitura.
+            </div>
+          </div>
+
+          <div
+            class="field conditional"
+            id="iciWrap"
+          >
+            <label for="codigoIci">
+              Código ICI
+            </label>
+
+            <div class="scan-row">
+              <input
+                id="codigoIci"
+                autocomplete="off"
+                maxlength="40"
+                placeholder="Leia ou digite o código"
+              >
+
+              <button
+                class="scan-button"
+                type="button"
+                data-scan-target="ICI"
+              >
+                ▣ Ler
+              </button>
+            </div>
+
+            <div class="hint" id="iciHint">
+              Etiqueta de inventário do ICI.
+            </div>
+          </div>
+
+          <div
+            class="field conditional"
+            id="serieWrap"
+          >
+            <label for="numeroSerie">
+              Número de série
+            </label>
+
+            <div class="scan-row">
+              <input
+                id="numeroSerie"
+                autocomplete="off"
+                autocapitalize="characters"
+                maxlength="80"
+                placeholder="Leia ou digite o número de série"
+              >
+
+              <button
+                class="scan-button"
+                type="button"
+                data-scan-target="SERIE"
+              >
+                ▣ Ler
+              </button>
+            </div>
+
+            <div class="hint" id="serieHint">
+              Use quando não houver etiqueta PMC ou ICI.
+            </div>
+          </div>
+
+          <div
+            class="secondary-box"
+            id="secondaryIciWrap"
+          >
+            <div class="secondary-title">
+              Também possui etiqueta ICI?
+            </div>
+
+            <div class="secondary-description">
+              É opcional quando o patrimônio PMC já foi informado.
+            </div>
+
+            <div class="scan-row">
+              <input
+                id="codigoIciSecundario"
+                autocomplete="off"
+                maxlength="40"
+                placeholder="Código ICI opcional"
+              >
+
+              <button
+                class="scan-button"
+                type="button"
+                data-scan-target="ICI_SECUNDARIO"
               >
                 ▣ Ler
               </button>
@@ -651,9 +758,9 @@
 
             <div
               class="hint"
-              id="patrimonioHint"
+              id="iciSecundarioHint"
             >
-              Aceita a etiqueta Code 128 da Prefeitura.
+              Informação secundária do equipamento.
             </div>
           </div>
         </section>
@@ -663,80 +770,40 @@
             O que é
           </div>
 
-          <div class="grid">
-            <div class="field">
-              <label for="categoria">
-                Categoria
-              </label>
+          <div class="field">
+            <label for="categoria">
+              Categoria
+            </label>
 
-              <select id="categoria" required>
-                <option value="Móvel">
-                  Móvel
-                </option>
+            <select id="categoria" required>
+              <option value="Móvel">
+                Móvel
+              </option>
 
-                <option value="Tecnologia">
-                  Tecnologia
-                </option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="quantidade">
-                Quantidade
-              </label>
-
-              <input
-                id="quantidade"
-                type="number"
-                min="1"
-                step="1"
-                value="1"
-                required
-              >
-            </div>
+              <option value="Tecnologia">
+                Tecnologia
+              </option>
+            </select>
           </div>
 
           <div class="field">
-            <label for="item">Item</label>
+            <label for="item">
+              Item
+            </label>
 
             <input
               id="item"
-              list="itens"
+              list="itensSugeridos"
               autocomplete="off"
               placeholder="Ex.: Cadeira, monitor, armário"
               required
             >
 
-            <datalist id="itens">
-              <option value="Cadeira">
-              <option value="Mesa">
-              <option value="Armário">
-              <option value="Gaveteiro">
-              <option value="Estante">
-              <option value="Computador">
-              <option value="Monitor">
-              <option value="Notebook">
-              <option value="Impressora">
-              <option value="Telefone">
-              <option value="Teclado">
-              <option value="Mouse">
-              <option value="Nobreak">
-              <option value="Projetor">
-              <option value="Televisor">
-            </datalist>
-          </div>
+            <datalist id="itensSugeridos"></datalist>
 
-          <div class="field">
-            <label for="marcaModelo">
-              Marca/modelo
-              <span class="hint">(opcional)</span>
-            </label>
-
-            <input
-              id="marcaModelo"
-              autocomplete="off"
-              placeholder="Ex.: Dell P2422H"
-            >
+            <div class="hint">
+              Novos itens entram automaticamente nas sugestões.
+            </div>
           </div>
 
           <div class="field">
@@ -771,18 +838,19 @@
 
   <dialog id="cameraDialog">
     <div class="camera-header">
-      <strong>Aponte para o patrimônio</strong>
+      <strong id="cameraTitle">
+        Aponte para o código
+      </strong>
 
       <div class="camera-actions">
         <button
           class="torch-button"
           id="torchButton"
           type="button"
-          aria-label="Ligar ou desligar lanterna"
           title="Ligar lanterna"
           disabled
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
             <path d="M9 2h6l1 5H8l1-5Z"></path>
             <path d="M8 7h8l2 4v9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-9l2-4Z"></path>
             <path d="M9 12h6"></path>
@@ -806,16 +874,14 @@
         muted
       ></video>
 
-      <canvas id="scannerCanvas"></canvas>
+      <canvas id="barcodeCanvas"></canvas>
+      <canvas id="ocrCanvas"></canvas>
 
       <div class="scan-guide"></div>
       <div class="scan-line"></div>
     </div>
 
-    <div
-      class="camera-help"
-      id="cameraHelp"
-    >
+    <div class="camera-help" id="cameraHelp">
       Abrindo a câmera…
     </div>
   </dialog>
@@ -836,17 +902,28 @@
     const element = id =>
       document.getElementById(id);
 
+    let itemSuggestions = [];
+
     let cameraStream = null;
     let cameraTrack = null;
-    let scanTimer = null;
-    let checkingTimer = null;
+    let barcodeTimer = null;
+    let ocrTimer = null;
+    let ocrWorker = null;
+    let ocrLoadingPromise = null;
 
     let scannerRunning = false;
-    let decoderBusy = false;
-    let barcodeAccepted = false;
+    let barcodeBusy = false;
+    let ocrBusy = false;
     let torchEnabled = false;
-    let isSaving = false;
+    let barcodeAccepted = false;
+    let scanTarget = null;
     let frameNumber = 0;
+
+    let lastOcrValue = '';
+    let repeatedOcrValue = 0;
+
+    let checkingTimer = null;
+    let isSaving = false;
 
     document.addEventListener(
       'DOMContentLoaded',
@@ -876,44 +953,81 @@
     );
 
     document
-      .querySelectorAll('[name="identificacao"]')
+      .querySelectorAll(
+        '[name="tipoIdentificacao"]'
+      )
       .forEach(function (radio) {
         radio.addEventListener(
           'change',
-          togglePatrimonio
+          toggleIdentification
         );
       });
 
-    element('patrimonio').addEventListener(
+    document
+      .querySelectorAll('[data-scan-target]')
+      .forEach(function (button) {
+        button.addEventListener(
+          'click',
+          function () {
+            openScanner(
+              button.dataset.scanTarget
+            );
+          }
+        );
+      });
+
+    element('patrimonioPmc').addEventListener(
       'input',
       function () {
-        element('patrimonio').value =
-          element('patrimonio').value
+        element('patrimonioPmc').value =
+          element('patrimonioPmc').value
             .replace(/\D/g, '')
             .slice(0, 6);
 
-        resetPatrimonioHint();
-        clearTimeout(checkingTimer);
-
-        if (
-          element('patrimonio').value.length === 6
-        ) {
-          checkingTimer = setTimeout(
-            checkDuplicate,
-            400
-          );
-        }
+        scheduleDuplicateCheck(
+          'PMC',
+          element('patrimonioPmc').value,
+          'pmcHint'
+        );
       }
     );
 
-    element('patrimonio').addEventListener(
-      'blur',
-      checkDuplicate
+    element('codigoIci').addEventListener(
+      'input',
+      function () {
+        scheduleDuplicateCheck(
+          'ICI',
+          element('codigoIci').value,
+          'iciHint'
+        );
+      }
     );
 
-    element('scanButton').addEventListener(
-      'click',
-      openScanner
+    element('codigoIciSecundario').addEventListener(
+      'input',
+      function () {
+        scheduleDuplicateCheck(
+          'ICI',
+          element('codigoIciSecundario').value,
+          'iciSecundarioHint'
+        );
+      }
+    );
+
+    element('numeroSerie').addEventListener(
+      'input',
+      function () {
+        element('numeroSerie').value =
+          normalizeSerial(
+            element('numeroSerie').value
+          );
+
+        scheduleDuplicateCheck(
+          'SERIE',
+          element('numeroSerie').value,
+          'serieHint'
+        );
+      }
     );
 
     element('closeCameraButton').addEventListener(
@@ -956,7 +1070,13 @@
         ) || 'Móvel';
 
       toggleLocation();
-      togglePatrimonio();
+      toggleIdentification();
+
+      /*
+        Começa a carregar o OCR imediatamente,
+        antes mesmo de abrir a câmera.
+      */
+      preloadOcr();
 
       try {
         const { data, error } =
@@ -968,7 +1088,16 @@
           throw error;
         }
 
-        updateSummary(data.summary);
+        updateSummary(
+          data.summary
+        );
+
+        itemSuggestions =
+          Array.isArray(data.suggestions)
+            ? data.suggestions
+            : [];
+
+        renderItemSuggestions();
 
         setConnectionStatus(
           true,
@@ -983,62 +1112,110 @@
         );
 
         showToast(
-          'Não foi possível conectar ao banco de dados.',
+          'Não foi possível conectar ao banco.',
           'error'
         );
       }
     }
 
-    function getIdentification() {
+    function getIdentificationType() {
       return document.querySelector(
-        '[name="identificacao"]:checked'
+        '[name="tipoIdentificacao"]:checked'
       ).value;
     }
 
     function toggleLocation() {
-      const isWarehouse =
+      const warehouse =
         element('ambiente').value ===
         'Almoxarifado';
 
       element('locationWrap')
         .classList.toggle(
           'show',
-          isWarehouse
+          warehouse
         );
 
-      if (!isWarehouse) {
+      if (!warehouse) {
         element('localizacao').value = '';
       }
     }
 
-    function togglePatrimonio() {
-      const show =
-        getIdentification() ===
-        'Com etiqueta';
+    function toggleIdentification() {
+      const type =
+        getIdentificationType();
 
-      element('patrimonioWrap').style.display =
-        show ? 'block' : 'none';
+      element('pmcWrap')
+        .classList.toggle(
+          'show',
+          type === 'PMC'
+        );
 
-      if (!show) {
-        element('patrimonio').value = '';
-        resetPatrimonioHint();
-      }
+      element('iciWrap')
+        .classList.toggle(
+          'show',
+          type === 'ICI'
+        );
+
+      element('serieWrap')
+        .classList.toggle(
+          'show',
+          type === 'SERIE'
+        );
+
+      element('secondaryIciWrap')
+        .style.display =
+          type === 'PMC'
+            ? 'block'
+            : 'none';
     }
 
-    async function checkDuplicate() {
-      const patrimonio =
-        element('patrimonio').value;
+    function scheduleDuplicateCheck(
+      type,
+      value,
+      hintId
+    ) {
+      resetIdentifierHint(
+        type,
+        hintId
+      );
 
-      if (patrimonio.length !== 6) {
+      clearTimeout(checkingTimer);
+
+      if (!value.trim()) {
+        return;
+      }
+
+      checkingTimer = setTimeout(
+        function () {
+          checkDuplicate(
+            type,
+            value,
+            hintId
+          );
+        },
+        400
+      );
+    }
+
+    async function checkDuplicate(
+      type,
+      value,
+      hintId
+    ) {
+      const code =
+        String(value || '').trim();
+
+      if (!code) {
         return false;
       }
 
       try {
         const { data, error } =
           await database.rpc(
-            'verificar_patrimonio',
+            'verificar_identificador',
             {
-              p_patrimonio: patrimonio
+              p_tipo: type,
+              p_codigo: code
             }
           );
 
@@ -1046,19 +1223,11 @@
           throw error;
         }
 
-        if (
-          !data ||
-          element('patrimonio').value !==
-            data.patrimonio
-        ) {
-          return false;
-        }
-
-        if (data.exists) {
-          element('patrimonioHint').className =
+        if (data && data.exists) {
+          element(hintId).className =
             'hint duplicate';
 
-          element('patrimonioHint').textContent =
+          element(hintId).textContent =
             'Já cadastrado: ' +
             data.item +
             ' · ' +
@@ -1067,13 +1236,17 @@
           return true;
         }
 
-        resetPatrimonioHint();
+        resetIdentifierHint(
+          type,
+          hintId
+        );
+
         return false;
       } catch (error) {
         console.error(error);
 
         showToast(
-          'Não foi possível verificar o patrimônio.',
+          'Não foi possível verificar o identificador.',
           'error'
         );
 
@@ -1081,61 +1254,178 @@
       }
     }
 
-    async function openScanner() {
+    function resetIdentifierHint(
+      type,
+      hintId
+    ) {
+      const hint =
+        element(hintId);
+
+      hint.className = 'hint';
+
+      if (type === 'PMC') {
+        hint.textContent =
+          'Código oficial da Prefeitura.';
+      }
+
+      if (type === 'ICI') {
+        hint.textContent =
+          hintId === 'iciSecundarioHint'
+            ? 'Informação secundária do equipamento.'
+            : 'Etiqueta de inventário do ICI.';
+      }
+
+      if (type === 'SERIE') {
+        hint.textContent =
+          'Use quando não houver etiqueta PMC ou ICI.';
+      }
+    }
+
+    function renderItemSuggestions() {
+      const datalist =
+        element('itensSugeridos');
+
+      datalist.innerHTML = '';
+
+      itemSuggestions.forEach(
+        function (item) {
+          const option =
+            document.createElement('option');
+
+          option.value = item;
+          datalist.appendChild(option);
+        }
+      );
+    }
+
+    function addItemSuggestion(item) {
+      const normalized =
+        item.trim().toLowerCase();
+
+      const exists =
+        itemSuggestions.some(
+          function (current) {
+            return (
+              current.trim().toLowerCase() ===
+              normalized
+            );
+          }
+        );
+
+      if (!exists) {
+        itemSuggestions.unshift(item);
+        renderItemSuggestions();
+      }
+    }
+
+    async function preloadOcr() {
+      if (ocrWorker) {
+        return ocrWorker;
+      }
+
+      if (ocrLoadingPromise) {
+        return ocrLoadingPromise;
+      }
+
+      ocrLoadingPromise =
+        (async function () {
+          try {
+            if (
+              !window.Tesseract ||
+              !window.Tesseract.createWorker
+            ) {
+              throw new Error(
+                'Biblioteca OCR não carregada.'
+              );
+            }
+
+            const worker =
+              await window.Tesseract.createWorker(
+                'eng',
+                1
+              );
+
+            await worker.setParameters({
+              tessedit_pageseg_mode: '7',
+              preserve_interword_spaces: '0'
+            });
+
+            ocrWorker = worker;
+            return worker;
+          } catch (error) {
+            console.error(
+              'Falha ao carregar OCR:',
+              error
+            );
+
+            ocrLoadingPromise = null;
+            return null;
+          }
+        })();
+
+      return ocrLoadingPromise;
+    }
+
+    async function openScanner(target) {
       if (scannerRunning) {
         return;
       }
 
+      scanTarget = target;
       barcodeAccepted = false;
+      barcodeBusy = false;
+      ocrBusy = false;
       torchEnabled = false;
-      decoderBusy = false;
       frameNumber = 0;
 
-      element('torchButton').disabled = true;
+      lastOcrValue = '';
+      repeatedOcrValue = 0;
+
+      element('torchButton').disabled =
+        true;
 
       element('torchButton')
         .classList.remove('active');
 
-      element('cameraHelp').textContent =
-        'Abrindo a câmera em alta resolução…';
+      element('cameraTitle').textContent =
+        scannerTitle(target);
+
+      element('cameraHelp').innerHTML =
+        '<span class="scanner-status">Abrindo câmera…</span>';
 
       element('cameraDialog').showModal();
 
+      /*
+        Garante que o carregamento do OCR
+        continue em segundo plano.
+      */
+      preloadOcr();
+
       try {
-        if (
-          !navigator.mediaDevices ||
-          !navigator.mediaDevices.getUserMedia
-        ) {
-          throw new Error(
-            'Este navegador não oferece acesso à câmera.'
-          );
-        }
-
         cameraStream =
-          await navigator.mediaDevices.getUserMedia({
-            audio: false,
+          await navigator.mediaDevices
+            .getUserMedia({
+              audio: false,
 
-            video: {
-              facingMode: {
-                ideal: 'environment'
-              },
+              video: {
+                facingMode: {
+                  ideal: 'environment'
+                },
 
-              width: {
-                ideal: 1920
-              },
+                width: {
+                  ideal: 1920
+                },
 
-              height: {
-                ideal: 1080
+                height: {
+                  ideal: 1080
+                }
               }
-            }
-          });
+            });
 
         const video =
           element('cameraVideo');
 
-        video.srcObject =
-          cameraStream;
-
+        video.srcObject = cameraStream;
         await video.play();
 
         cameraTrack =
@@ -1146,26 +1436,37 @@
 
         await prepareCamera();
 
-        if (
-          !window.ZXingWASM ||
-          typeof window.ZXingWASM.readBarcodes !==
-            'function'
-        ) {
-          throw new Error(
-            'O leitor ZXing não foi carregado.'
-          );
-        }
-
-        element('cameraHelp').textContent =
-          'Aproxime até as barras ocuparem o retângulo. Mantenha o celular firme.';
+        element('cameraHelp').innerHTML =
+          'Código de barras e números sendo analisados simultaneamente.<br>' +
+          '<span class="scanner-status">Aproxime até ficar bem nítido.</span>';
 
         /*
-          Analisa um quadro aproximadamente
-          quatro vezes por segundo.
+          Código de barras: aproximadamente
+          cinco tentativas por segundo.
         */
-        scanTimer = setInterval(
-          decodeCameraFrame,
-          260
+        barcodeTimer =
+          setInterval(
+            scanBarcode,
+            190
+          );
+
+        /*
+          OCR: já começa sem esperar o
+          código de barras falhar.
+        */
+        setTimeout(
+          function () {
+            if (scannerRunning) {
+              scanOcr();
+
+              ocrTimer =
+                setInterval(
+                  scanOcr,
+                  750
+                );
+            }
+          },
+          250
         );
       } catch (error) {
         console.error(error);
@@ -1173,11 +1474,25 @@
         await closeScanner();
 
         showToast(
-          error.message ||
-            'Não foi possível abrir a câmera.',
+          'Não foi possível abrir a câmera.',
           'error'
         );
       }
+    }
+
+    function scannerTitle(target) {
+      if (target === 'PMC') {
+        return 'Ler patrimônio PMC';
+      }
+
+      if (
+        target === 'ICI' ||
+        target === 'ICI_SECUNDARIO'
+      ) {
+        return 'Ler etiqueta ICI';
+      }
+
+      return 'Ler número de série';
     }
 
     async function prepareCamera() {
@@ -1193,9 +1508,7 @@
       const advanced = [];
 
       if (
-        Array.isArray(
-          capabilities.focusMode
-        ) &&
+        Array.isArray(capabilities.focusMode) &&
         capabilities.focusMode.includes(
           'continuous'
         )
@@ -1206,9 +1519,7 @@
       }
 
       if (
-        Array.isArray(
-          capabilities.exposureMode
-        ) &&
+        Array.isArray(capabilities.exposureMode) &&
         capabilities.exposureMode.includes(
           'continuous'
         )
@@ -1224,31 +1535,241 @@
             advanced: advanced
           });
         } catch (error) {
-          console.warn(
-            'Não foi possível aplicar foco contínuo:',
-            error
-          );
+          console.warn(error);
         }
       }
 
-      if (capabilities.torch === true) {
-        element('torchButton').disabled =
-          false;
-      } else {
-        element('torchButton').disabled =
-          true;
-      }
+      element('torchButton').disabled =
+        capabilities.torch !== true;
     }
 
-    async function decodeCameraFrame() {
+    async function scanBarcode() {
       if (
         !scannerRunning ||
-        decoderBusy ||
+        barcodeBusy ||
         barcodeAccepted
       ) {
         return;
       }
 
+      barcodeBusy = true;
+      frameNumber += 1;
+
+      try {
+        const imageData =
+          captureRegion(
+            'barcodeCanvas',
+            frameNumber % 3,
+            false
+          );
+
+        if (!imageData) {
+          return;
+        }
+
+        const results =
+          await window.ZXingWASM.readBarcodes(
+            imageData,
+            {
+              formats: [
+                'AllReadable'
+              ],
+
+              tryHarder: true,
+              tryRotate: true,
+              tryInvert: true,
+              tryDenoise: true,
+              maxNumberOfSymbols: 4
+            }
+          );
+
+        if (!Array.isArray(results)) {
+          return;
+        }
+
+        for (const result of results) {
+          const value =
+            validateScannedValue(
+              result.text
+            );
+
+          if (value) {
+            acceptScannedValue(
+              value,
+              'Código de barras ' +
+                (result.format || '')
+            );
+
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn(
+          'Leitura de código:',
+          error
+        );
+      } finally {
+        barcodeBusy = false;
+      }
+    }
+
+    async function scanOcr() {
+      if (
+        !scannerRunning ||
+        ocrBusy ||
+        barcodeAccepted
+      ) {
+        return;
+      }
+
+      const worker =
+        await preloadOcr();
+
+      if (
+        !worker ||
+        !scannerRunning ||
+        barcodeAccepted
+      ) {
+        return;
+      }
+
+      ocrBusy = true;
+
+      try {
+        const canvas =
+          captureRegion(
+            'ocrCanvas',
+            2,
+            true
+          );
+
+        if (!canvas) {
+          return;
+        }
+
+        if (scanTarget === 'SERIE') {
+          await worker.setParameters({
+            tessedit_char_whitelist:
+              'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-/.',
+            tessedit_pageseg_mode: '7'
+          });
+        } else {
+          await worker.setParameters({
+            tessedit_char_whitelist:
+              '0123456789',
+            tessedit_pageseg_mode: '7'
+          });
+        }
+
+        const result =
+          await worker.recognize(
+            element('ocrCanvas')
+          );
+
+        if (
+          !scannerRunning ||
+          barcodeAccepted
+        ) {
+          return;
+        }
+
+        const value =
+          validateScannedValue(
+            result.data.text
+          );
+
+        if (!value) {
+          return;
+        }
+
+        /*
+          OCR precisa encontrar o mesmo valor
+          duas vezes para evitar erro de leitura.
+        */
+        if (value === lastOcrValue) {
+          repeatedOcrValue += 1;
+        } else {
+          lastOcrValue = value;
+          repeatedOcrValue = 1;
+        }
+
+        if (repeatedOcrValue === 1) {
+          element('cameraHelp').innerHTML =
+            'Número encontrado: <strong>' +
+            escapeHtml(value) +
+            '</strong><br>' +
+            '<span class="scanner-status">Mantenha parado para confirmar…</span>';
+        }
+
+        if (repeatedOcrValue >= 2) {
+          acceptScannedValue(
+            value,
+            'Leitura dos números'
+          );
+        }
+      } catch (error) {
+        console.warn(
+          'Leitura OCR:',
+          error
+        );
+      } finally {
+        ocrBusy = false;
+      }
+    }
+
+    function validateScannedValue(rawValue) {
+      let value =
+        String(rawValue || '').trim();
+
+      if (scanTarget === 'PMC') {
+        value =
+          value.replace(/\D/g, '');
+
+        return value.length === 6
+          ? value
+          : '';
+      }
+
+      if (
+        scanTarget === 'ICI' ||
+        scanTarget === 'ICI_SECUNDARIO'
+      ) {
+        value =
+          value.replace(/\s/g, '');
+
+        return value.length >= 3 &&
+          value.length <= 40
+          ? value
+          : '';
+      }
+
+      if (scanTarget === 'SERIE') {
+        value =
+          normalizeSerial(value);
+
+        return value.length >= 2
+          ? value
+          : '';
+      }
+
+      return '';
+    }
+
+    function normalizeSerial(value) {
+      return String(value || '')
+        .toUpperCase()
+        .replace(
+          /[^A-Z0-9\-/.]/g,
+          ''
+        )
+        .slice(0, 80);
+    }
+
+    function captureRegion(
+      canvasId,
+      treatment,
+      returnCanvas
+    ) {
       const video =
         element('cameraVideo');
 
@@ -1257,81 +1778,11 @@
         !video.videoWidth ||
         !video.videoHeight
       ) {
-        return;
+        return null;
       }
-
-      decoderBusy = true;
-      frameNumber += 1;
-
-      try {
-        const imageData =
-          captureScanningArea(
-            frameNumber % 3
-          );
-
-        const results =
-          await window.ZXingWASM.readBarcodes(
-            imageData,
-            {
-              formats: [
-                'Code128'
-              ],
-
-              tryHarder: true,
-              tryRotate: true,
-              tryInvert: true,
-              tryDenoise: true,
-              maxNumberOfSymbols: 1
-            }
-          );
-
-        if (
-          !Array.isArray(results) ||
-          !results.length
-        ) {
-          return;
-        }
-
-        for (const result of results) {
-          const format =
-            String(
-              result.format || ''
-            )
-              .replace(/[^a-z0-9]/gi, '')
-              .toLowerCase();
-
-          const digits =
-            String(
-              result.text || ''
-            )
-              .replace(/\D/g, '');
-
-          if (
-            format === 'code128' &&
-            digits.length === 6
-          ) {
-            acceptBarcode(digits);
-            return;
-          }
-        }
-      } catch (error) {
-        console.warn(
-          'Quadro não reconhecido:',
-          error
-        );
-      } finally {
-        decoderBusy = false;
-      }
-    }
-
-    function captureScanningArea(
-      treatmentMode
-    ) {
-      const video =
-        element('cameraVideo');
 
       const canvas =
-        element('scannerCanvas');
+        element(canvasId);
 
       const context =
         canvas.getContext(
@@ -1341,10 +1792,6 @@
           }
         );
 
-      /*
-        Recorta somente a faixa central,
-        correspondente ao retângulo na tela.
-      */
       const sourceWidth =
         Math.floor(
           video.videoWidth * 0.94
@@ -1352,7 +1799,7 @@
 
       const sourceHeight =
         Math.floor(
-          video.videoHeight * 0.42
+          video.videoHeight * 0.44
         );
 
       const sourceX =
@@ -1367,13 +1814,12 @@
             2
         );
 
-      /*
-        Mantém detalhes, mas evita criar
-        uma imagem pesada demais para o iPhone.
-      */
-      const maximumWidth = 1800;
+      const maximumWidth =
+        returnCanvas
+          ? 1300
+          : 1800;
 
-      const outputScale =
+      const scale =
         Math.min(
           1.35,
           maximumWidth / sourceWidth
@@ -1383,7 +1829,7 @@
         Math.max(
           1,
           Math.floor(
-            sourceWidth * outputScale
+            sourceWidth * scale
           )
         );
 
@@ -1391,15 +1837,12 @@
         Math.max(
           1,
           Math.floor(
-            sourceHeight * outputScale
+            sourceHeight * scale
           )
         );
 
-      context.imageSmoothingEnabled =
-        true;
-
-      context.imageSmoothingQuality =
-        'high';
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
 
       context.drawImage(
         video,
@@ -1421,34 +1864,39 @@
           canvas.height
         );
 
-      /*
-        Alterna entre três tratamentos:
-        0 = imagem original;
-        1 = contraste forte em tons de cinza;
-        2 = preto e branco.
-
-        Isso ajuda porque a etiqueta metálica
-        muda bastante conforme a luz.
-      */
-      if (treatmentMode === 1) {
-        applyGrayscaleContrast(
+      if (treatment === 1) {
+        applyContrast(
           imageData,
-          1.8
+          1.75,
+          false
         );
       }
 
-      if (treatmentMode === 2) {
-        applyAdaptiveBlackAndWhite(
-          imageData
+      if (treatment === 2) {
+        applyContrast(
+          imageData,
+          2.15,
+          true
         );
       }
 
-      return imageData;
+      if (treatment !== 0) {
+        context.putImageData(
+          imageData,
+          0,
+          0
+        );
+      }
+
+      return returnCanvas
+        ? canvas
+        : imageData;
     }
 
-    function applyGrayscaleContrast(
+    function applyContrast(
       imageData,
-      contrast
+      contrast,
+      grayscale
     ) {
       const pixels =
         imageData.data;
@@ -1468,77 +1916,126 @@
             0,
             Math.min(
               255,
-              (gray - 128) * contrast +
+              (gray - 128) *
+                contrast +
                 128
             )
           );
 
-        pixels[index] = adjusted;
-        pixels[index + 1] = adjusted;
-        pixels[index + 2] = adjusted;
+        if (grayscale) {
+          pixels[index] = adjusted;
+          pixels[index + 1] = adjusted;
+          pixels[index + 2] = adjusted;
+        } else {
+          pixels[index] =
+            Math.max(
+              0,
+              Math.min(
+                255,
+                (pixels[index] - 128) *
+                  contrast +
+                  128
+              )
+            );
+
+          pixels[index + 1] =
+            Math.max(
+              0,
+              Math.min(
+                255,
+                (pixels[index + 1] - 128) *
+                  contrast +
+                  128
+              )
+            );
+
+          pixels[index + 2] =
+            Math.max(
+              0,
+              Math.min(
+                255,
+                (pixels[index + 2] - 128) *
+                  contrast +
+                  128
+              )
+            );
+        }
       }
     }
 
-    function applyAdaptiveBlackAndWhite(
-      imageData
+    function acceptScannedValue(
+      value,
+      method
     ) {
-      const pixels =
-        imageData.data;
-
-      let total = 0;
-      let count = 0;
-
-      /*
-        Calcula a luminosidade média usando
-        uma amostragem para manter rapidez.
-      */
-      for (
-        let index = 0;
-        index < pixels.length;
-        index += 40
-      ) {
-        const gray =
-          pixels[index] * 0.299 +
-          pixels[index + 1] * 0.587 +
-          pixels[index + 2] * 0.114;
-
-        total += gray;
-        count += 1;
+      if (barcodeAccepted) {
+        return;
       }
 
-      const threshold =
-        count
-          ? total / count
-          : 128;
+      barcodeAccepted = true;
 
-      for (
-        let index = 0;
-        index < pixels.length;
-        index += 4
-      ) {
-        const gray =
-          pixels[index] * 0.299 +
-          pixels[index + 1] * 0.587 +
-          pixels[index + 2] * 0.114;
+      if (scanTarget === 'PMC') {
+        element('patrimonioPmc').value =
+          value;
 
-        const value =
-          gray < threshold
-            ? 0
-            : 255;
-
-        pixels[index] = value;
-        pixels[index + 1] = value;
-        pixels[index + 2] = value;
+        checkDuplicate(
+          'PMC',
+          value,
+          'pmcHint'
+        );
       }
+
+      if (scanTarget === 'ICI') {
+        element('codigoIci').value =
+          value;
+
+        checkDuplicate(
+          'ICI',
+          value,
+          'iciHint'
+        );
+      }
+
+      if (
+        scanTarget ===
+        'ICI_SECUNDARIO'
+      ) {
+        element('codigoIciSecundario').value =
+          value;
+
+        checkDuplicate(
+          'ICI',
+          value,
+          'iciSecundarioHint'
+        );
+      }
+
+      if (scanTarget === 'SERIE') {
+        element('numeroSerie').value =
+          value;
+
+        checkDuplicate(
+          'SERIE',
+          value,
+          'serieHint'
+        );
+      }
+
+      closeScanner();
+
+      if (navigator.vibrate) {
+        navigator.vibrate(100);
+      }
+
+      showToast(
+        method +
+          ': ' +
+          value,
+        'success'
+      );
     }
 
     async function toggleTorch() {
       if (!cameraTrack) {
-        showToast(
-          'A câmera ainda está sendo preparada.',
-          'error'
-        );
-
         return;
       }
 
@@ -1549,97 +2046,48 @@
 
       if (capabilities.torch !== true) {
         showToast(
-          'A lanterna não está disponível neste navegador.',
+          'Lanterna indisponível.',
           'error'
         );
 
         return;
       }
 
-      const newState =
-        !torchEnabled;
-
       try {
+        torchEnabled =
+          !torchEnabled;
+
         await cameraTrack.applyConstraints({
           advanced: [
             {
-              torch: newState
+              torch: torchEnabled
             }
           ]
         });
-
-        torchEnabled = newState;
 
         element('torchButton')
           .classList.toggle(
             'active',
             torchEnabled
           );
-
-        element('torchButton').title =
-          torchEnabled
-            ? 'Desligar lanterna'
-            : 'Ligar lanterna';
       } catch (error) {
-        console.error(error);
-
         torchEnabled = false;
 
-        element('torchButton')
-          .classList.remove('active');
-
         showToast(
-          'O celular não permitiu controlar a lanterna.',
+          'Não foi possível ligar a lanterna.',
           'error'
         );
       }
     }
 
-    function acceptBarcode(rawValue) {
-      const digits =
-        String(rawValue || '')
-          .replace(/\D/g, '');
-
-      if (
-        digits.length !== 6 ||
-        barcodeAccepted
-      ) {
-        return;
-      }
-
-      barcodeAccepted = true;
-
-      element('patrimonio').value =
-        digits;
-
-      closeScanner();
-      checkDuplicate();
-
-      if (navigator.vibrate) {
-        navigator.vibrate(100);
-      }
-
-      showToast(
-        'Patrimônio ' +
-          digits +
-          ' lido.',
-        'success'
-      );
-
-      setTimeout(function () {
-        element('item').focus();
-      }, 200);
-    }
-
     async function closeScanner() {
       scannerRunning = false;
-      decoderBusy = false;
 
-      if (scanTimer) {
-        clearInterval(scanTimer);
-      }
+      clearInterval(barcodeTimer);
+      clearInterval(ocrTimer);
 
-      scanTimer = null;
+      barcodeTimer = null;
+      ocrTimer = null;
 
       try {
         if (
@@ -1655,10 +2103,7 @@
           });
         }
       } catch (error) {
-        console.warn(
-          'Não foi possível desligar a lanterna:',
-          error
-        );
+        console.warn(error);
       }
 
       torchEnabled = false;
@@ -1677,9 +2122,7 @@
       video.pause();
       video.srcObject = null;
 
-      if (
-        element('cameraDialog').open
-      ) {
+      if (element('cameraDialog').open) {
         element('cameraDialog').close();
       }
     }
@@ -1709,44 +2152,111 @@
         return;
       }
 
+      const type =
+        getIdentificationType();
+
+      const pmc =
+        type === 'PMC'
+          ? element('patrimonioPmc').value
+          : '';
+
+      const ici =
+        type === 'PMC'
+          ? element('codigoIciSecundario').value.trim()
+          : type === 'ICI'
+            ? element('codigoIci').value.trim()
+            : '';
+
+      const serie =
+        type === 'SERIE'
+          ? element('numeroSerie').value.trim()
+          : '';
+
       if (
-        getIdentification() ===
-          'Com etiqueta' &&
-        element('patrimonio').value.length !== 6
+        type === 'PMC' &&
+        pmc.length !== 6
       ) {
         showToast(
-          'O patrimônio deve possuir 6 números.',
+          'O patrimônio PMC deve possuir 6 números.',
           'error'
         );
 
-        element('patrimonio').focus();
         return;
       }
 
       if (
-        getIdentification() ===
-          'Com etiqueta'
+        type === 'ICI' &&
+        ici.length < 3
       ) {
-        const duplicated =
-          await checkDuplicate();
+        showToast(
+          'Informe o código ICI.',
+          'error'
+        );
 
-        if (duplicated) {
-          showToast(
-            'Esse patrimônio já está cadastrado.',
-            'error'
-          );
+        return;
+      }
 
-          return;
-        }
+      if (
+        type === 'SERIE' &&
+        serie.length < 2
+      ) {
+        showToast(
+          'Informe o número de série.',
+          'error'
+        );
+
+        return;
+      }
+
+      const checks = [];
+
+      if (pmc) {
+        checks.push(
+          checkDuplicate(
+            'PMC',
+            pmc,
+            'pmcHint'
+          )
+        );
+      }
+
+      if (ici) {
+        checks.push(
+          checkDuplicate(
+            'ICI',
+            ici,
+            type === 'PMC'
+              ? 'iciSecundarioHint'
+              : 'iciHint'
+          )
+        );
+      }
+
+      if (serie) {
+        checks.push(
+          checkDuplicate(
+            'SERIE',
+            serie,
+            'serieHint'
+          )
+        );
+      }
+
+      const duplicateResults =
+        await Promise.all(checks);
+
+      if (
+        duplicateResults.some(Boolean)
+      ) {
+        showToast(
+          'Existe um identificador já cadastrado.',
+          'error'
+        );
+
+        return;
       }
 
       const payload = {
-        patrimonio:
-          element('patrimonio').value,
-
-        identificacao:
-          getIdentification(),
-
         ambiente:
           element('ambiente').value,
 
@@ -1756,13 +2266,14 @@
         item:
           element('item').value.trim(),
 
-        marcaModelo:
-          element('marcaModelo').value.trim(),
+        patrimonio_pmc:
+          pmc,
 
-        quantidade:
-          Number(
-            element('quantidade').value
-          ) || 1,
+        codigo_ici:
+          ici,
+
+        numero_serie:
+          serie,
 
         localizacao:
           element('localizacao').value.trim(),
@@ -1786,7 +2297,15 @@
           throw error;
         }
 
-        updateSummary(data.summary);
+        updateSummary(
+          data.summary
+        );
+
+        addItemSuggestion(
+          data.item ||
+          payload.item
+        );
+
         clearForNext();
 
         if (navigator.vibrate) {
@@ -1803,23 +2322,9 @@
       } catch (error) {
         console.error(error);
 
-        let message =
-          error.message ||
-          'Não foi possível salvar o item.';
-
-        if (
-          message
-            .toLowerCase()
-            .includes(
-              'já está cadastrado'
-            )
-        ) {
-          message =
-            'Esse patrimônio já está cadastrado.';
-        }
-
         showToast(
-          message,
+          error.message ||
+            'Não foi possível salvar.',
           'error'
         );
       } finally {
@@ -1828,25 +2333,39 @@
     }
 
     function clearForNext() {
-      element('patrimonio').value = '';
+      element('patrimonioPmc').value = '';
+      element('codigoIci').value = '';
+      element('codigoIciSecundario').value = '';
+      element('numeroSerie').value = '';
       element('item').value = '';
-      element('marcaModelo').value = '';
-      element('quantidade').value = '1';
       element('observacao').value = '';
 
-      resetPatrimonioHint();
+      resetIdentifierHint(
+        'PMC',
+        'pmcHint'
+      );
 
-      if (
-        getIdentification() !==
-          'Com etiqueta'
-      ) {
-        document.querySelector(
-          '[name="identificacao"]' +
-          '[value="Com etiqueta"]'
-        ).checked = true;
+      resetIdentifierHint(
+        'ICI',
+        'iciHint'
+      );
 
-        togglePatrimonio();
-      }
+      resetIdentifierHint(
+        'ICI',
+        'iciSecundarioHint'
+      );
+
+      resetIdentifierHint(
+        'SERIE',
+        'serieHint'
+      );
+
+      document.querySelector(
+        '[name="tipoIdentificacao"]' +
+        '[value="PMC"]'
+      ).checked = true;
+
+      toggleIdentification();
 
       window.scrollTo({
         top: 0,
@@ -1854,16 +2373,8 @@
       });
 
       setTimeout(function () {
-        element('patrimonio').focus();
+        element('patrimonioPmc').focus();
       }, 250);
-    }
-
-    function resetPatrimonioHint() {
-      element('patrimonioHint').className =
-        'hint';
-
-      element('patrimonioHint').textContent =
-        'Aceita a etiqueta Code 128 da Prefeitura.';
     }
 
     function setSaving(active) {
@@ -1884,11 +2395,11 @@
       element('total').textContent =
         summary.total || 0;
 
-      element('principalCount').textContent =
-        summary.principal || 0;
-
       element('gerenciaCount').textContent =
         summary.gerencia || 0;
+
+      element('principalCount').textContent =
+        summary.principal || 0;
 
       element('almoxCount').textContent =
         summary.almoxarifado || 0;
@@ -1908,6 +2419,15 @@
 
       element('connectionText').textContent =
         message;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
 
     function showToast(

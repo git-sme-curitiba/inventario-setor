@@ -9,7 +9,6 @@
   >
 
   <meta name="theme-color" content="#0b57d0">
-
   <title>Inventário do Setor</title>
 
   <script src="https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js"></script>
@@ -372,19 +371,50 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px;
+      padding: 12px 14px;
     }
 
     .camera-header strong {
       font-size: 14px;
     }
 
-    .camera-header button {
+    .camera-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .camera-button {
+      min-height: 42px;
       padding: 9px 13px;
       border: 0;
-      border-radius: 9px;
+      border-radius: 10px;
       background: #333333;
       color: #ffffff;
+      font-weight: 700;
+    }
+
+    .torch-button {
+      width: 44px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid #555555;
+      border-radius: 10px;
+      background: #292929;
+      color: #ffffff;
+      font-size: 20px;
+    }
+
+    .torch-button.active {
+      border-color: #ffd54a;
+      background: #ffd54a;
+      color: #111111;
+      box-shadow: 0 0 18px rgba(255, 213, 74, 0.55);
+    }
+
+    .torch-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.35;
     }
 
     .camera-area {
@@ -405,8 +435,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 88%;
-      height: 130px;
+      width: 90%;
+      height: 135px;
       border: 3px solid #ffffff;
       border-radius: 14px;
       box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.43);
@@ -417,8 +447,8 @@
     .scan-line {
       position: absolute;
       top: 50%;
-      left: 8%;
-      width: 84%;
+      left: 7%;
+      width: 86%;
       height: 2px;
       background: #ff334f;
       box-shadow: 0 0 10px #ff334f;
@@ -437,6 +467,7 @@
     }
 
     .camera-help {
+      min-height: 60px;
       padding: 13px 16px 18px;
       color: #dddddd;
       font-size: 13px;
@@ -465,10 +496,7 @@
       <div class="top">
         <div>
           <h1>Inventário do Setor</h1>
-
-          <div class="subtitle">
-            Cadastro rápido pelo celular
-          </div>
+          <div class="subtitle">Cadastro rápido pelo celular</div>
         </div>
 
         <div class="count">
@@ -502,34 +530,19 @@
 
       <form id="inventoryForm">
         <section class="section">
-          <div class="section-title">
-            Onde está
-          </div>
+          <div class="section-title">Onde está</div>
 
           <div class="field">
-            <label for="ambiente">
-              Ambiente
-            </label>
+            <label for="ambiente">Ambiente</label>
 
             <select id="ambiente" required>
-              <option value="Sala da Gerência">
-                Sala da Gerência
-              </option>
-
-              <option value="Sala Principal">
-                Sala Principal
-              </option>
-
-              <option value="Almoxarifado">
-                Almoxarifado
-              </option>
+              <option value="Sala da Gerência">Sala da Gerência</option>
+              <option value="Sala Principal">Sala Principal</option>
+              <option value="Almoxarifado">Almoxarifado</option>
             </select>
           </div>
 
-          <div
-            class="field conditional"
-            id="locationWrap"
-          >
+          <div class="field conditional" id="locationWrap">
             <label for="localizacao">
               Localização no almoxarifado
             </label>
@@ -543,14 +556,10 @@
         </section>
 
         <section class="section">
-          <div class="section-title">
-            Identificação
-          </div>
+          <div class="section-title">Identificação</div>
 
           <div class="field">
-            <label>
-              Etiqueta patrimonial
-            </label>
+            <label>Etiqueta patrimonial</label>
 
             <div class="segments">
               <label>
@@ -560,7 +569,6 @@
                   value="Com etiqueta"
                   checked
                 >
-
                 <span>Com etiqueta</span>
               </label>
 
@@ -570,7 +578,6 @@
                   name="identificacao"
                   value="Sem etiqueta"
                 >
-
                 <span>Sem etiqueta</span>
               </label>
 
@@ -580,25 +587,20 @@
                   name="identificacao"
                   value="Etiqueta ilegível"
                 >
-
                 <span>Ilegível</span>
               </label>
             </div>
           </div>
 
-          <div
-            class="field"
-            id="patrimonioWrap"
-          >
-            <label for="patrimonio">
-              Patrimônio
-            </label>
+          <div class="field" id="patrimonioWrap">
+            <label for="patrimonio">Patrimônio</label>
 
             <div class="scan-row">
               <input
                 id="patrimonio"
                 inputmode="numeric"
                 autocomplete="off"
+                maxlength="6"
                 placeholder="Leia ou digite os 6 números"
               >
 
@@ -611,41 +613,27 @@
               </button>
             </div>
 
-            <div
-              class="hint"
-              id="patrimonioHint"
-            >
+            <div class="hint" id="patrimonioHint">
               Aceita a etiqueta Code 128 da Prefeitura.
             </div>
           </div>
         </section>
 
         <section class="section">
-          <div class="section-title">
-            O que é
-          </div>
+          <div class="section-title">O que é</div>
 
           <div class="grid">
             <div class="field">
-              <label for="categoria">
-                Categoria
-              </label>
+              <label for="categoria">Categoria</label>
 
               <select id="categoria" required>
-                <option value="Móvel">
-                  Móvel
-                </option>
-
-                <option value="Tecnologia">
-                  Tecnologia
-                </option>
+                <option value="Móvel">Móvel</option>
+                <option value="Tecnologia">Tecnologia</option>
               </select>
             </div>
 
             <div class="field">
-              <label for="quantidade">
-                Quantidade
-              </label>
+              <label for="quantidade">Quantidade</label>
 
               <input
                 id="quantidade"
@@ -659,9 +647,7 @@
           </div>
 
           <div class="field">
-            <label for="item">
-              Item
-            </label>
+            <label for="item">Item</label>
 
             <input
               id="item"
@@ -731,23 +717,32 @@
     </div>
   </div>
 
-  <div
-    class="toast"
-    id="toast"
-  ></div>
+  <div class="toast" id="toast"></div>
 
   <dialog id="cameraDialog">
     <div class="camera-header">
-      <strong>
-        Aponte para o código de barras
-      </strong>
+      <strong>Aponte para o patrimônio</strong>
 
-      <button
-        id="closeCameraButton"
-        type="button"
-      >
-        Fechar
-      </button>
+      <div class="camera-actions">
+        <button
+          class="torch-button"
+          id="torchButton"
+          type="button"
+          aria-label="Ligar ou desligar lanterna"
+          title="Lanterna"
+          disabled
+        >
+          🔦
+        </button>
+
+        <button
+          class="camera-button"
+          id="closeCameraButton"
+          type="button"
+        >
+          Fechar
+        </button>
+      </div>
     </div>
 
     <div class="camera-area">
@@ -761,9 +756,8 @@
       <div class="scan-line"></div>
     </div>
 
-    <div class="camera-help">
-      Centralize o código dentro do retângulo.
-      A leitura será automática.
+    <div class="camera-help" id="cameraHelp">
+      Abrindo a câmera…
     </div>
   </dialog>
 
@@ -774,19 +768,20 @@
     const SUPABASE_PUBLISHABLE_KEY =
       'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI';
 
-    const database =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
+    const database = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
     const element = id =>
       document.getElementById(id);
 
     let scannerControls = null;
     let scannerReader = null;
+    let activeCameraTrack = null;
     let checkingTimer = null;
     let barcodeAccepted = false;
+    let torchEnabled = false;
     let isSaving = false;
 
     document.addEventListener(
@@ -831,17 +826,16 @@
         element('patrimonio').value =
           element('patrimonio').value
             .replace(/\D/g, '')
-            .slice(0, 20);
+            .slice(0, 6);
 
         resetPatrimonioHint();
         clearTimeout(checkingTimer);
 
-        if (element('patrimonio').value) {
-          checkingTimer =
-            setTimeout(
-              checkDuplicate,
-              400
-            );
+        if (element('patrimonio').value.length === 6) {
+          checkingTimer = setTimeout(
+            checkDuplicate,
+            400
+          );
         }
       }
     );
@@ -859,6 +853,11 @@
     element('closeCameraButton').addEventListener(
       'click',
       closeScanner
+    );
+
+    element('torchButton').addEventListener(
+      'click',
+      toggleTorch
     );
 
     element('saveButton').addEventListener(
@@ -891,6 +890,7 @@
         }
 
         updateSummary(data.summary);
+
         setConnectionStatus(
           true,
           'Banco de dados conectado'
@@ -937,9 +937,8 @@
         getIdentification() ===
         'Com etiqueta';
 
-      element('patrimonioWrap')
-        .style.display =
-          show ? 'block' : 'none';
+      element('patrimonioWrap').style.display =
+        show ? 'block' : 'none';
 
       if (!show) {
         element('patrimonio').value = '';
@@ -960,8 +959,7 @@
           await database.rpc(
             'verificar_patrimonio',
             {
-              p_patrimonio:
-                patrimonio
+              p_patrimonio: patrimonio
             }
           );
 
@@ -977,16 +975,14 @@
         }
 
         if (data.exists) {
-          element('patrimonioHint')
-            .className =
-              'hint duplicate';
+          element('patrimonioHint').className =
+            'hint duplicate';
 
-          element('patrimonioHint')
-            .textContent =
-              'Já cadastrado: ' +
-              data.item +
-              ' · ' +
-              data.ambiente;
+          element('patrimonioHint').textContent =
+            'Já cadastrado: ' +
+            data.item +
+            ' · ' +
+            data.ambiente;
 
           return true;
         }
@@ -1008,7 +1004,7 @@
     async function openScanner() {
       if (!window.ZXingBrowser) {
         showToast(
-          'O leitor de código não foi carregado. Atualize a página.',
+          'O leitor não foi carregado. Atualize a página.',
           'error'
         );
 
@@ -1016,14 +1012,20 @@
       }
 
       barcodeAccepted = false;
+      torchEnabled = false;
+      activeCameraTrack = null;
 
-      element('cameraDialog')
-        .showModal();
+      element('torchButton').disabled = true;
+      element('torchButton').classList.remove('active');
+
+      element('cameraHelp').textContent =
+        'Abrindo a câmera em alta resolução…';
+
+      element('cameraDialog').showModal();
 
       try {
         scannerReader =
-          new ZXingBrowser
-            .BrowserMultiFormatReader();
+          new ZXingBrowser.BrowserMultiFormatReader();
 
         const constraints = {
           audio: false,
@@ -1034,37 +1036,233 @@
             },
 
             width: {
-              ideal: 1920
+              ideal: 2560
             },
 
             height: {
-              ideal: 1080
+              ideal: 1440
+            },
+
+            frameRate: {
+              ideal: 30
             }
           }
         };
 
         scannerControls =
-          await scannerReader
-            .decodeFromConstraints(
-              constraints,
-              element('cameraVideo'),
-              function (result) {
-                if (
-                  result &&
-                  !barcodeAccepted
-                ) {
-                  acceptBarcode(
-                    result.getText()
-                  );
-                }
+          await scannerReader.decodeFromConstraints(
+            constraints,
+            element('cameraVideo'),
+            function (result) {
+              if (
+                result &&
+                !barcodeAccepted
+              ) {
+                acceptBarcode(
+                  result.getText()
+                );
               }
-            );
+            }
+          );
+
+        setTimeout(
+          prepareCamera,
+          700
+        );
       } catch (error) {
         console.error(error);
-        closeScanner();
+
+        await closeScanner();
 
         showToast(
-          'Não foi possível acessar a câmera. Autorize a câmera nas configurações do navegador.',
+          'Não foi possível acessar a câmera. Verifique a permissão do navegador.',
+          'error'
+        );
+      }
+    }
+
+    async function prepareCamera() {
+      const video = element('cameraVideo');
+      const stream = video.srcObject;
+
+      if (!stream) {
+        return;
+      }
+
+      activeCameraTrack =
+        stream.getVideoTracks()[0];
+
+      if (!activeCameraTrack) {
+        return;
+      }
+
+      const capabilities =
+        activeCameraTrack.getCapabilities
+          ? activeCameraTrack.getCapabilities()
+          : {};
+
+      const settings =
+        activeCameraTrack.getSettings
+          ? activeCameraTrack.getSettings()
+          : {};
+
+      console.log(
+        'Recursos da câmera:',
+        capabilities
+      );
+
+      console.log(
+        'Configuração da câmera:',
+        settings
+      );
+
+      await improveCameraFocus(
+        capabilities
+      );
+
+      if ('torch' in capabilities) {
+        element('torchButton').disabled = false;
+
+        element('cameraHelp').textContent =
+          'Aproxime a etiqueta até as barras ficarem nítidas. Use a lanterna se necessário.';
+      } else {
+        element('torchButton').disabled = true;
+
+        element('cameraHelp').textContent =
+          'Aproxime a etiqueta até as barras ficarem nítidas. A lanterna não foi liberada por este navegador.';
+      }
+    }
+
+    async function improveCameraFocus(
+      capabilities
+    ) {
+      if (!activeCameraTrack) {
+        return;
+      }
+
+      const advanced = [];
+
+      if (
+        Array.isArray(
+          capabilities.focusMode
+        ) &&
+        capabilities.focusMode.includes(
+          'continuous'
+        )
+      ) {
+        advanced.push({
+          focusMode: 'continuous'
+        });
+      }
+
+      if (
+        Array.isArray(
+          capabilities.exposureMode
+        ) &&
+        capabilities.exposureMode.includes(
+          'continuous'
+        )
+      ) {
+        advanced.push({
+          exposureMode: 'continuous'
+        });
+      }
+
+      if (capabilities.zoom) {
+        const minimum =
+          Number(capabilities.zoom.min) || 1;
+
+        const maximum =
+          Number(capabilities.zoom.max) || minimum;
+
+        const desiredZoom =
+          Math.min(
+            maximum,
+            Math.max(
+              minimum,
+              2
+            )
+          );
+
+        advanced.push({
+          zoom: desiredZoom
+        });
+      }
+
+      if (!advanced.length) {
+        return;
+      }
+
+      try {
+        await activeCameraTrack.applyConstraints({
+          advanced: advanced
+        });
+      } catch (error) {
+        console.warn(
+          'Não foi possível aplicar foco ou zoom:',
+          error
+        );
+      }
+    }
+
+    async function toggleTorch() {
+      if (!activeCameraTrack) {
+        showToast(
+          'A câmera ainda está sendo preparada.',
+          'error'
+        );
+
+        return;
+      }
+
+      const capabilities =
+        activeCameraTrack.getCapabilities
+          ? activeCameraTrack.getCapabilities()
+          : {};
+
+      if (!('torch' in capabilities)) {
+        showToast(
+          'A lanterna não está disponível neste navegador.',
+          'error'
+        );
+
+        return;
+      }
+
+      const newState =
+        !torchEnabled;
+
+      try {
+        await activeCameraTrack.applyConstraints({
+          advanced: [
+            {
+              torch: newState
+            }
+          ]
+        });
+
+        torchEnabled = newState;
+
+        element('torchButton')
+          .classList.toggle(
+            'active',
+            torchEnabled
+          );
+
+        element('torchButton').title =
+          torchEnabled
+            ? 'Desligar lanterna'
+            : 'Ligar lanterna';
+      } catch (error) {
+        console.error(error);
+
+        torchEnabled = false;
+
+        element('torchButton')
+          .classList.remove('active');
+
+        showToast(
+          'O celular não permitiu controlar a lanterna.',
           'error'
         );
       }
@@ -1075,8 +1273,12 @@
         String(rawValue || '')
           .replace(/\D/g, '');
 
+      /*
+        As etiquetas patrimoniais possuem seis números.
+        Leituras com outro tamanho são ignoradas.
+      */
       if (
-        !digits ||
+        digits.length !== 6 ||
         barcodeAccepted
       ) {
         return;
@@ -1106,13 +1308,46 @@
       }, 200);
     }
 
-    function closeScanner() {
+    async function closeScanner() {
+      try {
+        if (
+          activeCameraTrack &&
+          torchEnabled
+        ) {
+          await activeCameraTrack.applyConstraints({
+            advanced: [
+              {
+                torch: false
+              }
+            ]
+          });
+        }
+      } catch (error) {
+        console.warn(
+          'Não foi possível desligar a lanterna:',
+          error
+        );
+      }
+
+      torchEnabled = false;
+
+      element('torchButton')
+        .classList.remove('active');
+
+      element('torchButton').disabled =
+        true;
+
       if (scannerControls) {
-        scannerControls.stop();
+        try {
+          scannerControls.stop();
+        } catch (error) {
+          console.warn(error);
+        }
       }
 
       scannerControls = null;
       scannerReader = null;
+      activeCameraTrack = null;
 
       const video =
         element('cameraVideo');
@@ -1127,9 +1362,7 @@
 
       video.srcObject = null;
 
-      if (
-        element('cameraDialog').open
-      ) {
+      if (element('cameraDialog').open) {
         element('cameraDialog').close();
       }
     }
@@ -1153,6 +1386,20 @@
       ) {
         showToast(
           'Leia ou digite o patrimônio.',
+          'error'
+        );
+
+        element('patrimonio').focus();
+        return;
+      }
+
+      if (
+        getIdentification() ===
+          'Com etiqueta' &&
+        element('patrimonio').value.length !== 6
+      ) {
+        showToast(
+          'O patrimônio deve possuir 6 números.',
           'error'
         );
 
@@ -1194,8 +1441,7 @@
           element('item').value.trim(),
 
         marcaModelo:
-          element('marcaModelo')
-            .value.trim(),
+          element('marcaModelo').value.trim(),
 
         quantidade:
           Number(
@@ -1203,12 +1449,10 @@
           ) || 1,
 
         localizacao:
-          element('localizacao')
-            .value.trim(),
+          element('localizacao').value.trim(),
 
         observacao:
-          element('observacao')
-            .value.trim()
+          element('observacao').value.trim()
       };
 
       setSaving(true);
@@ -1299,12 +1543,11 @@
     }
 
     function resetPatrimonioHint() {
-      element('patrimonioHint')
-        .className = 'hint';
+      element('patrimonioHint').className =
+        'hint';
 
-      element('patrimonioHint')
-        .textContent =
-          'Aceita a etiqueta Code 128 da Prefeitura.';
+      element('patrimonioHint').textContent =
+        'Aceita a etiqueta Code 128 da Prefeitura.';
     }
 
     function setSaving(active) {
@@ -1325,17 +1568,14 @@
       element('total').textContent =
         summary.total || 0;
 
-      element('principalCount')
-        .textContent =
-          summary.principal || 0;
+      element('principalCount').textContent =
+        summary.principal || 0;
 
-      element('gerenciaCount')
-        .textContent =
-          summary.gerencia || 0;
+      element('gerenciaCount').textContent =
+        summary.gerencia || 0;
 
-      element('almoxCount')
-        .textContent =
-          summary.almoxarifado || 0;
+      element('almoxCount').textContent =
+        summary.almoxarifado || 0;
     }
 
     function setConnectionStatus(
@@ -1350,8 +1590,8 @@
           ? 'connection connected'
           : 'connection error';
 
-      element('connectionText')
-        .textContent = message;
+      element('connectionText').textContent =
+        message;
     }
 
     function showToast(
@@ -1361,7 +1601,8 @@
       const toast =
         element('toast');
 
-      toast.textContent = message;
+      toast.textContent =
+        message;
 
       toast.className =
         'toast show ' +

@@ -762,859 +762,1164 @@
   </dialog>
 
   <script>
-    const SUPABASE_URL =
-      'https://yipfkwxhpahpuiizkcny.supabase.co';
+  const SUPABASE_URL =
+    'https://yipfkwxhpahpuiizkcny.supabase.co';
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI';
+  const SUPABASE_PUBLISHABLE_KEY =
+    'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI';
 
-    const database = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
+  const database = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
-    const element = id =>
-      document.getElementById(id);
+  const element = id =>
+    document.getElementById(id);
 
-    let scannerControls = null;
-    let scannerReader = null;
-    let activeCameraTrack = null;
-    let checkingTimer = null;
-    let barcodeAccepted = false;
-    let torchEnabled = false;
-    let isSaving = false;
+  let activeCameraTrack = null;
+  let checkingTimer = null;
+  let barcodeAccepted = false;
+  let torchEnabled = false;
+  let isSaving = false;
+  let scannerStarted = false;
+  let detectedHandler = null;
 
-    document.addEventListener(
-      'DOMContentLoaded',
-      initialize
-    );
+  let lastDetectedCode = '';
+  let detectionCount = 0;
+  let lastDetectionTime = 0;
 
-    element('ambiente').addEventListener(
-      'change',
-      function () {
-        localStorage.setItem(
-          'inventarioAmbiente',
-          element('ambiente').value
-        );
+  document.addEventListener(
+    'DOMContentLoaded',
+    initialize
+  );
 
-        toggleLocation();
-      }
-    );
-
-    element('categoria').addEventListener(
-      'change',
-      function () {
-        localStorage.setItem(
-          'inventarioCategoria',
-          element('categoria').value
-        );
-      }
-    );
-
-    document
-      .querySelectorAll('[name="identificacao"]')
-      .forEach(function (radio) {
-        radio.addEventListener(
-          'change',
-          togglePatrimonio
-        );
-      });
-
-    element('patrimonio').addEventListener(
-      'input',
-      function () {
-        element('patrimonio').value =
-          element('patrimonio').value
-            .replace(/\D/g, '')
-            .slice(0, 6);
-
-        resetPatrimonioHint();
-        clearTimeout(checkingTimer);
-
-        if (element('patrimonio').value.length === 6) {
-          checkingTimer = setTimeout(
-            checkDuplicate,
-            400
-          );
-        }
-      }
-    );
-
-    element('patrimonio').addEventListener(
-      'blur',
-      checkDuplicate
-    );
-
-    element('scanButton').addEventListener(
-      'click',
-      openScanner
-    );
-
-    element('closeCameraButton').addEventListener(
-      'click',
-      closeScanner
-    );
-
-    element('torchButton').addEventListener(
-      'click',
-      toggleTorch
-    );
-
-    element('saveButton').addEventListener(
-      'click',
-      saveItem
-    );
-
-    async function initialize() {
-      element('ambiente').value =
-        localStorage.getItem(
-          'inventarioAmbiente'
-        ) || 'Sala da Gerência';
-
-      element('categoria').value =
-        localStorage.getItem(
-          'inventarioCategoria'
-        ) || 'Móvel';
+  element('ambiente').addEventListener(
+    'change',
+    function () {
+      localStorage.setItem(
+        'inventarioAmbiente',
+        element('ambiente').value
+      );
 
       toggleLocation();
-      togglePatrimonio();
+    }
+  );
 
-      try {
-        const { data, error } =
-          await database.rpc(
-            'iniciar_inventario'
+  element('categoria').addEventListener(
+    'change',
+    function () {
+      localStorage.setItem(
+        'inventarioCategoria',
+        element('categoria').value
+      );
+    }
+  );
+
+  document
+    .querySelectorAll('[name="identificacao"]')
+    .forEach(function (radio) {
+      radio.addEventListener(
+        'change',
+        togglePatrimonio
+      );
+    });
+
+  element('patrimonio').addEventListener(
+    'input',
+    function () {
+      element('patrimonio').value =
+        element('patrimonio').value
+          .replace(/\D/g, '')
+          .slice(0, 6);
+
+      resetPatrimonioHint();
+      clearTimeout(checkingTimer);
+
+      if (
+        element('patrimonio').value.length === 6
+      ) {
+        checkingTimer = setTimeout(
+          checkDuplicate,
+          400
+        );
+      }
+    }
+  );
+
+  element('patrimonio').addEventListener(
+    'blur',
+    checkDuplicate
+  );
+
+  element('scanButton').addEventListener(
+    'click',
+    openScanner
+  );
+
+  element('closeCameraButton').addEventListener(
+    'click',
+    closeScanner
+  );
+
+  element('torchButton').addEventListener(
+    'click',
+    toggleTorch
+  );
+
+  element('saveButton').addEventListener(
+    'click',
+    saveItem
+  );
+
+  async function initialize() {
+    prepareScannerInterface();
+
+    element('ambiente').value =
+      localStorage.getItem(
+        'inventarioAmbiente'
+      ) || 'Sala da Gerência';
+
+    element('categoria').value =
+      localStorage.getItem(
+        'inventarioCategoria'
+      ) || 'Móvel';
+
+    toggleLocation();
+    togglePatrimonio();
+
+    try {
+      const { data, error } =
+        await database.rpc(
+          'iniciar_inventario'
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateSummary(data.summary);
+
+      setConnectionStatus(
+        true,
+        'Banco de dados conectado'
+      );
+    } catch (error) {
+      console.error(error);
+
+      setConnectionStatus(
+        false,
+        'Falha na conexão com o banco'
+      );
+
+      showToast(
+        'Não foi possível conectar ao banco de dados.',
+        'error'
+      );
+    }
+  }
+
+  function prepareScannerInterface() {
+    const currentCameraElement =
+      element('cameraVideo');
+
+    /*
+      O Quagga precisa de uma área onde ele possa
+      criar internamente o vídeo da câmera.
+    */
+    if (
+      currentCameraElement &&
+      currentCameraElement.tagName === 'VIDEO'
+    ) {
+      const viewport =
+        document.createElement('div');
+
+      viewport.id = 'cameraVideo';
+      viewport.className = 'camera-viewport';
+
+      currentCameraElement.replaceWith(
+        viewport
+      );
+    }
+
+    /*
+      Troca o emoji pelo ícone flat branco.
+    */
+    element('torchButton').innerHTML = `
+      <svg
+        width="23"
+        height="23"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M9 2h6l1 5H8l1-5Z"></path>
+        <path d="M8 7h8l2 4v9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-9l2-4Z"></path>
+        <path d="M9 12h6"></path>
+      </svg>
+    `;
+
+    /*
+      Estilos necessários para o vídeo criado
+      automaticamente pelo Quagga.
+    */
+    if (
+      !document.getElementById(
+        'quaggaScannerStyles'
+      )
+    ) {
+      const style =
+        document.createElement('style');
+
+      style.id = 'quaggaScannerStyles';
+
+      style.textContent = `
+        #cameraVideo {
+          position: relative;
+          width: 100%;
+          height: min(65vh, 540px);
+          overflow: hidden;
+          background: #000;
+        }
+
+        #cameraVideo video {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          background: #000;
+        }
+
+        #cameraVideo canvas {
+          display: none !important;
+        }
+
+        #torchButton {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+        }
+
+        #torchButton.active {
+          border-color: #ffffff;
+          background: #0b57d0;
+          color: #ffffff;
+          box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+        }
+      `;
+
+      document.head.appendChild(style);
+    }
+  }
+
+  function getIdentification() {
+    return document.querySelector(
+      '[name="identificacao"]:checked'
+    ).value;
+  }
+
+  function toggleLocation() {
+    const isWarehouse =
+      element('ambiente').value ===
+      'Almoxarifado';
+
+    element('locationWrap')
+      .classList.toggle(
+        'show',
+        isWarehouse
+      );
+
+    if (!isWarehouse) {
+      element('localizacao').value = '';
+    }
+  }
+
+  function togglePatrimonio() {
+    const show =
+      getIdentification() ===
+      'Com etiqueta';
+
+    element('patrimonioWrap').style.display =
+      show ? 'block' : 'none';
+
+    if (!show) {
+      element('patrimonio').value = '';
+      resetPatrimonioHint();
+    }
+  }
+
+  async function checkDuplicate() {
+    const patrimonio =
+      element('patrimonio').value;
+
+    if (!patrimonio) {
+      return false;
+    }
+
+    try {
+      const { data, error } =
+        await database.rpc(
+          'verificar_patrimonio',
+          {
+            p_patrimonio: patrimonio
+          }
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      if (
+        element('patrimonio').value !==
+        data.patrimonio
+      ) {
+        return false;
+      }
+
+      if (data.exists) {
+        element('patrimonioHint').className =
+          'hint duplicate';
+
+        element('patrimonioHint').textContent =
+          'Já cadastrado: ' +
+          data.item +
+          ' · ' +
+          data.ambiente;
+
+        return true;
+      }
+
+      resetPatrimonioHint();
+      return false;
+    } catch (error) {
+      console.error(error);
+
+      showToast(
+        'Não foi possível verificar o patrimônio.',
+        'error'
+      );
+
+      return false;
+    }
+  }
+
+  async function loadQuagga() {
+    if (window.Quagga) {
+      return;
+    }
+
+    const existingScript =
+      document.getElementById(
+        'quaggaLibrary'
+      );
+
+    if (existingScript) {
+      await waitForQuagga();
+      return;
+    }
+
+    await new Promise(function (
+      resolve,
+      reject
+    ) {
+      const script =
+        document.createElement('script');
+
+      script.id = 'quaggaLibrary';
+
+      script.src =
+        'https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js';
+
+      script.onload = function () {
+        if (window.Quagga) {
+          resolve();
+        } else {
+          reject(
+            new Error(
+              'Quagga não foi iniciado.'
+            )
           );
-
-        if (error) {
-          throw error;
         }
+      };
 
-        updateSummary(data.summary);
-
-        setConnectionStatus(
-          true,
-          'Banco de dados conectado'
+      script.onerror = function () {
+        reject(
+          new Error(
+            'Não foi possível carregar o Quagga.'
+          )
         );
-      } catch (error) {
-        console.error(error);
+      };
 
-        setConnectionStatus(
-          false,
-          'Falha na conexão com o banco'
-        );
+      document.head.appendChild(script);
+    });
+  }
 
-        showToast(
-          'Não foi possível conectar ao banco de dados.',
-          'error'
-        );
-      }
+  function waitForQuagga() {
+    return new Promise(function (
+      resolve,
+      reject
+    ) {
+      let attempts = 0;
+
+      const timer = setInterval(
+        function () {
+          attempts += 1;
+
+          if (window.Quagga) {
+            clearInterval(timer);
+            resolve();
+            return;
+          }
+
+          if (attempts >= 50) {
+            clearInterval(timer);
+
+            reject(
+              new Error(
+                'Tempo esgotado ao carregar o leitor.'
+              )
+            );
+          }
+        },
+        100
+      );
+    });
+  }
+
+  async function openScanner() {
+    if (scannerStarted) {
+      return;
     }
 
-    function getIdentification() {
-      return document.querySelector(
-        '[name="identificacao"]:checked'
-      ).value;
-    }
+    barcodeAccepted = false;
+    torchEnabled = false;
+    activeCameraTrack = null;
 
-    function toggleLocation() {
-      const isWarehouse =
-        element('ambiente').value ===
-        'Almoxarifado';
+    lastDetectedCode = '';
+    detectionCount = 0;
+    lastDetectionTime = 0;
 
-      element('locationWrap')
-        .classList.toggle(
-          'show',
-          isWarehouse
-        );
+    element('torchButton').disabled =
+      true;
 
-      if (!isWarehouse) {
-        element('localizacao').value = '';
-      }
-    }
+    element('torchButton')
+      .classList.remove('active');
 
-    function togglePatrimonio() {
-      const show =
-        getIdentification() ===
-        'Com etiqueta';
+    element('cameraHelp').textContent =
+      'Carregando o leitor de patrimônio…';
 
-      element('patrimonioWrap').style.display =
-        show ? 'block' : 'none';
+    element('cameraDialog').showModal();
 
-      if (!show) {
-        element('patrimonio').value = '';
-        resetPatrimonioHint();
-      }
-    }
-
-    async function checkDuplicate() {
-      const patrimonio =
-        element('patrimonio').value;
-
-      if (!patrimonio) {
-        return false;
-      }
-
-      try {
-        const { data, error } =
-          await database.rpc(
-            'verificar_patrimonio',
-            {
-              p_patrimonio: patrimonio
-            }
-          );
-
-        if (error) {
-          throw error;
-        }
-
-        if (
-          element('patrimonio').value !==
-          data.patrimonio
-        ) {
-          return false;
-        }
-
-        if (data.exists) {
-          element('patrimonioHint').className =
-            'hint duplicate';
-
-          element('patrimonioHint').textContent =
-            'Já cadastrado: ' +
-            data.item +
-            ' · ' +
-            data.ambiente;
-
-          return true;
-        }
-
-        resetPatrimonioHint();
-        return false;
-      } catch (error) {
-        console.error(error);
-
-        showToast(
-          'Não foi possível verificar o patrimônio.',
-          'error'
-        );
-
-        return false;
-      }
-    }
-
-    async function openScanner() {
-      if (!window.ZXingBrowser) {
-        showToast(
-          'O leitor não foi carregado. Atualize a página.',
-          'error'
-        );
-
-        return;
-      }
-
-      barcodeAccepted = false;
-      torchEnabled = false;
-      activeCameraTrack = null;
-
-      element('torchButton').disabled = true;
-      element('torchButton').classList.remove('active');
+    try {
+      await loadQuagga();
 
       element('cameraHelp').textContent =
         'Abrindo a câmera em alta resolução…';
 
-      element('cameraDialog').showModal();
+      const viewport =
+        element('cameraVideo');
 
-      try {
-        scannerReader =
-          new ZXingBrowser.BrowserMultiFormatReader();
+      viewport.innerHTML = '';
 
-        const constraints = {
-          audio: false,
+      await new Promise(function (
+        resolve,
+        reject
+      ) {
+        Quagga.init(
+          {
+            inputStream: {
+              name: 'Inventário',
+              type: 'LiveStream',
+              target: viewport,
 
-          video: {
-            facingMode: {
-              ideal: 'environment'
+              constraints: {
+                facingMode: {
+                  ideal: 'environment'
+                },
+
+                width: {
+                  ideal: 1920
+                },
+
+                height: {
+                  ideal: 1080
+                },
+
+                aspectRatio: {
+                  ideal: 1.777777778
+                }
+              },
+
+              /*
+                O leitor analisará principalmente
+                a região central da imagem.
+              */
+              area: {
+                top: '22%',
+                right: '3%',
+                left: '3%',
+                bottom: '22%'
+              },
+
+              singleChannel: false
             },
 
-            width: {
-              ideal: 2560
+            /*
+              Mantém a resolução completa porque
+              a etiqueta da Prefeitura é pequena.
+            */
+            locator: {
+              halfSample: false,
+              patchSize: 'small'
             },
 
-            height: {
-              ideal: 1440
-            },
+            locate: true,
+            frequency: 12,
+            numOfWorkers: 0,
 
-            frameRate: {
-              ideal: 30
+            decoder: {
+              readers: [
+                'code_128_reader'
+              ],
+
+              multiple: false
             }
+          },
+
+          function (error) {
+            if (error) {
+              reject(error);
+              return;
+            }
+
+            resolve();
           }
-        };
-
-        scannerControls =
-          await scannerReader.decodeFromConstraints(
-            constraints,
-            element('cameraVideo'),
-            function (result) {
-              if (
-                result &&
-                !barcodeAccepted
-              ) {
-                acceptBarcode(
-                  result.getText()
-                );
-              }
-            }
-          );
-
-        setTimeout(
-          prepareCamera,
-          700
         );
-      } catch (error) {
-        console.error(error);
+      });
 
-        await closeScanner();
+      detectedHandler =
+        handleQuaggaDetection;
 
-        showToast(
-          'Não foi possível acessar a câmera. Verifique a permissão do navegador.',
-          'error'
-        );
-      }
-    }
-
-    async function prepareCamera() {
-      const video = element('cameraVideo');
-      const stream = video.srcObject;
-
-      if (!stream) {
-        return;
-      }
-
-      activeCameraTrack =
-        stream.getVideoTracks()[0];
-
-      if (!activeCameraTrack) {
-        return;
-      }
-
-      const capabilities =
-        activeCameraTrack.getCapabilities
-          ? activeCameraTrack.getCapabilities()
-          : {};
-
-      const settings =
-        activeCameraTrack.getSettings
-          ? activeCameraTrack.getSettings()
-          : {};
-
-      console.log(
-        'Recursos da câmera:',
-        capabilities
+      Quagga.onDetected(
+        detectedHandler
       );
 
-      console.log(
-        'Configuração da câmera:',
-        settings
+      Quagga.start();
+      scannerStarted = true;
+
+      setTimeout(
+        prepareQuaggaCamera,
+        800
       );
+    } catch (error) {
+      console.error(error);
 
-      await improveCameraFocus(
-        capabilities
-      );
-
-      if ('torch' in capabilities) {
-        element('torchButton').disabled = false;
-
-        element('cameraHelp').textContent =
-          'Aproxime a etiqueta até as barras ficarem nítidas. Use a lanterna se necessário.';
-      } else {
-        element('torchButton').disabled = true;
-
-        element('cameraHelp').textContent =
-          'Aproxime a etiqueta até as barras ficarem nítidas. A lanterna não foi liberada por este navegador.';
-      }
-    }
-
-    async function improveCameraFocus(
-      capabilities
-    ) {
-      if (!activeCameraTrack) {
-        return;
-      }
-
-      const advanced = [];
-
-      if (
-        Array.isArray(
-          capabilities.focusMode
-        ) &&
-        capabilities.focusMode.includes(
-          'continuous'
-        )
-      ) {
-        advanced.push({
-          focusMode: 'continuous'
-        });
-      }
-
-      if (
-        Array.isArray(
-          capabilities.exposureMode
-        ) &&
-        capabilities.exposureMode.includes(
-          'continuous'
-        )
-      ) {
-        advanced.push({
-          exposureMode: 'continuous'
-        });
-      }
-
-      if (capabilities.zoom) {
-        const minimum =
-          Number(capabilities.zoom.min) || 1;
-
-        const maximum =
-          Number(capabilities.zoom.max) || minimum;
-
-        const desiredZoom =
-          Math.min(
-            maximum,
-            Math.max(
-              minimum,
-              2
-            )
-          );
-
-        advanced.push({
-          zoom: desiredZoom
-        });
-      }
-
-      if (!advanced.length) {
-        return;
-      }
-
-      try {
-        await activeCameraTrack.applyConstraints({
-          advanced: advanced
-        });
-      } catch (error) {
-        console.warn(
-          'Não foi possível aplicar foco ou zoom:',
-          error
-        );
-      }
-    }
-
-    async function toggleTorch() {
-      if (!activeCameraTrack) {
-        showToast(
-          'A câmera ainda está sendo preparada.',
-          'error'
-        );
-
-        return;
-      }
-
-      const capabilities =
-        activeCameraTrack.getCapabilities
-          ? activeCameraTrack.getCapabilities()
-          : {};
-
-      if (!('torch' in capabilities)) {
-        showToast(
-          'A lanterna não está disponível neste navegador.',
-          'error'
-        );
-
-        return;
-      }
-
-      const newState =
-        !torchEnabled;
-
-      try {
-        await activeCameraTrack.applyConstraints({
-          advanced: [
-            {
-              torch: newState
-            }
-          ]
-        });
-
-        torchEnabled = newState;
-
-        element('torchButton')
-          .classList.toggle(
-            'active',
-            torchEnabled
-          );
-
-        element('torchButton').title =
-          torchEnabled
-            ? 'Desligar lanterna'
-            : 'Ligar lanterna';
-      } catch (error) {
-        console.error(error);
-
-        torchEnabled = false;
-
-        element('torchButton')
-          .classList.remove('active');
-
-        showToast(
-          'O celular não permitiu controlar a lanterna.',
-          'error'
-        );
-      }
-    }
-
-    function acceptBarcode(rawValue) {
-      const digits =
-        String(rawValue || '')
-          .replace(/\D/g, '');
-
-      /*
-        As etiquetas patrimoniais possuem seis números.
-        Leituras com outro tamanho são ignoradas.
-      */
-      if (
-        digits.length !== 6 ||
-        barcodeAccepted
-      ) {
-        return;
-      }
-
-      barcodeAccepted = true;
-
-      element('patrimonio').value =
-        digits;
-
-      closeScanner();
-      checkDuplicate();
-
-      if (navigator.vibrate) {
-        navigator.vibrate(100);
-      }
+      await closeScanner();
 
       showToast(
-        'Patrimônio ' +
-          digits +
-          ' lido.',
-        'success'
+        'Não foi possível abrir o novo leitor. Atualize a página e verifique a permissão da câmera.',
+        'error'
       );
+    }
+  }
 
-      setTimeout(function () {
-        element('item').focus();
-      }, 200);
+  async function prepareQuaggaCamera() {
+    if (
+      !window.Quagga ||
+      !Quagga.CameraAccess
+    ) {
+      return;
     }
 
-    async function closeScanner() {
-      try {
-        if (
-          activeCameraTrack &&
+    try {
+      activeCameraTrack =
+        Quagga.CameraAccess.getActiveTrack();
+    } catch (error) {
+      console.warn(error);
+    }
+
+    if (!activeCameraTrack) {
+      element('cameraHelp').textContent =
+        'Aproxime a etiqueta e mantenha as barras bem nítidas.';
+
+      return;
+    }
+
+    const capabilities =
+      activeCameraTrack.getCapabilities
+        ? activeCameraTrack.getCapabilities()
+        : {};
+
+    await applyContinuousFocus(
+      capabilities
+    );
+
+    if ('torch' in capabilities) {
+      element('torchButton').disabled =
+        false;
+
+      element('cameraHelp').textContent =
+        'Centralize somente o código patrimonial. Use a lanterna se faltar luz.';
+    } else {
+      element('torchButton').disabled =
+        true;
+
+      element('cameraHelp').textContent =
+        'Centralize somente o código patrimonial e mantenha o celular firme.';
+    }
+  }
+
+  async function applyContinuousFocus(
+    capabilities
+  ) {
+    if (!activeCameraTrack) {
+      return;
+    }
+
+    const advanced = [];
+
+    if (
+      Array.isArray(
+        capabilities.focusMode
+      ) &&
+      capabilities.focusMode.includes(
+        'continuous'
+      )
+    ) {
+      advanced.push({
+        focusMode: 'continuous'
+      });
+    }
+
+    if (
+      Array.isArray(
+        capabilities.exposureMode
+      ) &&
+      capabilities.exposureMode.includes(
+        'continuous'
+      )
+    ) {
+      advanced.push({
+        exposureMode: 'continuous'
+      });
+    }
+
+    /*
+      Não aplicamos zoom automático.
+      Em etiquetas pequenas, o zoom digital pode
+      reduzir a nitidez das barras.
+    */
+    if (!advanced.length) {
+      return;
+    }
+
+    try {
+      await activeCameraTrack.applyConstraints({
+        advanced: advanced
+      });
+    } catch (error) {
+      console.warn(
+        'O foco contínuo não foi aplicado:',
+        error
+      );
+    }
+  }
+
+  function handleQuaggaDetection(result) {
+    if (
+      barcodeAccepted ||
+      !result ||
+      !result.codeResult
+    ) {
+      return;
+    }
+
+    const format =
+      String(
+        result.codeResult.format || ''
+      ).toLowerCase();
+
+    const digits =
+      String(
+        result.codeResult.code || ''
+      )
+        .replace(/\D/g, '');
+
+    /*
+      Aceita somente Code 128 com seis números.
+    */
+    if (
+      format !== 'code_128' ||
+      digits.length !== 6
+    ) {
+      return;
+    }
+
+    const currentTime =
+      Date.now();
+
+    /*
+      Confirma a mesma leitura duas vezes.
+      Isso evita aceitar um número interpretado
+      incorretamente em apenas um quadro.
+    */
+    if (
+      digits === lastDetectedCode &&
+      currentTime - lastDetectionTime <= 1800
+    ) {
+      detectionCount += 1;
+    } else {
+      lastDetectedCode = digits;
+      detectionCount = 1;
+    }
+
+    lastDetectionTime =
+      currentTime;
+
+    if (detectionCount === 1) {
+      element('cameraHelp').textContent =
+        'Código encontrado. Mantenha o celular parado para confirmar…';
+    }
+
+    if (detectionCount >= 2) {
+      acceptBarcode(digits);
+    }
+  }
+
+  async function toggleTorch() {
+    if (!activeCameraTrack) {
+      showToast(
+        'A câmera ainda está sendo preparada.',
+        'error'
+      );
+
+      return;
+    }
+
+    const capabilities =
+      activeCameraTrack.getCapabilities
+        ? activeCameraTrack.getCapabilities()
+        : {};
+
+    if (!('torch' in capabilities)) {
+      showToast(
+        'A lanterna não está disponível neste navegador.',
+        'error'
+      );
+
+      return;
+    }
+
+    const newState =
+      !torchEnabled;
+
+    try {
+      await activeCameraTrack.applyConstraints({
+        advanced: [
+          {
+            torch: newState
+          }
+        ]
+      });
+
+      torchEnabled = newState;
+
+      element('torchButton')
+        .classList.toggle(
+          'active',
           torchEnabled
-        ) {
-          await activeCameraTrack.applyConstraints({
-            advanced: [
-              {
-                torch: false
-              }
-            ]
-          });
-        }
-      } catch (error) {
-        console.warn(
-          'Não foi possível desligar a lanterna:',
-          error
         );
-      }
+
+      element('torchButton').title =
+        torchEnabled
+          ? 'Desligar lanterna'
+          : 'Ligar lanterna';
+    } catch (error) {
+      console.error(error);
 
       torchEnabled = false;
 
       element('torchButton')
         .classList.remove('active');
 
-      element('torchButton').disabled =
-        true;
+      showToast(
+        'O celular não permitiu controlar a lanterna.',
+        'error'
+      );
+    }
+  }
 
-      if (scannerControls) {
-        try {
-          scannerControls.stop();
-        } catch (error) {
-          console.warn(error);
-        }
-      }
+  function acceptBarcode(rawValue) {
+    const digits =
+      String(rawValue || '')
+        .replace(/\D/g, '');
 
-      scannerControls = null;
-      scannerReader = null;
-      activeCameraTrack = null;
-
-      const video =
-        element('cameraVideo');
-
-      if (video.srcObject) {
-        video.srcObject
-          .getTracks()
-          .forEach(function (track) {
-            track.stop();
-          });
-      }
-
-      video.srcObject = null;
-
-      if (element('cameraDialog').open) {
-        element('cameraDialog').close();
-      }
+    if (
+      digits.length !== 6 ||
+      barcodeAccepted
+    ) {
+      return;
     }
 
-    async function saveItem() {
-      if (isSaving) {
-        return;
-      }
+    barcodeAccepted = true;
 
+    element('patrimonio').value =
+      digits;
+
+    closeScanner();
+    checkDuplicate();
+
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+
+    showToast(
+      'Patrimônio ' +
+        digits +
+        ' lido.',
+      'success'
+    );
+
+    setTimeout(function () {
+      element('item').focus();
+    }, 200);
+  }
+
+  async function closeScanner() {
+    try {
       if (
-        !element('inventoryForm')
-          .reportValidity()
+        activeCameraTrack &&
+        torchEnabled
       ) {
-        return;
-      }
-
-      if (
-        getIdentification() ===
-          'Com etiqueta' &&
-        !element('patrimonio').value
-      ) {
-        showToast(
-          'Leia ou digite o patrimônio.',
-          'error'
-        );
-
-        element('patrimonio').focus();
-        return;
-      }
-
-      if (
-        getIdentification() ===
-          'Com etiqueta' &&
-        element('patrimonio').value.length !== 6
-      ) {
-        showToast(
-          'O patrimônio deve possuir 6 números.',
-          'error'
-        );
-
-        element('patrimonio').focus();
-        return;
-      }
-
-      if (
-        getIdentification() ===
-        'Com etiqueta'
-      ) {
-        const duplicated =
-          await checkDuplicate();
-
-        if (duplicated) {
-          showToast(
-            'Esse patrimônio já está cadastrado.',
-            'error'
-          );
-
-          return;
-        }
-      }
-
-      const payload = {
-        patrimonio:
-          element('patrimonio').value,
-
-        identificacao:
-          getIdentification(),
-
-        ambiente:
-          element('ambiente').value,
-
-        categoria:
-          element('categoria').value,
-
-        item:
-          element('item').value.trim(),
-
-        marcaModelo:
-          element('marcaModelo').value.trim(),
-
-        quantidade:
-          Number(
-            element('quantidade').value
-          ) || 1,
-
-        localizacao:
-          element('localizacao').value.trim(),
-
-        observacao:
-          element('observacao').value.trim()
-      };
-
-      setSaving(true);
-
-      try {
-        const { data, error } =
-          await database.rpc(
-            'salvar_item',
+        await activeCameraTrack.applyConstraints({
+          advanced: [
             {
-              p_dados: payload
+              torch: false
             }
-          );
+          ]
+        });
+      }
+    } catch (error) {
+      console.warn(
+        'Não foi possível desligar a lanterna:',
+        error
+      );
+    }
 
-        if (error) {
-          throw error;
-        }
+    torchEnabled = false;
 
-        updateSummary(data.summary);
-        clearForNext();
+    element('torchButton')
+      .classList.remove('active');
 
-        if (navigator.vibrate) {
-          navigator.vibrate(
-            [70, 40, 70]
-          );
-        }
+    element('torchButton').disabled =
+      true;
 
-        showToast(
-          'Item salvo: ' +
-            data.id,
-          'success'
+    if (
+      window.Quagga &&
+      detectedHandler
+    ) {
+      try {
+        Quagga.offDetected(
+          detectedHandler
         );
       } catch (error) {
-        console.error(error);
-
-        let message =
-          error.message ||
-          'Não foi possível salvar o item.';
-
-        if (
-          message
-            .toLowerCase()
-            .includes(
-              'já está cadastrado'
-            )
-        ) {
-          message =
-            'Esse patrimônio já está cadastrado.';
-        }
-
-        showToast(
-          message,
-          'error'
-        );
-      } finally {
-        setSaving(false);
+        console.warn(error);
       }
     }
 
-    function clearForNext() {
-      element('patrimonio').value = '';
-      element('item').value = '';
-      element('marcaModelo').value = '';
-      element('quantidade').value = '1';
-      element('observacao').value = '';
+    detectedHandler = null;
 
-      resetPatrimonioHint();
-
-      if (
-        getIdentification() !==
-        'Com etiqueta'
-      ) {
-        document.querySelector(
-          '[name="identificacao"]' +
-          '[value="Com etiqueta"]'
-        ).checked = true;
-
-        togglePatrimonio();
+    if (
+      window.Quagga &&
+      scannerStarted
+    ) {
+      try {
+        Quagga.stop();
+      } catch (error) {
+        console.warn(error);
       }
+    }
 
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+    scannerStarted = false;
+    activeCameraTrack = null;
+
+    const viewport =
+      element('cameraVideo');
+
+    if (viewport) {
+      const videos =
+        viewport.querySelectorAll('video');
+
+      videos.forEach(function (video) {
+        if (video.srcObject) {
+          video.srcObject
+            .getTracks()
+            .forEach(function (track) {
+              track.stop();
+            });
+        }
       });
 
+      viewport.innerHTML = '';
+    }
+
+    if (element('cameraDialog').open) {
+      element('cameraDialog').close();
+    }
+  }
+
+  async function saveItem() {
+    if (isSaving) {
+      return;
+    }
+
+    if (
+      !element('inventoryForm')
+        .reportValidity()
+    ) {
+      return;
+    }
+
+    if (
+      getIdentification() ===
+        'Com etiqueta' &&
+      !element('patrimonio').value
+    ) {
+      showToast(
+        'Leia ou digite o patrimônio.',
+        'error'
+      );
+
+      element('patrimonio').focus();
+      return;
+    }
+
+    if (
+      getIdentification() ===
+        'Com etiqueta' &&
+      element('patrimonio').value.length !== 6
+    ) {
+      showToast(
+        'O patrimônio deve possuir 6 números.',
+        'error'
+      );
+
+      element('patrimonio').focus();
+      return;
+    }
+
+    if (
+      getIdentification() ===
+      'Com etiqueta'
+    ) {
+      const duplicated =
+        await checkDuplicate();
+
+      if (duplicated) {
+        showToast(
+          'Esse patrimônio já está cadastrado.',
+          'error'
+        );
+
+        return;
+      }
+    }
+
+    const payload = {
+      patrimonio:
+        element('patrimonio').value,
+
+      identificacao:
+        getIdentification(),
+
+      ambiente:
+        element('ambiente').value,
+
+      categoria:
+        element('categoria').value,
+
+      item:
+        element('item').value.trim(),
+
+      marcaModelo:
+        element('marcaModelo').value.trim(),
+
+      quantidade:
+        Number(
+          element('quantidade').value
+        ) || 1,
+
+      localizacao:
+        element('localizacao').value.trim(),
+
+      observacao:
+        element('observacao').value.trim()
+    };
+
+    setSaving(true);
+
+    try {
+      const { data, error } =
+        await database.rpc(
+          'salvar_item',
+          {
+            p_dados: payload
+          }
+        );
+
+      if (error) {
+        throw error;
+      }
+
+      updateSummary(data.summary);
+      clearForNext();
+
+      if (navigator.vibrate) {
+        navigator.vibrate(
+          [70, 40, 70]
+        );
+      }
+
+      showToast(
+        'Item salvo: ' +
+          data.id,
+        'success'
+      );
+    } catch (error) {
+      console.error(error);
+
+      let message =
+        error.message ||
+        'Não foi possível salvar o item.';
+
+      if (
+        message
+          .toLowerCase()
+          .includes(
+            'já está cadastrado'
+          )
+      ) {
+        message =
+          'Esse patrimônio já está cadastrado.';
+      }
+
+      showToast(
+        message,
+        'error'
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function clearForNext() {
+    element('patrimonio').value = '';
+    element('item').value = '';
+    element('marcaModelo').value = '';
+    element('quantidade').value = '1';
+    element('observacao').value = '';
+
+    resetPatrimonioHint();
+
+    if (
+      getIdentification() !==
+      'Com etiqueta'
+    ) {
+      document.querySelector(
+        '[name="identificacao"]' +
+        '[value="Com etiqueta"]'
+      ).checked = true;
+
+      togglePatrimonio();
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+    setTimeout(function () {
+      element('patrimonio').focus();
+    }, 250);
+  }
+
+  function resetPatrimonioHint() {
+    element('patrimonioHint').className =
+      'hint';
+
+    element('patrimonioHint').textContent =
+      'Aceita a etiqueta Code 128 da Prefeitura.';
+  }
+
+  function setSaving(active) {
+    isSaving = active;
+
+    element('saveButton').disabled =
+      active;
+
+    element('saveButton').textContent =
+      active
+        ? 'Salvando…'
+        : 'Salvar e cadastrar próximo';
+  }
+
+  function updateSummary(summary) {
+    summary = summary || {};
+
+    element('total').textContent =
+      summary.total || 0;
+
+    element('principalCount').textContent =
+      summary.principal || 0;
+
+    element('gerenciaCount').textContent =
+      summary.gerencia || 0;
+
+    element('almoxCount').textContent =
+      summary.almoxarifado || 0;
+  }
+
+  function setConnectionStatus(
+    connected,
+    message
+  ) {
+    const status =
+      element('connectionStatus');
+
+    status.className =
+      connected
+        ? 'connection connected'
+        : 'connection error';
+
+    element('connectionText').textContent =
+      message;
+  }
+
+  function showToast(
+    message,
+    type
+  ) {
+    const toast =
+      element('toast');
+
+    toast.textContent =
+      message;
+
+    toast.className =
+      'toast show ' +
+      (type || '');
+
+    clearTimeout(toast.timer);
+
+    toast.timer =
       setTimeout(function () {
-        element('patrimonio').focus();
-      }, 250);
-    }
-
-    function resetPatrimonioHint() {
-      element('patrimonioHint').className =
-        'hint';
-
-      element('patrimonioHint').textContent =
-        'Aceita a etiqueta Code 128 da Prefeitura.';
-    }
-
-    function setSaving(active) {
-      isSaving = active;
-
-      element('saveButton').disabled =
-        active;
-
-      element('saveButton').textContent =
-        active
-          ? 'Salvando…'
-          : 'Salvar e cadastrar próximo';
-    }
-
-    function updateSummary(summary) {
-      summary = summary || {};
-
-      element('total').textContent =
-        summary.total || 0;
-
-      element('principalCount').textContent =
-        summary.principal || 0;
-
-      element('gerenciaCount').textContent =
-        summary.gerencia || 0;
-
-      element('almoxCount').textContent =
-        summary.almoxarifado || 0;
-    }
-
-    function setConnectionStatus(
-      connected,
-      message
-    ) {
-      const status =
-        element('connectionStatus');
-
-      status.className =
-        connected
-          ? 'connection connected'
-          : 'connection error';
-
-      element('connectionText').textContent =
-        message;
-    }
-
-    function showToast(
-      message,
-      type
-    ) {
-      const toast =
-        element('toast');
-
-      toast.textContent =
-        message;
-
-      toast.className =
-        'toast show ' +
-        (type || '');
-
-      clearTimeout(toast.timer);
-
-      toast.timer =
-        setTimeout(function () {
-          toast.className = 'toast';
-        }, 4000);
-    }
-  </script>
+        toast.className = 'toast';
+      }, 4000);
+  }
+</script>
 </body>
 </html>

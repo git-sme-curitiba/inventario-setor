@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#0b57d0">
+
+  <title>Inventário do Setor</title>
+
+  <script src="https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --blue: #0b57d0;
+      --blue-light: #e8f0fe;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d8dee9;
+      --background: #f4f7fb;
+      --success: #137333;
+      --danger: #b3261e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--background);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      font-size: 15px;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .app {
+      max-width: 620px;
+      min-height: 100vh;
+      margin: auto;
+      background: #ffffff;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding:
+        calc(16px + env(safe-area-inset-top))
+        18px
+        12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(10px);
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .count {
+      color: var(--blue);
+      font-size: 19px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .connection {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .connection-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #98a2b3;
+    }
+
+    .connection.connected .connection-dot {
+      background: var(--success);
+    }
+
+    .connection.error .connection-dot {
+      background: var(--danger);
+    }
+
+    main {
+      padding: 18px 16px 115px;
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-bottom: 22px;
+    }
+
+    .pill {
+      min-width: 0;
+      padding: 11px 6px;
+      border-radius: 14px;
+      background: var(--blue-light);
+      color: #344054;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .pill b {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--blue);
+      font-size: 19px;
+    }
+
+    .section {
+      margin-bottom: 23px;
+    }
+
+    .section-title {
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      outline: none;
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.1);
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .segments {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .segments label {
+      margin: 0;
+    }
+
+    .segments input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segments span {
+      display: flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: #344054;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .segments input:checked + span {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .scan-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 9px;
+    }
+
+    .scan-button {
+      min-width: 92px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 13px;
+      background: var(--ink);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .duplicate {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .conditional {
+      display: none;
+    }
+
+    .conditional.show {
+      display: block;
+    }
+
+    .footer {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 4;
+      padding:
+        12px
+        16px
+        calc(12px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(10px);
+    }
+
+    .footer-inner {
+      max-width: 588px;
+      margin: auto;
+    }
+
+    .save-button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 15px;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 850;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.55;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 98px;
+      left: 50%;
+      z-index: 30;
+      width: max-content;
+      max-width: 90%;
+      padding: 13px 17px;
+      border-radius: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(20px);
+      transition: 0.2s;
+      background: #1f2937;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--danger);
+    }
+
+    dialog {
+      width: min(94vw, 600px);
+      padding: 0;
+      border: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #111111;
+      color: #ffffff;
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.78);
+    }
+
+    .camera-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .camera-header strong {
+      font-size: 14px;
+    }
+
+    .camera-header button {
+      padding: 9px 13px;
+      border: 0;
+      border-radius: 9px;
+      background: #333333;
+      color: #ffffff;
+    }
+
+    .camera-area {
+      position: relative;
+      overflow: hidden;
+      background: #000000;
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: min(65vh, 540px);
+      object-fit: cover;
+      background: #000000;
+    }
+
+    .scan-guide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 88%;
+      height: 130px;
+      border: 3px solid #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.43);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 50%;
+      left: 8%;
+      width: 84%;
+      height: 2px;
+      background: #ff334f;
+      box-shadow: 0 0 10px #ff334f;
+      animation: scan 1.5s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      from {
+        transform: translateY(-48px);
+      }
+
+      to {
+        transform: translateY(48px);
+      }
+    }
+
+    .camera-help {
+      padding: 13px 16px 18px;
+      color: #dddddd;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 430px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .segments span {
+        font-size: 11px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="top">
+        <div>
+          <h1>Inventário do Setor</h1>
+
+          <div class="subtitle">
+            Cadastro rápido pelo celular
+          </div>
+        </div>
+
+        <div class="count">
+          <span id="total">0</span> itens
+        </div>
+      </div>
+
+      <div class="connection" id="connectionStatus">
+        <span class="connection-dot"></span>
+        <span id="connectionText">Conectando ao banco de dados…</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="progress">
+        <div class="pill">
+          <b id="gerenciaCount">0</b>
+          Gerência
+        </div>
+
+        <div class="pill">
+          <b id="principalCount">0</b>
+          Sala principal
+        </div>
+
+        <div class="pill">
+          <b id="almoxCount">0</b>
+          Almoxarifado
+        </div>
+      </div>
+
+      <form id="inventoryForm">
+        <section class="section">
+          <div class="section-title">
+            Onde está
+          </div>
+
+          <div class="field">
+            <label for="ambiente">
+              Ambiente
+            </label>
+
+            <select id="ambiente" required>
+              <option value="Sala da Gerência">
+                Sala da Gerência
+              </option>
+
+              <option value="Sala Principal">
+                Sala Principal
+              </option>
+
+              <option value="Almoxarifado">
+                Almoxarifado
+              </option>
+            </select>
+          </div>
+
+          <div
+            class="field conditional"
+            id="locationWrap"
+          >
+            <label for="localizacao">
+              Localização no almoxarifado
+            </label>
+
+            <input
+              id="localizacao"
+              autocomplete="off"
+              placeholder="Ex.: Estante A · Prateleira 2"
+            >
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title">
+            Identificação
+          </div>
+
+          <div class="field">
+            <label>
+              Etiqueta patrimonial
+            </label>
+
+            <div class="segments">
+              <label>
+                <input
+                  type="radio"
+                  name="identificacao"
+                  value="Com etiqueta"
+                  checked
+                >
+
+                <span>Com etiqueta</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="identificacao"
+                  value="Sem etiqueta"
+                >
+
+                <span>Sem etiqueta</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="identificacao"
+                  value="Etiqueta ilegível"
+                >
+
+                <span>Ilegível</span>
+              </label>
+            </div>
+          </div>
+
+          <div
+            class="field"
+            id="patrimonioWrap"
+          >
+            <label for="patrimonio">
+              Patrimônio
+            </label>
+
+            <div class="scan-row">
+              <input
+                id="patrimonio"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="Leia ou digite os 6 números"
+              >
+
+              <button
+                class="scan-button"
+                id="scanButton"
+                type="button"
+              >
+                ▣ Ler
+              </button>
+            </div>
+
+            <div
+              class="hint"
+              id="patrimonioHint"
+            >
+              Aceita a etiqueta Code 128 da Prefeitura.
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title">
+            O que é
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="categoria">
+                Categoria
+              </label>
+
+              <select id="categoria" required>
+                <option value="Móvel">
+                  Móvel
+                </option>
+
+                <option value="Tecnologia">
+                  Tecnologia
+                </option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="quantidade">
+                Quantidade
+              </label>
+
+              <input
+                id="quantidade"
+                type="number"
+                min="1"
+                step="1"
+                value="1"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="item">
+              Item
+            </label>
+
+            <input
+              id="item"
+              list="itens"
+              autocomplete="off"
+              placeholder="Ex.: Cadeira, monitor, armário"
+              required
+            >
+
+            <datalist id="itens">
+              <option value="Cadeira">
+              <option value="Mesa">
+              <option value="Armário">
+              <option value="Gaveteiro">
+              <option value="Estante">
+              <option value="Computador">
+              <option value="Monitor">
+              <option value="Notebook">
+              <option value="Impressora">
+              <option value="Telefone">
+              <option value="Teclado">
+              <option value="Mouse">
+              <option value="Nobreak">
+              <option value="Projetor">
+              <option value="Televisor">
+            </datalist>
+          </div>
+
+          <div class="field">
+            <label for="marcaModelo">
+              Marca/modelo
+              <span class="hint">(opcional)</span>
+            </label>
+
+            <input
+              id="marcaModelo"
+              autocomplete="off"
+              placeholder="Ex.: Dell P2422H"
+            >
+          </div>
+
+          <div class="field">
+            <label for="observacao">
+              Observação
+              <span class="hint">(opcional)</span>
+            </label>
+
+            <textarea
+              id="observacao"
+              placeholder="Algo importante sobre este item"
+            ></textarea>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <button
+        class="save-button"
+        id="saveButton"
+        type="button"
+      >
+        Salvar e cadastrar próximo
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="toast"
+    id="toast"
+  ></div>
+
+  <dialog id="cameraDialog">
+    <div class="camera-header">
+      <strong>
+        Aponte para o código de barras
+      </strong>
+
+      <button
+        id="closeCameraButton"
+        type="button"
+      >
+        Fechar
+      </button>
+    </div>
+
+    <div class="camera-area">
+      <video
+        id="cameraVideo"
+        playsinline
+        muted
+      ></video>
+
+      <div class="scan-guide"></div>
+      <div class="scan-line"></div>
+    </div>
+
+    <div class="camera-help">
+      Centralize o código dentro do retângulo.
+      A leitura será automática.
+    </div>
+  </dialog>
+
+  <script>
+    const SUPABASE_URL =
+      'https://yipfkwxhpahpuiizkcny.supabase.co';
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI';
+
+    const database =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+      );
+
+    const element = id =>
+      document.getElementById(id);
+
+    let scannerControls = null;
+    let scannerReader = null;
+    let checkingTimer = null;
+    let barcodeAccepted = false;
+    let isSaving = false;
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      initialize
+    );
+
+    element('ambiente').addEventListener(
+      'change',
+      function () {
+        localStorage.setItem(
+          'inventarioAmbiente',
+          element('ambiente').value
+        );
+
+        toggleLocation();
+      }
+    );
+
+    element('categoria').addEventListener(
+      'change',
+      function () {
+        localStorage.setItem(
+          'inventarioCategoria',
+          element('categoria').value
+        );
+      }
+    );
+
+    document
+      .querySelectorAll('[name="identificacao"]')
+      .forEach(function (radio) {
+        radio.addEventListener(
+          'change',
+          togglePatrimonio
+        );
+      });
+
+    element('patrimonio').addEventListener(
+      'input',
+      function () {
+        element('patrimonio').value =
+          element('patrimonio').value
+            .replace(/\D/g, '')
+            .slice(0, 20);
+
+        resetPatrimonioHint();
+        clearTimeout(checkingTimer);
+
+        if (element('patrimonio').value) {
+          checkingTimer =
+            setTimeout(
+              checkDuplicate,
+              400
+            );
+        }
+      }
+    );
+
+    element('patrimonio').addEventListener(
+      'blur',
+      checkDuplicate
+    );
+
+    element('scanButton').addEventListener(
+      'click',
+      openScanner
+    );
+
+    element('closeCameraButton').addEventListener(
+      'click',
+      closeScanner
+    );
+
+    element('saveButton').addEventListener(
+      'click',
+      saveItem
+    );
+
+    async function initialize() {
+      element('ambiente').value =
+        localStorage.getItem(
+          'inventarioAmbiente'
+        ) || 'Sala da Gerência';
+
+      element('categoria').value =
+        localStorage.getItem(
+          'inventarioCategoria'
+        ) || 'Móvel';
+
+      toggleLocation();
+      togglePatrimonio();
+
+      try {
+        const { data, error } =
+          await database.rpc(
+            'iniciar_inventario'
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        updateSummary(data.summary);
+        setConnectionStatus(
+          true,
+          'Banco de dados conectado'
+        );
+      } catch (error) {
+        console.error(error);
+
+        setConnectionStatus(
+          false,
+          'Falha na conexão com o banco'
+        );
+
+        showToast(
+          'Não foi possível conectar ao banco de dados.',
+          'error'
+        );
+      }
+    }
+
+    function getIdentification() {
+      return document.querySelector(
+        '[name="identificacao"]:checked'
+      ).value;
+    }
+
+    function toggleLocation() {
+      const isWarehouse =
+        element('ambiente').value ===
+        'Almoxarifado';
+
+      element('locationWrap')
+        .classList.toggle(
+          'show',
+          isWarehouse
+        );
+
+      if (!isWarehouse) {
+        element('localizacao').value = '';
+      }
+    }
+
+    function togglePatrimonio() {
+      const show =
+        getIdentification() ===
+        'Com etiqueta';
+
+      element('patrimonioWrap')
+        .style.display =
+          show ? 'block' : 'none';
+
+      if (!show) {
+        element('patrimonio').value = '';
+        resetPatrimonioHint();
+      }
+    }
+
+    async function checkDuplicate() {
+      const patrimonio =
+        element('patrimonio').value;
+
+      if (!patrimonio) {
+        return false;
+      }
+
+      try {
+        const { data, error } =
+          await database.rpc(
+            'verificar_patrimonio',
+            {
+              p_patrimonio:
+                patrimonio
+            }
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        if (
+          element('patrimonio').value !==
+          data.patrimonio
+        ) {
+          return false;
+        }
+
+        if (data.exists) {
+          element('patrimonioHint')
+            .className =
+              'hint duplicate';
+
+          element('patrimonioHint')
+            .textContent =
+              'Já cadastrado: ' +
+              data.item +
+              ' · ' +
+              data.ambiente;
+
+          return true;
+        }
+
+        resetPatrimonioHint();
+        return false;
+      } catch (error) {
+        console.error(error);
+
+        showToast(
+          'Não foi possível verificar o patrimônio.',
+          'error'
+        );
+
+        return false;
+      }
+    }
+
+    async function openScanner() {
+      if (!window.ZXingBrowser) {
+        showToast(
+          'O leitor de código não foi carregado. Atualize a página.',
+          'error'
+        );
+
+        return;
+      }
+
+      barcodeAccepted = false;
+
+      element('cameraDialog')
+        .showModal();
+
+      try {
+        scannerReader =
+          new ZXingBrowser
+            .BrowserMultiFormatReader();
+
+        const constraints = {
+          audio: false,
+
+          video: {
+            facingMode: {
+              ideal: 'environment'
+            },
+
+            width: {
+              ideal: 1920
+            },
+
+            height: {
+              ideal: 1080
+            }
+          }
+        };
+
+        scannerControls =
+          await scannerReader
+            .decodeFromConstraints(
+              constraints,
+              element('cameraVideo'),
+              function (result) {
+                if (
+                  result &&
+                  !barcodeAccepted
+                ) {
+                  acceptBarcode(
+                    result.getText()
+                  );
+                }
+              }
+            );
+      } catch (error) {
+        console.error(error);
+        closeScanner();
+
+        showToast(
+          'Não foi possível acessar a câmera. Autorize a câmera nas configurações do navegador.',
+          'error'
+        );
+      }
+    }
+
+    function acceptBarcode(rawValue) {
+      const digits =
+        String(rawValue || '')
+          .replace(/\D/g, '');
+
+      if (
+        !digits ||
+        barcodeAccepted
+      ) {
+        return;
+      }
+
+      barcodeAccepted = true;
+
+      element('patrimonio').value =
+        digits;
+
+      closeScanner();
+      checkDuplicate();
+
+      if (navigator.vibrate) {
+        navigator.vibrate(100);
+      }
+
+      showToast(
+        'Patrimônio ' +
+          digits +
+          ' lido.',
+        'success'
+      );
+
+      setTimeout(function () {
+        element('item').focus();
+      }, 200);
+    }
+
+    function closeScanner() {
+      if (scannerControls) {
+        scannerControls.stop();
+      }
+
+      scannerControls = null;
+      scannerReader = null;
+
+      const video =
+        element('cameraVideo');
+
+      if (video.srcObject) {
+        video.srcObject
+          .getTracks()
+          .forEach(function (track) {
+            track.stop();
+          });
+      }
+
+      video.srcObject = null;
+
+      if (
+        element('cameraDialog').open
+      ) {
+        element('cameraDialog').close();
+      }
+    }
+
+    async function saveItem() {
+      if (isSaving) {
+        return;
+      }
+
+      if (
+        !element('inventoryForm')
+          .reportValidity()
+      ) {
+        return;
+      }
+
+      if (
+        getIdentification() ===
+          'Com etiqueta' &&
+        !element('patrimonio').value
+      ) {
+        showToast(
+          'Leia ou digite o patrimônio.',
+          'error'
+        );
+
+        element('patrimonio').focus();
+        return;
+      }
+
+      if (
+        getIdentification() ===
+        'Com etiqueta'
+      ) {
+        const duplicated =
+          await checkDuplicate();
+
+        if (duplicated) {
+          showToast(
+            'Esse patrimônio já está cadastrado.',
+            'error'
+          );
+
+          return;
+        }
+      }
+
+      const payload = {
+        patrimonio:
+          element('patrimonio').value,
+
+        identificacao:
+          getIdentification(),
+
+        ambiente:
+          element('ambiente').value,
+
+        categoria:
+          element('categoria').value,
+
+        item:
+          element('item').value.trim(),
+
+        marcaModelo:
+          element('marcaModelo')
+            .value.trim(),
+
+        quantidade:
+          Number(
+            element('quantidade').value
+          ) || 1,
+
+        localizacao:
+          element('localizacao')
+            .value.trim(),
+
+        observacao:
+          element('observacao')
+            .value.trim()
+      };
+
+      setSaving(true);
+
+      try {
+        const { data, error } =
+          await database.rpc(
+            'salvar_item',
+            {
+              p_dados: payload
+            }
+          );
+
+        if (error) {
+          throw error;
+        }
+
+        updateSummary(data.summary);
+        clearForNext();
+
+        if (navigator.vibrate) {
+          navigator.vibrate(
+            [70, 40, 70]
+          );
+        }
+
+        showToast(
+          'Item salvo: ' +
+            data.id,
+          'success'
+        );
+      } catch (error) {
+        console.error(error);
+
+        let message =
+          error.message ||
+          'Não foi possível salvar o item.';
+
+        if (
+          message
+            .toLowerCase()
+            .includes(
+              'já está cadastrado'
+            )
+        ) {
+          message =
+            'Esse patrimônio já está cadastrado.';
+        }
+
+        showToast(
+          message,
+          'error'
+        );
+      } finally {
+        setSaving(false);
+      }
+    }
+
+    function clearForNext() {
+      element('patrimonio').value = '';
+      element('item').value = '';
+      element('marcaModelo').value = '';
+      element('quantidade').value = '1';
+      element('observacao').value = '';
+
+      resetPatrimonioHint();
+
+      if (
+        getIdentification() !==
+        'Com etiqueta'
+      ) {
+        document.querySelector(
+          '[name="identificacao"]' +
+          '[value="Com etiqueta"]'
+        ).checked = true;
+
+        togglePatrimonio();
+      }
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+
+      setTimeout(function () {
+        element('patrimonio').focus();
+      }, 250);
+    }
+
+    function resetPatrimonioHint() {
+      element('patrimonioHint')
+        .className = 'hint';
+
+      element('patrimonioHint')
+        .textContent =
+          'Aceita a etiqueta Code 128 da Prefeitura.';
+    }
+
+    function setSaving(active) {
+      isSaving = active;
+
+      element('saveButton').disabled =
+        active;
+
+      element('saveButton').textContent =
+        active
+          ? 'Salvando…'
+          : 'Salvar e cadastrar próximo';
+    }
+
+    function updateSummary(summary) {
+      summary = summary || {};
+
+      element('total').textContent =
+        summary.total || 0;
+
+      element('principalCount')
+        .textContent =
+          summary.principal || 0;
+
+      element('gerenciaCount')
+        .textContent =
+          summary.gerencia || 0;
+
+      element('almoxCount')
+        .textContent =
+          summary.almoxarifado || 0;
+    }
+
+    function setConnectionStatus(
+      connected,
+      message
+    ) {
+      const status =
+        element('connectionStatus');
+
+      status.className =
+        connected
+          ? 'connection connected'
+          : 'connection error';
+
+      element('connectionText')
+        .textContent = message;
+    }
+
+    function showToast(
+      message,
+      type
+    ) {
+      const toast =
+        element('toast');
+
+      toast.textContent = message;
+
+      toast.className =
+        'toast show ' +
+        (type || '');
+
+      clearTimeout(toast.timer);
+
+      toast.timer =
+        setTimeout(function () {
+          toast.className = 'toast';
+        }, 4000);
+    }
+  </script>
+</body>
+</html>

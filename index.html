@@ -2,384 +2,600 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#123d32">
+  <title>ACERVO · Inventário do setor</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
-
-  <meta name="theme-color" content="#0b57d0">
-  <title>Inventário do Setor</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
     :root {
-      --blue: #0b57d0;
-      --blue-light: #e8f0fe;
-      --ink: #172033;
-      --muted: #667085;
-      --line: #d8dee9;
-      --background: #f4f7fb;
-      --success: #137333;
-      --danger: #b3261e;
-      --warning: #e8a000;
+      --paper: #f3f4ef;
+      --white: #fff;
+      --forest: #123d32;
+      --forest-dark: #0b2b23;
+      --lime: #d7f58b;
+      --ink: #20372f;
+      --muted: #738079;
+      --line: #e0e5dc;
+      --soft: #edf2e9;
+      --danger: #b44736;
+      --radius: 22px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--background);
-    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
 
     body {
-      min-height: 100%;
       margin: 0;
-      background: var(--background);
+      background: var(--paper);
       color: var(--ink);
-      font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-      font-size: 15px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; touch-action: manipulation; }
+    button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+    button:disabled { cursor: default; opacity: .5; }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid #91b85f;
+      outline-offset: 4px;
     }
 
-    button {
-      cursor: pointer;
-      touch-action: manipulation;
+    svg {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
     }
 
-    .app {
-      max-width: 620px;
-      min-height: 100vh;
+    .symbols {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .shell {
+      max-width: 920px;
       margin: auto;
-      background: #ffffff;
+      padding: 0 22px;
     }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      padding:
-        calc(16px + env(safe-area-inset-top))
-        18px
-        12px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(10px);
-    }
-
-    .top {
+    .masthead {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
+      padding: calc(25px + env(safe-area-inset-top)) 0 23px;
+      border-bottom: 1px solid var(--line);
     }
 
-    h1 {
-      margin: 0;
-      font-size: 22px;
-      line-height: 1.2;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
     }
 
-    .subtitle {
-      margin-top: 4px;
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--forest);
+      color: var(--lime);
+    }
+
+    .brand-mark svg { width: 28px; height: 28px; }
+
+    .brand-name {
+      display: block;
+      font-size: 21px;
+      font-weight: 850;
+      letter-spacing: -.9px;
+    }
+
+    .brand-caption {
+      display: block;
+      margin-top: 2px;
       color: var(--muted);
-      font-size: 13px;
-    }
-
-    .count {
-      color: var(--blue);
-      font-size: 19px;
-      font-weight: 800;
-      white-space: nowrap;
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
     }
 
     .connection {
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-top: 9px;
+      gap: 7px;
+      font-size: 11px;
       color: var(--muted);
-      font-size: 12px;
+      text-align: right;
     }
 
-    .connection-dot {
-      width: 8px;
-      height: 8px;
+    .dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #98a2b3;
+      background: #aeb8ae;
+      flex-shrink: 0;
     }
 
-    .connection.connected .connection-dot {
-      background: var(--success);
+    .connection[data-state="ok"] .dot { background: #669b48; }
+    .connection[data-state="error"] .dot { background: var(--danger); }
+
+    .intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 28px 0 24px;
     }
 
-    .connection.error .connection-dot {
-      background: var(--danger);
+    .eyebrow {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    main {
-      padding: 18px 16px 115px;
+    h1 {
+      margin: 9px 0 7px;
+      font-size: clamp(27px, 5vw, 37px);
+      letter-spacing: -1.6px;
+      line-height: 1.08;
+      font-weight: 720;
     }
 
-    .progress {
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .total {
+      min-width: 87px;
+      text-align: right;
+    }
+
+    .total strong {
+      display: block;
+      font-size: 43px;
+      font-weight: 650;
+      letter-spacing: -2.4px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .total span {
+      display: block;
+      margin-top: 7px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .rooms {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-bottom: 25px;
+    }
+
+    .room {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 7px;
-      margin-bottom: 22px;
+      padding: 14px 16px;
+      background: #e9ede3;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      color: #61705e;
+      text-align: left;
     }
 
-    .pill {
-      min-width: 0;
-      padding: 11px 5px;
-      border-radius: 14px;
-      background: var(--blue-light);
-      color: #344054;
-      font-size: 11px;
-      text-align: center;
+    .room.active {
+      color: var(--forest);
+      background: var(--lime);
+      border-color: #c8e279;
     }
 
-    .pill b {
-      display: block;
-      margin-bottom: 2px;
-      color: var(--blue);
-      font-size: 19px;
-    }
+    .room span { font-size: 11px; }
+    .room b { font-size: 19px; font-weight: 650; }
 
-    .section {
-      margin-bottom: 24px;
-    }
+    main { padding-bottom: 125px; }
 
-    .section-title {
-      margin-bottom: 12px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .field {
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: 700;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 14px 13px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      outline: none;
-      background: #ffffff;
-      color: var(--ink);
-      font-size: 16px;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(11, 87, 208, 0.1);
-    }
-
-    textarea {
-      min-height: 85px;
-      resize: vertical;
-    }
-
-    .segments {
+    .workspace {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: minmax(0, 1fr) 210px;
+      gap: 20px;
+      align-items: start;
     }
 
-    .segments label {
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: visible;
+      box-shadow: 0 8px 28px rgba(28, 52, 32, .025);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 21px 25px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: -.4px;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: var(--soft);
+      color: #6c7d63;
+      font-family: ui-monospace, monospace;
+      font-size: 9px;
+      letter-spacing: .5px;
+    }
+
+    .form-body { padding: 25px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 3px 0 16px;
+    }
+
+    .step {
+      color: #93a58b;
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+    }
+
+    .section-head h3 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 650;
+      color: #70816b;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 26px 0 23px;
+      background: var(--line);
+    }
+
+    .field { margin-top: 17px; }
+    .field:first-child { margin-top: 0; }
+
+    .field-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .optional {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafbf8;
+      color: var(--ink);
+      padding: 14px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #9aa599;
+      opacity: 1;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #789772;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(120, 151, 114, .1);
+    }
+
+    input[readonly] {
+      color: #83907d;
+      border-style: dashed;
+      box-shadow: none;
+    }
+
+    textarea { min-height: 83px; resize: vertical; }
+
+    .hint {
+      margin: 8px 0 0;
+      min-height: 15px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .hint.error { color: var(--danger); }
+
+    .types {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 5px;
+      gap: 4px;
+      border-radius: 15px;
+      background: #f0f3ed;
+    }
+
+    .type {
+      position: relative;
+      cursor: pointer;
       margin: 0;
     }
 
-    .segments input {
+    .type input {
       position: absolute;
       opacity: 0;
-      pointer-events: none;
+      width: 1px;
+      height: 1px;
+      padding: 0;
     }
 
-    .segments span {
+    .type span {
       display: flex;
-      min-height: 54px;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      color: #344054;
-      font-size: 12px;
+      gap: 8px;
+      min-height: 75px;
+      padding: 9px 3px;
+      border-radius: 11px;
+      font-size: 10px;
+      font-weight: 550;
+      color: #7b8a76;
       text-align: center;
+      transition: background .15s, color .15s;
     }
 
-    .segments input:checked + span {
-      border-color: var(--blue);
-      background: var(--blue-light);
-      color: var(--blue);
-      font-weight: 800;
+    .type input:checked + span {
+      background: var(--forest);
+      color: var(--lime);
+      box-shadow: 0 3px 8px rgba(18, 61, 50, .1);
     }
 
-    .scan-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 9px;
+    .type input:focus-visible + span {
+      outline: 2px solid #8ea26b;
+      outline-offset: 2px;
+    }
+
+    .id-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    #identifier {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      letter-spacing: .7px;
+    }
+
+    #identifier[readonly] {
+      font-family: inherit;
+      letter-spacing: 0;
+      font-size: 14px;
     }
 
     .scan-button {
-      min-width: 92px;
-      padding: 0 15px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      width: 54px;
       border: 0;
-      border-radius: 13px;
-      background: var(--ink);
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 800;
+      border-radius: 12px;
+      color: var(--lime);
+      background: var(--forest);
     }
 
-    .hint {
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .scan-button:hover { background: var(--forest-dark); }
+    .scan-button svg { width: 25px; height: 25px; }
 
-    .duplicate {
-      color: var(--danger);
-      font-weight: 700;
-    }
+    .suggest-wrap { position: relative; }
 
-    .conditional {
-      display: none;
-    }
-
-    .conditional.show {
-      display: block;
-    }
-
-    .secondary-box {
-      padding: 14px;
-      border: 1px dashed #b9c4d5;
+    .suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      max-height: 240px;
+      overflow: auto;
+      z-index: 8;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid var(--line);
       border-radius: 14px;
-      background: #f8faff;
+      box-shadow: 0 12px 30px rgba(18, 61, 50, .12);
     }
 
-    .secondary-title {
-      margin-bottom: 5px;
-      font-weight: 800;
+    .suggestions button {
+      display: block;
+      width: 100%;
+      border: 0;
+      padding: 12px;
+      background: transparent;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 14px;
+      color: var(--ink);
     }
 
-    .secondary-description {
-      margin-bottom: 12px;
-      color: var(--muted);
+    .suggestions button:hover,
+    .suggestions button:focus {
+      background: var(--soft);
+      outline: none;
+    }
+
+    .aside-card {
+      padding: 23px;
+      border-radius: var(--radius);
+      background: var(--forest);
+      color: #e8efdf;
+    }
+
+    .aside-card .eyebrow { color: #9caf97; }
+    .aside-card h2 {
+      margin: 20px 0 13px;
+      font-size: 26px;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      font-weight: 500;
+    }
+
+    .aside-card h2 span { color: var(--lime); }
+    .aside-card p {
+      margin: 0;
       font-size: 12px;
+      line-height: 1.7;
+      color: #a9bdb0;
+    }
+
+    .brand-pattern {
+      display: flex;
+      gap: 6px;
+      margin-top: 34px;
+      height: 42px;
+      align-items: end;
+    }
+
+    .brand-pattern i {
+      flex: 1;
+      height: 100%;
+      border: 1px solid #6e8b63;
+      border-radius: 4px;
+    }
+
+    .brand-pattern i:nth-child(2) { height: 73%; }
+    .brand-pattern i:nth-child(3) {
+      height: 90%;
+      background: var(--lime);
+      border-color: var(--lime);
+    }
+
+    .aside-note {
+      margin: 17px 8px 0;
+      color: #8a9684;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .last-saved {
+      margin-top: 17px;
+      padding: 15px;
+      border-radius: 14px;
+      background: #e6efda;
+      color: var(--forest);
+      font-size: 12px;
+      line-height: 1.6;
     }
 
     .footer {
       position: fixed;
-      right: 0;
-      bottom: 0;
+      z-index: 10;
       left: 0;
-      z-index: 4;
-      padding:
-        12px
-        16px
-        calc(12px + env(safe-area-inset-bottom));
+      bottom: 0;
+      width: 100%;
+      padding: 12px 22px calc(12px + env(safe-area-inset-bottom));
       border-top: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(10px);
+      background: rgba(243, 244, 239, .96);
+      backdrop-filter: blur(14px);
     }
 
     .footer-inner {
-      max-width: 588px;
+      max-width: 876px;
       margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
     }
+
+    .footer-note { color: var(--muted); font-size: 11px; }
 
     .save-button {
-      width: 100%;
-      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: 360px;
+      padding: 16px 20px;
       border: 0;
-      border-radius: 15px;
-      background: var(--blue);
-      color: #ffffff;
-      font-size: 17px;
-      font-weight: 850;
+      border-radius: 14px;
+      background: var(--forest);
+      color: var(--lime);
+      font-weight: 650;
+      font-size: 14px;
     }
 
-    button:disabled {
-      cursor: wait;
-      opacity: 0.5;
-    }
+    .save-button:hover { background: var(--forest-dark); }
 
     .toast {
       position: fixed;
-      bottom: 98px;
+      z-index: 40;
+      bottom: calc(96px + env(safe-area-inset-bottom));
       left: 50%;
-      z-index: 30;
+      transform: translateX(-50%);
       width: max-content;
-      max-width: 90%;
-      padding: 13px 17px;
-      border-radius: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(-50%) translateY(20px);
-      transition: 0.2s;
-      background: #1f2937;
-      color: #ffffff;
+      max-width: min(90vw, 520px);
+      padding: 15px 20px;
+      background: var(--forest);
+      color: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px #0002;
+      font-size: 13px;
       text-align: center;
+      line-height: 1.5;
     }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .toast.success {
-      background: var(--success);
-    }
-
-    .toast.error {
-      background: var(--danger);
-    }
+    .toast.error { background: var(--danger); }
 
     dialog {
-      width: min(94vw, 600px);
+      width: min(94vw, 580px);
+      max-height: 92dvh;
+      overflow: auto;
       padding: 0;
       border: 0;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #111111;
-      color: #ffffff;
+      border-radius: 24px;
+      background: var(--forest-dark);
+      color: #fff;
     }
 
     dialog::backdrop {
-      background: rgba(0, 0, 0, 0.78);
+      background: rgba(7, 21, 16, .83);
+      backdrop-filter: blur(5px);
     }
 
     .camera-header {
@@ -387,2069 +603,1265 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 12px 14px;
+      padding: 15px;
     }
 
-    .camera-header strong {
-      font-size: 14px;
-    }
+    .camera-header strong { font-size: 13px; font-weight: 550; }
+    .camera-actions { display: flex; gap: 7px; }
 
-    .camera-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .camera-button {
-      min-height: 42px;
-      padding: 9px 13px;
-      border: 0;
-      border-radius: 10px;
-      background: #333333;
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    .torch-button {
-      display: inline-flex;
-      width: 44px;
+    .camera-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
       height: 42px;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border: 1px solid #555555;
-      border-radius: 10px;
-      background: #292929;
-      color: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #ffffff25;
+      background: #ffffff0a;
+      color: #fff;
     }
 
-    .torch-button svg {
-      width: 23px;
-      height: 23px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .camera-icon.active {
+      background: #527140;
+      border-color: var(--lime);
+      color: #fff;
     }
 
-    .torch-button.active {
-      border-color: #ffffff;
-      background: var(--blue);
-      color: #ffffff;
-    }
-
-    .camera-area {
-      position: relative;
-      overflow: hidden;
-      background: #000000;
-    }
-
+    .camera-area { position: relative; overflow: hidden; }
     #cameraVideo {
       display: block;
       width: 100%;
-      height: min(65vh, 540px);
+      height: min(48dvh, 430px);
       object-fit: cover;
-      background: #000000;
+      background: #000;
     }
 
-    #barcodeCanvas,
-    #ocrCanvas {
-      display: none;
-    }
-
-    .scan-guide {
+    #barcodeGuide {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 92%;
-      height: 155px;
-      border: 3px solid #ffffff;
+      left: 5%;
+      right: 5%;
+      top: calc(50% - 83px);
+      height: 166px;
+      border: 1px solid #d7f58baa;
       border-radius: 14px;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.43);
-      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 999px #0006;
       pointer-events: none;
     }
 
-    .scan-line {
+    #ocrGuide {
       position: absolute;
-      top: 50%;
-      left: 6%;
-      width: 88%;
-      height: 2px;
-      background: #ff334f;
-      box-shadow: 0 0 10px #ff334f;
-      animation: scan 1.3s ease-in-out infinite alternate;
+      left: 9%;
+      right: 9%;
+      top: calc(50% + 18px);
+      height: 48px;
+      border: 1px dashed #ffffffbd;
+      border-radius: 5px;
       pointer-events: none;
     }
 
-    @keyframes scan {
-      from {
-        transform: translateY(-58px);
-      }
-
-      to {
-        transform: translateY(58px);
-      }
+    #ocrGuide::after {
+      content: "NÚMEROS / TEXTO";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      padding-top: 5px;
+      color: #fff;
+      font: 8px ui-monospace, monospace;
+      letter-spacing: 1.4px;
     }
 
     .camera-help {
-      min-height: 69px;
-      padding: 13px 16px 18px;
-      color: #dddddd;
-      font-size: 13px;
-      text-align: center;
+      padding: 16px 18px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #c5d4c7;
     }
 
-    .scanner-status {
-      color: #8ab4f8;
-      font-weight: 800;
+    .reader-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .reader-status span {
+      padding: 4px 7px;
+      background: #ffffff0c;
+      border-radius: 5px;
+      font-size: 10px;
+      color: var(--lime);
+    }
+
+    .candidate {
+      margin: 0 16px 16px;
+      padding: 14px;
+      background: #ffffff0c;
+      border: 1px solid #ffffff20;
+      border-radius: 13px;
+    }
+
+    .candidate p {
+      margin: 0 0 10px;
+      color: #d0decc;
+      font-size: 11px;
+    }
+
+    .candidate button {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--lime);
+      color: var(--forest);
+      overflow-wrap: anywhere;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .workspace { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .footer-note { display: none; }
+      .save-button { width: 100%; }
+    }
+
+    @media (max-width: 440px) {
+      .shell { padding: 0 16px; }
+      .masthead { padding-bottom: 18px; }
+      .brand-name { font-size: 20px; }
+      .connection { max-width: 106px; font-size: 10px; }
+      .intro { padding: 25px 0 21px; gap: 12px; }
+      .intro p { font-size: 12px; }
+      .total strong { font-size: 37px; }
+      .total { min-width: 64px; }
+      .room { padding: 12px 10px; }
+      .room span { font-size: 10px; }
+      .room b { font-size: 17px; }
+      .form-body { padding: 20px 17px; }
+      .card-header { padding: 19px 18px; }
+      .types { gap: 3px; padding: 4px; }
+      .type span { font-size: 9px; gap: 8px; }
+      .footer { padding-left: 16px; padding-right: 16px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; transition: none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <header>
-      <div class="top">
-        <div>
-          <h1>Inventário do Setor</h1>
-          <div class="subtitle">
-            Cadastro rápido pelo celular
-          </div>
-        </div>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-brand" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="7" height="15" rx="1"></rect>
+      <rect x="14" y="3" width="7" height="17" rx="1"></rect>
+      <path d="M5 9h3M16 7h3M3 23h18"></path>
+    </symbol>
+    <symbol id="i-pmc" viewBox="0 0 24 24">
+      <path d="m3 9 9-6 9 6H3ZM5 11v7m5-7v7m4-7v7m5-7v7M3 21h18"></path>
+    </symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24">
+      <path d="M3 3h8l10 10-8 8L3 11V3Z"></path>
+      <circle cx="7.5" cy="7.5" r="1"></circle>
+    </symbol>
+    <symbol id="i-hash" viewBox="0 0 24 24">
+      <path d="m10 3-4 18M18 3l-4 18M3 9h18M2 15h18"></path>
+    </symbol>
+    <symbol id="i-empty" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="4"></rect>
+      <path d="M8 12h8"></path>
+    </symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24">
+      <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 8v8m3-8v8m4-8v8m3-8v8"></path>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M4 12h16m-6-6 6 6-6 6"></path>
+    </symbol>
+    <symbol id="i-torch" viewBox="0 0 24 24">
+      <path d="M7 3h10v5l-3 4v9h-4v-9L7 8V3Zm0 4h10M11 15h2"></path>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24">
+      <path d="m6 6 12 12M6 18 18 6"></path>
+    </symbol>
+  </svg>
 
-        <div class="count">
-          <span id="total">0</span> itens
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand-mark">
+          <svg aria-hidden="true"><use href="#i-brand"></use></svg>
+        </span>
+        <div>
+          <span class="brand-name">ACERVO</span>
+          <span class="brand-caption">Inventário do setor</span>
         </div>
       </div>
 
-      <div class="connection" id="connectionStatus">
-        <span class="connection-dot"></span>
-        <span id="connectionText">
-          Conectando ao banco…
-        </span>
+      <div class="connection" id="connection" role="status">
+        <span class="dot"></span>
+        <span id="connectionText">Conectando</span>
       </div>
     </header>
 
-    <main>
-      <div class="progress">
-        <div class="pill">
-          <b id="gerenciaCount">0</b>
-          Gerência
-        </div>
-
-        <div class="pill">
-          <b id="principalCount">0</b>
-          Sala principal
-        </div>
-
-        <div class="pill">
-          <b id="almoxCount">0</b>
-          Almoxarifado
-        </div>
+    <section class="intro">
+      <div>
+        <span class="eyebrow">GIT / SME · Curitiba</span>
+        <h1>Cada bem,<br>no seu lugar.</h1>
+        <p>Um registro de cada vez. Tudo organizado.</p>
       </div>
 
-      <form id="inventoryForm">
-        <section class="section">
-          <div class="section-title">
-            Onde está
+      <div class="total">
+        <strong id="total">—</strong>
+        <span>itens registrados</span>
+      </div>
+    </section>
+
+    <div class="rooms" aria-label="Ambientes">
+      <button class="room" type="button" data-room="Sala da Gerência">
+        <span>Gerência</span><b id="gerenciaCount">—</b>
+      </button>
+      <button class="room" type="button" data-room="Sala Principal">
+        <span>Sala principal</span><b id="principalCount">—</b>
+      </button>
+      <button class="room" type="button" data-room="Almoxarifado">
+        <span>Almoxarifado</span><b id="almoxCount">—</b>
+      </button>
+    </div>
+
+    <main class="workspace">
+      <div>
+        <article class="card">
+          <div class="card-header">
+            <h2>Novo registro</h2>
+            <span class="tag">01 ITEM POR VEZ</span>
           </div>
 
-          <div class="field">
-            <label for="ambiente">
-              Ambiente
-            </label>
+          <form id="inventoryForm" class="form-body">
+            <div class="section-head">
+              <span class="step">01 /</span>
+              <h3>Localização</h3>
+            </div>
 
-            <select id="ambiente" required>
-              <option value="Sala da Gerência">
-                Sala da Gerência
-              </option>
+            <div class="field">
+              <label class="field-label" for="ambiente">Ambiente</label>
+              <select id="ambiente" required>
+                <option>Sala da Gerência</option>
+                <option>Sala Principal</option>
+                <option>Almoxarifado</option>
+              </select>
+            </div>
 
-              <option value="Sala Principal">
-                Sala Principal
-              </option>
+            <div class="field" id="locationWrap" hidden>
+              <label class="field-label" for="localizacao">
+                Estante / prateleira <span class="optional">Opcional</span>
+              </label>
+              <input id="localizacao" maxlength="150"
+                     placeholder="Ex.: Estante A · Prateleira 2">
+            </div>
 
-              <option value="Almoxarifado">
-                Almoxarifado
-              </option>
-            </select>
-          </div>
+            <div class="divider"></div>
 
-          <div
-            class="field conditional"
-            id="locationWrap"
-          >
-            <label for="localizacao">
-              Localização no almoxarifado
-            </label>
+            <div class="section-head">
+              <span class="step">02 /</span>
+              <h3>Identificação</h3>
+            </div>
 
-            <input
-              id="localizacao"
-              autocomplete="off"
-              placeholder="Ex.: Estante A · Prateleira 2"
-            >
-          </div>
-        </section>
+            <div class="types" role="radiogroup" aria-label="Tipo de identificação">
+              <label class="type">
+                <input type="radio" name="idType" value="PMC" checked>
+                <span>
+                  <svg aria-hidden="true"><use href="#i-pmc"></use></svg>
+                  Patrimônio
+                </span>
+              </label>
+              <label class="type">
+                <input type="radio" name="idType" value="ICI">
+                <span>
+                  <svg aria-hidden="true"><use href="#i-tag"></use></svg>
+                  ICI
+                </span>
+              </label>
+              <label class="type">
+                <input type="radio" name="idType" value="SERIE">
+                <span>
+                  <svg aria-hidden="true"><use href="#i-hash"></use></svg>
+                  Nº de série
+                </span>
+              </label>
+              <label class="type">
+                <input type="radio" name="idType" value="SEM_IDENTIFICACAO">
+                <span>
+                  <svg aria-hidden="true"><use href="#i-empty"></use></svg>
+                  Sem identificação
+                </span>
+              </label>
+            </div>
 
-        <section class="section">
-          <div class="section-title">
-            Identificação principal
-          </div>
-
-          <div class="field">
-            <div class="segments">
-              <label>
-                <input
-                  type="radio"
-                  name="tipoIdentificacao"
-                  value="PMC"
-                  checked
-                >
-                <span>Patrimônio PMC</span>
+            <!-- Um único campo. O tipo selecionado define seu comportamento. -->
+            <div class="field">
+              <label class="field-label" id="identifierLabel" for="identifier">
+                Patrimônio PMC
               </label>
 
-              <label>
-                <input
-                  type="radio"
-                  name="tipoIdentificacao"
-                  value="ICI"
-                >
-                <span>Etiqueta ICI</span>
+              <div class="id-row">
+                <input id="identifier" autocomplete="off" spellcheck="false"
+                       aria-describedby="identifierHint">
+                <button id="scanButton" class="scan-button" type="button"
+                        title="Ler identificação" aria-label="Ler identificação pela câmera">
+                  <svg aria-hidden="true"><use href="#i-scan"></use></svg>
+                </button>
+              </div>
+
+              <p class="hint" id="identifierHint" aria-live="polite"></p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="section-head">
+              <span class="step">03 /</span>
+              <h3>Sobre o item</h3>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="categoria">Categoria</label>
+              <select id="categoria" required>
+                <option>Móvel</option>
+                <option>Tecnologia</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="item">Item</label>
+              <div class="suggest-wrap">
+                <input id="item" required minlength="2" maxlength="120"
+                       autocomplete="off" placeholder="O que você está registrando?"
+                       aria-controls="suggestions" aria-expanded="false">
+                <div class="suggestions" id="suggestions"
+                     aria-label="Itens já utilizados" hidden></div>
+              </div>
+              <p class="hint">Digite para encontrar itens já registrados ou criar um novo.</p>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="observacao">
+                Observação <span class="optional">Opcional</span>
               </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="tipoIdentificacao"
-                  value="SERIE"
-                >
-                <span>Número de série</span>
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="tipoIdentificacao"
-                  value="SEM_IDENTIFICACAO"
-                >
-                <span>Sem identificação</span>
-              </label>
+              <textarea id="observacao" maxlength="2000"
+                        placeholder="Algum detalhe que vale guardar?"></textarea>
             </div>
+          </form>
+        </article>
+
+        <div class="last-saved" id="lastSaved" role="status" hidden></div>
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <span class="eyebrow">Menos procura.</span>
+          <h2>Mais ordem.<br><span>Mais clareza.</span></h2>
+          <p>Identifique, registre e siga para o próximo. Seu setor, bem cuidado.</p>
+          <div class="brand-pattern" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
           </div>
-
-          <div class="field" id="pmcWrap">
-            <label for="patrimonioPmc">
-              Patrimônio PMC
-            </label>
-
-            <div class="scan-row">
-              <input
-                id="patrimonioPmc"
-                inputmode="numeric"
-                autocomplete="off"
-                maxlength="6"
-                placeholder="6 números"
-              >
-
-              <button
-                class="scan-button"
-                type="button"
-                data-scan-target="PMC"
-              >
-                ▣ Ler
-              </button>
-            </div>
-
-            <div class="hint" id="pmcHint">
-              Código oficial da Prefeitura.
-            </div>
-          </div>
-
-          <div
-            class="field conditional"
-            id="iciWrap"
-          >
-            <label for="codigoIci">
-              Código ICI
-            </label>
-
-            <div class="scan-row">
-              <input
-                id="codigoIci"
-                autocomplete="off"
-                maxlength="40"
-                placeholder="Leia ou digite o código"
-              >
-
-              <button
-                class="scan-button"
-                type="button"
-                data-scan-target="ICI"
-              >
-                ▣ Ler
-              </button>
-            </div>
-
-            <div class="hint" id="iciHint">
-              Etiqueta de inventário do ICI.
-            </div>
-          </div>
-
-          <div
-            class="field conditional"
-            id="serieWrap"
-          >
-            <label for="numeroSerie">
-              Número de série
-            </label>
-
-            <div class="scan-row">
-              <input
-                id="numeroSerie"
-                autocomplete="off"
-                autocapitalize="characters"
-                maxlength="80"
-                placeholder="Leia ou digite o número de série"
-              >
-
-              <button
-                class="scan-button"
-                type="button"
-                data-scan-target="SERIE"
-              >
-                ▣ Ler
-              </button>
-            </div>
-
-            <div class="hint" id="serieHint">
-              Use quando não houver etiqueta PMC ou ICI.
-            </div>
-          </div>
-
-          <div
-            class="secondary-box"
-            id="secondaryIciWrap"
-          >
-            <div class="secondary-title">
-              Também possui etiqueta ICI?
-            </div>
-
-            <div class="secondary-description">
-              É opcional quando o patrimônio PMC já foi informado.
-            </div>
-
-            <div class="scan-row">
-              <input
-                id="codigoIciSecundario"
-                autocomplete="off"
-                maxlength="40"
-                placeholder="Código ICI opcional"
-              >
-
-              <button
-                class="scan-button"
-                type="button"
-                data-scan-target="ICI_SECUNDARIO"
-              >
-                ▣ Ler
-              </button>
-            </div>
-
-            <div
-              class="hint"
-              id="iciSecundarioHint"
-            >
-              Informação secundária do equipamento.
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-title">
-            O que é
-          </div>
-
-          <div class="field">
-            <label for="categoria">
-              Categoria
-            </label>
-
-            <select id="categoria" required>
-              <option value="Móvel">
-                Móvel
-              </option>
-
-              <option value="Tecnologia">
-                Tecnologia
-              </option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="item">
-              Item
-            </label>
-
-            <input
-              id="item"
-              list="itensSugeridos"
-              autocomplete="off"
-              placeholder="Ex.: Cadeira, monitor, armário"
-              required
-            >
-
-            <datalist id="itensSugeridos"></datalist>
-
-            <div class="hint">
-              Novos itens entram automaticamente nas sugestões.
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="observacao">
-              Observação
-              <span class="hint">(opcional)</span>
-            </label>
-
-            <textarea
-              id="observacao"
-              placeholder="Algo importante sobre este item"
-            ></textarea>
-          </div>
-        </section>
-      </form>
+        </div>
+        <p class="aside-note">
+          Use o patrimônio PMC primeiro. Na ausência dele, use ICI ou número de série.
+        </p>
+      </aside>
     </main>
   </div>
 
-  <div class="footer">
+  <footer class="footer">
     <div class="footer-inner">
-      <button
-        class="save-button"
-        id="saveButton"
-        type="button"
-      >
-        Salvar e cadastrar próximo
+      <span class="footer-note">ACERVO / Inventário do setor</span>
+      <button class="save-button" id="saveButton"
+              type="submit" form="inventoryForm">
+        <span id="saveText">Salvar e cadastrar próximo</span>
+        <svg aria-hidden="true"><use href="#i-arrow"></use></svg>
       </button>
     </div>
-  </div>
+  </footer>
 
-  <div class="toast" id="toast"></div>
+  <div id="toast" class="toast" role="status" hidden></div>
 
-  <dialog id="cameraDialog">
+  <dialog id="cameraDialog" aria-labelledby="cameraTitle">
     <div class="camera-header">
-      <strong id="cameraTitle">
-        Aponte para o código
-      </strong>
-
+      <strong id="cameraTitle">Ler identificação</strong>
       <div class="camera-actions">
-        <button
-          class="torch-button"
-          id="torchButton"
-          type="button"
-          title="Ligar lanterna"
-          disabled
-        >
-          <svg viewBox="0 0 24 24">
-            <path d="M9 2h6l1 5H8l1-5Z"></path>
-            <path d="M8 7h8l2 4v9a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-9l2-4Z"></path>
-            <path d="M9 12h6"></path>
-          </svg>
+        <button class="camera-icon" id="torchButton" type="button"
+                disabled aria-label="Ligar lanterna" aria-pressed="false">
+          <svg aria-hidden="true"><use href="#i-torch"></use></svg>
         </button>
-
-        <button
-          class="camera-button"
-          id="closeCameraButton"
-          type="button"
-        >
-          Fechar
+        <button class="camera-icon" id="closeCameraButton" type="button"
+                aria-label="Fechar câmera">
+          <svg aria-hidden="true"><use href="#i-close"></use></svg>
         </button>
       </div>
     </div>
 
     <div class="camera-area">
-      <video
-        id="cameraVideo"
-        playsinline
-        muted
-      ></video>
-
-      <canvas id="barcodeCanvas"></canvas>
-      <canvas id="ocrCanvas"></canvas>
-
-      <div class="scan-guide"></div>
-      <div class="scan-line"></div>
+      <video id="cameraVideo" playsinline muted autoplay></video>
+      <div id="barcodeGuide"></div>
+      <div id="ocrGuide"></div>
     </div>
 
-    <div class="camera-help" id="cameraHelp">
-      Abrindo a câmera…
+    <div class="camera-help">
+      <div class="reader-status">
+        <span id="barcodeStatus">Código: preparando</span>
+        <span id="ocrStatus">OCR: preparando</span>
+      </div>
+      <span id="cameraHelp">
+        Código no quadro maior; números ou série na faixa tracejada.
+      </span>
+    </div>
+
+    <div class="candidate" id="candidateBox" hidden>
+      <p id="candidateMessage">Confira a leitura antes de usar.</p>
+      <div id="candidateOptions"></div>
     </div>
   </dialog>
 
   <script>
-    const SUPABASE_URL =
-      'https://yipfkwxhpahpuiizkcny.supabase.co';
+    document.addEventListener('DOMContentLoaded', () => {
+      'use strict';
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI';
+      const $ = id => document.getElementById(id);
 
-    const database =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
-
-    const element = id =>
-      document.getElementById(id);
-
-    let itemSuggestions = [];
-
-    let cameraStream = null;
-    let cameraTrack = null;
-    let barcodeTimer = null;
-    let ocrTimer = null;
-    let ocrWorker = null;
-    let ocrLoadingPromise = null;
-
-    let scannerRunning = false;
-    let barcodeBusy = false;
-    let ocrBusy = false;
-    let torchEnabled = false;
-    let barcodeAccepted = false;
-    let scanTarget = null;
-    let frameNumber = 0;
-
-    let lastOcrValue = '';
-    let repeatedOcrValue = 0;
-
-    let checkingTimer = null;
-    let isSaving = false;
-
-    document.addEventListener(
-      'DOMContentLoaded',
-      initialize
-    );
-
-    element('ambiente').addEventListener(
-      'change',
-      function () {
-        localStorage.setItem(
-          'inventarioAmbiente',
-          element('ambiente').value
-        );
-
-        toggleLocation();
-      }
-    );
-
-    element('categoria').addEventListener(
-      'change',
-      function () {
-        localStorage.setItem(
-          'inventarioCategoria',
-          element('categoria').value
-        );
-      }
-    );
-
-    document
-      .querySelectorAll(
-        '[name="tipoIdentificacao"]'
-      )
-      .forEach(function (radio) {
-        radio.addEventListener(
-          'change',
-          toggleIdentification
-        );
-      });
-
-    document
-      .querySelectorAll('[data-scan-target]')
-      .forEach(function (button) {
-        button.addEventListener(
-          'click',
-          function () {
-            openScanner(
-              button.dataset.scanTarget
-            );
-          }
-        );
-      });
-
-    element('patrimonioPmc').addEventListener(
-      'input',
-      function () {
-        element('patrimonioPmc').value =
-          element('patrimonioPmc').value
-            .replace(/\D/g, '')
-            .slice(0, 6);
-
-        scheduleDuplicateCheck(
-          'PMC',
-          element('patrimonioPmc').value,
-          'pmcHint'
-        );
-      }
-    );
-
-    element('codigoIci').addEventListener(
-      'input',
-      function () {
-        scheduleDuplicateCheck(
-          'ICI',
-          element('codigoIci').value,
-          'iciHint'
-        );
-      }
-    );
-
-    element('codigoIciSecundario').addEventListener(
-      'input',
-      function () {
-        scheduleDuplicateCheck(
-          'ICI',
-          element('codigoIciSecundario').value,
-          'iciSecundarioHint'
-        );
-      }
-    );
-
-    element('numeroSerie').addEventListener(
-      'input',
-      function () {
-        element('numeroSerie').value =
-          normalizeSerial(
-            element('numeroSerie').value
-          );
-
-        scheduleDuplicateCheck(
-          'SERIE',
-          element('numeroSerie').value,
-          'serieHint'
-        );
-      }
-    );
-
-    element('closeCameraButton').addEventListener(
-      'click',
-      closeScanner
-    );
-
-    element('torchButton').addEventListener(
-      'click',
-      toggleTorch
-    );
-
-    element('saveButton').addEventListener(
-      'click',
-      saveItem
-    );
-
-    element('cameraDialog').addEventListener(
-      'cancel',
-      function (event) {
-        event.preventDefault();
-        closeScanner();
-      }
-    );
-
-    window.addEventListener(
-      'pagehide',
-      stopCameraTracks
-    );
-
-    async function initialize() {
-      element('ambiente').value =
-        localStorage.getItem(
-          'inventarioAmbiente'
-        ) || 'Sala da Gerência';
-
-      element('categoria').value =
-        localStorage.getItem(
-          'inventarioCategoria'
-        ) || 'Móvel';
-
-      toggleLocation();
-      toggleIdentification();
-
-      /*
-        Começa a carregar o OCR imediatamente,
-        antes mesmo de abrir a câmera.
-      */
-      preloadOcr();
-
-      try {
-        const { data, error } =
-          await database.rpc(
-            'iniciar_inventario'
-          );
-
-        if (error) {
-          throw error;
-        }
-
-        updateSummary(
-          data.summary
-        );
-
-        itemSuggestions =
-          Array.isArray(data.suggestions)
-            ? data.suggestions
-            : [];
-
-        renderItemSuggestions();
-
-        setConnectionStatus(
-          true,
-          'Banco de dados conectado'
-        );
-      } catch (error) {
-        console.error(error);
-
-        setConnectionStatus(
-          false,
-          'Falha na conexão com o banco'
-        );
-
-        showToast(
-          'Não foi possível conectar ao banco.',
-          'error'
-        );
-      }
-    }
-
-    function getIdentificationType() {
-      return document.querySelector(
-        '[name="tipoIdentificacao"]:checked'
-      ).value;
-    }
-
-    function toggleLocation() {
-      const warehouse =
-        element('ambiente').value ===
-        'Almoxarifado';
-
-      element('locationWrap')
-        .classList.toggle(
-          'show',
-          warehouse
-        );
-
-      if (!warehouse) {
-        element('localizacao').value = '';
-      }
-    }
-
-    function toggleIdentification() {
-      const type =
-        getIdentificationType();
-
-      element('pmcWrap')
-        .classList.toggle(
-          'show',
-          type === 'PMC'
-        );
-
-      element('iciWrap')
-        .classList.toggle(
-          'show',
-          type === 'ICI'
-        );
-
-      element('serieWrap')
-        .classList.toggle(
-          'show',
-          type === 'SERIE'
-        );
-
-      element('secondaryIciWrap')
-        .style.display =
-          type === 'PMC'
-            ? 'block'
-            : 'none';
-    }
-
-    function scheduleDuplicateCheck(
-      type,
-      value,
-      hintId
-    ) {
-      resetIdentifierHint(
-        type,
-        hintId
-      );
-
-      clearTimeout(checkingTimer);
-
-      if (!value.trim()) {
-        return;
-      }
-
-      checkingTimer = setTimeout(
-        function () {
-          checkDuplicate(
-            type,
-            value,
-            hintId
-          );
+      const TYPE = {
+        PMC: {
+          label: 'Patrimônio PMC',
+          placeholder: 'Digite ou leia os 6 números',
+          hint: 'Identificação patrimonial da Prefeitura.',
+          max: 6,
+          min: 6,
+          pattern: '[0-9]{6}',
+          inputmode: 'numeric'
         },
-        400
-      );
-    }
-
-    async function checkDuplicate(
-      type,
-      value,
-      hintId
-    ) {
-      const code =
-        String(value || '').trim();
-
-      if (!code) {
-        return false;
-      }
-
-      try {
-        const { data, error } =
-          await database.rpc(
-            'verificar_identificador',
-            {
-              p_tipo: type,
-              p_codigo: code
-            }
-          );
-
-        if (error) {
-          throw error;
+        ICI: {
+          label: 'Código ICI',
+          placeholder: 'Digite ou leia o código ICI',
+          hint: 'Use quando o item não tiver patrimônio PMC.',
+          max: 40,
+          min: 3,
+          pattern: '',
+          inputmode: 'text'
+        },
+        SERIE: {
+          label: 'Número de série',
+          placeholder: 'Digite ou leia o número de série',
+          hint: 'Use quando não houver etiqueta PMC nem ICI.',
+          max: 80,
+          min: 2,
+          pattern: '',
+          inputmode: 'text'
+        },
+        SEM_IDENTIFICACAO: {
+          label: 'Identificação interna',
+          placeholder: 'Gerada automaticamente ao salvar',
+          hint: 'O item ficará sem código externo e receberá um número interno.',
+          max: 80,
+          min: 0,
+          pattern: '',
+          inputmode: 'text'
         }
+      };
 
-        if (data && data.exists) {
-          element(hintId).className =
-            'hint duplicate';
+      let database = null;
+      let saving = false;
+      let suggestions = [];
+      let duplicateTimer;
+      let duplicateVersion = 0;
+      let toastTimer;
 
-          element(hintId).textContent =
-            'Já cadastrado: ' +
-            data.item +
-            ' · ' +
-            data.ambiente;
+      let cameraSession = 0;
+      let cameraActive = false;
+      let cameraStream = null;
+      let cameraTrack = null;
+      let cameraType = 'PMC';
+      let torchOn = false;
+      let torchBusy = false;
 
-          return true;
+      let barcodeTimer;
+      let ocrTimer;
+      let barcodeBusy = false;
+      let ocrBusy = false;
+      let ocrPromise = null;
+      let ocrState = 'preparing';
+      let barcodeFailures = 0;
+      let ocrFailures = 0;
+      let barcodeReads = new Set();
+      let ocrReads = new Set();
+      let scanFrame = 0;
+
+      const barcodeCanvas = document.createElement('canvas');
+      const ocrCanvas = document.createElement('canvas');
+
+      function currentType() {
+        return document.querySelector('[name="idType"]:checked').value;
+      }
+
+      function remember(key, value) {
+        try { localStorage.setItem(key, value); } catch (_) {}
+      }
+
+      function recall(key) {
+        try { return localStorage.getItem(key); } catch (_) { return null; }
+      }
+
+      function normalizeName(value) {
+        return String(value || '').trim().replace(/\s+/g, ' ');
+      }
+
+      function searchKey(value) {
+        return normalizeName(value).normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+      }
+
+      function showToast(message, error = false) {
+        clearTimeout(toastTimer);
+        $('toast').textContent = message;
+        $('toast').className = 'toast' + (error ? ' error' : '');
+        $('toast').hidden = false;
+        toastTimer = setTimeout(() => $('toast').hidden = true, 5000);
+      }
+
+      function connection(state, message) {
+        $('connection').dataset.state = state;
+        $('connectionText').textContent = message;
+      }
+
+      function updateSummary(summary = {}) {
+        for (const [id, key] of [
+          ['total', 'total'],
+          ['gerenciaCount', 'gerencia'],
+          ['principalCount', 'principal'],
+          ['almoxCount', 'almoxarifado']
+        ]) {
+          $(id).textContent = summary[key] ?? 0;
         }
-
-        resetIdentifierHint(
-          type,
-          hintId
-        );
-
-        return false;
-      } catch (error) {
-        console.error(error);
-
-        showToast(
-          'Não foi possível verificar o identificador.',
-          'error'
-        );
-
-        return false;
-      }
-    }
-
-    function resetIdentifierHint(
-      type,
-      hintId
-    ) {
-      const hint =
-        element(hintId);
-
-      hint.className = 'hint';
-
-      if (type === 'PMC') {
-        hint.textContent =
-          'Código oficial da Prefeitura.';
       }
 
-      if (type === 'ICI') {
-        hint.textContent =
-          hintId === 'iciSecundarioHint'
-            ? 'Informação secundária do equipamento.'
-            : 'Etiqueta de inventário do ICI.';
+      function updateRoom() {
+        const room = $('ambiente').value;
+        $('locationWrap').hidden = room !== 'Almoxarifado';
+        if (room !== 'Almoxarifado') $('localizacao').value = '';
+
+        document.querySelectorAll('[data-room]').forEach(button => {
+          const selected = button.dataset.room === room;
+          button.classList.toggle('active', selected);
+          button.setAttribute('aria-pressed', String(selected));
+        });
+        remember('inventarioAmbiente', room);
       }
 
-      if (type === 'SERIE') {
-        hint.textContent =
-          'Use quando não houver etiqueta PMC ou ICI.';
-      }
-    }
+      function updateIdentification() {
+        closeScanner();
+        clearTimeout(duplicateTimer);
+        duplicateVersion++;
 
-    function renderItemSuggestions() {
-      const datalist =
-        element('itensSugeridos');
+        const type = currentType();
+        const config = TYPE[type];
+        const noCode = type === 'SEM_IDENTIFICACAO';
+        const input = $('identifier');
 
-      datalist.innerHTML = '';
+        // O valor do tipo anterior nunca é enviado no próximo cadastro.
+        input.value = '';
+        input.readOnly = noCode;
+        input.required = !noCode;
+        input.maxLength = config.max;
+        input.minLength = config.min;
+        input.inputMode = config.inputmode;
+        input.placeholder = config.placeholder;
+        input.setCustomValidity('');
 
-      itemSuggestions.forEach(
-        function (item) {
-          const option =
-            document.createElement('option');
+        if (config.pattern) input.pattern = config.pattern;
+        else input.removeAttribute('pattern');
 
-          option.value = item;
-          datalist.appendChild(option);
-        }
-      );
-    }
-
-    function addItemSuggestion(item) {
-      const normalized =
-        item.trim().toLowerCase();
-
-      const exists =
-        itemSuggestions.some(
-          function (current) {
-            return (
-              current.trim().toLowerCase() ===
-              normalized
-            );
-          }
-        );
-
-      if (!exists) {
-        itemSuggestions.unshift(item);
-        renderItemSuggestions();
-      }
-    }
-
-    async function preloadOcr() {
-      if (ocrWorker) {
-        return ocrWorker;
+        $('identifierLabel').textContent = config.label;
+        $('identifierHint').textContent = config.hint;
+        $('identifierHint').className = 'hint';
+        $('scanButton').hidden = noCode;
+        $('scanButton').setAttribute('aria-label', 'Ler ' + config.label);
       }
 
-      if (ocrLoadingPromise) {
-        return ocrLoadingPromise;
+      async function rpc(name, args) {
+        if (!database) throw new Error('O banco de dados não está conectado.');
+        const { data, error } = await database.rpc(name, args);
+        if (error) throw error;
+        return data;
       }
 
-      ocrLoadingPromise =
-        (async function () {
+      async function checkDuplicate(type, value) {
+        if (!value || type === 'SEM_IDENTIFICACAO') return null;
+        return rpc('verificar_identificador', {
+          p_tipo: type,
+          p_codigo: value
+        });
+      }
+
+      function scheduleDuplicate() {
+        clearTimeout(duplicateTimer);
+        const version = ++duplicateVersion;
+        const type = currentType();
+        const code = $('identifier').value.trim();
+
+        $('identifierHint').className = 'hint';
+        $('identifierHint').textContent = TYPE[type].hint;
+
+        if (code.length < TYPE[type].min || type === 'SEM_IDENTIFICACAO') return;
+
+        duplicateTimer = setTimeout(async () => {
           try {
-            if (
-              !window.Tesseract ||
-              !window.Tesseract.createWorker
-            ) {
-              throw new Error(
-                'Biblioteca OCR não carregada.'
-              );
+            const result = await checkDuplicate(type, code);
+            if (version !== duplicateVersion) return;
+
+            if (result?.exists) {
+              $('identifierHint').className = 'hint error';
+              $('identifierHint').textContent =
+                `Já cadastrado: ${result.item} · ${result.ambiente}`;
             }
+          } catch (_) {
+            if (version !== duplicateVersion) return;
+            $('identifierHint').className = 'hint error';
+            $('identifierHint').textContent =
+              'Verificação indisponível. Tentaremos novamente ao salvar.';
+          }
+        }, 350);
+      }
 
-            const worker =
-              await window.Tesseract.createWorker(
-                'eng',
-                1
-              );
+      function hideSuggestions() {
+        $('suggestions').hidden = true;
+        $('item').setAttribute('aria-expanded', 'false');
+      }
 
+      function renderSuggestions() {
+        const query = searchKey($('item').value);
+        const matches = suggestions
+          .filter(name => searchKey(name).includes(query))
+          .slice(0, 10);
+
+        const box = $('suggestions');
+        box.replaceChildren();
+
+        for (const name of matches) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = name;
+          button.addEventListener('click', () => {
+            $('item').value = name;
+            hideSuggestions();
+            $('observacao').focus();
+          });
+          box.appendChild(button);
+        }
+
+        box.hidden = matches.length === 0;
+        $('item').setAttribute('aria-expanded', String(matches.length > 0));
+      }
+
+      async function saveItem(event) {
+        event.preventDefault();
+        if (saving || !$('inventoryForm').reportValidity()) return;
+
+        const type = currentType();
+        const code = $('identifier').value.trim();
+        let itemName = normalizeName($('item').value);
+
+        if (itemName.length < 2) {
+          showToast('Informe o nome do item.', true);
+          $('item').focus();
+          return;
+        }
+
+        const existingName = suggestions.find(
+          name => searchKey(name) === searchKey(itemName)
+        );
+        if (existingName) itemName = existingName;
+
+        const payload = {
+          ambiente: $('ambiente').value,
+          categoria: $('categoria').value,
+          item: itemName,
+          patrimonio_pmc: type === 'PMC' ? code : '',
+          codigo_ici: type === 'ICI' ? code : '',
+          numero_serie: type === 'SERIE' ? code : '',
+          localizacao: $('ambiente').value === 'Almoxarifado'
+            ? $('localizacao').value.trim() : '',
+          observacao: $('observacao').value.trim()
+        };
+
+        // Bloqueia antes de qualquer chamada: evita clique duplo.
+        saving = true;
+        $('saveButton').disabled = true;
+        $('saveText').textContent = 'Salvando…';
+
+        const controls = [...$('inventoryForm').elements];
+        controls.forEach(control => control.disabled = true);
+        document.querySelectorAll('[data-room]').forEach(b => b.disabled = true);
+
+        try {
+          const duplicate = await checkDuplicate(type, code);
+          if (duplicate?.exists) {
+            throw new Error(`Já cadastrado: ${duplicate.item} · ${duplicate.ambiente}`);
+          }
+
+          const data = await rpc('salvar_item', { p_dados: payload });
+
+          updateSummary(data?.summary);
+          const savedName = data?.item || itemName;
+
+          suggestions = [
+            savedName,
+            ...suggestions.filter(name => searchKey(name) !== searchKey(savedName))
+          ];
+
+          $('identifier').value = '';
+          $('item').value = '';
+          $('observacao').value = '';
+          hideSuggestions();
+          clearTimeout(duplicateTimer);
+          duplicateVersion++;
+
+          $('identifierHint').className = 'hint';
+          $('identifierHint').textContent = TYPE[type].hint;
+
+          const internalId = data?.id != null
+            ? `ACV-${String(data.id).padStart(5, '0')}`
+            : 'Registro concluído';
+
+          $('lastSaved').textContent =
+            `${internalId} · ${savedName} · ${payload.ambiente} — salvo.`;
+          $('lastSaved').hidden = false;
+
+          showToast(`${savedName} salvo · ${internalId}`);
+        } catch (error) {
+          showToast(error.message || 'Não foi possível salvar. Seus campos foram mantidos.', true);
+        } finally {
+          saving = false;
+          controls.forEach(control => control.disabled = false);
+          document.querySelectorAll('[data-room]').forEach(b => b.disabled = false);
+          $('saveButton').disabled = false;
+          $('saveText').textContent = 'Salvar e cadastrar próximo';
+        }
+      }
+
+      // =====================================================
+      // LEITORES
+      // Código de barras + OCR em segundo plano.
+      // Cada sessão ignora resultados de câmeras já fechadas.
+      // =====================================================
+
+      function preloadOcr() {
+        if (ocrPromise) return ocrPromise;
+
+        ocrPromise = (async () => {
+          try {
+            if (!window.Tesseract) throw new Error('OCR indisponível');
+
+            const worker = await Tesseract.createWorker('eng', 1);
             await worker.setParameters({
               tessedit_pageseg_mode: '7',
-              preserve_interword_spaces: '0'
+              preserve_interword_spaces: '1'
             });
 
-            ocrWorker = worker;
+            ocrState = 'ready';
+            $('ocrStatus').textContent = 'OCR: pronto';
             return worker;
           } catch (error) {
-            console.error(
-              'Falha ao carregar OCR:',
-              error
-            );
-
-            ocrLoadingPromise = null;
+            console.warn('OCR:', error);
+            ocrState = 'error';
+            $('ocrStatus').textContent = 'OCR: indisponível';
             return null;
           }
         })();
 
-      return ocrLoadingPromise;
-    }
-
-    async function openScanner(target) {
-      if (scannerRunning) {
-        return;
+        return ocrPromise;
       }
 
-      scanTarget = target;
-      barcodeAccepted = false;
-      barcodeBusy = false;
-      ocrBusy = false;
-      torchEnabled = false;
-      frameNumber = 0;
-
-      lastOcrValue = '';
-      repeatedOcrValue = 0;
-
-      element('torchButton').disabled =
-        true;
-
-      element('torchButton')
-        .classList.remove('active');
-
-      element('cameraTitle').textContent =
-        scannerTitle(target);
-
-      element('cameraHelp').innerHTML =
-        '<span class="scanner-status">Abrindo câmera…</span>';
-
-      element('cameraDialog').showModal();
-
-      /*
-        Garante que o carregamento do OCR
-        continue em segundo plano.
-      */
-      preloadOcr();
-
-      try {
-        cameraStream =
-          await navigator.mediaDevices
-            .getUserMedia({
-              audio: false,
-
-              video: {
-                facingMode: {
-                  ideal: 'environment'
-                },
-
-                width: {
-                  ideal: 1920
-                },
-
-                height: {
-                  ideal: 1080
-                }
-              }
-            });
-
-        const video =
-          element('cameraVideo');
-
-        video.srcObject = cameraStream;
-        await video.play();
-
-        cameraTrack =
-          cameraStream.getVideoTracks()[0] ||
-          null;
-
-        scannerRunning = true;
-
-        await prepareCamera();
-
-        element('cameraHelp').innerHTML =
-          'Código de barras e números sendo analisados simultaneamente.<br>' +
-          '<span class="scanner-status">Aproxime até ficar bem nítido.</span>';
-
-        /*
-          Código de barras: aproximadamente
-          cinco tentativas por segundo.
-        */
-        barcodeTimer =
-          setInterval(
-            scanBarcode,
-            190
-          );
-
-        /*
-          OCR: já começa sem esperar o
-          código de barras falhar.
-        */
-        setTimeout(
-          function () {
-            if (scannerRunning) {
-              scanOcr();
-
-              ocrTimer =
-                setInterval(
-                  scanOcr,
-                  750
-                );
-            }
-          },
-          250
-        );
-      } catch (error) {
-        console.error(error);
-
-        await closeScanner();
-
-        showToast(
-          'Não foi possível abrir a câmera.',
-          'error'
-        );
-      }
-    }
-
-    function scannerTitle(target) {
-      if (target === 'PMC') {
-        return 'Ler patrimônio PMC';
+      function sessionIsActive(session) {
+        return cameraActive && session === cameraSession;
       }
 
-      if (
-        target === 'ICI' ||
-        target === 'ICI_SECUNDARIO'
-      ) {
-        return 'Ler etiqueta ICI';
+      function closeScanner() {
+        cameraActive = false;
+        cameraSession++;
+        clearTimeout(barcodeTimer);
+        clearTimeout(ocrTimer);
+
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(track => track.stop());
+        }
+
+        cameraStream = null;
+        cameraTrack = null;
+        torchOn = false;
+
+        $('cameraVideo').pause();
+        $('cameraVideo').srcObject = null;
+        $('torchButton').disabled = true;
+        $('torchButton').classList.remove('active');
+        $('torchButton').setAttribute('aria-pressed', 'false');
+
+        if ($('cameraDialog').open) $('cameraDialog').close();
       }
 
-      return 'Ler número de série';
-    }
+      async function openScanner() {
+        if (cameraActive || currentType() === 'SEM_IDENTIFICACAO' || saving) return;
 
-    async function prepareCamera() {
-      if (!cameraTrack) {
-        return;
-      }
+        hideSuggestions();
+        cameraActive = true;
+        const session = ++cameraSession;
+        cameraType = currentType();
 
-      const capabilities =
-        cameraTrack.getCapabilities
-          ? cameraTrack.getCapabilities()
-          : {};
+        barcodeReads = new Set();
+        ocrReads = new Set();
+        barcodeFailures = 0;
+        ocrFailures = 0;
+        scanFrame = 0;
 
-      const advanced = [];
+        $('candidateBox').hidden = true;
+        $('candidateOptions').replaceChildren();
+        $('cameraTitle').textContent = 'Ler ' + TYPE[cameraType].label;
+        $('barcodeStatus').textContent = 'Código: preparando';
+        $('ocrStatus').textContent = ocrState === 'ready'
+          ? 'OCR: pronto' : ocrState === 'error'
+            ? 'OCR: indisponível' : 'OCR: carregando';
+        $('cameraHelp').textContent =
+          'Código no quadro maior; números ou série na faixa tracejada.';
+        $('cameraDialog').showModal();
 
-      if (
-        Array.isArray(capabilities.focusMode) &&
-        capabilities.focusMode.includes(
-          'continuous'
-        )
-      ) {
-        advanced.push({
-          focusMode: 'continuous'
-        });
-      }
+        preloadOcr();
 
-      if (
-        Array.isArray(capabilities.exposureMode) &&
-        capabilities.exposureMode.includes(
-          'continuous'
-        )
-      ) {
-        advanced.push({
-          exposureMode: 'continuous'
-        });
-      }
-
-      if (advanced.length) {
         try {
-          await cameraTrack.applyConstraints({
-            advanced: advanced
-          });
-        } catch (error) {
-          console.warn(error);
-        }
-      }
+          if (!navigator.mediaDevices?.getUserMedia) {
+            throw new Error('Abra o site por HTTPS em um navegador com acesso à câmera.');
+          }
 
-      element('torchButton').disabled =
-        capabilities.torch !== true;
-    }
-
-    async function scanBarcode() {
-      if (
-        !scannerRunning ||
-        barcodeBusy ||
-        barcodeAccepted
-      ) {
-        return;
-      }
-
-      barcodeBusy = true;
-      frameNumber += 1;
-
-      try {
-        const imageData =
-          captureRegion(
-            'barcodeCanvas',
-            frameNumber % 3,
-            false
-          );
-
-        if (!imageData) {
-          return;
-        }
-
-        const results =
-          await window.ZXingWASM.readBarcodes(
-            imageData,
-            {
-              formats: [
-                'AllReadable'
-              ],
-
-              tryHarder: true,
-              tryRotate: true,
-              tryInvert: true,
-              tryDenoise: true,
-              maxNumberOfSymbols: 4
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              facingMode: { ideal: 'environment' },
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
             }
-          );
+          });
 
-        if (!Array.isArray(results)) {
-          return;
-        }
-
-        for (const result of results) {
-          const value =
-            validateScannedValue(
-              result.text
-            );
-
-          if (value) {
-            acceptScannedValue(
-              value,
-              'Código de barras ' +
-                (result.format || '')
-            );
-
+          if (!sessionIsActive(session)) {
+            stream.getTracks().forEach(track => track.stop());
             return;
           }
-        }
-      } catch (error) {
-        console.warn(
-          'Leitura de código:',
-          error
-        );
-      } finally {
-        barcodeBusy = false;
-      }
-    }
 
-    async function scanOcr() {
-      if (
-        !scannerRunning ||
-        ocrBusy ||
-        barcodeAccepted
-      ) {
-        return;
-      }
+          cameraStream = stream;
+          cameraTrack = stream.getVideoTracks()[0];
+          $('cameraVideo').srcObject = stream;
+          await $('cameraVideo').play();
 
-      const worker =
-        await preloadOcr();
+          if (!sessionIsActive(session)) return;
 
-      if (
-        !worker ||
-        !scannerRunning ||
-        barcodeAccepted
-      ) {
-        return;
-      }
+          const capabilities = cameraTrack.getCapabilities?.() || {};
+          $('torchButton').disabled = capabilities.torch !== true;
 
-      ocrBusy = true;
+          if (capabilities.focusMode?.includes('continuous')) {
+            try {
+              await cameraTrack.applyConstraints({
+                advanced: [{ focusMode: 'continuous' }]
+              });
+            } catch (_) {}
+          }
 
-      try {
-        const canvas =
-          captureRegion(
-            'ocrCanvas',
-            2,
+          if (!sessionIsActive(session)) return;
+          runBarcode(session, cameraType);
+          runOcr(session, cameraType);
+        } catch (error) {
+          if (!sessionIsActive(session)) return;
+          closeScanner();
+          showToast(
+            error.name === 'NotAllowedError'
+              ? 'Autorize o acesso à câmera nas configurações do navegador.'
+              : error.message || 'Não foi possível abrir a câmera.',
             true
           );
-
-        if (!canvas) {
-          return;
         }
+      }
 
-        if (scanTarget === 'SERIE') {
-          await worker.setParameters({
-            tessedit_char_whitelist:
-              'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-/.',
-            tessedit_pageseg_mode: '7'
-          });
-        } else {
-          await worker.setParameters({
-            tessedit_char_whitelist:
-              '0123456789',
-            tessedit_pageseg_mode: '7'
-          });
-        }
+      /*
+        Converte o retângulo visível em coordenadas do vídeo.
+        Considera o recorte feito por object-fit: cover.
+        Assim, o leitor analisa a área realmente indicada na tela.
+      */
+      function captureGuide(guideId, canvas, maxWidth, contrast = false) {
+        const video = $('cameraVideo');
+        if (video.readyState < 2 || !video.videoWidth) return null;
 
-        const result =
-          await worker.recognize(
-            element('ocrCanvas')
-          );
+        const videoRect = video.getBoundingClientRect();
+        const guideRect = $(guideId).getBoundingClientRect();
+        if (!videoRect.width || !videoRect.height) return null;
 
-        if (
-          !scannerRunning ||
-          barcodeAccepted
-        ) {
-          return;
-        }
-
-        const value =
-          validateScannedValue(
-            result.data.text
-          );
-
-        if (!value) {
-          return;
-        }
-
-        /*
-          OCR precisa encontrar o mesmo valor
-          duas vezes para evitar erro de leitura.
-        */
-        if (value === lastOcrValue) {
-          repeatedOcrValue += 1;
-        } else {
-          lastOcrValue = value;
-          repeatedOcrValue = 1;
-        }
-
-        if (repeatedOcrValue === 1) {
-          element('cameraHelp').innerHTML =
-            'Número encontrado: <strong>' +
-            escapeHtml(value) +
-            '</strong><br>' +
-            '<span class="scanner-status">Mantenha parado para confirmar…</span>';
-        }
-
-        if (repeatedOcrValue >= 2) {
-          acceptScannedValue(
-            value,
-            'Leitura dos números'
-          );
-        }
-      } catch (error) {
-        console.warn(
-          'Leitura OCR:',
-          error
+        const scale = Math.max(
+          videoRect.width / video.videoWidth,
+          videoRect.height / video.videoHeight
         );
-      } finally {
-        ocrBusy = false;
-      }
-    }
 
-    function validateScannedValue(rawValue) {
-      let value =
-        String(rawValue || '').trim();
+        const offsetX = (video.videoWidth * scale - videoRect.width) / 2;
+        const offsetY = (video.videoHeight * scale - videoRect.height) / 2;
 
-      if (scanTarget === 'PMC') {
-        value =
-          value.replace(/\D/g, '');
+        const sx = Math.max(0, (guideRect.left - videoRect.left + offsetX) / scale);
+        const sy = Math.max(0, (guideRect.top - videoRect.top + offsetY) / scale);
+        const sw = Math.min(guideRect.width / scale, video.videoWidth - sx);
+        const sh = Math.min(guideRect.height / scale, video.videoHeight - sy);
 
-        return value.length === 6
-          ? value
-          : '';
-      }
+        const outputScale = Math.min(1.4, maxWidth / sw);
+        canvas.width = Math.max(1, Math.round(sw * outputScale));
+        canvas.height = Math.max(1, Math.round(sh * outputScale));
 
-      if (
-        scanTarget === 'ICI' ||
-        scanTarget === 'ICI_SECUNDARIO'
-      ) {
-        value =
-          value.replace(/\s/g, '');
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        context.drawImage(
+          video, sx, sy, sw, sh,
+          0, 0, canvas.width, canvas.height
+        );
 
-        return value.length >= 3 &&
-          value.length <= 40
-          ? value
-          : '';
-      }
+        const data = context.getImageData(0, 0, canvas.width, canvas.height);
 
-      if (scanTarget === 'SERIE') {
-        value =
-          normalizeSerial(value);
-
-        return value.length >= 2
-          ? value
-          : '';
-      }
-
-      return '';
-    }
-
-    function normalizeSerial(value) {
-      return String(value || '')
-        .toUpperCase()
-        .replace(
-          /[^A-Z0-9\-/.]/g,
-          ''
-        )
-        .slice(0, 80);
-    }
-
-    function captureRegion(
-      canvasId,
-      treatment,
-      returnCanvas
-    ) {
-      const video =
-        element('cameraVideo');
-
-      if (
-        video.readyState < 2 ||
-        !video.videoWidth ||
-        !video.videoHeight
-      ) {
-        return null;
-      }
-
-      const canvas =
-        element(canvasId);
-
-      const context =
-        canvas.getContext(
-          '2d',
-          {
-            willReadFrequently: true
+        if (contrast) {
+          for (let i = 0; i < data.data.length; i += 4) {
+            const gray = .299 * data.data[i] +
+                         .587 * data.data[i + 1] +
+                         .114 * data.data[i + 2];
+            const value = Math.max(0, Math.min(255, (gray - 128) * 1.5 + 128));
+            data.data[i] = data.data[i + 1] = data.data[i + 2] = value;
           }
-        );
+          context.putImageData(data, 0, 0);
+        }
 
-      const sourceWidth =
-        Math.floor(
-          video.videoWidth * 0.94
-        );
-
-      const sourceHeight =
-        Math.floor(
-          video.videoHeight * 0.44
-        );
-
-      const sourceX =
-        Math.floor(
-          (video.videoWidth - sourceWidth) /
-            2
-        );
-
-      const sourceY =
-        Math.floor(
-          (video.videoHeight - sourceHeight) /
-            2
-        );
-
-      const maximumWidth =
-        returnCanvas
-          ? 1300
-          : 1800;
-
-      const scale =
-        Math.min(
-          1.35,
-          maximumWidth / sourceWidth
-        );
-
-      canvas.width =
-        Math.max(
-          1,
-          Math.floor(
-            sourceWidth * scale
-          )
-        );
-
-      canvas.height =
-        Math.max(
-          1,
-          Math.floor(
-            sourceHeight * scale
-          )
-        );
-
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = 'high';
-
-      context.drawImage(
-        video,
-        sourceX,
-        sourceY,
-        sourceWidth,
-        sourceHeight,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      const imageData =
-        context.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-      if (treatment === 1) {
-        applyContrast(
-          imageData,
-          1.75,
-          false
-        );
+        return data;
       }
 
-      if (treatment === 2) {
-        applyContrast(
-          imageData,
-          2.15,
-          true
-        );
+      function validBarcode(raw, type) {
+        const value = String(raw || '').trim();
+
+        // Não transforma qualquer texto em código removendo suas letras.
+        if (type === 'PMC') return /^[0-9]{6}$/.test(value) ? value : '';
+
+        const min = TYPE[type].min;
+        const max = TYPE[type].max;
+        if (value.length < min || value.length > max) return '';
+        if (/[\x00-\x1f\x7f]/.test(value)) return '';
+        if (/^(https?:|mailto:|wifi:)/i.test(value)) return '';
+        return value;
       }
 
-      if (treatment !== 0) {
-        context.putImageData(
-          imageData,
-          0,
-          0
-        );
+      function extractOcr(text, type) {
+        const lines = String(text || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const result = new Set();
+
+        for (let line of lines) {
+          if (type === 'PMC') {
+            if (/^[0-9\s]+$/.test(line)) {
+              const compact = line.replace(/\s/g, '');
+              if (/^[0-9]{6}$/.test(compact)) result.add(compact);
+            }
+          } else if (type === 'ICI') {
+            if (/^[0-9\s]{3,45}$/.test(line)) {
+              const compact = line.replace(/\s/g, '');
+              if (compact.length >= 3 && compact.length <= 40) result.add(compact);
+            }
+          } else {
+            line = line.replace(/^(?:S\/N|SN|SERIAL(?:\s+NO)?)[\s:#.-]*/i, '');
+            if (/^[A-Za-z0-9][A-Za-z0-9./_-]{1,79}$/.test(line) && /\d/.test(line)) {
+              result.add(line);
+            }
+          }
+        }
+        return [...result];
       }
 
-      return returnCanvas
-        ? canvas
-        : imageData;
-    }
+      function sameCode(a, b) {
+        return a.toLocaleLowerCase() === b.toLocaleLowerCase();
+      }
 
-    function applyContrast(
-      imageData,
-      contrast,
-      grayscale
-    ) {
-      const pixels =
-        imageData.data;
+      async function runBarcode(session, type) {
+        if (!sessionIsActive(session)) return;
 
-      for (
-        let index = 0;
-        index < pixels.length;
-        index += 4
-      ) {
-        const gray =
-          pixels[index] * 0.299 +
-          pixels[index + 1] * 0.587 +
-          pixels[index + 2] * 0.114;
+        try {
+          if (barcodeBusy) return;
+          if (!window.ZXingWASM?.readBarcodes) {
+            $('barcodeStatus').textContent = 'Código: indisponível';
+            return;
+          }
 
-        const adjusted =
-          Math.max(
-            0,
-            Math.min(
-              255,
-              (gray - 128) *
-                contrast +
-                128
-            )
+          barcodeBusy = true;
+          scanFrame++;
+          const image = captureGuide(
+            'barcodeGuide', barcodeCanvas, 1600, scanFrame % 3 === 0
           );
+          if (!image) return;
 
-        if (grayscale) {
-          pixels[index] = adjusted;
-          pixels[index + 1] = adjusted;
-          pixels[index + 2] = adjusted;
-        } else {
-          pixels[index] =
-            Math.max(
-              0,
-              Math.min(
-                255,
-                (pixels[index] - 128) *
-                  contrast +
-                  128
-              )
-            );
+          const results = await ZXingWASM.readBarcodes(image, {
+            formats: ['AllReadable'],
+            tryHarder: true,
+            tryRotate: true,
+            tryInvert: true,
+            maxNumberOfSymbols: 4
+          });
 
-          pixels[index + 1] =
-            Math.max(
-              0,
-              Math.min(
-                255,
-                (pixels[index + 1] - 128) *
-                  contrast +
-                  128
-              )
-            );
+          if (!sessionIsActive(session)) return;
+          barcodeFailures = 0;
+          $('barcodeStatus').textContent = 'Código: ativo';
 
-          pixels[index + 2] =
-            Math.max(
-              0,
-              Math.min(
-                255,
-                (pixels[index + 2] - 128) *
-                  contrast +
-                  128
-              )
-            );
+          const codes = [...new Set(
+            (results || [])
+              .filter(result => !result.error)
+              .map(result => validBarcode(result.text, type))
+              .filter(Boolean)
+          )];
+
+          codes.forEach(code => barcodeReads.add(code));
+
+          const hasConflict = codes.length > 1 ||
+            (codes.length === 1 && [...ocrReads].some(code => !sameCode(code, codes[0])));
+
+          if (codes.length === 1 && !hasConflict && barcodeReads.size === 1) {
+            useCode(codes[0], session);
+          } else if (codes.length) {
+            renderCandidates(session);
+          }
+        } catch (error) {
+          barcodeFailures++;
+          $('barcodeStatus').textContent = 'Código: erro no leitor';
+          console.warn('Código:', error);
+        } finally {
+          // Só a chamada que reservou o leitor pode liberá-lo.
+          // O processamento é sequencial neste ciclo.
+          if (barcodeBusy) barcodeBusy = false;
+          if (sessionIsActive(session) && barcodeFailures < 3) {
+            barcodeTimer = setTimeout(() => runBarcode(session, type), 190);
+          }
         }
       }
-    }
 
-    function acceptScannedValue(
-      value,
-      method
-    ) {
-      if (barcodeAccepted) {
-        return;
+      async function runOcr(session, type) {
+        if (!sessionIsActive(session)) return;
+
+        if (ocrBusy) {
+          ocrTimer = setTimeout(() => runOcr(session, type), 250);
+          return;
+        }
+
+        ocrBusy = true;
+
+        try {
+          const worker = await preloadOcr();
+          if (!worker || !sessionIsActive(session)) return;
+
+          await worker.setParameters({
+            tessedit_pageseg_mode: '7',
+            tessedit_char_whitelist: type === 'SERIE'
+              ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-./_: '
+              : '0123456789 '
+          });
+
+          if (!sessionIsActive(session)) return;
+
+          const image = captureGuide('ocrGuide', ocrCanvas, 1200, true);
+          if (!image) return;
+
+          const result = await worker.recognize(ocrCanvas);
+          if (!sessionIsActive(session)) return;
+
+          ocrFailures = 0;
+          $('ocrStatus').textContent = 'OCR: ativo';
+
+          const values = extractOcr(result.data?.text, type);
+          if ((result.data?.confidence ?? 0) < 55) return;
+
+          values.forEach(value => ocrReads.add(value));
+
+          // OCR é uma sugestão: um toque confirma o número.
+          // Não cadastra automaticamente uma interpretação de texto.
+          if (values.length) renderCandidates(session);
+        } catch (error) {
+          ocrFailures++;
+          $('ocrStatus').textContent = 'OCR: erro na leitura';
+          console.warn('OCR:', error);
+        } finally {
+          ocrBusy = false;
+          if (sessionIsActive(session) && ocrState !== 'error' && ocrFailures < 3) {
+            ocrTimer = setTimeout(() => runOcr(session, type), 550);
+          }
+        }
       }
 
-      barcodeAccepted = true;
+      function renderCandidates(session) {
+        if (!sessionIsActive(session)) return;
 
-      if (scanTarget === 'PMC') {
-        element('patrimonioPmc').value =
-          value;
+        const values = [...barcodeReads, ...ocrReads].filter(
+          (value, index, all) => all.findIndex(v => sameCode(v, value)) === index
+        ).slice(0, 4);
 
-        checkDuplicate(
-          'PMC',
-          value,
-          'pmcHint'
-        );
-      }
+        if (!values.length) return;
 
-      if (scanTarget === 'ICI') {
-        element('codigoIci').value =
-          value;
+        $('candidateMessage').textContent = values.length > 1
+          ? 'Leituras diferentes. Toque no código correto:'
+          : 'Texto reconhecido. Confira e toque para usar:';
 
-        checkDuplicate(
-          'ICI',
-          value,
-          'iciHint'
-        );
-      }
+        $('candidateOptions').replaceChildren();
 
-      if (
-        scanTarget ===
-        'ICI_SECUNDARIO'
-      ) {
-        element('codigoIciSecundario').value =
-          value;
-
-        checkDuplicate(
-          'ICI',
-          value,
-          'iciSecundarioHint'
-        );
-      }
-
-      if (scanTarget === 'SERIE') {
-        element('numeroSerie').value =
-          value;
-
-        checkDuplicate(
-          'SERIE',
-          value,
-          'serieHint'
-        );
-      }
-
-      closeScanner();
-
-      if (navigator.vibrate) {
-        navigator.vibrate(100);
-      }
-
-      showToast(
-        method +
-          ': ' +
-          value,
-        'success'
-      );
-    }
-
-    async function toggleTorch() {
-      if (!cameraTrack) {
-        return;
-      }
-
-      const capabilities =
-        cameraTrack.getCapabilities
-          ? cameraTrack.getCapabilities()
-          : {};
-
-      if (capabilities.torch !== true) {
-        showToast(
-          'Lanterna indisponível.',
-          'error'
-        );
-
-        return;
-      }
-
-      try {
-        torchEnabled =
-          !torchEnabled;
-
-        await cameraTrack.applyConstraints({
-          advanced: [
-            {
-              torch: torchEnabled
-            }
-          ]
+        values.forEach(value => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'Usar ' + value;
+          button.addEventListener('click', () => useCode(value, session));
+          $('candidateOptions').appendChild(button);
         });
 
-        element('torchButton')
-          .classList.toggle(
-            'active',
-            torchEnabled
-          );
-      } catch (error) {
-        torchEnabled = false;
-
-        showToast(
-          'Não foi possível ligar a lanterna.',
-          'error'
-        );
+        $('candidateBox').hidden = false;
       }
-    }
 
-    async function closeScanner() {
-      scannerRunning = false;
+      function useCode(value, session) {
+        if (!sessionIsActive(session)) return;
+        $('identifier').value = value;
+        closeScanner();
+        scheduleDuplicate();
+        showToast('Identificação preenchida: ' + value);
+      }
 
-      clearInterval(barcodeTimer);
-      clearInterval(ocrTimer);
+      async function toggleTorch() {
+        if (!cameraTrack || torchBusy) return;
 
-      barcodeTimer = null;
-      ocrTimer = null;
+        const track = cameraTrack;
+        const session = cameraSession;
+        const next = !torchOn;
+        torchBusy = true;
 
-      try {
-        if (
-          cameraTrack &&
-          torchEnabled
-        ) {
-          await cameraTrack.applyConstraints({
-            advanced: [
-              {
-                torch: false
-              }
-            ]
-          });
+        try {
+          await track.applyConstraints({ advanced: [{ torch: next }] });
+          if (!sessionIsActive(session)) return;
+
+          torchOn = next;
+          $('torchButton').classList.toggle('active', next);
+          $('torchButton').setAttribute('aria-pressed', String(next));
+          $('torchButton').setAttribute('aria-label',
+            next ? 'Desligar lanterna' : 'Ligar lanterna');
+        } catch (_) {
+          if (sessionIsActive(session)) {
+            $('cameraHelp').textContent = 'Não foi possível alterar a lanterna.';
+          }
+        } finally {
+          torchBusy = false;
         }
-      } catch (error) {
-        console.warn(error);
       }
 
-      torchEnabled = false;
+      // =====================================================
+      // EVENTOS E INICIALIZAÇÃO
+      // =====================================================
 
-      element('torchButton')
-        .classList.remove('active');
+      $('ambiente').addEventListener('change', updateRoom);
 
-      element('torchButton').disabled =
-        true;
-
-      stopCameraTracks();
-
-      const video =
-        element('cameraVideo');
-
-      video.pause();
-      video.srcObject = null;
-
-      if (element('cameraDialog').open) {
-        element('cameraDialog').close();
-      }
-    }
-
-    function stopCameraTracks() {
-      if (cameraStream) {
-        cameraStream
-          .getTracks()
-          .forEach(function (track) {
-            track.stop();
-          });
-      }
-
-      cameraStream = null;
-      cameraTrack = null;
-    }
-
-    async function saveItem() {
-      if (isSaving) {
-        return;
-      }
-
-      if (
-        !element('inventoryForm')
-          .reportValidity()
-      ) {
-        return;
-      }
-
-      const type =
-        getIdentificationType();
-
-      const pmc =
-        type === 'PMC'
-          ? element('patrimonioPmc').value
-          : '';
-
-      const ici =
-        type === 'PMC'
-          ? element('codigoIciSecundario').value.trim()
-          : type === 'ICI'
-            ? element('codigoIci').value.trim()
-            : '';
-
-      const serie =
-        type === 'SERIE'
-          ? element('numeroSerie').value.trim()
-          : '';
-
-      if (
-        type === 'PMC' &&
-        pmc.length !== 6
-      ) {
-        showToast(
-          'O patrimônio PMC deve possuir 6 números.',
-          'error'
-        );
-
-        return;
-      }
-
-      if (
-        type === 'ICI' &&
-        ici.length < 3
-      ) {
-        showToast(
-          'Informe o código ICI.',
-          'error'
-        );
-
-        return;
-      }
-
-      if (
-        type === 'SERIE' &&
-        serie.length < 2
-      ) {
-        showToast(
-          'Informe o número de série.',
-          'error'
-        );
-
-        return;
-      }
-
-      const checks = [];
-
-      if (pmc) {
-        checks.push(
-          checkDuplicate(
-            'PMC',
-            pmc,
-            'pmcHint'
-          )
-        );
-      }
-
-      if (ici) {
-        checks.push(
-          checkDuplicate(
-            'ICI',
-            ici,
-            type === 'PMC'
-              ? 'iciSecundarioHint'
-              : 'iciHint'
-          )
-        );
-      }
-
-      if (serie) {
-        checks.push(
-          checkDuplicate(
-            'SERIE',
-            serie,
-            'serieHint'
-          )
-        );
-      }
-
-      const duplicateResults =
-        await Promise.all(checks);
-
-      if (
-        duplicateResults.some(Boolean)
-      ) {
-        showToast(
-          'Existe um identificador já cadastrado.',
-          'error'
-        );
-
-        return;
-      }
-
-      const payload = {
-        ambiente:
-          element('ambiente').value,
-
-        categoria:
-          element('categoria').value,
-
-        item:
-          element('item').value.trim(),
-
-        patrimonio_pmc:
-          pmc,
-
-        codigo_ici:
-          ici,
-
-        numero_serie:
-          serie,
-
-        localizacao:
-          element('localizacao').value.trim(),
-
-        observacao:
-          element('observacao').value.trim()
-      };
-
-      setSaving(true);
-
-      try {
-        const { data, error } =
-          await database.rpc(
-            'salvar_item',
-            {
-              p_dados: payload
-            }
-          );
-
-        if (error) {
-          throw error;
-        }
-
-        updateSummary(
-          data.summary
-        );
-
-        addItemSuggestion(
-          data.item ||
-          payload.item
-        );
-
-        clearForNext();
-
-        if (navigator.vibrate) {
-          navigator.vibrate(
-            [70, 40, 70]
-          );
-        }
-
-        showToast(
-          'Item salvo: ' +
-            data.id,
-          'success'
-        );
-      } catch (error) {
-        console.error(error);
-
-        showToast(
-          error.message ||
-            'Não foi possível salvar.',
-          'error'
-        );
-      } finally {
-        setSaving(false);
-      }
-    }
-
-    function clearForNext() {
-      element('patrimonioPmc').value = '';
-      element('codigoIci').value = '';
-      element('codigoIciSecundario').value = '';
-      element('numeroSerie').value = '';
-      element('item').value = '';
-      element('observacao').value = '';
-
-      resetIdentifierHint(
-        'PMC',
-        'pmcHint'
-      );
-
-      resetIdentifierHint(
-        'ICI',
-        'iciHint'
-      );
-
-      resetIdentifierHint(
-        'ICI',
-        'iciSecundarioHint'
-      );
-
-      resetIdentifierHint(
-        'SERIE',
-        'serieHint'
-      );
-
-      document.querySelector(
-        '[name="tipoIdentificacao"]' +
-        '[value="PMC"]'
-      ).checked = true;
-
-      toggleIdentification();
-
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+      document.querySelectorAll('[data-room]').forEach(button => {
+        button.addEventListener('click', () => {
+          if (saving) return;
+          $('ambiente').value = button.dataset.room;
+          updateRoom();
+        });
       });
 
-      setTimeout(function () {
-        element('patrimonioPmc').focus();
-      }, 250);
-    }
+      $('categoria').addEventListener('change', () => {
+        remember('inventarioCategoria', $('categoria').value);
+      });
 
-    function setSaving(active) {
-      isSaving = active;
+      document.querySelectorAll('[name="idType"]').forEach(radio => {
+        radio.addEventListener('change', updateIdentification);
+      });
 
-      element('saveButton').disabled =
-        active;
+      $('identifier').addEventListener('input', () => {
+        if (currentType() === 'PMC') {
+          $('identifier').value = $('identifier').value.replace(/\D/g, '').slice(0, 6);
+        }
+        scheduleDuplicate();
+      });
 
-      element('saveButton').textContent =
-        active
-          ? 'Salvando…'
-          : 'Salvar e cadastrar próximo';
-    }
+      $('item').addEventListener('input', renderSuggestions);
+      $('item').addEventListener('focus', renderSuggestions);
 
-    function updateSummary(summary) {
-      summary = summary || {};
+      $('item').addEventListener('keydown', event => {
+        if (event.key === 'Escape') hideSuggestions();
+        if (event.key === 'ArrowDown' && !$('suggestions').hidden) {
+          event.preventDefault();
+          $('suggestions').querySelector('button')?.focus();
+        }
+      });
 
-      element('total').textContent =
-        summary.total || 0;
+      $('suggestions').addEventListener('keydown', event => {
+        const buttons = [...$('suggestions').querySelectorAll('button')];
+        const index = buttons.indexOf(document.activeElement);
 
-      element('gerenciaCount').textContent =
-        summary.gerencia || 0;
+        if (event.key === 'Escape') {
+          $('item').focus();
+          hideSuggestions();
+        } else if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          buttons[(index + 1) % buttons.length]?.focus();
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (index <= 0) $('item').focus();
+          else buttons[index - 1].focus();
+        }
+      });
 
-      element('principalCount').textContent =
-        summary.principal || 0;
+      document.addEventListener('pointerdown', event => {
+        if (!event.target.closest('.suggest-wrap')) hideSuggestions();
+      });
 
-      element('almoxCount').textContent =
-        summary.almoxarifado || 0;
-    }
+      $('inventoryForm').addEventListener('submit', saveItem);
+      $('scanButton').addEventListener('click', openScanner);
+      $('closeCameraButton').addEventListener('click', closeScanner);
+      $('torchButton').addEventListener('click', toggleTorch);
 
-    function setConnectionStatus(
-      connected,
-      message
-    ) {
-      const status =
-        element('connectionStatus');
+      $('cameraDialog').addEventListener('cancel', event => {
+        event.preventDefault();
+        closeScanner();
+      });
 
-      status.className =
-        connected
-          ? 'connection connected'
-          : 'connection error';
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) closeScanner();
+      });
+      window.addEventListener('pagehide', closeScanner);
 
-      element('connectionText').textContent =
-        message;
-    }
+      const savedRoom = recall('inventarioAmbiente');
+      if ([...$('ambiente').options].some(option => option.value === savedRoom)) {
+        $('ambiente').value = savedRoom;
+      }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
+      const savedCategory = recall('inventarioCategoria');
+      if (['Móvel', 'Tecnologia'].includes(savedCategory)) {
+        $('categoria').value = savedCategory;
+      }
 
-    function showToast(
-      message,
-      type
-    ) {
-      const toast =
-        element('toast');
+      updateRoom();
+      updateIdentification();
+      preloadOcr();
 
-      toast.textContent = message;
+      (async () => {
+        try {
+          if (!window.supabase) throw new Error('Biblioteca do banco não carregada.');
 
-      toast.className =
-        'toast show ' +
-        (type || '');
+          database = supabase.createClient(
+            'https://yipfkwxhpahpuiizkcny.supabase.co',
+            'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI'
+          );
 
-      clearTimeout(toast.timer);
+          const data = await rpc('iniciar_inventario');
+          updateSummary(data?.summary);
 
-      toast.timer =
-        setTimeout(function () {
-          toast.className = 'toast';
-        }, 4000);
-    }
+          suggestions = (Array.isArray(data?.suggestions) ? data.suggestions : [])
+            .filter(value => typeof value === 'string');
+
+          connection('ok', 'Banco conectado');
+        } catch (error) {
+          connection('error', 'Conexão indisponível');
+          showToast(error.message || 'Não foi possível conectar.', true);
+        }
+      })();
+    });
   </script>
 </body>
 </html>

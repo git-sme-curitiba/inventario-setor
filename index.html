@@ -4,8 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#123d32">
+  <meta name="theme-color" content="#080808">
+
   <title>ACERVO · Inventário do setor</title>
+
+  <link rel="icon" type="image/svg+xml" sizes="any"
+        href="./favicon.svg?v=2">
 
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
@@ -14,10 +18,13 @@
   <style>
     :root {
       --paper: #f3f4ef;
-      --white: #fff;
+      --white: #ffffff;
       --forest: #123d32;
       --forest-dark: #0b2b23;
       --lime: #d7f58b;
+      --black: #080808;
+      --acid: #c6ff00;
+      --magenta: #ff27bc;
       --ink: #20372f;
       --muted: #738079;
       --line: #e0e5dc;
@@ -38,10 +45,22 @@
     }
 
     button, input, select, textarea { font: inherit; }
-    button { cursor: pointer; touch-action: manipulation; }
-    button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
-    button:disabled { cursor: default; opacity: .5; }
-    button:focus-visible, a:focus-visible {
+
+    button {
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button, input, select, textarea {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: .5;
+    }
+
+    button:focus-visible {
       outline: 3px solid #91b85f;
       outline-offset: 4px;
     }
@@ -75,50 +94,72 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: calc(25px + env(safe-area-inset-top)) 0 23px;
-      border-bottom: 1px solid var(--line);
+      padding: calc(22px + env(safe-area-inset-top)) 20px 22px;
+      background: var(--black);
+      color: #f5f5ef;
+      border-radius: 0 0 20px 20px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 12px;
+      min-width: 0;
     }
 
-    .brand-mark {
-      width: 43px;
-      height: 43px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: var(--forest);
-      color: var(--lime);
+    .acervo-symbol {
+      display: block;
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
     }
-
-    .brand-mark svg { width: 28px; height: 28px; }
 
     .brand-name {
       display: block;
-      font-size: 21px;
-      font-weight: 850;
-      letter-spacing: -.9px;
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      line-height: 1;
     }
 
     .brand-caption {
       display: block;
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: 1.4px;
+      margin-top: 7px;
+      color: #b5b5b5;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: 1.2px;
+      line-height: 1.4;
       text-transform: uppercase;
+    }
+
+    .acervo-accents {
+      display: flex;
+      gap: 5px;
+      margin-top: 7px;
+    }
+
+    .acervo-accents i {
+      display: block;
+      height: 3px;
+    }
+
+    .acervo-accents i:first-child {
+      width: 42px;
+      background: var(--acid);
+    }
+
+    .acervo-accents i:last-child {
+      width: 13px;
+      background: var(--magenta);
     }
 
     .connection {
       display: flex;
       align-items: center;
       gap: 7px;
-      font-size: 11px;
-      color: var(--muted);
+      font-size: 10px;
+      color: #b5b5b5;
       text-align: right;
     }
 
@@ -130,8 +171,13 @@
       flex-shrink: 0;
     }
 
-    .connection[data-state="ok"] .dot { background: #669b48; }
-    .connection[data-state="error"] .dot { background: var(--danger); }
+    .connection[data-state="ok"] .dot {
+      background: var(--acid);
+    }
+
+    .connection[data-state="error"] .dot {
+      background: #ff7188;
+    }
 
     .intro {
       display: flex;
@@ -227,7 +273,6 @@
       background: var(--white);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      overflow: visible;
       box-shadow: 0 8px 28px rgba(28, 52, 32, .025);
     }
 
@@ -284,7 +329,6 @@
     }
 
     .field { margin-top: 17px; }
-    .field:first-child { margin-top: 0; }
 
     .field-label {
       display: flex;
@@ -394,10 +438,7 @@
       outline-offset: 2px;
     }
 
-    .id-row {
-      display: flex;
-      gap: 8px;
-    }
+    .id-row { display: flex; gap: 8px; }
 
     #identifier {
       font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -456,7 +497,6 @@
     .suggestions button:hover,
     .suggestions button:focus {
       background: var(--soft);
-      outline: none;
     }
 
     .aside-card {
@@ -467,6 +507,7 @@
     }
 
     .aside-card .eyebrow { color: #9caf97; }
+
     .aside-card h2 {
       margin: 20px 0 13px;
       font-size: 26px;
@@ -476,6 +517,7 @@
     }
 
     .aside-card h2 span { color: var(--lime); }
+
     .aside-card p {
       margin: 0;
       font-size: 12px;
@@ -499,6 +541,7 @@
     }
 
     .brand-pattern i:nth-child(2) { height: 73%; }
+
     .brand-pattern i:nth-child(3) {
       height: 90%;
       background: var(--lime);
@@ -606,7 +649,11 @@
       padding: 15px;
     }
 
-    .camera-header strong { font-size: 13px; font-weight: 550; }
+    .camera-header strong {
+      font-size: 13px;
+      font-weight: 550;
+    }
+
     .camera-actions { display: flex; gap: 7px; }
 
     .camera-icon {
@@ -627,6 +674,7 @@
     }
 
     .camera-area { position: relative; overflow: hidden; }
+
     #cameraVideo {
       display: block;
       width: 100%;
@@ -726,9 +774,12 @@
 
     @media (max-width: 440px) {
       .shell { padding: 0 16px; }
-      .masthead { padding-bottom: 18px; }
-      .brand-name { font-size: 20px; }
-      .connection { max-width: 106px; font-size: 10px; }
+      .masthead { padding-left: 14px; padding-right: 14px; gap: 10px; }
+      .brand { gap: 9px; }
+      .acervo-symbol { width: 42px; height: 42px; }
+      .brand-name { font-size: 22px; }
+      .brand-caption { font-size: 8px; letter-spacing: .7px; }
+      .connection { max-width: 85px; font-size: 9px; }
       .intro { padding: 25px 0 21px; gap: 12px; }
       .intro p { font-size: 12px; }
       .total strong { font-size: 37px; }
@@ -744,18 +795,16 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      * { scroll-behavior: auto !important; transition: none !important; }
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <symbol id="i-brand" viewBox="0 0 24 24">
-      <rect x="3" y="5" width="7" height="15" rx="1"></rect>
-      <rect x="14" y="3" width="7" height="17" rx="1"></rect>
-      <path d="M5 9h3M16 7h3M3 23h18"></path>
-    </symbol>
     <symbol id="i-pmc" viewBox="0 0 24 24">
       <path d="m3 9 9-6 9 6H3ZM5 11v7m5-7v7m4-7v7m5-7v7M3 21h18"></path>
     </symbol>
@@ -787,11 +836,17 @@
   <div class="shell">
     <header class="masthead">
       <div class="brand">
-        <span class="brand-mark">
-          <svg aria-hidden="true"><use href="#i-brand"></use></svg>
-        </span>
+        <img class="acervo-symbol"
+             src="./favicon.svg?v=2"
+             width="48"
+             height="48"
+             alt="">
+
         <div>
           <span class="brand-name">ACERVO</span>
+          <span class="acervo-accents" aria-hidden="true">
+            <i></i><i></i>
+          </span>
           <span class="brand-caption">Inventário do setor</span>
         </div>
       </div>
@@ -816,14 +871,19 @@
     </section>
 
     <div class="rooms" aria-label="Ambientes">
-      <button class="room" type="button" data-room="Sala da Gerência">
-        <span>Gerência</span><b id="gerenciaCount">—</b>
-      </button>
       <button class="room" type="button" data-room="Sala Principal">
-        <span>Sala principal</span><b id="principalCount">—</b>
+        <span>Sala principal</span>
+        <b id="principalCount">—</b>
       </button>
+
+      <button class="room" type="button" data-room="Sala da Gerência">
+        <span>Gerência</span>
+        <b id="gerenciaCount">—</b>
+      </button>
+
       <button class="room" type="button" data-room="Almoxarifado">
-        <span>Almoxarifado</span><b id="almoxCount">—</b>
+        <span>Almoxarifado</span>
+        <b id="almoxCount">—</b>
       </button>
     </div>
 
@@ -844,15 +904,16 @@
             <div class="field">
               <label class="field-label" for="ambiente">Ambiente</label>
               <select id="ambiente" required>
-                <option>Sala da Gerência</option>
                 <option>Sala Principal</option>
+                <option>Sala da Gerência</option>
                 <option>Almoxarifado</option>
               </select>
             </div>
 
             <div class="field" id="locationWrap" hidden>
               <label class="field-label" for="localizacao">
-                Estante / prateleira <span class="optional">Opcional</span>
+                Estante / prateleira
+                <span class="optional">Opcional</span>
               </label>
               <input id="localizacao" maxlength="150"
                      placeholder="Ex.: Estante A · Prateleira 2">
@@ -865,7 +926,8 @@
               <h3>Identificação</h3>
             </div>
 
-            <div class="types" role="radiogroup" aria-label="Tipo de identificação">
+            <div class="types" role="radiogroup"
+                 aria-label="Tipo de identificação">
               <label class="type">
                 <input type="radio" name="idType" value="PMC" checked>
                 <span>
@@ -873,6 +935,7 @@
                   Patrimônio
                 </span>
               </label>
+
               <label class="type">
                 <input type="radio" name="idType" value="ICI">
                 <span>
@@ -880,6 +943,7 @@
                   ICI
                 </span>
               </label>
+
               <label class="type">
                 <input type="radio" name="idType" value="SERIE">
                 <span>
@@ -887,8 +951,10 @@
                   Nº de série
                 </span>
               </label>
+
               <label class="type">
-                <input type="radio" name="idType" value="SEM_IDENTIFICACAO">
+                <input type="radio" name="idType"
+                       value="SEM_IDENTIFICACAO">
                 <span>
                   <svg aria-hidden="true"><use href="#i-empty"></use></svg>
                   Sem identificação
@@ -896,17 +962,21 @@
               </label>
             </div>
 
-            <!-- Um único campo. O tipo selecionado define seu comportamento. -->
             <div class="field">
-              <label class="field-label" id="identifierLabel" for="identifier">
+              <label class="field-label"
+                     id="identifierLabel" for="identifier">
                 Patrimônio PMC
               </label>
 
               <div class="id-row">
-                <input id="identifier" autocomplete="off" spellcheck="false"
+                <input id="identifier"
+                       autocomplete="off"
+                       spellcheck="false"
                        aria-describedby="identifierHint">
+
                 <button id="scanButton" class="scan-button" type="button"
-                        title="Ler identificação" aria-label="Ler identificação pela câmera">
+                        title="Ler identificação"
+                        aria-label="Ler identificação pela câmera">
                   <svg aria-hidden="true"><use href="#i-scan"></use></svg>
                 </button>
               </div>
@@ -931,19 +1001,30 @@
 
             <div class="field">
               <label class="field-label" for="item">Item</label>
+
               <div class="suggest-wrap">
-                <input id="item" required minlength="2" maxlength="120"
-                       autocomplete="off" placeholder="O que você está registrando?"
-                       aria-controls="suggestions" aria-expanded="false">
+                <input id="item"
+                       required
+                       minlength="2"
+                       maxlength="120"
+                       autocomplete="off"
+                       placeholder="O que você está registrando?"
+                       aria-controls="suggestions"
+                       aria-expanded="false">
+
                 <div class="suggestions" id="suggestions"
                      aria-label="Itens já utilizados" hidden></div>
               </div>
-              <p class="hint">Digite para encontrar itens já registrados ou criar um novo.</p>
+
+              <p class="hint">
+                Digite para encontrar itens já registrados ou criar um novo.
+              </p>
             </div>
 
             <div class="field">
               <label class="field-label" for="observacao">
-                Observação <span class="optional">Opcional</span>
+                Observação
+                <span class="optional">Opcional</span>
               </label>
               <textarea id="observacao" maxlength="2000"
                         placeholder="Algum detalhe que vale guardar?"></textarea>
@@ -958,13 +1039,18 @@
         <div class="aside-card">
           <span class="eyebrow">Menos procura.</span>
           <h2>Mais ordem.<br><span>Mais clareza.</span></h2>
-          <p>Identifique, registre e siga para o próximo. Seu setor, bem cuidado.</p>
+          <p>
+            Identifique, registre e siga para o próximo.
+            Seu setor, bem cuidado.
+          </p>
           <div class="brand-pattern" aria-hidden="true">
             <i></i><i></i><i></i><i></i>
           </div>
         </div>
+
         <p class="aside-note">
-          Use o patrimônio PMC primeiro. Na ausência dele, use ICI ou número de série.
+          Use o patrimônio PMC primeiro.
+          Na ausência dele, use ICI ou número de série.
         </p>
       </aside>
     </main>
@@ -973,6 +1059,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <span class="footer-note">ACERVO / Inventário do setor</span>
+
       <button class="save-button" id="saveButton"
               type="submit" form="inventoryForm">
         <span id="saveText">Salvar e cadastrar próximo</span>
@@ -986,11 +1073,13 @@
   <dialog id="cameraDialog" aria-labelledby="cameraTitle">
     <div class="camera-header">
       <strong id="cameraTitle">Ler identificação</strong>
+
       <div class="camera-actions">
         <button class="camera-icon" id="torchButton" type="button"
                 disabled aria-label="Ligar lanterna" aria-pressed="false">
           <svg aria-hidden="true"><use href="#i-torch"></use></svg>
         </button>
+
         <button class="camera-icon" id="closeCameraButton" type="button"
                 aria-label="Fechar câmera">
           <svg aria-hidden="true"><use href="#i-close"></use></svg>
@@ -1086,6 +1175,7 @@
       let ocrBusy = false;
       let ocrPromise = null;
       let ocrState = 'preparing';
+
       let barcodeFailures = 0;
       let ocrFailures = 0;
       let barcodeReads = new Set();
@@ -1100,11 +1190,17 @@
       }
 
       function remember(key, value) {
-        try { localStorage.setItem(key, value); } catch (_) {}
+        try {
+          localStorage.setItem(key, value);
+        } catch (_) {}
       }
 
       function recall(key) {
-        try { return localStorage.getItem(key); } catch (_) { return null; }
+        try {
+          return localStorage.getItem(key);
+        } catch (_) {
+          return null;
+        }
       }
 
       function normalizeName(value) {
@@ -1112,8 +1208,10 @@
       }
 
       function searchKey(value) {
-        return normalizeName(value).normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+        return normalizeName(value)
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLocaleLowerCase('pt-BR');
       }
 
       function showToast(message, error = false) {
@@ -1121,7 +1219,10 @@
         $('toast').textContent = message;
         $('toast').className = 'toast' + (error ? ' error' : '');
         $('toast').hidden = false;
-        toastTimer = setTimeout(() => $('toast').hidden = true, 5000);
+
+        toastTimer = setTimeout(() => {
+          $('toast').hidden = true;
+        }, 5000);
       }
 
       function connection(state, message) {
@@ -1132,8 +1233,8 @@
       function updateSummary(summary = {}) {
         for (const [id, key] of [
           ['total', 'total'],
-          ['gerenciaCount', 'gerencia'],
           ['principalCount', 'principal'],
+          ['gerenciaCount', 'gerencia'],
           ['almoxCount', 'almoxarifado']
         ]) {
           $(id).textContent = summary[key] ?? 0;
@@ -1143,13 +1244,17 @@
       function updateRoom() {
         const room = $('ambiente').value;
         $('locationWrap').hidden = room !== 'Almoxarifado';
-        if (room !== 'Almoxarifado') $('localizacao').value = '';
+
+        if (room !== 'Almoxarifado') {
+          $('localizacao').value = '';
+        }
 
         document.querySelectorAll('[data-room]').forEach(button => {
           const selected = button.dataset.room === room;
           button.classList.toggle('active', selected);
           button.setAttribute('aria-pressed', String(selected));
         });
+
         remember('inventarioAmbiente', room);
       }
 
@@ -1163,7 +1268,6 @@
         const noCode = type === 'SEM_IDENTIFICACAO';
         const input = $('identifier');
 
-        // O valor do tipo anterior nunca é enviado no próximo cadastro.
         input.value = '';
         input.readOnly = noCode;
         input.required = !noCode;
@@ -1173,25 +1277,37 @@
         input.placeholder = config.placeholder;
         input.setCustomValidity('');
 
-        if (config.pattern) input.pattern = config.pattern;
-        else input.removeAttribute('pattern');
+        if (config.pattern) {
+          input.pattern = config.pattern;
+        } else {
+          input.removeAttribute('pattern');
+        }
 
         $('identifierLabel').textContent = config.label;
         $('identifierHint').textContent = config.hint;
         $('identifierHint').className = 'hint';
         $('scanButton').hidden = noCode;
-        $('scanButton').setAttribute('aria-label', 'Ler ' + config.label);
+
+        $('scanButton').setAttribute(
+          'aria-label',
+          'Ler ' + config.label
+        );
       }
 
       async function rpc(name, args) {
-        if (!database) throw new Error('O banco de dados não está conectado.');
+        if (!database) {
+          throw new Error('O banco de dados não está conectado.');
+        }
+
         const { data, error } = await database.rpc(name, args);
+
         if (error) throw error;
         return data;
       }
 
       async function checkDuplicate(type, value) {
         if (!value || type === 'SEM_IDENTIFICACAO') return null;
+
         return rpc('verificar_identificador', {
           p_tipo: type,
           p_codigo: value
@@ -1200,6 +1316,7 @@
 
       function scheduleDuplicate() {
         clearTimeout(duplicateTimer);
+
         const version = ++duplicateVersion;
         const type = currentType();
         const code = $('identifier').value.trim();
@@ -1207,11 +1324,15 @@
         $('identifierHint').className = 'hint';
         $('identifierHint').textContent = TYPE[type].hint;
 
-        if (code.length < TYPE[type].min || type === 'SEM_IDENTIFICACAO') return;
+        if (
+          code.length < TYPE[type].min ||
+          type === 'SEM_IDENTIFICACAO'
+        ) return;
 
         duplicateTimer = setTimeout(async () => {
           try {
             const result = await checkDuplicate(type, code);
+
             if (version !== duplicateVersion) return;
 
             if (result?.exists) {
@@ -1221,6 +1342,7 @@
             }
           } catch (_) {
             if (version !== duplicateVersion) return;
+
             $('identifierHint').className = 'hint error';
             $('identifierHint').textContent =
               'Verificação indisponível. Tentaremos novamente ao salvar.';
@@ -1235,6 +1357,7 @@
 
       function renderSuggestions() {
         const query = searchKey($('item').value);
+
         const matches = suggestions
           .filter(name => searchKey(name).includes(query))
           .slice(0, 10);
@@ -1246,20 +1369,27 @@
           const button = document.createElement('button');
           button.type = 'button';
           button.textContent = name;
+
           button.addEventListener('click', () => {
             $('item').value = name;
             hideSuggestions();
             $('observacao').focus();
           });
+
           box.appendChild(button);
         }
 
         box.hidden = matches.length === 0;
-        $('item').setAttribute('aria-expanded', String(matches.length > 0));
+
+        $('item').setAttribute(
+          'aria-expanded',
+          String(matches.length > 0)
+        );
       }
 
       async function saveItem(event) {
         event.preventDefault();
+
         if (saving || !$('inventoryForm').reportValidity()) return;
 
         const type = currentType();
@@ -1272,9 +1402,23 @@
           return;
         }
 
+        if (
+          type !== 'SEM_IDENTIFICACAO' &&
+          (
+            code.length < TYPE[type].min ||
+            code.length > TYPE[type].max ||
+            (type === 'PMC' && !/^[0-9]{6}$/.test(code))
+          )
+        ) {
+          showToast('Confira a identificação informada.', true);
+          $('identifier').focus();
+          return;
+        }
+
         const existingName = suggestions.find(
           name => searchKey(name) === searchKey(itemName)
         );
+
         if (existingName) itemName = existingName;
 
         const payload = {
@@ -1285,38 +1429,51 @@
           codigo_ici: type === 'ICI' ? code : '',
           numero_serie: type === 'SERIE' ? code : '',
           localizacao: $('ambiente').value === 'Almoxarifado'
-            ? $('localizacao').value.trim() : '',
+            ? $('localizacao').value.trim()
+            : '',
           observacao: $('observacao').value.trim()
         };
 
-        // Bloqueia antes de qualquer chamada: evita clique duplo.
         saving = true;
         $('saveButton').disabled = true;
         $('saveText').textContent = 'Salvando…';
 
         const controls = [...$('inventoryForm').elements];
+
         controls.forEach(control => control.disabled = true);
-        document.querySelectorAll('[data-room]').forEach(b => b.disabled = true);
+
+        document.querySelectorAll('[data-room]').forEach(button => {
+          button.disabled = true;
+        });
 
         try {
           const duplicate = await checkDuplicate(type, code);
+
           if (duplicate?.exists) {
-            throw new Error(`Já cadastrado: ${duplicate.item} · ${duplicate.ambiente}`);
+            throw new Error(
+              `Já cadastrado: ${duplicate.item} · ${duplicate.ambiente}`
+            );
           }
 
-          const data = await rpc('salvar_item', { p_dados: payload });
+          const data = await rpc('salvar_item', {
+            p_dados: payload
+          });
 
           updateSummary(data?.summary);
+
           const savedName = data?.item || itemName;
 
           suggestions = [
             savedName,
-            ...suggestions.filter(name => searchKey(name) !== searchKey(savedName))
+            ...suggestions.filter(
+              name => searchKey(name) !== searchKey(savedName)
+            )
           ];
 
           $('identifier').value = '';
           $('item').value = '';
           $('observacao').value = '';
+
           hideSuggestions();
           clearTimeout(duplicateTimer);
           duplicateVersion++;
@@ -1330,34 +1487,45 @@
 
           $('lastSaved').textContent =
             `${internalId} · ${savedName} · ${payload.ambiente} — salvo.`;
+
           $('lastSaved').hidden = false;
 
           showToast(`${savedName} salvo · ${internalId}`);
         } catch (error) {
-          showToast(error.message || 'Não foi possível salvar. Seus campos foram mantidos.', true);
+          showToast(
+            error.message ||
+            'Não foi possível salvar. Seus campos foram mantidos.',
+            true
+          );
         } finally {
           saving = false;
+
           controls.forEach(control => control.disabled = false);
-          document.querySelectorAll('[data-room]').forEach(b => b.disabled = false);
+
+          document.querySelectorAll('[data-room]').forEach(button => {
+            button.disabled = false;
+          });
+
           $('saveButton').disabled = false;
           $('saveText').textContent = 'Salvar e cadastrar próximo';
         }
       }
 
-      // =====================================================
-      // LEITORES
-      // Código de barras + OCR em segundo plano.
-      // Cada sessão ignora resultados de câmeras já fechadas.
-      // =====================================================
+      // ======================================================
+      // CÂMERA, CÓDIGOS DE BARRAS E OCR
+      // ======================================================
 
       function preloadOcr() {
         if (ocrPromise) return ocrPromise;
 
         ocrPromise = (async () => {
           try {
-            if (!window.Tesseract) throw new Error('OCR indisponível');
+            if (!window.Tesseract) {
+              throw new Error('OCR indisponível');
+            }
 
             const worker = await Tesseract.createWorker('eng', 1);
+
             await worker.setParameters({
               tessedit_pageseg_mode: '7',
               preserve_interword_spaces: '1'
@@ -1365,6 +1533,7 @@
 
             ocrState = 'ready';
             $('ocrStatus').textContent = 'OCR: pronto';
+
             return worker;
           } catch (error) {
             console.warn('OCR:', error);
@@ -1384,6 +1553,7 @@
       function closeScanner() {
         cameraActive = false;
         cameraSession++;
+
         clearTimeout(barcodeTimer);
         clearTimeout(ocrTimer);
 
@@ -1397,17 +1567,26 @@
 
         $('cameraVideo').pause();
         $('cameraVideo').srcObject = null;
+
         $('torchButton').disabled = true;
         $('torchButton').classList.remove('active');
         $('torchButton').setAttribute('aria-pressed', 'false');
+        $('torchButton').setAttribute('aria-label', 'Ligar lanterna');
 
-        if ($('cameraDialog').open) $('cameraDialog').close();
+        if ($('cameraDialog').open) {
+          $('cameraDialog').close();
+        }
       }
 
       async function openScanner() {
-        if (cameraActive || currentType() === 'SEM_IDENTIFICACAO' || saving) return;
+        if (
+          cameraActive ||
+          currentType() === 'SEM_IDENTIFICACAO' ||
+          saving
+        ) return;
 
         hideSuggestions();
+
         cameraActive = true;
         const session = ++cameraSession;
         cameraType = currentType();
@@ -1420,20 +1599,31 @@
 
         $('candidateBox').hidden = true;
         $('candidateOptions').replaceChildren();
-        $('cameraTitle').textContent = 'Ler ' + TYPE[cameraType].label;
+
+        $('cameraTitle').textContent =
+          'Ler ' + TYPE[cameraType].label;
+
         $('barcodeStatus').textContent = 'Código: preparando';
-        $('ocrStatus').textContent = ocrState === 'ready'
-          ? 'OCR: pronto' : ocrState === 'error'
-            ? 'OCR: indisponível' : 'OCR: carregando';
+
+        $('ocrStatus').textContent =
+          ocrState === 'ready'
+            ? 'OCR: pronto'
+            : ocrState === 'error'
+              ? 'OCR: indisponível'
+              : 'OCR: carregando';
+
         $('cameraHelp').textContent =
           'Código no quadro maior; números ou série na faixa tracejada.';
+
         $('cameraDialog').showModal();
 
         preloadOcr();
 
         try {
           if (!navigator.mediaDevices?.getUserMedia) {
-            throw new Error('Abra o site por HTTPS em um navegador com acesso à câmera.');
+            throw new Error(
+              'Abra o site por HTTPS em um navegador com acesso à câmera.'
+            );
           }
 
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -1452,13 +1642,17 @@
 
           cameraStream = stream;
           cameraTrack = stream.getVideoTracks()[0];
+
           $('cameraVideo').srcObject = stream;
           await $('cameraVideo').play();
 
           if (!sessionIsActive(session)) return;
 
-          const capabilities = cameraTrack.getCapabilities?.() || {};
-          $('torchButton').disabled = capabilities.torch !== true;
+          const capabilities =
+            cameraTrack.getCapabilities?.() || {};
+
+          $('torchButton').disabled =
+            capabilities.torch !== true;
 
           if (capabilities.focusMode?.includes('continuous')) {
             try {
@@ -1469,11 +1663,14 @@
           }
 
           if (!sessionIsActive(session)) return;
+
           runBarcode(session, cameraType);
           runOcr(session, cameraType);
         } catch (error) {
           if (!sessionIsActive(session)) return;
+
           closeScanner();
+
           showToast(
             error.name === 'NotAllowedError'
               ? 'Autorize o acesso à câmera nas configurações do navegador.'
@@ -1483,17 +1680,23 @@
         }
       }
 
-      /*
-        Converte o retângulo visível em coordenadas do vídeo.
-        Considera o recorte feito por object-fit: cover.
-        Assim, o leitor analisa a área realmente indicada na tela.
-      */
-      function captureGuide(guideId, canvas, maxWidth, contrast = false) {
+      function captureGuide(
+        guideId,
+        canvas,
+        maxWidth,
+        contrast = false
+      ) {
         const video = $('cameraVideo');
-        if (video.readyState < 2 || !video.videoWidth) return null;
+
+        if (
+          video.readyState < 2 ||
+          !video.videoWidth ||
+          !video.videoHeight
+        ) return null;
 
         const videoRect = video.getBoundingClientRect();
         const guideRect = $(guideId).getBoundingClientRect();
+
         if (!videoRect.width || !videoRect.height) return null;
 
         const scale = Math.max(
@@ -1501,34 +1704,70 @@
           videoRect.height / video.videoHeight
         );
 
-        const offsetX = (video.videoWidth * scale - videoRect.width) / 2;
-        const offsetY = (video.videoHeight * scale - videoRect.height) / 2;
+        const offsetX =
+          (video.videoWidth * scale - videoRect.width) / 2;
 
-        const sx = Math.max(0, (guideRect.left - videoRect.left + offsetX) / scale);
-        const sy = Math.max(0, (guideRect.top - videoRect.top + offsetY) / scale);
-        const sw = Math.min(guideRect.width / scale, video.videoWidth - sx);
-        const sh = Math.min(guideRect.height / scale, video.videoHeight - sy);
+        const offsetY =
+          (video.videoHeight * scale - videoRect.height) / 2;
+
+        const sx = Math.max(
+          0,
+          (guideRect.left - videoRect.left + offsetX) / scale
+        );
+
+        const sy = Math.max(
+          0,
+          (guideRect.top - videoRect.top + offsetY) / scale
+        );
+
+        const sw = Math.min(
+          guideRect.width / scale,
+          video.videoWidth - sx
+        );
+
+        const sh = Math.min(
+          guideRect.height / scale,
+          video.videoHeight - sy
+        );
+
+        if (sw <= 0 || sh <= 0) return null;
 
         const outputScale = Math.min(1.4, maxWidth / sw);
+
         canvas.width = Math.max(1, Math.round(sw * outputScale));
         canvas.height = Math.max(1, Math.round(sh * outputScale));
 
-        const context = canvas.getContext('2d', { willReadFrequently: true });
+        const context = canvas.getContext('2d', {
+          willReadFrequently: true
+        });
+
         context.drawImage(
-          video, sx, sy, sw, sh,
+          video,
+          sx, sy, sw, sh,
           0, 0, canvas.width, canvas.height
         );
 
-        const data = context.getImageData(0, 0, canvas.width, canvas.height);
+        const data = context.getImageData(
+          0, 0, canvas.width, canvas.height
+        );
 
         if (contrast) {
           for (let i = 0; i < data.data.length; i += 4) {
-            const gray = .299 * data.data[i] +
-                         .587 * data.data[i + 1] +
-                         .114 * data.data[i + 2];
-            const value = Math.max(0, Math.min(255, (gray - 128) * 1.5 + 128));
-            data.data[i] = data.data[i + 1] = data.data[i + 2] = value;
+            const gray =
+              .299 * data.data[i] +
+              .587 * data.data[i + 1] +
+              .114 * data.data[i + 2];
+
+            const value = Math.max(
+              0,
+              Math.min(255, (gray - 128) * 1.5 + 128)
+            );
+
+            data.data[i] = value;
+            data.data[i + 1] = value;
+            data.data[i + 2] = value;
           }
+
           context.putImageData(data, 0, 0);
         }
 
@@ -1538,39 +1777,60 @@
       function validBarcode(raw, type) {
         const value = String(raw || '').trim();
 
-        // Não transforma qualquer texto em código removendo suas letras.
-        if (type === 'PMC') return /^[0-9]{6}$/.test(value) ? value : '';
+        if (type === 'PMC') {
+          return /^[0-9]{6}$/.test(value) ? value : '';
+        }
 
         const min = TYPE[type].min;
         const max = TYPE[type].max;
+
         if (value.length < min || value.length > max) return '';
         if (/[\x00-\x1f\x7f]/.test(value)) return '';
         if (/^(https?:|mailto:|wifi:)/i.test(value)) return '';
+
         return value;
       }
 
       function extractOcr(text, type) {
-        const lines = String(text || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const lines = String(text || '')
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(Boolean);
+
         const result = new Set();
 
         for (let line of lines) {
           if (type === 'PMC') {
             if (/^[0-9\s]+$/.test(line)) {
               const compact = line.replace(/\s/g, '');
-              if (/^[0-9]{6}$/.test(compact)) result.add(compact);
+
+              if (/^[0-9]{6}$/.test(compact)) {
+                result.add(compact);
+              }
             }
           } else if (type === 'ICI') {
             if (/^[0-9\s]{3,45}$/.test(line)) {
               const compact = line.replace(/\s/g, '');
-              if (compact.length >= 3 && compact.length <= 40) result.add(compact);
+
+              if (compact.length >= 3 && compact.length <= 40) {
+                result.add(compact);
+              }
             }
           } else {
-            line = line.replace(/^(?:S\/N|SN|SERIAL(?:\s+NO)?)[\s:#.-]*/i, '');
-            if (/^[A-Za-z0-9][A-Za-z0-9./_-]{1,79}$/.test(line) && /\d/.test(line)) {
+            line = line.replace(
+              /^(?:S\/N|SN|SERIAL(?:\s+NO)?)[\s:#.-]*/i,
+              ''
+            );
+
+            if (
+              /^[A-Za-z0-9][A-Za-z0-9./_-]{1,79}$/.test(line) &&
+              /\d/.test(line)
+            ) {
               result.add(line);
             }
           }
         }
+
         return [...result];
       }
 
@@ -1581,18 +1841,32 @@
       async function runBarcode(session, type) {
         if (!sessionIsActive(session)) return;
 
-        try {
-          if (barcodeBusy) return;
-          if (!window.ZXingWASM?.readBarcodes) {
-            $('barcodeStatus').textContent = 'Código: indisponível';
-            return;
-          }
-
-          barcodeBusy = true;
-          scanFrame++;
-          const image = captureGuide(
-            'barcodeGuide', barcodeCanvas, 1600, scanFrame % 3 === 0
+        // Uma sessão nova aguarda a leitura anterior terminar.
+        if (barcodeBusy) {
+          barcodeTimer = setTimeout(
+            () => runBarcode(session, type),
+            190
           );
+          return;
+        }
+
+        if (!window.ZXingWASM?.readBarcodes) {
+          $('barcodeStatus').textContent = 'Código: indisponível';
+          return;
+        }
+
+        barcodeBusy = true;
+
+        try {
+          scanFrame++;
+
+          const image = captureGuide(
+            'barcodeGuide',
+            barcodeCanvas,
+            1600,
+            scanFrame % 3 === 0
+          );
+
           if (!image) return;
 
           const results = await ZXingWASM.readBarcodes(image, {
@@ -1604,6 +1878,7 @@
           });
 
           if (!sessionIsActive(session)) return;
+
           barcodeFailures = 0;
           $('barcodeStatus').textContent = 'Código: ativo';
 
@@ -1616,24 +1891,37 @@
 
           codes.forEach(code => barcodeReads.add(code));
 
-          const hasConflict = codes.length > 1 ||
-            (codes.length === 1 && [...ocrReads].some(code => !sameCode(code, codes[0])));
+          const hasConflict =
+            codes.length > 1 ||
+            (
+              codes.length === 1 &&
+              [...ocrReads].some(code => !sameCode(code, codes[0]))
+            );
 
-          if (codes.length === 1 && !hasConflict && barcodeReads.size === 1) {
+          if (
+            codes.length === 1 &&
+            !hasConflict &&
+            barcodeReads.size === 1
+          ) {
             useCode(codes[0], session);
           } else if (codes.length) {
             renderCandidates(session);
           }
         } catch (error) {
-          barcodeFailures++;
-          $('barcodeStatus').textContent = 'Código: erro no leitor';
+          if (sessionIsActive(session)) {
+            barcodeFailures++;
+            $('barcodeStatus').textContent = 'Código: erro no leitor';
+          }
+
           console.warn('Código:', error);
         } finally {
-          // Só a chamada que reservou o leitor pode liberá-lo.
-          // O processamento é sequencial neste ciclo.
-          if (barcodeBusy) barcodeBusy = false;
+          barcodeBusy = false;
+
           if (sessionIsActive(session) && barcodeFailures < 3) {
-            barcodeTimer = setTimeout(() => runBarcode(session, type), 190);
+            barcodeTimer = setTimeout(
+              () => runBarcode(session, type),
+              190
+            );
           }
         }
       }
@@ -1642,7 +1930,10 @@
         if (!sessionIsActive(session)) return;
 
         if (ocrBusy) {
-          ocrTimer = setTimeout(() => runOcr(session, type), 250);
+          ocrTimer = setTimeout(
+            () => runOcr(session, type),
+            250
+          );
           return;
         }
 
@@ -1650,6 +1941,7 @@
 
         try {
           const worker = await preloadOcr();
+
           if (!worker || !sessionIsActive(session)) return;
 
           await worker.setParameters({
@@ -1661,31 +1953,50 @@
 
           if (!sessionIsActive(session)) return;
 
-          const image = captureGuide('ocrGuide', ocrCanvas, 1200, true);
+          const image = captureGuide(
+            'ocrGuide',
+            ocrCanvas,
+            1200,
+            true
+          );
+
           if (!image) return;
 
           const result = await worker.recognize(ocrCanvas);
+
           if (!sessionIsActive(session)) return;
 
           ocrFailures = 0;
           $('ocrStatus').textContent = 'OCR: ativo';
 
           const values = extractOcr(result.data?.text, type);
+
           if ((result.data?.confidence ?? 0) < 55) return;
 
           values.forEach(value => ocrReads.add(value));
 
-          // OCR é uma sugestão: um toque confirma o número.
-          // Não cadastra automaticamente uma interpretação de texto.
-          if (values.length) renderCandidates(session);
+          if (values.length) {
+            renderCandidates(session);
+          }
         } catch (error) {
-          ocrFailures++;
-          $('ocrStatus').textContent = 'OCR: erro na leitura';
+          if (sessionIsActive(session)) {
+            ocrFailures++;
+            $('ocrStatus').textContent = 'OCR: erro na leitura';
+          }
+
           console.warn('OCR:', error);
         } finally {
           ocrBusy = false;
-          if (sessionIsActive(session) && ocrState !== 'error' && ocrFailures < 3) {
-            ocrTimer = setTimeout(() => runOcr(session, type), 550);
+
+          if (
+            sessionIsActive(session) &&
+            ocrState !== 'error' &&
+            ocrFailures < 3
+          ) {
+            ocrTimer = setTimeout(
+              () => runOcr(session, type),
+              550
+            );
           }
         }
       }
@@ -1693,9 +2004,12 @@
       function renderCandidates(session) {
         if (!sessionIsActive(session)) return;
 
-        const values = [...barcodeReads, ...ocrReads].filter(
-          (value, index, all) => all.findIndex(v => sameCode(v, value)) === index
-        ).slice(0, 4);
+        const values = [...barcodeReads, ...ocrReads]
+          .filter(
+            (value, index, all) =>
+              all.findIndex(other => sameCode(other, value)) === index
+          )
+          .slice(0, 4);
 
         if (!values.length) return;
 
@@ -1709,7 +2023,11 @@
           const button = document.createElement('button');
           button.type = 'button';
           button.textContent = 'Usar ' + value;
-          button.addEventListener('click', () => useCode(value, session));
+
+          button.addEventListener('click', () => {
+            useCode(value, session);
+          });
+
           $('candidateOptions').appendChild(button);
         });
 
@@ -1718,9 +2036,12 @@
 
       function useCode(value, session) {
         if (!sessionIsActive(session)) return;
+
         $('identifier').value = value;
+
         closeScanner();
         scheduleDuplicate();
+
         showToast('Identificação preenchida: ' + value);
       }
 
@@ -1730,35 +2051,45 @@
         const track = cameraTrack;
         const session = cameraSession;
         const next = !torchOn;
+
         torchBusy = true;
 
         try {
-          await track.applyConstraints({ advanced: [{ torch: next }] });
+          await track.applyConstraints({
+            advanced: [{ torch: next }]
+          });
+
           if (!sessionIsActive(session)) return;
 
           torchOn = next;
+
           $('torchButton').classList.toggle('active', next);
           $('torchButton').setAttribute('aria-pressed', String(next));
-          $('torchButton').setAttribute('aria-label',
-            next ? 'Desligar lanterna' : 'Ligar lanterna');
+
+          $('torchButton').setAttribute(
+            'aria-label',
+            next ? 'Desligar lanterna' : 'Ligar lanterna'
+          );
         } catch (_) {
           if (sessionIsActive(session)) {
-            $('cameraHelp').textContent = 'Não foi possível alterar a lanterna.';
+            $('cameraHelp').textContent =
+              'Não foi possível alterar a lanterna.';
           }
         } finally {
           torchBusy = false;
         }
       }
 
-      // =====================================================
-      // EVENTOS E INICIALIZAÇÃO
-      // =====================================================
+      // ======================================================
+      // EVENTOS
+      // ======================================================
 
       $('ambiente').addEventListener('change', updateRoom);
 
       document.querySelectorAll('[data-room]').forEach(button => {
         button.addEventListener('click', () => {
           if (saving) return;
+
           $('ambiente').value = button.dataset.room;
           updateRoom();
         });
@@ -1774,8 +2105,11 @@
 
       $('identifier').addEventListener('input', () => {
         if (currentType() === 'PMC') {
-          $('identifier').value = $('identifier').value.replace(/\D/g, '').slice(0, 6);
+          $('identifier').value = $('identifier').value
+            .replace(/\D/g, '')
+            .slice(0, 6);
         }
+
         scheduleDuplicate();
       });
 
@@ -1783,16 +2117,27 @@
       $('item').addEventListener('focus', renderSuggestions);
 
       $('item').addEventListener('keydown', event => {
-        if (event.key === 'Escape') hideSuggestions();
-        if (event.key === 'ArrowDown' && !$('suggestions').hidden) {
+        if (event.key === 'Escape') {
+          hideSuggestions();
+        }
+
+        if (
+          event.key === 'ArrowDown' &&
+          !$('suggestions').hidden
+        ) {
           event.preventDefault();
           $('suggestions').querySelector('button')?.focus();
         }
       });
 
       $('suggestions').addEventListener('keydown', event => {
-        const buttons = [...$('suggestions').querySelectorAll('button')];
+        const buttons = [
+          ...$('suggestions').querySelectorAll('button')
+        ];
+
         const index = buttons.indexOf(document.activeElement);
+
+        if (!buttons.length) return;
 
         if (event.key === 'Escape') {
           $('item').focus();
@@ -1802,13 +2147,19 @@
           buttons[(index + 1) % buttons.length]?.focus();
         } else if (event.key === 'ArrowUp') {
           event.preventDefault();
-          if (index <= 0) $('item').focus();
-          else buttons[index - 1].focus();
+
+          if (index <= 0) {
+            $('item').focus();
+          } else {
+            buttons[index - 1].focus();
+          }
         }
       });
 
       document.addEventListener('pointerdown', event => {
-        if (!event.target.closest('.suggest-wrap')) hideSuggestions();
+        if (!event.target.closest('.suggest-wrap')) {
+          hideSuggestions();
+        }
       });
 
       $('inventoryForm').addEventListener('submit', saveItem);
@@ -1824,14 +2175,25 @@
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) closeScanner();
       });
+
       window.addEventListener('pagehide', closeScanner);
 
+      // ======================================================
+      // INICIALIZAÇÃO
+      // ======================================================
+
       const savedRoom = recall('inventarioAmbiente');
-      if ([...$('ambiente').options].some(option => option.value === savedRoom)) {
+
+      if (
+        [...$('ambiente').options].some(
+          option => option.value === savedRoom
+        )
+      ) {
         $('ambiente').value = savedRoom;
       }
 
       const savedCategory = recall('inventarioCategoria');
+
       if (['Móvel', 'Tecnologia'].includes(savedCategory)) {
         $('categoria').value = savedCategory;
       }
@@ -1842,7 +2204,9 @@
 
       (async () => {
         try {
-          if (!window.supabase) throw new Error('Biblioteca do banco não carregada.');
+          if (!window.supabase) {
+            throw new Error('Biblioteca do banco não carregada.');
+          }
 
           database = supabase.createClient(
             'https://yipfkwxhpahpuiizkcny.supabase.co',
@@ -1850,15 +2214,23 @@
           );
 
           const data = await rpc('iniciar_inventario');
+
           updateSummary(data?.summary);
 
-          suggestions = (Array.isArray(data?.suggestions) ? data.suggestions : [])
-            .filter(value => typeof value === 'string');
+          suggestions = (
+            Array.isArray(data?.suggestions)
+              ? data.suggestions
+              : []
+          ).filter(value => typeof value === 'string');
 
           connection('ok', 'Banco conectado');
         } catch (error) {
           connection('error', 'Conexão indisponível');
-          showToast(error.message || 'Não foi possível conectar.', true);
+
+          showToast(
+            error.message || 'Não foi possível conectar.',
+            true
+          );
         }
       })();
     });

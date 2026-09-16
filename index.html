@@ -1,2909 +1,2635 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
-
-  <meta name="theme-color" content="#f3f4ef">
-
-  <title>ACERVO · Inventário do setor</title>
-
-  <link id="appFavicon" rel="icon" type="image/svg+xml">
-
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-  <style>
-    :root {
-      color-scheme: light;
-
-      --background: #f3f4ef;
-      --surface: #ffffff;
-      --field: #fafbf8;
-      --forest: #123d32;
-      --forest-dark: #0b2b23;
-      --lime: #d7f58b;
-      --text: #20372f;
-      --muted: #6f7d71;
-      --line: #e0e5dc;
-      --soft: #edf2e9;
-      --danger: #b44736;
-      --radius: 20px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    [hidden] {
-      display: none !important;
-    }
-
-    body {
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button {
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    button:disabled {
-      cursor: default;
-      opacity: .5;
-    }
-
-    button:focus-visible {
-      outline: 3px solid #789772;
-      outline-offset: 3px;
-    }
-
-    ::selection {
-      background: var(--lime);
-      color: var(--forest);
-    }
-
-    .icon {
-      display: block;
-      width: 22px;
-      height: 22px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.7;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    .symbols {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-    }
-
-    .shell {
-      max-width: 940px;
-      margin: auto;
-      padding: 0 24px;
-    }
-
-    .masthead {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding:
-        calc(26px + env(safe-area-inset-top))
-        0
-        23px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-symbol {
-      display: block;
-      width: 46px;
-      height: 46px;
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      display: block;
-      color: var(--forest);
-      font-size: 23px;
-      font-weight: 850;
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    .brand-caption {
-      display: block;
-      margin-top: 7px;
-      color: var(--muted);
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Consolas,
-        monospace;
-      font-size: 9px;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .connection {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--muted);
-      font-size: 11px;
-      text-align: right;
-    }
-
-    .connection-dot {
-      width: 7px;
-      height: 7px;
-      flex-shrink: 0;
-      border-radius: 50%;
-      background: #aeb8ae;
-    }
-
-    .connection[data-state="ok"] .connection-dot {
-      background: #669b48;
-    }
-
-    .connection[data-state="error"] .connection-dot {
-      background: var(--danger);
-    }
-
-    .intro {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 29px 0 25px;
-    }
-
-    .eyebrow {
-      display: block;
-      color: var(--muted);
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 10px;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 11px 0 9px;
-      font-size: 34px;
-      font-weight: 700;
-      line-height: 1.12;
-      letter-spacing: 0;
-    }
-
-    .intro p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .total {
-      flex-shrink: 0;
-      text-align: right;
-      padding-bottom: 3px;
-    }
-
-    .total strong {
-      display: block;
-      color: var(--forest);
-      font-size: 43px;
-      font-weight: 650;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .total span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .rooms {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 9px;
-      margin-bottom: 24px;
-    }
-
-    .room {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 14px 15px;
-      border: 1px solid transparent;
-      border-radius: 14px;
-      background: #e9ede3;
-      color: #61705e;
-      text-align: left;
-      transition:
-        background .15s,
-        border-color .15s;
-    }
-
-    .room:hover {
-      border-color: #aab99b;
-    }
-
-    .room.active {
-      border-color: #c8e279;
-      background: var(--lime);
-      color: var(--forest);
-    }
-
-    .room span {
-      font-size: 11px;
-      font-weight: 550;
-    }
-
-    .room b {
-      font-size: 19px;
-      font-weight: 650;
-      font-variant-numeric: tabular-nums;
-    }
-
-    main {
-      padding-bottom: 124px;
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 205px;
-      gap: 21px;
-      align-items: start;
-    }
-
-    .form-panel {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: 0 8px 28px rgba(28, 52, 32, .025);
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 21px 24px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .panel-header h2 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 650;
-    }
-
-    .tag {
-      padding: 5px 8px;
-      border-radius: 6px;
-      background: var(--soft);
-      color: #6c7d63;
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 9px;
-      white-space: nowrap;
-    }
-
-    .form-body {
-      padding: 24px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0 0 17px;
-    }
-
-    .step {
-      color: #829578;
-      font-family: ui-monospace, Consolas, monospace;
-      font-size: 11px;
-    }
-
-    .section-head h3 {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 550;
-    }
-
-    .divider {
-      height: 1px;
-      margin: 26px 0;
-      background: var(--line);
-    }
-
-    .field {
-      margin-top: 18px;
-    }
-
-    .field-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 8px;
-      font-size: 12px;
-      font-weight: 650;
-    }
-
-    .optional {
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 400;
-    }
-
-    input,
-    select,
-    textarea {
-      display: block;
-      width: 100%;
-      min-width: 0;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      outline: none;
-      background: var(--field);
-      color: var(--text);
-      font-size: 16px;
-      transition:
-        border-color .15s,
-        box-shadow .15s;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: #8b9788;
-      opacity: 1;
-    }
-
-    input:hover,
-    select:hover,
-    textarea:hover {
-      border-color: #b6c3ae;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #789772;
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(120, 151, 114, .1);
-    }
-
-    input[readonly] {
-      border-style: dashed;
-      color: #7e8a79;
-      box-shadow: none;
-    }
-
-    textarea {
-      min-height: 84px;
-      resize: vertical;
-    }
-
-    .hint {
-      min-height: 15px;
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
-    }
-
-    .hint.error {
-      color: var(--danger);
-    }
-
-    .types {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 4px;
-      padding: 5px;
-      border-radius: 14px;
-      background: #f0f3ed;
-    }
-
-    .type {
-      position: relative;
-      min-width: 0;
-      cursor: pointer;
-    }
-
-    .type input {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      opacity: 0;
-    }
-
-    .type span {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 8px;
-      min-height: 76px;
-      padding: 9px 3px;
-      border-radius: 10px;
-      color: #71806b;
-      font-size: 10px;
-      font-weight: 550;
-      text-align: center;
-      transition:
-        background .15s,
-        color .15s;
-    }
-
-    .type input:checked + span {
-      background: var(--forest);
-      color: var(--lime);
-      box-shadow: 0 3px 8px rgba(18, 61, 50, .1);
-    }
-
-    .type input:focus-visible + span {
-      outline: 2px solid #789772;
-      outline-offset: 2px;
-    }
-
-    .id-row {
-      display: flex;
-      gap: 9px;
-    }
-
-    #identifier {
-      font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Consolas,
-        monospace;
-    }
-
-    #identifier[readonly] {
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    .scan-button {
-      display: grid;
-      place-items: center;
-      width: 54px;
-      flex-shrink: 0;
-      border: 0;
-      border-radius: 12px;
-      background: var(--forest);
-      color: var(--lime);
-    }
-
-    .scan-button:hover,
-    .save-button:hover {
-      background: var(--forest-dark);
-    }
-
-    .scan-button .icon {
-      width: 25px;
-      height: 25px;
-    }
-
-    .suggest-wrap {
-      position: relative;
-    }
-
-    .suggestions {
-      position: absolute;
-      z-index: 12;
-      top: calc(100% + 6px);
-      right: 0;
-      left: 0;
-      max-height: 240px;
-      overflow-y: auto;
-      padding: 6px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 12px 30px rgba(18, 61, 50, .12);
-    }
-
-    .suggestions button {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      border: 0;
-      border-radius: 7px;
-      background: transparent;
-      color: var(--text);
-      text-align: left;
-      font-size: 14px;
-    }
-
-    .suggestions button:hover,
-    .suggestions button:focus {
-      background: var(--soft);
-      color: var(--forest);
-    }
-
-    .aside-panel {
-      padding: 23px;
-      border-radius: var(--radius);
-      background: var(--forest);
-      color: #e8efdf;
-    }
-
-    .aside-panel .eyebrow {
-      color: #a9bdb0;
-    }
-
-    .aside-panel h2 {
-      margin: 23px 0 14px;
-      font-size: 25px;
-      font-weight: 550;
-      line-height: 1.2;
-    }
-
-    .aside-panel h2 span {
-      color: var(--lime);
-    }
-
-    .aside-panel p {
-      margin: 0;
-      color: #b5c7bb;
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .brand-pattern {
-      display: flex;
-      align-items: end;
-      gap: 6px;
-      height: 43px;
-      margin-top: 31px;
-    }
-
-    .brand-pattern i {
-      flex: 1;
-      height: 100%;
-      border: 1px solid #789a6c;
-      border-radius: 4px;
-    }
-
-    .brand-pattern i:nth-child(2) {
-      height: 70%;
-    }
-
-    .brand-pattern i:nth-child(3) {
-      height: 86%;
-      border-color: var(--lime);
-      background: var(--lime);
-    }
-
-    .aside-note {
-      margin: 16px 6px 0;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.8;
-    }
-
-    .last-saved {
-      margin-top: 16px;
-      padding: 15px 17px;
-      border: 1px solid #d4dfc5;
-      border-radius: 12px;
-      background: #e6efda;
-      color: var(--forest);
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .footer {
-      position: fixed;
-      z-index: 20;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding:
-        12px
-        24px
-        calc(12px + env(safe-area-inset-bottom));
-      border-top: 1px solid var(--line);
-      background: rgba(243, 244, 239, .96);
-      backdrop-filter: blur(14px);
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      max-width: 892px;
-      margin: auto;
-    }
-
-    .footer-note {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .save-button {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      width: 360px;
-      padding: 16px 20px;
-      border: 0;
-      border-radius: 13px;
-      background: var(--forest);
-      color: var(--lime);
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 50;
-      left: 50%;
-      bottom: calc(97px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      width: max-content;
-      max-width: min(90vw, 540px);
-      padding: 15px 18px;
-      border-radius: 13px;
-      background: var(--forest);
-      color: #fff;
-      box-shadow: 0 8px 30px #0002;
-      font-size: 13px;
-      line-height: 1.6;
-      text-align: center;
-    }
-
-    .toast.error {
-      background: var(--danger);
-    }
-
-    dialog {
-      width: min(94vw, 580px);
-      max-height: 92dvh;
-      overflow-y: auto;
-      padding: 0;
-      border: 1px solid #284b3e;
-      border-radius: 21px;
-      background: var(--forest-dark);
-      color: #fff;
-    }
-
-    dialog::backdrop {
-      background: rgba(7, 21, 16, .83);
-      backdrop-filter: blur(5px);
-    }
-
-    .camera-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 14px;
-    }
-
-    .camera-header strong {
-      font-size: 13px;
-      font-weight: 550;
-    }
-
-    .camera-actions {
-      display: flex;
-      gap: 7px;
-    }
-
-    .camera-icon {
-      display: grid;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border: 1px solid #ffffff25;
-      border-radius: 10px;
-      background: #ffffff0a;
-      color: #fff;
-    }
-
-    .camera-icon.active {
-      border-color: var(--lime);
-      background: #527140;
-    }
-
-    .camera-area {
-      position: relative;
-      overflow: hidden;
-    }
-
-    #cameraVideo {
-      display: block;
-      width: 100%;
-      height: min(48dvh, 430px);
-      object-fit: cover;
-      background: #000;
-    }
-
-    #barcodeGuide {
-      position: absolute;
-      top: calc(50% - 83px);
-      right: 5%;
-      left: 5%;
-      height: 166px;
-      border: 1px solid var(--lime);
-      border-radius: 12px;
-      box-shadow: 0 0 0 999px #0006;
-      pointer-events: none;
-    }
-
-    #ocrGuide {
-      position: absolute;
-      top: calc(50% + 18px);
-      right: 9%;
-      left: 9%;
-      height: 48px;
-      border: 1px dashed #fff;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-
-    #ocrGuide::after {
-      content: "NÚMEROS / TEXTO";
-      position: absolute;
-      top: 100%;
-      left: 0;
-      padding-top: 5px;
-      color: #fff;
-      font: 8px ui-monospace, monospace;
-    }
-
-    .camera-help {
-      padding: 16px;
-      color: #c5d4c7;
-      font-size: 12px;
-      line-height: 1.7;
-    }
-
-    .reader-status {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 9px;
-    }
-
-    .reader-status span {
-      padding: 4px 7px;
-      border-radius: 5px;
-      background: #ffffff0c;
-      color: var(--lime);
-      font-size: 10px;
-    }
-
-    .candidate {
-      margin: 0 16px 16px;
-      padding: 13px;
-      border: 1px solid #ffffff20;
-      border-radius: 11px;
-      background: #ffffff0c;
-    }
-
-    .candidate p {
-      margin: 0 0 9px;
-      color: #d0decc;
-      font-size: 12px;
-    }
-
-    .candidate button {
-      display: block;
-      width: 100%;
-      margin-top: 7px;
-      padding: 12px;
-      border: 0;
-      border-radius: 7px;
-      background: var(--lime);
-      color: var(--forest);
-      overflow-wrap: anywhere;
-      font-size: 14px;
-    }
-
-    @media (max-width: 740px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      aside,
-      .footer-note {
-        display: none;
-      }
-
-      .save-button {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 440px) {
-      .shell {
-        padding: 0 16px;
-      }
-
-      .masthead {
-        gap: 12px;
-      }
-
-      .brand {
-        gap: 9px;
-      }
-
-      .brand-symbol {
-        width: 42px;
-        height: 42px;
-      }
-
-      .brand-name {
-        font-size: 21px;
-      }
-
-      .brand-caption {
-        font-size: 8px;
-      }
-
-      .connection {
-        max-width: 90px;
-        font-size: 10px;
-      }
-
-      .intro {
-        padding: 25px 0 22px;
-        gap: 12px;
-      }
-
-      h1 {
-        font-size: 28px;
-      }
-
-      .intro p {
-        font-size: 12px;
-      }
-
-      .total strong {
-        font-size: 37px;
-      }
-
-      .total span {
-        max-width: 72px;
-        line-height: 1.5;
-      }
-
-      .room {
-        padding: 12px 9px;
-      }
-
-      .room span {
-        font-size: 10px;
-      }
-
-      .room b {
-        font-size: 17px;
-      }
-
-      .panel-header {
-        padding: 20px 18px;
-      }
-
-      .form-body {
-        padding: 21px 17px;
-      }
-
-      .types {
-        padding: 4px;
-        gap: 3px;
-      }
-
-      .type span {
-        font-size: 9px;
-      }
-
-      .footer {
-        padding-left: 16px;
-        padding-right: 16px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f4ef">
+<title>ACERVO · Inventário do setor</title>
+<link id="favicon" rel="icon" type="image/svg+xml">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f3f4ef;
+  --green:#123d32;
+  --lime:#d7f58b;
+  --ink:#20372f;
+  --muted:#69786f;
+  --line:#dee5dc;
+  --soft:#edf2e9;
+  --red:#ae4436;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.5;cursor:wait}
+button{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:11px 15px;
+  background:white;
+  color:var(--green);
+  font-weight:650;
+}
+button:focus-visible,a:focus-visible{
+  outline:3px solid #86ac39;
+  outline-offset:3px;
+}
+.primary{
+  background:var(--green);
+  color:var(--lime);
+  border-color:var(--green);
+}
+.danger{color:var(--red)}
+.shell{max-width:1100px;margin:auto;padding:24px 22px 50px}
+header,.flex,.bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+header{padding:8px 0 22px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:46px;height:46px}
+.brand b{display:block;font-size:23px;letter-spacing:-.6px}
+.eyebrow{
+  font:10px ui-monospace,monospace;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.small,small{font-size:12px;color:var(--muted)}
+.intro{margin:30px 0 22px}
+h1{font-size:34px;line-height:1.15;margin:10px 0}
+h2{font-size:20px;margin:0 0 15px}
+h3{font-size:15px;margin:0 0 10px}
+p{margin:8px 0 16px}
+.nav{display:flex;gap:8px;margin:20px 0}
+.nav button{flex:1;background:transparent}
+.nav button.active,.rooms button.active{
+  background:var(--lime);
+  border-color:#bedb7e;
+}
+.rooms,.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:20px 0;
+}
+.rooms button{text-align:left;background:var(--soft)}
+.rooms b{display:block;font-size:19px;margin-top:5px}
+.workspace{
+  display:grid;
+  grid-template-columns:1fr 250px;
+  gap:22px;
+  align-items:start;
+}
+.card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:24px;
+  margin-bottom:18px;
+  min-width:0;
+}
+.accent{background:var(--green);color:white;border:0}
+.accent strong{
+  font-size:25px;
+  line-height:1.2;
+  display:block;
+  margin:24px 0;
+}
+.accent em{color:var(--lime);font-style:normal}
+.accent p{color:#d0e0d4;font-size:13px}
+.step{border-top:1px solid var(--line);padding-top:22px;margin-top:22px}
+.step-title{
+  color:var(--muted);
+  font:12px ui-monospace,monospace;
+  margin-bottom:18px;
+}
+label{display:block;font-weight:650;font-size:13px;margin:14px 0 7px}
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fafbf8;
+  color:var(--ink);
+  padding:13px;
+  font-size:16px;
+  min-width:0;
+}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid #b4d577;
+  outline-offset:1px;
+}
+input[readonly]{color:var(--muted);background:var(--soft)}
+textarea{min-height:85px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.types{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  background:var(--soft);
+  padding:5px;
+  border-radius:14px;
+}
+.types label{margin:0;position:relative}
+.types input{position:absolute;opacity:0;width:1px}
+.types span{
+  display:block;
+  text-align:center;
+  padding:15px 3px;
+  border-radius:10px;
+  font-size:12px;
+}
+.types input:checked+span{background:var(--green);color:var(--lime)}
+.types input:focus-visible+span{outline:2px solid #86ac39}
+.scanrow{display:flex;gap:8px}
+.scanrow input{flex:1;width:0}
+.scanrow button{width:54px;padding:10px}
+.ico{
+  width:23px;
+  height:23px;
+  vertical-align:middle;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.hint{color:var(--muted);font-size:12px;margin-top:7px}
+.check{display:flex;align-items:center;gap:8px}
+.check input{width:18px;height:18px}
+.savebar{display:flex;gap:10px;margin-top:22px}
+.savebar .primary{flex:1;padding:16px}
+.suggestions{
+  border:1px solid var(--line);
+  border-radius:12px;
+  max-height:220px;
+  overflow:auto;
+  padding:5px;
+}
+.suggestions button{display:block;width:100%;border:0;text-align:left}
+.stats{grid-template-columns:repeat(4,1fr)}
+.stat{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:17px;
+}
+.stat b{font-size:30px;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.filters{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+.filters input{grid-column:1/-1}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:13px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{
+  white-space:nowrap;
+  font-size:11px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+td:first-child{font-weight:650}
+.badge{
+  display:inline-block;
+  background:var(--soft);
+  padding:3px 8px;
+  border-radius:8px;
+  font-size:11px;
+  white-space:nowrap;
+}
+.chartline{
+  display:grid;
+  grid-template-columns:140px 1fr 35px;
+  gap:10px;
+  align-items:center;
+  margin:15px 0;
+  font-size:12px;
+}
+.track{background:var(--soft);height:13px;border-radius:5px;overflow:hidden}
+.fill{background:var(--green);height:100%;min-width:0}
+.notice{
+  border:1px solid #c4d990;
+  background:#eef6dc;
+  border-radius:12px;
+  padding:13px;
+  margin:15px 0;
+}
+.toast{
+  position:fixed;
+  bottom:22px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--green);
+  color:white;
+  border-radius:13px;
+  padding:14px 20px;
+  z-index:1000;
+  max-width:92%;
+  width:max-content;
+  box-shadow:0 4px 30px #0003;
+}
+.toast.error{background:var(--red)}
+dialog{
+  border:1px solid var(--line);
+  border-radius:20px;
+  width:min(94vw,700px);
+  max-height:90dvh;
+  padding:22px;
+  color:var(--ink);
+}
+dialog::backdrop{background:#091b17b8}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+pre{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font:12px/1.6 ui-monospace,monospace;
+  background:var(--soft);
+  padding:12px;
+  border-radius:10px;
+}
+#camera{
+  padding:0;
+  background:#0b201a;
+  color:white;
+  max-width:620px;
+}
+#camera .bar{padding:14px}
+#camera button{background:#23443a;border-color:#426354;color:white}
+#camera .notice{color:var(--ink)}
+.preview{position:relative;overflow:hidden}
+.preview video{
+  display:block;
+  width:100%;
+  height:min(55dvh,480px);
+  object-fit:cover;
+  background:black;
+}
+.guide{
+  position:absolute;
+  left:8%;
+  top:22%;
+  width:84%;
+  height:44%;
+  border:2px solid var(--lime);
+  border-radius:14px;
+  box-shadow:0 0 0 999px #0005;
+  pointer-events:none;
+}
+.ocrguide{
+  position:absolute;
+  left:14%;
+  top:66%;
+  width:72%;
+  height:13%;
+  border:1px dashed white;
+  pointer-events:none;
+}
+.camerafoot{padding:15px;font-size:13px}
+.camerafoot p{color:#d2ded7}
+#candidates button{margin:4px;overflow-wrap:anywhere;max-width:100%}
+#zoom{padding:0}
+#torch[aria-pressed=true]{background:#5d761e}
+
+@media(max-width:760px){
+  #dashboard>.grid2{grid-template-columns:1fr}
+  .shell{padding-bottom:120px!important}
+  .savebar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:6;
+    margin:0;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    background:#f3f4eff5;
+    border-top:1px solid var(--line);
+  }
+  .workspace{grid-template-columns:1fr}
+  .workspace aside{display:none}
+  .shell{padding:16px}
+  .card{padding:19px}
+  .stats{grid-template-columns:1fr 1fr}
+  .filters{grid-template-columns:1fr 1fr}
+  h1{font-size:29px}
+  .rooms button{padding:12px 8px;font-size:11px}
+  .chartline{grid-template-columns:112px 1fr 28px}
+  .grid2{gap:8px}
+  header .small{max-width:150px;overflow-wrap:anywhere}
+}
+</style>
 </head>
 
 <body>
-  <svg
-    class="symbols"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <symbol id="i-pmc" viewBox="0 0 24 24">
-      <path d="m3 9 9-6 9 6H3ZM5 11v7m5-7v7m4-7v7m5-7v7M3 21h18"/>
-    </symbol>
+<svg aria-hidden="true" style="display:none">
+  <symbol id="scanIcon" viewBox="0 0 24 24">
+    <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7v10m3-10v10m4-10v10m3-10v10"/>
+  </symbol>
+  <symbol id="torchIcon" viewBox="0 0 24 24">
+    <path d="M7 2h10v5l-3 4v11h-4V11L7 7zM7 6h10m-5 7v3"/>
+  </symbol>
+</svg>
 
-    <symbol id="i-tag" viewBox="0 0 24 24">
-      <path d="M3 3h8l10 10-8 8L3 11V3Z"/>
-      <circle cx="7.5" cy="7.5" r="1"/>
-    </symbol>
-
-    <symbol id="i-hash" viewBox="0 0 24 24">
-      <path d="m10 3-4 18M18 3l-4 18M3 9h18M2 15h18"/>
-    </symbol>
-
-    <symbol id="i-empty" viewBox="0 0 24 24">
-      <rect x="4" y="4" width="16" height="16" rx="4"/>
-      <path d="M8 12h8"/>
-    </symbol>
-
-    <symbol id="i-scan" viewBox="0 0 24 24">
-      <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 8v8m3-8v8m4-8v8m3-8v8"/>
-    </symbol>
-
-    <symbol id="i-arrow" viewBox="0 0 24 24">
-      <path d="M4 12h16m-6-6 6 6-6 6"/>
-    </symbol>
-
-    <symbol id="i-torch" viewBox="0 0 24 24">
-      <path d="M7 3h10v5l-3 4v9h-4v-9L7 8V3Zm0 4h10M11 15h2"/>
-    </symbol>
-
-    <symbol id="i-close" viewBox="0 0 24 24">
-      <path d="m6 6 12 12M6 18 18 6"/>
-    </symbol>
-  </svg>
-
-  <div class="shell">
-    <header class="masthead">
-      <div class="brand">
-        <svg
-          id="brandSymbol"
-          class="brand-symbol"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 64 64"
-          aria-hidden="true"
-        >
-          <rect width="64" height="64" rx="16" fill="#123d32"/>
-
-          <g fill="#d7f58b">
-            <rect x="10" y="22" width="19" height="31" rx="3"/>
-            <rect x="35" y="11" width="19" height="42" rx="3"/>
-          </g>
-
-          <g fill="#123d32">
-            <rect x="15" y="27" width="9" height="21" rx="1"/>
-            <rect x="40" y="16" width="9" height="32" rx="1"/>
-          </g>
-
-          <g fill="#d7f58b">
-            <rect x="15" y="30" width="9" height="4"/>
-            <rect x="40" y="19" width="9" height="4"/>
-          </g>
-        </svg>
-
-        <div>
-          <span class="brand-name">ACERVO</span>
-          <span class="brand-caption">Inventário do setor</span>
-        </div>
-      </div>
-
-      <div id="connection" class="connection" role="status">
-        <span class="connection-dot"></span>
-        <span id="connectionText">Conectando</span>
-      </div>
-    </header>
-
-    <section class="intro">
-      <div>
-        <span class="eyebrow">GIT / SME · Curitiba</span>
-        <h1>Cada bem,<br>no seu lugar.</h1>
-        <p>Um registro de cada vez. Tudo organizado.</p>
-      </div>
-
-      <div class="total">
-        <strong id="total">—</strong>
-        <span>itens registrados</span>
-      </div>
-    </section>
-
-    <div class="rooms" aria-label="Ambientes">
-      <button
-        type="button"
-        class="room"
-        data-room="Sala Principal"
-      >
-        <span>Sala principal</span>
-        <b id="principalCount">—</b>
-      </button>
-
-      <button
-        type="button"
-        class="room"
-        data-room="Sala da Gerência"
-      >
-        <span>Gerência</span>
-        <b id="gerenciaCount">—</b>
-      </button>
-
-      <button
-        type="button"
-        class="room"
-        data-room="Almoxarifado"
-      >
-        <span>Almoxarifado</span>
-        <b id="almoxCount">—</b>
-      </button>
+<div class="shell">
+<header>
+  <div class="brand">
+    <svg id="logo" xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="64" height="64" rx="16" fill="#123d32"/>
+      <g fill="#d7f58b">
+        <rect x="10" y="22" width="19" height="31" rx="3"/>
+        <rect x="35" y="11" width="19" height="42" rx="3"/>
+      </g>
+      <g fill="#123d32">
+        <path d="M15 27h9v21h-9zM40 16h9v32h-9z"/>
+      </g>
+      <g fill="#d7f58b">
+        <path d="M15 30h9v4h-9zM40 19h9v4h-9z"/>
+      </g>
+    </svg>
+    <div>
+      <b>ACERVO</b>
+      <span class="eyebrow">Inventário do setor</span>
     </div>
+  </div>
 
-    <main class="workspace">
-      <div>
-        <article class="form-panel">
-          <div class="panel-header">
-            <h2>Novo registro</h2>
-            <span class="tag">01 ITEM POR VEZ</span>
-          </div>
+  <div class="flex">
+    <span class="small" id="connection">Aguardando acesso</span>
+    <button id="logout" hidden>Sair</button>
+  </div>
+</header>
 
-          <form id="inventoryForm" class="form-body">
-            <div class="section-head">
-              <span class="step">01 /</span>
-              <h3>Localização</h3>
+<section id="login" class="card" style="max-width:430px;margin:40px auto">
+  <div class="eyebrow">GIT · SME · Curitiba</div>
+  <h1>Seu setor,<br>bem organizado.</h1>
+  <p class="small">Entre com a conta autorizada no ACERVO.</p>
+
+  <form id="loginForm">
+    <label for="email">E-mail</label>
+    <input id="email" type="email" autocomplete="username" required>
+
+    <label for="password">Senha</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+
+    <button class="primary" style="width:100%;margin-top:20px" id="loginButton">
+      Entrar
+    </button>
+  </form>
+
+  <p class="hint" id="loginMessage" role="status"></p>
+</section>
+
+<main id="app" hidden>
+  <div class="intro flex">
+    <div>
+      <div class="eyebrow">GIT / SME · Curitiba</div>
+      <h1>Cada bem,<br>no seu lugar.</h1>
+      <span class="small">Um registro de cada vez. Tudo organizado.</span>
+    </div>
+    <button id="refresh">Atualizar dados</button>
+  </div>
+
+  <div id="pendingBox" class="notice" hidden>
+    Há uma operação sem confirmação.
+    <button id="retry">Verificar e concluir</button>
+  </div>
+
+  <nav class="nav" aria-label="Seções">
+    <button data-tab="register" class="active">Cadastrar</button>
+    <button data-tab="browse">Consultar</button>
+    <button data-tab="dashboard">Visão geral</button>
+  </nav>
+
+  <section id="register">
+    <div class="rooms" id="rooms"></div>
+
+    <div class="workspace">
+      <div class="card">
+        <div class="flex">
+          <h2 id="formTitle">Novo registro</h2>
+          <span class="eyebrow">01 item por vez</span>
+        </div>
+
+        <form id="itemForm">
+          <fieldset id="fields" style="border:0;margin:0;padding:0;min-width:0">
+
+            <div class="step-title">01 / Localização</div>
+
+            <label for="room">Ambiente</label>
+            <select id="room">
+              <option>Sala Principal</option>
+              <option>Sala da Gerência</option>
+              <option>Almoxarifado</option>
+            </select>
+
+            <div id="location" class="grid2" hidden>
+              <div>
+                <label for="shelf">Estante</label>
+                <select id="shelf">
+                  <option value="">Selecione</option>
+                  <option>A</option>
+                  <option>B</option>
+                  <option>C</option>
+                  <option>D</option>
+                  <option>E</option>
+                </select>
+              </div>
+              <div>
+                <label for="level">Prateleira</label>
+                <select id="level">
+                  <option value="">Selecione</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                </select>
+              </div>
+              <small>Numeração de baixo para cima.</small>
             </div>
 
-            <div class="field">
-              <label class="field-label" for="ambiente">
-                Ambiente
-              </label>
+            <div class="step">
+              <div class="step-title">02 / Identificação</div>
 
-              <select id="ambiente" required>
-                <option>Sala Principal</option>
-                <option>Sala da Gerência</option>
-                <option>Almoxarifado</option>
-              </select>
-            </div>
+              <div class="types">
+                <label>
+                  <input type="radio" name="type" value="PMC" checked>
+                  <span>Patrimônio PMC</span>
+                </label>
+                <label>
+                  <input type="radio" name="type" value="ICI">
+                  <span>Etiqueta ICI</span>
+                </label>
+                <label>
+                  <input type="radio" name="type" value="SEM_IDENTIFICACAO">
+                  <span>Sem identificação</span>
+                </label>
+              </div>
 
-            <div id="locationWrap" class="field" hidden>
-              <label class="field-label" for="localizacao">
-                Estante / prateleira
-                <span class="optional">Opcional</span>
-              </label>
+              <label id="codeLabel" for="code">Patrimônio PMC</label>
 
-              <input
-                id="localizacao"
-                maxlength="150"
-                placeholder="Ex.: Estante A · Prateleira 2"
-              >
-            </div>
+              <div class="scanrow">
+                <input id="code" inputmode="numeric" maxlength="6"
+                  autocomplete="off" pattern="[0-9]{6}" required
+                  placeholder="Leia ou digite os 6 números">
 
-            <div class="divider"></div>
-
-            <div class="section-head">
-              <span class="step">02 /</span>
-              <h3>Identificação</h3>
-            </div>
-
-            <div
-              class="types"
-              role="radiogroup"
-              aria-label="Tipo de identificação"
-            >
-              <label class="type">
-                <input
-                  type="radio"
-                  name="idType"
-                  value="PMC"
-                  checked
-                >
-                <span>
-                  <svg class="icon" aria-hidden="true">
-                    <use href="#i-pmc"/>
-                  </svg>
-                  Patrimônio
-                </span>
-              </label>
-
-              <label class="type">
-                <input
-                  type="radio"
-                  name="idType"
-                  value="ICI"
-                >
-                <span>
-                  <svg class="icon" aria-hidden="true">
-                    <use href="#i-tag"/>
-                  </svg>
-                  ICI
-                </span>
-              </label>
-
-              <label class="type">
-                <input
-                  type="radio"
-                  name="idType"
-                  value="SERIE"
-                >
-                <span>
-                  <svg class="icon" aria-hidden="true">
-                    <use href="#i-hash"/>
-                  </svg>
-                  Nº de série
-                </span>
-              </label>
-
-              <label class="type">
-                <input
-                  type="radio"
-                  name="idType"
-                  value="SEM_IDENTIFICACAO"
-                >
-                <span>
-                  <svg class="icon" aria-hidden="true">
-                    <use href="#i-empty"/>
-                  </svg>
-                  Sem identificação
-                </span>
-              </label>
-            </div>
-
-            <div class="field">
-              <label
-                id="identifierLabel"
-                class="field-label"
-                for="identifier"
-              >
-                Patrimônio PMC
-              </label>
-
-              <div class="id-row">
-                <input
-                  id="identifier"
-                  autocomplete="off"
-                  spellcheck="false"
-                  aria-describedby="identifierHint"
-                >
-
-                <button
-                  id="scanButton"
-                  class="scan-button"
-                  type="button"
-                  title="Ler identificação"
-                  aria-label="Ler identificação pela câmera"
-                >
-                  <svg class="icon" aria-hidden="true">
-                    <use href="#i-scan"/>
-                  </svg>
+                <button type="button" class="primary" id="scan" aria-label="Ler código">
+                  <svg class="ico"><use href="#scanIcon"/></svg>
                 </button>
               </div>
 
-              <p
-                id="identifierHint"
-                class="hint"
-                aria-live="polite"
-              ></p>
+              <div class="hint" id="codeHint">
+                Os zeros à esquerda são preservados.
+              </div>
             </div>
 
-            <div class="divider"></div>
+            <div class="step">
+              <div class="step-title">03 / Sobre o item</div>
 
-            <div class="section-head">
-              <span class="step">03 /</span>
-              <h3>Sobre o item</h3>
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="categoria">
-                Categoria
-              </label>
-
-              <select id="categoria" required>
+              <label for="category">Categoria</label>
+              <select id="category">
                 <option>Móvel</option>
                 <option>Tecnologia</option>
               </select>
-            </div>
 
-            <div class="field">
-              <label class="field-label" for="item">
-                Item
+              <label for="item">Item</label>
+              <input id="item" required minlength="2" maxlength="120"
+                autocomplete="off" placeholder="Ex.: Cadeira"
+                aria-controls="suggestions" aria-expanded="false">
+
+              <div id="suggestions" class="suggestions" hidden></div>
+
+              <label for="note">
+                Observação <span class="small">· opcional</span>
               </label>
+              <textarea id="note" maxlength="2000"></textarea>
 
-              <div class="suggest-wrap">
-                <input
-                  id="item"
-                  required
-                  minlength="2"
-                  maxlength="120"
-                  autocomplete="off"
-                  placeholder="O que você está registrando?"
-                  aria-controls="suggestions"
-                  aria-expanded="false"
-                >
-
-                <div
-                  id="suggestions"
-                  class="suggestions"
-                  aria-label="Itens já utilizados"
-                  hidden
-                ></div>
-              </div>
-
-              <p class="hint">
-                Digite para encontrar itens já registrados ou criar um novo.
-              </p>
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="observacao">
-                Observação
-                <span class="optional">Opcional</span>
+              <label class="check">
+                <input type="checkbox" id="repeat" checked>
+                Manter nome e categoria para o próximo item
               </label>
-
-              <textarea
-                id="observacao"
-                maxlength="2000"
-                placeholder="Algum detalhe que vale guardar?"
-              ></textarea>
             </div>
-          </form>
-        </article>
 
-        <div
-          id="lastSaved"
-          class="last-saved"
-          role="status"
-          hidden
-        ></div>
+            <div class="savebar">
+              <button class="primary" id="save">
+                Salvar e cadastrar próximo
+              </button>
+              <button type="button" id="cancelEdit" hidden>
+                Cancelar edição
+              </button>
+            </div>
+
+          </fieldset>
+        </form>
+
+        <p class="hint" id="draftInfo">O rascunho é salvo neste navegador.</p>
+        <div id="saved" class="notice" hidden></div>
       </div>
 
-      <aside>
-        <div class="aside-panel">
-          <span class="eyebrow">Menos procura.</span>
-
-          <h2>
-            Mais ordem.<br>
-            <span>Mais clareza.</span>
-          </h2>
-
-          <p>
-            Identifique, registre e siga para o próximo.
-            Seu setor, bem cuidado.
-          </p>
-
-          <div class="brand-pattern" aria-hidden="true">
-            <i></i><i></i><i></i><i></i>
-          </div>
-        </div>
-
-        <p class="aside-note">
-          Use o patrimônio PMC primeiro.
-          Na ausência dele, use ICI ou número de série.
+      <aside class="card accent">
+        <span class="eyebrow">Menos procura.</span>
+        <strong>Mais ordem.<br><em>Mais clareza.</em></strong>
+        <p>
+          Use o patrimônio PMC primeiro. Na ausência, use ICI.
+          Sem etiqueta, o ACERVO gera a identificação interna.
         </p>
+        <hr style="border:0;border-top:1px solid #426355;margin:28px 0">
+        <p>Almoxarifado<br>5 estantes · 30 posições</p>
       </aside>
-    </main>
+    </div>
+  </section>
+
+  <section id="browse" hidden>
+    <div class="card">
+      <div class="flex">
+        <h2>Consultar inventário</h2>
+        <div class="flex">
+          <button id="exportFiltered">Excel do filtro</button>
+          <button id="exportAll" class="primary">Excel completo</button>
+        </div>
+      </div>
+
+      <div class="filters">
+        <input id="search" type="search"
+          placeholder="Buscar item, patrimônio, ICI ou ACV…"
+          aria-label="Buscar">
+
+        <select id="filterRoom" aria-label="Ambiente">
+          <option value="">Todos os ambientes</option>
+          <option>Sala Principal</option>
+          <option>Sala da Gerência</option>
+          <option>Almoxarifado</option>
+        </select>
+
+        <select id="filterCategory" aria-label="Categoria">
+          <option value="">Todas as categorias</option>
+          <option>Móvel</option>
+          <option>Tecnologia</option>
+        </select>
+
+        <select id="filterType" aria-label="Identificação">
+          <option value="">Todas as identificações</option>
+          <option value="PMC">PMC</option>
+          <option value="ICI">ICI</option>
+          <option value="SEM_IDENTIFICACAO">Sem identificação externa</option>
+        </select>
+
+        <select id="filterStatus" aria-label="Situação">
+          <option value="">Todas as situações</option>
+          <option value="ATIVO">Ativos</option>
+          <option value="BAIXADO">Baixados</option>
+          <option value="ARQUIVADO">Arquivados</option>
+        </select>
+
+        <select id="filterShelf" aria-label="Estante">
+          <option value="">Todas as estantes</option>
+          <option>A</option><option>B</option><option>C</option>
+          <option>D</option><option>E</option>
+        </select>
+
+        <select id="filterLevel" aria-label="Prateleira">
+          <option value="">Todas as prateleiras</option>
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+        </select>
+      </div>
+
+      <p class="small" id="resultCount"></p>
+
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Identificação</th>
+              <th>Ambiente</th>
+              <th>Situação</th>
+              <th>Detalhes</th>
+            </tr>
+          </thead>
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+
+      <div class="flex" style="margin-top:18px">
+        <button id="previous">Anterior</button>
+        <span id="pageLabel" class="small"></span>
+        <button id="next">Próxima</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard" hidden>
+    <div class="stats" id="stats"></div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>Ativos por ambiente</h2>
+        <div id="roomChart"></div>
+      </div>
+      <div class="card">
+        <h2>Ativos por categoria</h2>
+        <div id="categoryChart"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Identificação dos ativos</h2>
+      <div id="typeChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>Conferência dos ambientes</h2>
+      <p class="small">
+        Marque ao concluir a verificação física.
+        Alterações em itens reabrem a conferência dos ambientes envolvidos.
+      </p>
+      <div id="checks"></div>
+    </div>
+  </section>
+</main>
+</div>
+
+<dialog id="details">
+  <div class="bar">
+    <h2 id="detailTitle">Item</h2>
+    <button data-close="details">Fechar</button>
+  </div>
+  <div id="detailBody"></div>
+  <div class="actions" id="detailActions"></div>
+  <h3>Histórico</h3>
+  <div id="history"></div>
+</dialog>
+
+<dialog id="operation">
+  <div class="bar">
+    <h2 id="operationTitle"></h2>
+    <button data-close="operation">Fechar</button>
   </div>
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <span class="footer-note">
-        ACERVO / Inventário do setor
-      </span>
+  <form id="operationForm">
+    <p id="operationHint" class="small"></p>
 
-      <button
-        id="saveButton"
-        class="save-button"
-        type="submit"
-        form="inventoryForm"
-      >
-        <span id="saveText">Salvar e cadastrar próximo</span>
+    <div id="downFields">
+      <label for="downDate">Data da baixa</label>
+      <input type="date" id="downDate">
 
-        <svg class="icon" aria-hidden="true">
-          <use href="#i-arrow"/>
-        </svg>
+      <label for="document">Documento/processo · opcional</label>
+      <input id="document" maxlength="200">
+    </div>
+
+    <label for="reason">Motivo / justificativa</label>
+    <textarea id="reason" required minlength="3" maxlength="2000"></textarea>
+
+    <button class="primary" id="confirmOperation" style="margin-top:16px">
+      Confirmar
+    </button>
+  </form>
+</dialog>
+
+<dialog id="camera">
+  <div class="bar">
+    <strong id="cameraTitle">Ler identificação</strong>
+    <div>
+      <button id="torch" aria-label="Ligar lanterna" aria-pressed="false" disabled>
+        <svg class="ico"><use href="#torchIcon"/></svg>
       </button>
+      <button id="closeCamera">Fechar</button>
     </div>
-  </footer>
+  </div>
 
-  <div
-    id="toast"
-    class="toast"
-    role="status"
-    hidden
-  ></div>
+  <div class="preview">
+    <video id="video" playsinline muted autoplay></video>
+    <div id="barcodeGuide" class="guide"></div>
+    <div id="numberGuide" class="ocrguide"></div>
+  </div>
 
-  <dialog id="cameraDialog" aria-labelledby="cameraTitle">
-    <div class="camera-header">
-      <strong id="cameraTitle">Ler identificação</strong>
+  <div class="camerafoot">
+    <p>
+      Etiqueta no quadro maior; números na faixa tracejada.
+      Barras, QR Code e OCR trabalham em paralelo.
+    </p>
 
-      <div class="camera-actions">
-        <button
-          id="torchButton"
-          class="camera-icon"
-          type="button"
-          disabled
-          title="Ligar lanterna"
-          aria-label="Ligar lanterna"
-          aria-pressed="false"
-        >
-          <svg class="icon" aria-hidden="true">
-            <use href="#i-torch"/>
-          </svg>
-        </button>
+    <div id="cameraStatus" role="status">Preparando leitores…</div>
 
-        <button
-          id="closeCameraButton"
-          class="camera-icon"
-          type="button"
-          title="Fechar câmera"
-          aria-label="Fechar câmera"
-        >
-          <svg class="icon" aria-hidden="true">
-            <use href="#i-close"/>
-          </svg>
-        </button>
-      </div>
-    </div>
+    <label id="zoomLabel" hidden>
+      Zoom
+      <input id="zoom" type="range">
+    </label>
 
-    <div class="camera-area">
-      <video id="cameraVideo" playsinline muted autoplay></video>
-      <div id="barcodeGuide"></div>
-      <div id="ocrGuide"></div>
-    </div>
+    <div id="candidates"></div>
+  </div>
+</dialog>
 
-    <div class="camera-help">
-      <div class="reader-status">
-        <span id="barcodeStatus">Código: preparando</span>
-        <span id="ocrStatus">OCR: preparando</span>
-      </div>
+<div class="toast" id="toast" role="status" hidden></div>
 
-      <span id="cameraHelp">
-        Código no quadro maior; números ou série na faixa tracejada.
-      </span>
-    </div>
+<script>
+'use strict';
 
-    <div id="candidateBox" class="candidate" hidden>
-      <p id="candidateMessage">
-        Confira a leitura antes de usar.
-      </p>
+const $=id=>document.getElementById(id);
 
-      <div id="candidateOptions"></div>
-    </div>
-  </dialog>
+const ROOMS=[
+  'Sala Principal',
+  'Sala da Gerência',
+  'Almoxarifado'
+];
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      'use strict';
+const TYPE={
+  PMC:'Patrimônio PMC',
+  ICI:'Etiqueta ICI',
+  SEM_IDENTIFICACAO:'Sem identificação externa'
+};
 
-      const $ = id => document.getElementById(id);
+const STATUS={
+  ATIVO:'Ativo',
+  BAIXADO:'Baixado',
+  ARQUIVADO:'Arquivado'
+};
 
-      // O favicon é criado a partir do símbolo incorporado.
-      const favicon = $('brandSymbol').cloneNode(true);
+const ACTION={
+  salvar:'Editar',
+  baixar:'Dar baixa',
+  estornar:'Estornar baixa',
+  arquivar:'Arquivar',
+  restaurar:'Restaurar'
+};
 
-      favicon.removeAttribute('id');
-      favicon.removeAttribute('class');
-      favicon.removeAttribute('aria-hidden');
+const db=window.supabase?.createClient(
+  'https://yipfkwxhpahpuiizkcny.supabase.co',
+  'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI'
+);
 
-      $('appFavicon').href =
-        'data:image/svg+xml;charset=utf-8,' +
-        encodeURIComponent(
-          new XMLSerializer().serializeToString(favicon)
-        );
+let user=null;
+let role='leitor';
+let rows=[];
+let checks=[];
+let editing=null;
+let selected=null;
+let action='';
+let busy=false;
+let page=1;
+let pending=null;
+let scene=null;
 
-      const TYPE = {
-        PMC: {
-          label: 'Patrimônio PMC',
-          placeholder: 'Digite ou leia os 6 números',
-          hint: 'Identificação patrimonial da Prefeitura.',
-          min: 6,
-          max: 6,
-          pattern: '[0-9]{6}',
-          inputmode: 'numeric'
-        },
+let barcodeWorker=null;
+let barcodeTask=null;
+let ocrPromise=null;
+let ocrBusy=false;
+let barcodeBusy=false;
+let toastTimer;
 
-        ICI: {
-          label: 'Código ICI',
-          placeholder: 'Digite ou leia o código ICI',
-          hint: 'Use quando o item não tiver patrimônio PMC.',
-          min: 3,
-          max: 40,
-          pattern: '',
-          inputmode: 'text'
-        },
+const internal=id=>'ACV-'+String(id).padStart(5,'0');
 
-        SERIE: {
-          label: 'Número de série',
-          placeholder: 'Digite ou leia o número de série',
-          hint: 'Use quando não houver etiqueta PMC nem ICI.',
-          min: 2,
-          max: 80,
-          pattern: '',
-          inputmode: 'text'
-        },
+const key=s=>String(s||'')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g,'')
+  .toLowerCase();
 
-        SEM_IDENTIFICACAO: {
-          label: 'Identificação interna',
-          placeholder: 'Gerada automaticamente ao salvar',
-          hint:
-            'O item ficará sem código externo e receberá um número interno.',
-          min: 0,
-          max: 80,
-          pattern: '',
-          inputmode: 'text'
+const clean=s=>String(s||'').trim().replace(/\s+/g,' ');
+
+const type=()=>document.querySelector('[name=type]:checked').value;
+
+const dateBR=v=>v?new Date(v).toLocaleString('pt-BR'):'—';
+
+const today=()=>new Intl.DateTimeFormat('en-CA',{
+  timeZone:'America/Sao_Paulo',
+  year:'numeric',
+  month:'2-digit',
+  day:'2-digit'
+}).format(new Date());
+
+function el(tag,text,cls){
+  const n=document.createElement(tag);
+  if(text!==undefined)n.textContent=text;
+  if(cls)n.className=cls;
+  return n;
+}
+
+function button(text,fn,cls){
+  const n=el('button',text,cls);
+  n.type='button';
+  n.onclick=fn;
+  return n;
+}
+
+function toast(text,error=false){
+  $('toast').textContent=text;
+  $('toast').className='toast'+(error?' error':'');
+  $('toast').hidden=false;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$('toast').hidden=true,6000);
+}
+
+function storage(name,value){
+  const k='acervo2:'+user?.id+':'+name;
+
+  try{
+    if(arguments.length===1){
+      return JSON.parse(localStorage.getItem(k)||'null');
+    }
+
+    if(value===null)localStorage.removeItem(k);
+    else localStorage.setItem(k,JSON.stringify(value));
+
+    return true;
+  }catch{
+    return false;
+  }
+}
+
+async function rpc(name,args={}){
+  if(!db){
+    throw Error('Biblioteca de conexão indisponível. Atualize a página.');
+  }
+
+  const {data,error}=await db.rpc(name,args);
+  if(error)throw error;
+  return data;
+}
+
+function setBusy(v){
+  busy=v;
+
+  document.querySelectorAll('#app button,#operation button')
+    .forEach(b=>b.disabled=v);
+
+  $('fields').disabled=v||role==='leitor'||!!pending;
+
+  $('save').textContent=v
+    ?'Aguarde…'
+    :editing
+      ?'Salvar alterações'
+      :'Salvar e cadastrar próximo';
+
+  $('pendingBox').hidden=!pending;
+  $('retry').disabled=v;
+}
+
+function showTab(id){
+  document.querySelectorAll('main>section')
+    .forEach(s=>s.hidden=s.id!==id);
+
+  document.querySelectorAll('[data-tab]')
+    .forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+}
+
+function locationText(r){
+  const d=r.dados;
+
+  return d.estante&&d.prateleira
+    ?d.estante+'-'+String(d.prateleira).padStart(2,'0')
+    :(r.legado?.localizacao||'');
+}
+
+function syncForm(){
+  const warehouse=$('room').value==='Almoxarifado';
+  const none=type()==='SEM_IDENTIFICACAO';
+
+  $('location').hidden=!warehouse;
+  $('shelf').required=$('level').required=warehouse;
+
+  $('codeLabel').textContent=none
+    ?'Identificação interna'
+    :TYPE[type()];
+
+  $('code').readOnly=none;
+  $('code').required=!none;
+  $('scan').hidden=none;
+
+  $('code').placeholder=none
+    ?'Gerada ao salvar'
+    :'Leia ou digite os 6 números';
+
+  if(none)$('code').value='';
+
+  $('codeHint').textContent=none
+    ?'O ACERVO gera um código próprio para este registro.'
+    :'Os zeros à esquerda são preservados.';
+
+  document.querySelectorAll('[data-room]')
+    .forEach(b=>b.classList.toggle(
+      'active',
+      b.dataset.room===$('room').value
+    ));
+}
+
+function formData(){
+  return {
+    ambiente:$('room').value,
+    categoria:$('category').value,
+    item:clean($('item').value),
+    tipo:type(),
+    codigo:type()==='SEM_IDENTIFICACAO'?'':$('code').value,
+    estante:$('room').value==='Almoxarifado'?$('shelf').value:'',
+    prateleira:$('room').value==='Almoxarifado'?$('level').value:'',
+    observacao:$('note').value.trim()
+  };
+}
+
+function saveDraft(){
+  if(user&&!busy){
+    const ok=storage('draft',{
+      dados:formData(),
+      editing,
+      repeat:$('repeat').checked
+    });
+
+    $('draftInfo').textContent=ok
+      ?'Rascunho salvo neste navegador.'
+      :'Não foi possível guardar o rascunho neste navegador.';
+  }
+}
+
+function fillForm(d){
+  $('room').value=ROOMS.includes(d.ambiente)?d.ambiente:ROOMS[0];
+  $('category').value=d.categoria||'Móvel';
+  $('item').value=d.item||'';
+  $('note').value=d.observacao||'';
+  $('shelf').value=d.estante||'';
+  $('level').value=d.prateleira||'';
+
+  document.querySelector(
+    '[name=type][value="'+(
+      TYPE[d.tipo]?d.tipo:'SEM_IDENTIFICACAO'
+    )+'"]'
+  ).checked=true;
+
+  syncForm();
+  $('code').value=d.codigo||'';
+}
+
+function resetForm(){
+  editing=null;
+  $('formTitle').textContent='Novo registro';
+  $('cancelEdit').hidden=true;
+  $('repeat').disabled=false;
+  $('code').value='';
+  $('note').value='';
+
+  if(!$('repeat').checked)$('item').value='';
+
+  syncForm();
+  saveDraft();
+}
+
+function suggestions(){
+  const q=key($('item').value);
+
+  const names=[...new Set(rows.map(r=>r.dados.item))]
+    .filter(Boolean)
+    .filter(n=>key(n).includes(q))
+    .slice(0,10);
+
+  $('suggestions').replaceChildren(...names.map(n=>button(n,()=>{
+    $('item').value=n;
+    $('suggestions').hidden=true;
+    $('item').setAttribute('aria-expanded','false');
+    saveDraft();
+  })));
+
+  $('suggestions').hidden=!names.length;
+  $('item').setAttribute('aria-expanded',String(!!names.length));
+}
+
+async function refresh(){
+  const data=await rpc('acervo_ler');
+
+  rows=data.itens||[];
+  checks=data.conferencias||[];
+  role=data.perfil;
+
+  $('connection').textContent=user.email+' · '+role;
+
+  render();
+
+  $('fields').disabled=role==='leitor'||busy||!!pending;
+}
+
+function filtered(){
+  const q=key($('search').value);
+
+  return rows.filter(r=>{
+    const d=r.dados;
+
+    return (
+      !q||key([
+        internal(r.id),
+        d.item,
+        d.codigo,
+        r.legado?.numero_serie
+      ].join(' ')).includes(q)
+    )
+    &&(!$('filterRoom').value||d.ambiente===$('filterRoom').value)
+    &&(!$('filterCategory').value||d.categoria===$('filterCategory').value)
+    &&(!$('filterType').value||d.tipo===$('filterType').value)
+    &&(!$('filterStatus').value||r.situacao===$('filterStatus').value)
+    &&(!$('filterShelf').value||d.estante===$('filterShelf').value)
+    &&(!$('filterLevel').value||d.prateleira===$('filterLevel').value);
+  });
+}
+
+function chart(target,groups,total){
+  $(target).replaceChildren(...groups.map(([label,n])=>{
+    const line=el('div',undefined,'chartline');
+    const track=el('div',undefined,'track');
+    const fill=el('div',undefined,'fill');
+
+    fill.style.width=(total?n/total*100:0)+'%';
+
+    track.append(fill);
+    line.append(el('span',label),track,el('b',n));
+
+    return line;
+  }));
+}
+
+function render(){
+  const active=rows.filter(r=>r.situacao==='ATIVO');
+
+  $('rooms').replaceChildren(...ROOMS.map(room=>{
+    const b=button(room,()=>{
+      if(busy||pending)return;
+      $('room').value=room;
+      syncForm();
+      saveDraft();
+    });
+
+    b.dataset.room=room;
+    b.append(el('b',active.filter(r=>r.dados.ambiente===room).length));
+
+    return b;
+  }));
+
+  syncForm();
+  renderList();
+
+  const metrics=[
+    ['Itens ativos',active.length],
+    ['Baixados',rows.filter(r=>r.situacao==='BAIXADO').length],
+    [
+      'Sem identificação · ativos',
+      active.filter(r=>r.dados.tipo==='SEM_IDENTIFICACAO').length
+    ],
+    ['Arquivados',rows.filter(r=>r.situacao==='ARQUIVADO').length]
+  ];
+
+  $('stats').replaceChildren(...metrics.map(([title,n])=>{
+    const d=el('div',undefined,'stat');
+    d.append(el('b',n),el('span',title));
+    return d;
+  }));
+
+  chart(
+    'roomChart',
+    ROOMS.map(v=>[
+      v,
+      active.filter(r=>r.dados.ambiente===v).length
+    ]),
+    active.length
+  );
+
+  chart(
+    'categoryChart',
+    ['Móvel','Tecnologia'].map(v=>[
+      v,
+      active.filter(r=>r.dados.categoria===v).length
+    ]),
+    active.length
+  );
+
+  chart(
+    'typeChart',
+    Object.entries(TYPE).map(([v,n])=>[
+      n,
+      active.filter(r=>r.dados.tipo===v).length
+    ]),
+    active.length
+  );
+
+  $('checks').replaceChildren(...ROOMS.map(room=>{
+    const c=checks.find(x=>x.ambiente===room)||{};
+    const line=el('div',undefined,'bar');
+    line.style.margin='15px 0';
+
+    const info=el('div');
+
+    info.append(
+      el('b',room),
+      el(
+        'div',
+        c.conferido
+          ?'Conferido em '+dateBR(c.momento)+' · '+c.email
+          :'A conferir',
+        'small'
+      )
+    );
+
+    line.append(info);
+
+    if(role!=='leitor'){
+      line.append(button(
+        c.conferido?'Reabrir':'Marcar conferido',
+        ()=>{
+          if(confirm('Confirmar alteração da conferência de '+room+'?')){
+            commit({
+              acao:'conferir',
+              ambiente:room,
+              conferido:!c.conferido
+            });
+          }
         }
+      ));
+    }
+
+    return line;
+  }));
+}
+
+function renderList(){
+  const found=filtered();
+  const pages=Math.max(1,Math.ceil(found.length/30));
+
+  page=Math.min(page,pages);
+
+  $('resultCount').textContent=found.length+' registros encontrados';
+  $('pageLabel').textContent=page+' / '+pages;
+  $('previous').disabled=page===1;
+  $('next').disabled=page===pages;
+
+  $('results').replaceChildren(
+    ...found.slice((page-1)*30,page*30).map(r=>{
+      const tr=el('tr');
+
+      [
+        r.dados.item,
+        r.dados.codigo
+          ?TYPE[r.dados.tipo]+' '+r.dados.codigo
+          :internal(r.id),
+        r.dados.ambiente+(
+          locationText(r)?' · '+locationText(r):''
+        ),
+        STATUS[r.situacao]
+      ].forEach(t=>tr.append(el('td',t)));
+
+      const td=el('td');
+      td.append(button('Abrir',()=>openDetails(r)));
+      tr.append(td);
+
+      return tr;
+    })
+  );
+}
+
+async function openDetails(r){
+  selected=r;
+
+  $('detailTitle').textContent=r.dados.item+' · '+internal(r.id);
+
+  const d=r.dados;
+  $('detailBody').replaceChildren();
+
+  for(const [label,value] of [
+    ['Identificação',TYPE[d.tipo]+(d.codigo?' · '+d.codigo:'')],
+    ['Ambiente',d.ambiente],
+    ['Localização',locationText(r)||'—'],
+    ['Categoria',d.categoria],
+    ['Situação',STATUS[r.situacao]],
+    ['Cadastro',dateBR(r.criado_em)],
+    ['Observação',d.observacao||'—']
+  ]){
+    const p=el('p');
+    p.append(el('b',label+': '),document.createTextNode(value));
+    $('detailBody').append(p);
+  }
+
+  if(r.baixa){
+    $('detailBody').append(el(
+      'pre',
+      'Baixa: '+r.baixa.data+
+      '\n'+r.baixa.motivo+
+      '\nDocumento: '+(r.baixa.documento||'—')+
+      '\nPor: '+r.baixa.email
+    ));
+  }
+
+  if(r.legado){
+    const box=el('details');
+
+    box.append(
+      el('summary','Dados preservados da versão anterior'),
+      el('pre',JSON.stringify(r.legado,null,2))
+    );
+
+    $('detailBody').append(box);
+  }
+
+  const acts=[];
+
+  if(role!=='leitor'&&r.situacao==='ATIVO'){
+    acts.push(
+      button('Editar',()=>startEdit(r)),
+      button('Dar baixa',()=>openOperation('baixar',r),'danger')
+    );
+  }
+
+  if(role==='admin'){
+    const a=r.situacao==='BAIXADO'
+      ?'estornar'
+      :r.situacao==='ARQUIVADO'
+        ?'restaurar'
+        :'arquivar';
+
+    acts.push(button(ACTION[a],()=>openOperation(a,r)));
+  }
+
+  $('detailActions').replaceChildren(...acts);
+  $('history').textContent='Carregando…';
+
+  if(!$('details').open)$('details').showModal();
+
+  try{
+    const history=await rpc('acervo_historico',{p_id:r.id});
+
+    if(selected?.id!==r.id)return;
+
+    $('history').replaceChildren(...history.map(h=>{
+      const x=el('details');
+
+      x.append(el(
+        'summary',
+        h.acao+' · '+dateBR(h.momento)+' · '+h.email
+      ));
+
+      x.append(el('pre',JSON.stringify({
+        motivo:h.motivo,
+        antes:h.antes,
+        depois:h.depois
+      },null,2)));
+
+      return x;
+    }));
+
+    if(!history.length){
+      $('history').textContent=
+        'Registro importado; alterações desta versão aparecerão aqui.';
+    }
+  }catch(e){
+    $('history').textContent=e.message;
+  }
+}
+
+function startEdit(r){
+  if(busy||pending){
+    return toast('Conclua a operação pendente primeiro.',true);
+  }
+
+  editing={id:r.id,versao:r.versao};
+
+  fillForm(r.dados);
+
+  $('formTitle').textContent='Editar '+internal(r.id);
+  $('cancelEdit').hidden=false;
+  $('save').textContent='Salvar alterações';
+
+  $('details').close();
+  showTab('register');
+  saveDraft();
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function openOperation(a,r){
+  if(busy||pending){
+    return toast('Conclua a operação pendente primeiro.',true);
+  }
+
+  selected=r;
+  action=a;
+
+  $('operationTitle').textContent=ACTION[a]+' · '+internal(r.id);
+
+  $('operationHint').textContent=a==='baixar'
+    ?'Controle interno do setor. Este lançamento não executa a baixa patrimonial oficial.'
+    :'A justificativa ficará registrada no histórico.';
+
+  $('downFields').hidden=a!=='baixar';
+  $('downDate').required=a==='baixar';
+  $('downDate').value=today();
+  $('downDate').max=today();
+  $('reason').value='';
+  $('document').value='';
+
+  $('details').close();
+  $('operation').showModal();
+}
+
+async function commit(body){
+  if(busy)return;
+
+  if(pending){
+    return toast(
+      'Use “Verificar e concluir” antes de outra operação.',
+      true
+    );
+  }
+
+  pending={
+    chave:crypto.randomUUID(),
+    body
+  };
+
+  if(!storage('pending',pending)){
+    pending=null;
+
+    return toast(
+      'Habilite o armazenamento do navegador para proteger este envio.',
+      true
+    );
+  }
+
+  await transmit();
+}
+
+async function transmit(){
+  if(busy||!pending)return;
+
+  setBusy(true);
+  const op=pending;
+
+  try{
+    const result=await rpc('acervo_gravar',{
+      p_chave:op.chave,
+      p:op.body
+    });
+
+    pending=null;
+    storage('pending',null);
+
+    if(op.body.acao==='salvar'){
+      resetForm();
+
+      $('saved').textContent=
+        internal(result.id)+' · '+result.dados.item+' — salvo.';
+
+      $('saved').hidden=false;
+
+      storage('draft',{
+        dados:formData(),
+        editing:null,
+        repeat:$('repeat').checked
+      });
+    }
+
+    if($('operation').open)$('operation').close();
+
+    toast(
+      op.body.acao==='salvar'
+        ?'Registro salvo.'
+        :'Operação concluída.'
+    );
+
+    try{
+      await refresh();
+    }catch(e){
+      toast(
+        'Operação salva. A lista não atualizou; clique em Atualizar dados.',
+        true
+      );
+    }
+  }catch(e){
+    if(e.code){
+      pending=null;
+      storage('pending',null);
+    }
+
+    toast(
+      e.message||
+      'Sem confirmação. Use Verificar e concluir; o envio não será duplicado.',
+      true
+    );
+  }finally{
+    setBusy(false);
+    renderList();
+  }
+}
+
+async function loginReady(session){
+  user=session.user;
+  pending=storage('pending');
+
+  $('login').hidden=true;
+  $('app').hidden=false;
+  $('logout').hidden=false;
+
+  try{
+    await refresh();
+
+    const draft=storage('draft');
+
+    if(draft){
+      editing=draft.editing||null;
+      fillForm(draft.dados);
+      $('repeat').checked=draft.repeat!==false;
+
+      if(editing){
+        $('formTitle').textContent='Editar '+internal(editing.id);
+        $('cancelEdit').hidden=false;
+      }
+    }
+
+    setBusy(false);
+
+    if(role==='leitor')showTab('browse');
+
+    warmBarcode();
+    warmOCR();
+  }catch(e){
+    $('app').hidden=true;
+    $('login').hidden=false;
+    $('loginMessage').textContent=e.message;
+  }
+}
+
+/* Exportação Excel */
+
+async function exportExcel(all){
+  if(busy)return;
+
+  setBusy(true);
+
+  try{
+    await refresh();
+
+    if(!window.ExcelJS){
+      throw Error('Excel ainda não carregou. Atualize e tente novamente.');
+    }
+
+    const list=all?[...rows]:filtered();
+    const wb=new ExcelJS.Workbook();
+
+    wb.creator='ACERVO · GIT/SME';
+    wb.created=new Date();
+
+    const scope=all
+      ?'Inventário completo'
+      :JSON.stringify({
+        busca:$('search').value,
+        ambiente:$('filterRoom').value,
+        categoria:$('filterCategory').value,
+        tipo:$('filterType').value,
+        situacao:$('filterStatus').value,
+        estante:$('filterShelf').value,
+        prateleira:$('filterLevel').value
+      });
+
+    const logoImage=new Image();
+    logoImage.src=$('favicon').href;
+    await logoImage.decode();
+
+    const lc=document.createElement('canvas');
+    lc.width=lc.height=64;
+    lc.getContext('2d').drawImage(logoImage,0,0,64,64);
+
+    const logoId=wb.addImage({
+      base64:lc.toDataURL('image/png'),
+      extension:'png'
+    });
+
+    const forest='FF123D32';
+    const lime='FFD7F58B';
+    const soft='FFF1F5ED';
+
+    function sheet(name,headers,data,widths){
+      const ws=wb.addWorksheet(name,{
+        views:[{state:'frozen',ySplit:5}],
+        pageSetup:{
+          paperSize:9,
+          orientation:'landscape',
+          fitToPage:true,
+          fitToWidth:1,
+          fitToHeight:0,
+          printTitlesRow:'1:5'
+        },
+        headerFooter:{
+          oddFooter:'ACERVO · GIT/SME &R Página &P de &N'
+        }
+      });
+
+      const n=headers.length;
+
+      ws.columns=widths.map(width=>({width}));
+
+      ws.mergeCells(1,1,1,n);
+      ws.getCell(1,1).value='       ACERVO  /  '+name.toUpperCase();
+
+      ws.addImage(logoId,{
+        tl:{col:0.05,row:0.12},
+        ext:{width:36,height:36}
+      });
+
+      ws.getCell(1,1).fill={
+        type:'pattern',
+        pattern:'solid',
+        fgColor:{argb:forest}
       };
 
-      let database = null;
-      let saving = false;
-      let suggestions = [];
-
-      let duplicateTimer;
-      let duplicateVersion = 0;
-      let toastTimer;
-
-      let cameraSession = 0;
-      let cameraActive = false;
-      let cameraStream = null;
-      let cameraTrack = null;
-      let torchOn = false;
-      let torchBusy = false;
-
-      let barcodeTimer;
-      let ocrTimer;
-
-      let barcodeBusy = false;
-      let ocrBusy = false;
-
-      let ocrPromise = null;
-      let ocrState = 'preparing';
-
-      let barcodeFailures = 0;
-      let ocrFailures = 0;
-      let barcodeReads = new Set();
-      let ocrReads = new Set();
-      let frameNumber = 0;
-
-      const barcodeCanvas = document.createElement('canvas');
-      const ocrCanvas = document.createElement('canvas');
-
-      function currentType() {
-        return document.querySelector(
-          '[name="idType"]:checked'
-        ).value;
-      }
-
-      function remember(key, value) {
-        try {
-          localStorage.setItem(key, value);
-        } catch (_) {}
-      }
-
-      function recall(key) {
-        try {
-          return localStorage.getItem(key);
-        } catch (_) {
-          return null;
-        }
-      }
-
-      function normalizeName(value) {
-        return String(value || '')
-          .trim()
-          .replace(/\s+/g, ' ');
-      }
-
-      function searchKey(value) {
-        return normalizeName(value)
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .toLocaleLowerCase('pt-BR');
-      }
-
-      function showToast(message, error = false) {
-        clearTimeout(toastTimer);
-
-        $('toast').textContent = message;
-        $('toast').className =
-          'toast' + (error ? ' error' : '');
-
-        $('toast').hidden = false;
-
-        toastTimer = setTimeout(() => {
-          $('toast').hidden = true;
-        }, 5000);
-      }
-
-      function setConnection(state, message) {
-        $('connection').dataset.state = state;
-        $('connectionText').textContent = message;
-      }
-
-      function updateSummary(summary = {}) {
-        const fields = [
-          ['total', 'total'],
-          ['principalCount', 'principal'],
-          ['gerenciaCount', 'gerencia'],
-          ['almoxCount', 'almoxarifado']
-        ];
-
-        fields.forEach(([id, key]) => {
-          $(id).textContent = summary[key] ?? 0;
-        });
-      }
-
-      function updateRoom() {
-        const room = $('ambiente').value;
-
-        $('locationWrap').hidden =
-          room !== 'Almoxarifado';
-
-        if (room !== 'Almoxarifado') {
-          $('localizacao').value = '';
-        }
-
-        document.querySelectorAll('[data-room]')
-          .forEach(button => {
-            const selected =
-              button.dataset.room === room;
-
-            button.classList.toggle('active', selected);
-            button.setAttribute(
-              'aria-pressed',
-              String(selected)
-            );
-          });
-
-        remember('inventarioAmbiente', room);
-      }
-
-      function updateIdentification() {
-        closeScanner();
-        clearTimeout(duplicateTimer);
-        duplicateVersion++;
-
-        const type = currentType();
-        const config = TYPE[type];
-        const input = $('identifier');
-        const noCode =
-          type === 'SEM_IDENTIFICACAO';
-
-        input.value = '';
-        input.readOnly = noCode;
-        input.required = !noCode;
-        input.minLength = config.min;
-        input.maxLength = config.max;
-        input.inputMode = config.inputmode;
-        input.placeholder = config.placeholder;
-        input.setCustomValidity('');
-
-        if (config.pattern) {
-          input.pattern = config.pattern;
-        } else {
-          input.removeAttribute('pattern');
-        }
-
-        $('identifierLabel').textContent = config.label;
-        $('identifierHint').textContent = config.hint;
-        $('identifierHint').className = 'hint';
-
-        $('scanButton').hidden = noCode;
-
-        $('scanButton').setAttribute(
-          'aria-label',
-          'Ler ' + config.label
-        );
-
-        $('scanButton').title =
-          'Ler ' + config.label;
-      }
-
-      async function rpc(name, args) {
-        if (!database) {
-          throw new Error(
-            'O banco de dados não está conectado.'
-          );
-        }
-
-        const { data, error } =
-          await database.rpc(name, args);
-
-        if (error) throw error;
-
-        return data;
-      }
-
-      async function checkDuplicate(type, code) {
-        if (
-          !code ||
-          type === 'SEM_IDENTIFICACAO'
-        ) {
-          return null;
-        }
-
-        return rpc('verificar_identificador', {
-          p_tipo: type,
-          p_codigo: code
-        });
-      }
-
-      function scheduleDuplicate() {
-        clearTimeout(duplicateTimer);
-
-        const version = ++duplicateVersion;
-        const type = currentType();
-        const code = $('identifier').value.trim();
-
-        $('identifierHint').className = 'hint';
-        $('identifierHint').textContent = TYPE[type].hint;
-
-        if (
-          type === 'SEM_IDENTIFICACAO' ||
-          code.length < TYPE[type].min
-        ) {
-          return;
-        }
-
-        duplicateTimer = setTimeout(async () => {
-          try {
-            const result =
-              await checkDuplicate(type, code);
-
-            if (version !== duplicateVersion) return;
-
-            if (result?.exists) {
-              $('identifierHint').className =
-                'hint error';
-
-              $('identifierHint').textContent =
-                `Já cadastrado: ${result.item} · ${result.ambiente}`;
-            }
-          } catch (_) {
-            if (version !== duplicateVersion) return;
-
-            $('identifierHint').className =
-              'hint error';
-
-            $('identifierHint').textContent =
-              'Verificação indisponível. Tentaremos novamente ao salvar.';
-          }
-        }, 350);
-      }
-
-      function hideSuggestions() {
-        $('suggestions').hidden = true;
-        $('item').setAttribute('aria-expanded', 'false');
-      }
-
-      function renderSuggestions() {
-        const query = searchKey($('item').value);
-
-        const matches = suggestions
-          .filter(name => searchKey(name).includes(query))
-          .slice(0, 10);
-
-        $('suggestions').replaceChildren();
-
-        matches.forEach(name => {
-          const button =
-            document.createElement('button');
-
-          button.type = 'button';
-          button.textContent = name;
-
-          button.addEventListener('click', () => {
-            $('item').value = name;
-            hideSuggestions();
-            $('observacao').focus();
-          });
-
-          $('suggestions').appendChild(button);
-        });
-
-        $('suggestions').hidden =
-          matches.length === 0;
-
-        $('item').setAttribute(
-          'aria-expanded',
-          String(matches.length > 0)
-        );
-      }
-
-      function lockForm(active) {
-        saving = active;
-
-        [...$('inventoryForm').elements]
-          .forEach(control => {
-            control.disabled = active;
-          });
-
-        document.querySelectorAll('[data-room]')
-          .forEach(button => {
-            button.disabled = active;
-          });
-
-        $('saveButton').disabled = active;
-
-        $('saveText').textContent = active
-          ? 'Salvando…'
-          : 'Salvar e cadastrar próximo';
-      }
-
-      async function saveItem(event) {
-        event.preventDefault();
-
-        if (
-          saving ||
-          !$('inventoryForm').reportValidity()
-        ) {
-          return;
-        }
-
-        const type = currentType();
-        const code = $('identifier').value.trim();
-
-        let name = normalizeName($('item').value);
-
-        if (name.length < 2) {
-          showToast('Informe o nome do item.', true);
-          $('item').focus();
-          return;
-        }
-
-        const invalidCode =
-          type !== 'SEM_IDENTIFICACAO' &&
-          (
-            code.length < TYPE[type].min ||
-            code.length > TYPE[type].max ||
-            (
-              type === 'PMC' &&
-              !/^[0-9]{6}$/.test(code)
-            )
-          );
-
-        if (invalidCode) {
-          showToast(
-            'Confira a identificação informada.',
-            true
-          );
-
-          $('identifier').focus();
-          return;
-        }
-
-        const existingName = suggestions.find(
-          item => searchKey(item) === searchKey(name)
-        );
-
-        if (existingName) name = existingName;
-
-        const payload = {
-          ambiente: $('ambiente').value,
-          categoria: $('categoria').value,
-          item: name,
-
-          patrimonio_pmc:
-            type === 'PMC' ? code : '',
-
-          codigo_ici:
-            type === 'ICI' ? code : '',
-
-          numero_serie:
-            type === 'SERIE' ? code : '',
-
-          localizacao:
-            $('ambiente').value === 'Almoxarifado'
-              ? $('localizacao').value.trim()
-              : '',
-
-          observacao:
-            $('observacao').value.trim()
+      ws.getCell(1,1).font={
+        name:'Calibri',
+        size:20,
+        bold:true,
+        color:{argb:lime}
+      };
+
+      ws.getRow(1).height=42;
+
+      ws.mergeCells(2,1,2,n);
+
+      ws.getCell(2,1).value=
+        'GIT · SME · Curitiba — Exportado em '+
+        new Date().toLocaleString('pt-BR');
+
+      ws.mergeCells(3,1,3,n);
+      ws.getCell(3,1).value=scope;
+      ws.getRow(3).height=42;
+
+      ws.getCell(3,1).alignment={
+        wrapText:true,
+        vertical:'middle'
+      };
+
+      ws.getRow(5).values=headers;
+      ws.getRow(5).height=32;
+
+      ws.getRow(5).eachCell(c=>{
+        c.font={
+          bold:true,
+          color:{argb:'FFFFFFFF'}
         };
 
-        hideSuggestions();
-        lockForm(true);
+        c.fill={
+          type:'pattern',
+          pattern:'solid',
+          fgColor:{argb:forest}
+        };
 
-        try {
-          const duplicate =
-            await checkDuplicate(type, code);
+        c.alignment={
+          wrapText:true,
+          vertical:'middle'
+        };
+      });
 
-          if (duplicate?.exists) {
-            throw new Error(
-              `Já cadastrado: ${duplicate.item} · ${duplicate.ambiente}`
-            );
-          }
+      data.forEach((values,i)=>{
+        const row=ws.addRow(values);
 
-          const data = await rpc('salvar_item', {
-            p_dados: payload
-          });
-
-          updateSummary(data?.summary);
-
-          const savedName = data?.item || name;
-
-          suggestions = [
-            savedName,
-            ...suggestions.filter(
-              item =>
-                searchKey(item) !== searchKey(savedName)
+        row.height=Math.min(
+          409,
+          Math.max(
+            42,
+            ...values.map((v,j)=>
+              Math.ceil(
+                String(v??'').length/Math.max(8,widths[j]-3)
+              )*15+12
             )
-          ];
-
-          $('identifier').value = '';
-          $('item').value = '';
-          $('observacao').value = '';
-
-          clearTimeout(duplicateTimer);
-          duplicateVersion++;
-
-          $('identifierHint').className = 'hint';
-          $('identifierHint').textContent =
-            TYPE[type].hint;
-
-          const internalId = data?.id != null
-            ? `ACV-${String(data.id).padStart(5, '0')}`
-            : 'Registro concluído';
-
-          $('lastSaved').textContent =
-            `${internalId} · ${savedName} · ${payload.ambiente} — salvo.`;
-
-          $('lastSaved').hidden = false;
-
-          showToast(
-            `${savedName} salvo · ${internalId}`
-          );
-        } catch (error) {
-          showToast(
-            error.message ||
-              'Não foi possível salvar. Seus campos foram mantidos.',
-            true
-          );
-        } finally {
-          lockForm(false);
-        }
-      }
-
-      // =====================================================
-      // PREPARAÇÃO DO OCR
-      // =====================================================
-
-      function preloadOcr() {
-        if (ocrPromise) return ocrPromise;
-
-        ocrPromise = (async () => {
-          try {
-            if (!window.Tesseract) {
-              throw new Error('OCR indisponível.');
-            }
-
-            const worker =
-              await Tesseract.createWorker('eng', 1);
-
-            await worker.setParameters({
-              tessedit_pageseg_mode: '7',
-              preserve_interword_spaces: '1'
-            });
-
-            ocrState = 'ready';
-
-            $('ocrStatus').textContent =
-              'OCR: pronto';
-
-            return worker;
-          } catch (error) {
-            console.warn('OCR:', error);
-
-            ocrState = 'error';
-
-            $('ocrStatus').textContent =
-              'OCR: indisponível';
-
-            return null;
-          }
-        })();
-
-        return ocrPromise;
-      }
-
-      // =====================================================
-      // CONTROLE DA CÂMERA
-      // =====================================================
-
-      function activeSession(session) {
-        return (
-          cameraActive &&
-          session === cameraSession
-        );
-      }
-
-      function closeScanner() {
-        cameraActive = false;
-        cameraSession++;
-
-        clearTimeout(barcodeTimer);
-        clearTimeout(ocrTimer);
-
-        if (cameraStream) {
-          cameraStream.getTracks()
-            .forEach(track => track.stop());
-        }
-
-        cameraStream = null;
-        cameraTrack = null;
-        torchOn = false;
-
-        $('cameraVideo').pause();
-        $('cameraVideo').srcObject = null;
-
-        $('torchButton').disabled = true;
-        $('torchButton').classList.remove('active');
-
-        $('torchButton').setAttribute(
-          'aria-pressed',
-          'false'
-        );
-
-        $('torchButton').setAttribute(
-          'aria-label',
-          'Ligar lanterna'
-        );
-
-        $('torchButton').title = 'Ligar lanterna';
-
-        if ($('cameraDialog').open) {
-          $('cameraDialog').close();
-        }
-      }
-
-      async function openScanner() {
-        if (
-          cameraActive ||
-          saving ||
-          currentType() === 'SEM_IDENTIFICACAO'
-        ) {
-          return;
-        }
-
-        hideSuggestions();
-
-        cameraActive = true;
-
-        const session = ++cameraSession;
-        const type = currentType();
-
-        barcodeReads = new Set();
-        ocrReads = new Set();
-
-        barcodeFailures = 0;
-        ocrFailures = 0;
-        frameNumber = 0;
-
-        $('candidateBox').hidden = true;
-        $('candidateOptions').replaceChildren();
-
-        $('cameraTitle').textContent =
-          'Ler ' + TYPE[type].label;
-
-        $('barcodeStatus').textContent =
-          'Código: preparando';
-
-        $('ocrStatus').textContent =
-          ocrState === 'ready'
-            ? 'OCR: pronto'
-            : ocrState === 'error'
-              ? 'OCR: indisponível'
-              : 'OCR: carregando';
-
-        $('cameraHelp').textContent =
-          'Código no quadro maior; números ou série na faixa tracejada.';
-
-        $('cameraDialog').showModal();
-
-        preloadOcr();
-
-        try {
-          if (!navigator.mediaDevices?.getUserMedia) {
-            throw new Error(
-              'Abra o site por HTTPS em um navegador com acesso à câmera.'
-            );
-          }
-
-          const stream =
-            await navigator.mediaDevices.getUserMedia({
-              audio: false,
-
-              video: {
-                facingMode: {
-                  ideal: 'environment'
-                },
-
-                width: {
-                  ideal: 1920
-                },
-
-                height: {
-                  ideal: 1080
-                }
-              }
-            });
-
-          if (!activeSession(session)) {
-            stream.getTracks()
-              .forEach(track => track.stop());
-
-            return;
-          }
-
-          cameraStream = stream;
-          cameraTrack = stream.getVideoTracks()[0];
-
-          $('cameraVideo').srcObject = stream;
-
-          await $('cameraVideo').play();
-
-          if (!activeSession(session)) return;
-
-          const capabilities =
-            cameraTrack.getCapabilities?.() || {};
-
-          $('torchButton').disabled =
-            capabilities.torch !== true;
-
-          if (
-            capabilities.focusMode?.includes('continuous')
-          ) {
-            try {
-              await cameraTrack.applyConstraints({
-                advanced: [
-                  {
-                    focusMode: 'continuous'
-                  }
-                ]
-              });
-            } catch (_) {}
-          }
-
-          if (!activeSession(session)) return;
-
-          runBarcode(session, type);
-          runOcr(session, type);
-        } catch (error) {
-          if (!activeSession(session)) return;
-
-          closeScanner();
-
-          showToast(
-            error.name === 'NotAllowedError'
-              ? 'Autorize o acesso à câmera nas configurações do navegador.'
-              : error.message ||
-                'Não foi possível abrir a câmera.',
-            true
-          );
-        }
-      }
-
-      // =====================================================
-      // RECORTE DA ÁREA VISÍVEL
-      // =====================================================
-
-      function captureGuide(
-        guideId,
-        canvas,
-        maxWidth,
-        contrast = false
-      ) {
-        const video = $('cameraVideo');
-
-        if (
-          video.readyState < 2 ||
-          !video.videoWidth ||
-          !video.videoHeight
-        ) {
-          return null;
-        }
-
-        const videoRect =
-          video.getBoundingClientRect();
-
-        const guideRect =
-          $(guideId).getBoundingClientRect();
-
-        if (
-          !videoRect.width ||
-          !videoRect.height
-        ) {
-          return null;
-        }
-
-        // Compensa o recorte visual de object-fit: cover.
-        const scale = Math.max(
-          videoRect.width / video.videoWidth,
-          videoRect.height / video.videoHeight
-        );
-
-        const offsetX =
-          (
-            video.videoWidth * scale -
-            videoRect.width
-          ) / 2;
-
-        const offsetY =
-          (
-            video.videoHeight * scale -
-            videoRect.height
-          ) / 2;
-
-        const sx = Math.max(
-          0,
-          (
-            guideRect.left -
-            videoRect.left +
-            offsetX
-          ) / scale
-        );
-
-        const sy = Math.max(
-          0,
-          (
-            guideRect.top -
-            videoRect.top +
-            offsetY
-          ) / scale
-        );
-
-        const sw = Math.min(
-          guideRect.width / scale,
-          video.videoWidth - sx
-        );
-
-        const sh = Math.min(
-          guideRect.height / scale,
-          video.videoHeight - sy
-        );
-
-        if (sw <= 0 || sh <= 0) return null;
-
-        const outputScale = Math.min(
-          1.4,
-          maxWidth / sw
-        );
-
-        canvas.width = Math.max(
-          1,
-          Math.round(sw * outputScale)
-        );
-
-        canvas.height = Math.max(
-          1,
-          Math.round(sh * outputScale)
-        );
-
-        const context = canvas.getContext(
-          '2d',
-          {
-            willReadFrequently: true
-          }
-        );
-
-        context.drawImage(
-          video,
-          sx,
-          sy,
-          sw,
-          sh,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-        const data = context.getImageData(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-        if (contrast) {
-          for (
-            let i = 0;
-            i < data.data.length;
-            i += 4
-          ) {
-            const gray =
-              .299 * data.data[i] +
-              .587 * data.data[i + 1] +
-              .114 * data.data[i + 2];
-
-            const value = Math.max(
-              0,
-              Math.min(
-                255,
-                (gray - 128) * 1.5 + 128
-              )
-            );
-
-            data.data[i] = value;
-            data.data[i + 1] = value;
-            data.data[i + 2] = value;
-          }
-
-          context.putImageData(data, 0, 0);
-        }
-
-        return data;
-      }
-
-      // =====================================================
-      // VALIDAÇÃO DAS LEITURAS
-      // =====================================================
-
-      function validBarcode(raw, type) {
-        const value =
-          String(raw || '').trim();
-
-        if (type === 'PMC') {
-          return /^[0-9]{6}$/.test(value)
-            ? value
-            : '';
-        }
-
-        if (
-          value.length < TYPE[type].min ||
-          value.length > TYPE[type].max
-        ) {
-          return '';
-        }
-
-        if (/[\x00-\x1f\x7f]/.test(value)) {
-          return '';
-        }
-
-        if (/^(https?:|mailto:|wifi:)/i.test(value)) {
-          return '';
-        }
-
-        return value;
-      }
-
-      function extractOcr(text, type) {
-        const lines = String(text || '')
-          .split(/\r?\n/)
-          .map(line => line.trim())
-          .filter(Boolean);
-
-        const found = new Set();
-
-        for (let line of lines) {
-          if (type === 'PMC') {
-            if (/^[0-9\s]+$/.test(line)) {
-              const value =
-                line.replace(/\s/g, '');
-
-              if (/^[0-9]{6}$/.test(value)) {
-                found.add(value);
-              }
-            }
-          } else if (type === 'ICI') {
-            if (/^[0-9\s]{3,45}$/.test(line)) {
-              const value =
-                line.replace(/\s/g, '');
-
-              if (
-                value.length >= 3 &&
-                value.length <= 40
-              ) {
-                found.add(value);
-              }
-            }
-          } else {
-            line = line.replace(
-              /^(?:S\/N|SN|SERIAL(?:\s+NO)?)[\s:#.-]*/i,
-              ''
-            );
-
-            if (
-              /^[A-Za-z0-9][A-Za-z0-9./_-]{1,79}$/.test(line) &&
-              /\d/.test(line)
-            ) {
-              found.add(line);
-            }
-          }
-        }
-
-        return [...found];
-      }
-
-      function sameCode(a, b) {
-        return (
-          a.toLocaleLowerCase() ===
-          b.toLocaleLowerCase()
-        );
-      }
-
-      // =====================================================
-      // LEITURA DE CÓDIGO DE BARRAS
-      // =====================================================
-
-      async function runBarcode(session, type) {
-        if (!activeSession(session)) return;
-
-        if (barcodeBusy) {
-          barcodeTimer = setTimeout(
-            () => runBarcode(session, type),
-            190
-          );
-
-          return;
-        }
-
-        if (!window.ZXingWASM?.readBarcodes) {
-          $('barcodeStatus').textContent =
-            'Código: indisponível';
-
-          return;
-        }
-
-        barcodeBusy = true;
-
-        try {
-          frameNumber++;
-
-          const image = captureGuide(
-            'barcodeGuide',
-            barcodeCanvas,
-            1600,
-            frameNumber % 3 === 0
-          );
-
-          if (!image) return;
-
-          const results =
-            await ZXingWASM.readBarcodes(
-              image,
-              {
-                formats: ['AllReadable'],
-                tryHarder: true,
-                tryRotate: true,
-                tryInvert: true,
-                maxNumberOfSymbols: 4
-              }
-            );
-
-          if (!activeSession(session)) return;
-
-          barcodeFailures = 0;
-
-          $('barcodeStatus').textContent =
-            'Código: ativo';
-
-          const codes = [...new Set(
-            (results || [])
-              .filter(result => !result.error)
-              .map(result =>
-                validBarcode(result.text, type)
-              )
-              .filter(Boolean)
-          )];
-
-          codes.forEach(code => {
-            barcodeReads.add(code);
-          });
-
-          const conflict =
-            codes.length > 1 ||
-            (
-              codes.length === 1 &&
-              [...ocrReads].some(
-                code => !sameCode(code, codes[0])
-              )
-            );
-
-          if (
-            codes.length === 1 &&
-            !conflict &&
-            barcodeReads.size === 1
-          ) {
-            useCode(codes[0], session);
-          } else if (codes.length) {
-            renderCandidates(session);
-          }
-        } catch (error) {
-          if (activeSession(session)) {
-            barcodeFailures++;
-
-            $('barcodeStatus').textContent =
-              'Código: erro no leitor';
-          }
-
-          console.warn('Código:', error);
-        } finally {
-          barcodeBusy = false;
-
-          if (
-            activeSession(session) &&
-            barcodeFailures < 3
-          ) {
-            barcodeTimer = setTimeout(
-              () => runBarcode(session, type),
-              190
-            );
-          }
-        }
-      }
-
-      // =====================================================
-      // LEITURA OCR
-      // =====================================================
-
-      async function runOcr(session, type) {
-        if (!activeSession(session)) return;
-
-        if (ocrBusy) {
-          ocrTimer = setTimeout(
-            () => runOcr(session, type),
-            250
-          );
-
-          return;
-        }
-
-        ocrBusy = true;
-
-        try {
-          const worker = await preloadOcr();
-
-          if (
-            !worker ||
-            !activeSession(session)
-          ) {
-            return;
-          }
-
-          await worker.setParameters({
-            tessedit_pageseg_mode: '7',
-
-            tessedit_char_whitelist:
-              type === 'SERIE'
-                ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-./_: '
-                : '0123456789 '
-          });
-
-          if (!activeSession(session)) return;
-
-          const image = captureGuide(
-            'ocrGuide',
-            ocrCanvas,
-            1200,
-            true
-          );
-
-          if (!image) return;
-
-          const result =
-            await worker.recognize(ocrCanvas);
-
-          if (!activeSession(session)) return;
-
-          ocrFailures = 0;
-
-          $('ocrStatus').textContent =
-            'OCR: ativo';
-
-          if (
-            (result.data?.confidence ?? 0) < 55
-          ) {
-            return;
-          }
-
-          const values = extractOcr(
-            result.data?.text,
-            type
-          );
-
-          values.forEach(value => {
-            ocrReads.add(value);
-          });
-
-          if (values.length) {
-            renderCandidates(session);
-          }
-        } catch (error) {
-          if (activeSession(session)) {
-            ocrFailures++;
-
-            $('ocrStatus').textContent =
-              'OCR: erro na leitura';
-          }
-
-          console.warn('OCR:', error);
-        } finally {
-          ocrBusy = false;
-
-          if (
-            activeSession(session) &&
-            ocrState !== 'error' &&
-            ocrFailures < 3
-          ) {
-            ocrTimer = setTimeout(
-              () => runOcr(session, type),
-              550
-            );
-          }
-        }
-      }
-
-      function renderCandidates(session) {
-        if (!activeSession(session)) return;
-
-        const values = [
-          ...barcodeReads,
-          ...ocrReads
-        ]
-          .filter((value, index, all) =>
-            all.findIndex(
-              other => sameCode(other, value)
-            ) === index
           )
-          .slice(-4);
-
-        if (!values.length) return;
-
-        $('candidateMessage').textContent =
-          values.length > 1
-            ? 'Leituras diferentes. Toque no código correto:'
-            : 'Texto reconhecido. Confira e toque para usar:';
-
-        $('candidateOptions').replaceChildren();
-
-        values.forEach(value => {
-          const button =
-            document.createElement('button');
-
-          button.type = 'button';
-          button.textContent = 'Usar ' + value;
-
-          button.addEventListener('click', () => {
-            useCode(value, session);
-          });
-
-          $('candidateOptions').appendChild(button);
-        });
-
-        $('candidateBox').hidden = false;
-      }
-
-      function useCode(value, session) {
-        if (!activeSession(session)) return;
-
-        $('identifier').value = value;
-
-        closeScanner();
-        scheduleDuplicate();
-
-        showToast(
-          'Identificação preenchida: ' + value
         );
-      }
 
-      async function toggleTorch() {
-        if (!cameraTrack || torchBusy) return;
+        row.eachCell(c=>{
+          c.font={
+            name:'Calibri',
+            size:11,
+            color:{argb:forest}
+          };
 
-        const track = cameraTrack;
-        const session = cameraSession;
-        const next = !torchOn;
+          c.alignment={
+            vertical:'middle',
+            wrapText:true
+          };
 
-        torchBusy = true;
-
-        try {
-          await track.applyConstraints({
-            advanced: [
-              {
-                torch: next
-              }
-            ]
-          });
-
-          if (!activeSession(session)) return;
-
-          torchOn = next;
-
-          $('torchButton').classList.toggle(
-            'active',
-            next
-          );
-
-          $('torchButton').setAttribute(
-            'aria-pressed',
-            String(next)
-          );
-
-          const label = next
-            ? 'Desligar lanterna'
-            : 'Ligar lanterna';
-
-          $('torchButton').setAttribute(
-            'aria-label',
-            label
-          );
-
-          $('torchButton').title = label;
-        } catch (_) {
-          if (activeSession(session)) {
-            $('cameraHelp').textContent =
-              'Não foi possível alterar a lanterna.';
+          if(i%2===0){
+            c.fill={
+              type:'pattern',
+              pattern:'solid',
+              fgColor:{argb:soft}
+            };
           }
-        } finally {
-          torchBusy = false;
+
+          if(typeof c.value==='string')c.numFmt='@';
+        });
+      });
+
+      ws.autoFilter={
+        from:{row:5,column:1},
+        to:{row:Math.max(5,ws.rowCount),column:n}
+      };
+
+      return ws;
+    }
+
+    const active=list.filter(r=>r.situacao==='ATIVO');
+
+    const summary=[
+      ['Registros no recorte',list.length],
+      ['Ativos',active.length],
+      ['Baixados',list.filter(r=>r.situacao==='BAIXADO').length],
+      ['Arquivados',list.filter(r=>r.situacao==='ARQUIVADO').length],
+      [
+        'Ativos sem identificação externa',
+        active.filter(r=>r.dados.tipo==='SEM_IDENTIFICACAO').length
+      ],
+      ...ROOMS.map(v=>[
+        'Ativos · '+v,
+        active.filter(r=>r.dados.ambiente===v).length
+      ]),
+      ...['Móvel','Tecnologia'].map(v=>[
+        'Ativos · '+v,
+        active.filter(r=>r.dados.categoria===v).length
+      ])
+    ];
+
+    const summarySheet=sheet(
+      'Resumo',
+      ['Indicador','Quantidade'],
+      summary,
+      [66,32]
+    );
+
+    const canvas=document.createElement('canvas');
+    canvas.width=900;
+    canvas.height=300;
+
+    const ctx=canvas.getContext('2d');
+
+    ctx.fillStyle='#f3f4ef';
+    ctx.fillRect(0,0,900,300);
+    ctx.fillStyle='#123d32';
+    ctx.font='bold 25px sans-serif';
+    ctx.fillText('ITENS ATIVOS POR AMBIENTE',25,40);
+
+    ROOMS.forEach((room,i)=>{
+      const n=active.filter(r=>r.dados.ambiente===room).length;
+      const y=90+i*75;
+
+      ctx.font='18px sans-serif';
+      ctx.fillStyle='#123d32';
+      ctx.fillText(room,25,y);
+      ctx.fillStyle='#e0e8d9';
+      ctx.fillRect(240,y-20,560,25);
+      ctx.fillStyle='#123d32';
+
+      ctx.fillRect(
+        240,y-20,
+        active.length?n/active.length*560:0,
+        25
+      );
+
+      ctx.fillText(String(n),820,y);
+    });
+
+    summarySheet.addImage(
+      wb.addImage({
+        base64:canvas.toDataURL('image/png'),
+        extension:'png'
+      }),
+      {
+        tl:{col:0,row:18},
+        ext:{width:675,height:225}
+      }
+    );
+
+    ctx.fillStyle='#f3f4ef';
+    ctx.fillRect(0,0,900,300);
+    ctx.fillStyle='#123d32';
+    ctx.font='bold 25px sans-serif';
+    ctx.fillText('ITENS ATIVOS POR CATEGORIA',25,40);
+
+    ['Móvel','Tecnologia'].forEach((category,i)=>{
+      const n=active.filter(r=>r.dados.categoria===category).length;
+      const y=100+i*85;
+
+      ctx.font='18px sans-serif';
+      ctx.fillStyle='#123d32';
+      ctx.fillText(category,25,y);
+      ctx.fillStyle='#e0e8d9';
+      ctx.fillRect(240,y-20,560,25);
+      ctx.fillStyle='#123d32';
+
+      ctx.fillRect(
+        240,y-20,
+        active.length?n/active.length*560:0,
+        25
+      );
+
+      ctx.fillText(String(n),820,y);
+    });
+
+    summarySheet.addImage(
+      wb.addImage({
+        base64:canvas.toDataURL('image/png'),
+        extension:'png'
+      }),
+      {
+        tl:{col:0,row:35},
+        ext:{width:675,height:225}
+      }
+    );
+
+    summarySheet.pageSetup.printArea='A1:B52';
+
+    const headers=[
+      'Código interno',
+      'Tipo',
+      'Código externo',
+      'Item',
+      'Categoria',
+      'Ambiente',
+      'Localização',
+      'Situação',
+      'Observação',
+      'Cadastrado em',
+      'Série anterior',
+      'Localização anterior'
+    ];
+
+    const values=r=>[
+      internal(r.id),
+      TYPE[r.dados.tipo],
+      String(r.dados.codigo||''),
+      r.dados.item,
+      r.dados.categoria,
+      r.dados.ambiente,
+      locationText(r),
+      STATUS[r.situacao],
+      r.dados.observacao||'',
+      new Date(r.criado_em),
+      r.legado?.numero_serie||'',
+      r.legado?.localizacao||''
+    ];
+
+    const widths=[19,26,19,30,17,25,18,16,85,23,24,25];
+
+    for(const [name,data] of [
+      ['Inventário',list],
+      [
+        'Sem identificação externa',
+        list.filter(r=>r.dados.tipo==='SEM_IDENTIFICACAO')
+      ]
+    ]){
+      const ws=sheet(name,headers,data.map(values),widths);
+      ws.getColumn(10).numFmt='dd/mm/yyyy hh:mm';
+    }
+
+    const down=list.filter(r=>r.situacao==='BAIXADO');
+
+    sheet(
+      'Baixas',
+      [
+        'Código interno',
+        'Item',
+        'Identificação',
+        'Data da baixa',
+        'Motivo',
+        'Documento/processo',
+        'Responsável',
+        'Ambiente anterior'
+      ],
+      down.map(r=>[
+        internal(r.id),
+        r.dados.item,
+        r.dados.codigo||internal(r.id),
+        r.baixa?.data||'',
+        r.baixa?.motivo||'',
+        r.baixa?.documento||'',
+        r.baixa?.email||'',
+        r.baixa?.ambiente||''
+      ]),
+      [19,30,20,17,85,25,34,25]
+    );
+
+    const data=await wb.xlsx.writeBuffer();
+
+    const url=URL.createObjectURL(new Blob([data],{
+      type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    }));
+
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='ACERVO_'+(all?'completo':'filtrado')+'_'+today()+'.xlsx';
+    a.click();
+
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+
+    toast('Excel gerado: '+list.length+' registros.');
+  }catch(e){
+    toast(e.message,true);
+  }finally{
+    setBusy(false);
+    renderList();
+  }
+}
+
+/*
+Leitura:
+- ZXing-C++ em Worker.
+- Todos os formatos legíveis suportados pela biblioteca.
+- OCR em paralelo.
+- Nenhuma imagem enviada ao banco.
+*/
+
+function warmBarcode(){
+  if(barcodeWorker)return;
+
+  try{
+    const source=`
+      importScripts(
+        'https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/iife/reader/index.js'
+      );
+
+      const ready=ZXingWASM.prepareZXingModule({
+        overrides:{
+          locateFile:(p)=>
+            'https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.4/dist/reader/'+p
+        },
+        fireImmediately:true
+      });
+
+      ready.catch(()=>{});
+
+      onmessage=async e=>{
+        try{
+          await ready;
+
+          const results=await ZXingWASM.readBarcodes(
+            new ImageData(
+              new Uint8ClampedArray(e.data.buffer),
+              e.data.width,
+              e.data.height
+            ),
+            {
+              formats:['AllReadable'],
+              tryHarder:true,
+              tryRotate:true,
+              tryInvert:true,
+              maxNumberOfSymbols:4,
+              minLineCount:1
+            }
+          );
+
+          postMessage({
+            results:results
+              .filter(r=>!r.error)
+              .map(r=>({
+                text:r.text,
+                format:r.format
+              }))
+          });
+        }catch(err){
+          postMessage({error:err.message});
         }
+      };
+    `;
+
+    const url=URL.createObjectURL(
+      new Blob([source],{type:'text/javascript'})
+    );
+
+    barcodeWorker=new Worker(url);
+    URL.revokeObjectURL(url);
+
+    barcodeWorker.onmessage=e=>{
+      if(barcodeTask){
+        clearTimeout(barcodeTask.timer);
+
+        if(e.data.error){
+          barcodeTask.reject(Error(e.data.error));
+        }else{
+          barcodeTask.resolve(e.data.results);
+        }
+
+        barcodeTask=null;
+      }
+    };
+
+    barcodeWorker.onerror=()=>{
+      if(barcodeTask){
+        clearTimeout(barcodeTask.timer);
+        barcodeTask.reject(Error('Leitor de barras indisponível'));
+        barcodeTask=null;
       }
 
-      // =====================================================
-      // EVENTOS
-      // =====================================================
+      barcodeWorker?.terminate();
+      barcodeWorker=null;
+    };
+  }catch(e){
+    console.warn(e);
+  }
+}
 
-      $('ambiente').addEventListener(
-        'change',
-        updateRoom
-      );
+function decode(image){
+  return new Promise((resolve,reject)=>{
+    warmBarcode();
 
-      document.querySelectorAll('[data-room]')
-        .forEach(button => {
-          button.addEventListener('click', () => {
-            if (saving) return;
+    if(!barcodeWorker){
+      return reject(Error('Leitor indisponível'));
+    }
 
-            $('ambiente').value =
-              button.dataset.room;
+    const timer=setTimeout(()=>{
+      barcodeWorker?.terminate();
+      barcodeWorker=null;
+      barcodeTask=null;
+      reject(Error('Leitor demorou a responder'));
+    },20000);
 
-            updateRoom();
-          });
-        });
+    barcodeTask={resolve,reject,timer};
 
-      $('categoria').addEventListener('change', () => {
-        remember(
-          'inventarioCategoria',
-          $('categoria').value
-        );
+    barcodeWorker.postMessage(
+      {
+        buffer:image.data.buffer,
+        width:image.width,
+        height:image.height
+      },
+      [image.data.buffer]
+    );
+  });
+}
+
+function warmOCR(){
+  if(!ocrPromise){
+    ocrPromise=(async()=>{
+      if(!window.Tesseract)throw Error('OCR não carregou');
+
+      const w=await Tesseract.createWorker('eng',1);
+
+      await w.setParameters({
+        tessedit_pageseg_mode:'7',
+        tessedit_char_whitelist:'0123456789 ',
+        preserve_interword_spaces:'1'
       });
 
-      document.querySelectorAll('[name="idType"]')
-        .forEach(radio => {
-          radio.addEventListener(
-            'change',
-            updateIdentification
-          );
-        });
+      return w;
+    })().catch(e=>{
+      ocrPromise=null;
+      return null;
+    });
+  }
 
-      $('identifier').addEventListener('input', () => {
-        if (currentType() === 'PMC') {
-          $('identifier').value =
-            $('identifier').value
-              .replace(/\D/g, '')
-              .slice(0, 6);
-        }
+  return ocrPromise;
+}
 
-        scheduleDuplicate();
-      });
+function crop(guide,contrast=false,angle=0){
+  const v=$('video');
+  const vr=v.getBoundingClientRect();
+  const r=$(guide).getBoundingClientRect();
 
-      $('item').addEventListener(
-        'input',
-        renderSuggestions
+  if(!v.videoWidth||!vr.width)return null;
+
+  const scale=Math.max(
+    vr.width/v.videoWidth,
+    vr.height/v.videoHeight
+  );
+
+  const ox=(vr.width-v.videoWidth*scale)/2;
+  const oy=(vr.height-v.videoHeight*scale)/2;
+
+  const x=Math.max(0,(r.left-vr.left-ox)/scale);
+  const y=Math.max(0,(r.top-vr.top-oy)/scale);
+  const w=Math.min(v.videoWidth-x,r.width/scale);
+  const h=Math.min(v.videoHeight-y,r.height/scale);
+
+  const c=document.createElement('canvas');
+  const factor=Math.min(1.5,1400/w);
+
+  c.width=Math.round(w*factor);
+  c.height=Math.round(h*factor);
+
+  const ctx=c.getContext('2d',{willReadFrequently:true});
+
+  ctx.drawImage(v,x,y,w,h,0,0,c.width,c.height);
+
+  const img=ctx.getImageData(0,0,c.width,c.height);
+
+  if(contrast){
+    for(let i=0;i<img.data.length;i+=4){
+      let g=(
+        img.data[i]*.299+
+        img.data[i+1]*.587+
+        img.data[i+2]*.114-
+        128
+      )*1.5+128;
+
+      img.data[i]=img.data[i+1]=img.data[i+2]=g;
+    }
+
+    ctx.putImageData(img,0,0);
+  }
+
+  if(angle){
+    const rotated=document.createElement('canvas');
+    const a=angle*Math.PI/180;
+
+    rotated.width=Math.ceil(
+      Math.abs(c.width*Math.cos(a))+
+      Math.abs(c.height*Math.sin(a))
+    );
+
+    rotated.height=Math.ceil(
+      Math.abs(c.height*Math.cos(a))+
+      Math.abs(c.width*Math.sin(a))
+    );
+
+    const rc=rotated.getContext('2d');
+
+    rc.fillStyle='white';
+    rc.fillRect(0,0,rotated.width,rotated.height);
+    rc.translate(rotated.width/2,rotated.height/2);
+    rc.rotate(a);
+    rc.drawImage(c,-c.width/2,-c.height/2);
+
+    return {
+      canvas:rotated,
+      image:rc.getImageData(0,0,rotated.width,rotated.height)
+    };
+  }
+
+  return {canvas:c,image:img};
+}
+
+const pause=ms=>new Promise(r=>setTimeout(r,ms));
+
+function showCandidates(s){
+  if(scene!==s)return;
+
+  $('candidates').replaceChildren();
+
+  for(const [value,entry] of [...s.candidates.entries()].slice(-4)){
+    if(/^\d{6}$/.test(value)){
+      $('candidates').append(button(
+        'Usar '+value+' · '+entry.source,
+        ()=>acceptCode(s,value)
+      ));
+    }else{
+      const p=el('p');
+
+      p.textContent=
+        entry.source+': '+value.slice(0,300)+
+        ' — conteúdo diferente dos seis números esperados. Não foi preenchido.';
+
+      $('candidates').append(p);
+    }
+  }
+}
+
+function candidate(s,text,source,automatic){
+  if(scene!==s)return;
+
+  const value=String(text||'').trim();
+
+  if(!value||value.length>4096)return;
+
+  const now=performance.now();
+  const old=s.candidates.get(value);
+  const count=old&&now-old.time<2000?old.count+1:1;
+
+  s.candidates.set(value,{
+    source,
+    count,
+    time:now
+  });
+
+  for(const [v,e] of s.candidates){
+    if(now-e.time>4000)s.candidates.delete(v);
+  }
+
+  showCandidates(s);
+
+  if(
+    automatic&&
+    /^\d{6}$/.test(value)&&
+    count>=2&&
+    s.candidates.size===1
+  ){
+    acceptCode(s,value);
+  }
+}
+
+function acceptCode(s,value){
+  if(scene!==s)return;
+
+  $('code').value=value;
+  closeScanner();
+  saveDraft();
+  duplicateHint();
+
+  toast('Código '+value+' preenchido.');
+}
+
+async function barcodeLoop(s){
+  let n=0;
+  let errors=0;
+
+  while(scene===s){
+    if(barcodeBusy){
+      await pause(150);
+      continue;
+    }
+
+    barcodeBusy=true;
+
+    try{
+      n++;
+
+      const frame=crop(
+        'barcodeGuide',
+        n%5===0,
+        n%4===2?8:n%4===3?-8:0
       );
 
-      $('item').addEventListener(
-        'focus',
-        renderSuggestions
-      );
+      if(frame){
+        const results=await decode(frame.image);
 
-      $('item').addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
-          hideSuggestions();
+        if(scene!==s)break;
+
+        errors=0;
+
+        for(const r of results){
+          candidate(s,r.text,r.format,true);
         }
+      }
+    }catch(e){
+      if(scene===s){
+        $('cameraStatus').textContent=
+          'Barras: '+e.message+'. OCR continua disponível.';
+      }
 
-        if (
-          event.key === 'ArrowDown' &&
-          !$('suggestions').hidden
-        ) {
-          event.preventDefault();
+      if(++errors>=3)break;
+    }finally{
+      barcodeBusy=false;
+    }
 
-          $('suggestions')
-            .querySelector('button')
-            ?.focus();
-        }
-      });
+    await pause(130);
+  }
+}
 
-      $('suggestions').addEventListener(
-        'keydown',
-        event => {
-          const buttons = [
-            ...$('suggestions').querySelectorAll('button')
-          ];
+async function ocrLoop(s){
+  let n=0;
 
-          const index =
-            buttons.indexOf(document.activeElement);
+  while(scene===s){
+    if(ocrBusy){
+      await pause(250);
+      continue;
+    }
 
-          if (!buttons.length) return;
+    ocrBusy=true;
 
-          if (event.key === 'Escape') {
-            $('item').focus();
-            hideSuggestions();
-          } else if (event.key === 'ArrowDown') {
-            event.preventDefault();
+    try{
+      const w=await warmOCR();
 
-            buttons[
-              (index + 1) % buttons.length
-            ].focus();
-          } else if (event.key === 'ArrowUp') {
-            event.preventDefault();
+      if(scene!==s)break;
 
-            if (index <= 0) {
-              $('item').focus();
-            } else {
-              buttons[index - 1].focus();
+      if(!w){
+        $('cameraStatus').textContent=
+          'OCR indisponível; a leitura de códigos continua.';
+        break;
+      }
+
+      const frame=crop('numberGuide',++n%2===0);
+
+      if(frame){
+        const {data}=await w.recognize(frame.canvas);
+
+        if(scene!==s)break;
+
+        if(data.confidence>=65){
+          for(const line of data.text.split(/[\r\n]+/)){
+            const value=line.replace(/\s/g,'');
+
+            if(/^\d{6}$/.test(value)){
+              candidate(s,value,'OCR · confirme',false);
             }
           }
         }
-      );
-
-      document.addEventListener('pointerdown', event => {
-        if (!event.target.closest('.suggest-wrap')) {
-          hideSuggestions();
-        }
-      });
-
-      $('inventoryForm').addEventListener(
-        'submit',
-        saveItem
-      );
-
-      $('scanButton').addEventListener(
-        'click',
-        openScanner
-      );
-
-      $('closeCameraButton').addEventListener(
-        'click',
-        closeScanner
-      );
-
-      $('torchButton').addEventListener(
-        'click',
-        toggleTorch
-      );
-
-      $('cameraDialog').addEventListener(
-        'cancel',
-        event => {
-          event.preventDefault();
-          closeScanner();
-        }
-      );
-
-      document.addEventListener(
-        'visibilitychange',
-        () => {
-          if (document.hidden) closeScanner();
-        }
-      );
-
-      window.addEventListener(
-        'pagehide',
-        closeScanner
-      );
-
-      // =====================================================
-      // INICIALIZAÇÃO
-      // =====================================================
-
-      const savedRoom =
-        recall('inventarioAmbiente');
-
-      if (
-        [...$('ambiente').options].some(
-          option => option.value === savedRoom
-        )
-      ) {
-        $('ambiente').value = savedRoom;
+      }
+    }catch(e){
+      if(scene===s){
+        $('cameraStatus').textContent=
+          'OCR falhou; leitura de códigos continua.';
       }
 
-      const savedCategory =
-        recall('inventarioCategoria');
+      break;
+    }finally{
+      ocrBusy=false;
+    }
 
-      if (
-        ['Móvel', 'Tecnologia'].includes(savedCategory)
-      ) {
-        $('categoria').value = savedCategory;
+    await pause(400);
+  }
+}
+
+async function openScanner(){
+  if(
+    scene||
+    busy||
+    pending||
+    type()==='SEM_IDENTIFICACAO'
+  )return;
+
+  const s={
+    candidates:new Map(),
+    stream:null,
+    torch:false
+  };
+
+  scene=s;
+
+  $('cameraTitle').textContent='Ler '+TYPE[type()];
+  $('cameraStatus').textContent='Procurando códigos…';
+  $('candidates').replaceChildren();
+  $('torch').disabled=true;
+  $('torch').setAttribute('aria-pressed','false');
+  $('zoomLabel').hidden=true;
+
+  $('camera').showModal();
+
+  warmBarcode();
+  warmOCR();
+
+  try{
+    if(!navigator.mediaDevices?.getUserMedia){
+      throw Error('Abra o site HTTPS no Safari ou Chrome.');
+    }
+
+    const stream=await navigator.mediaDevices.getUserMedia({
+      audio:false,
+      video:{
+        facingMode:{ideal:'environment'},
+        width:{ideal:1920},
+        height:{ideal:1080}
       }
-
-      updateRoom();
-      updateIdentification();
-      preloadOcr();
-
-      (async () => {
-        try {
-          if (!window.supabase) {
-            throw new Error(
-              'Biblioteca do banco não carregada.'
-            );
-          }
-
-          database = supabase.createClient(
-            'https://yipfkwxhpahpuiizkcny.supabase.co',
-            'sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI'
-          );
-
-          const data =
-            await rpc('iniciar_inventario');
-
-          updateSummary(data?.summary);
-
-          suggestions = (
-            Array.isArray(data?.suggestions)
-              ? data.suggestions
-              : []
-          ).filter(
-            value => typeof value === 'string'
-          );
-
-          setConnection(
-            'ok',
-            'Banco conectado'
-          );
-        } catch (error) {
-          setConnection(
-            'error',
-            'Conexão indisponível'
-          );
-
-          showToast(
-            error.message ||
-              'Não foi possível conectar.',
-            true
-          );
-        }
-      })();
     });
-  </script>
+
+    if(scene!==s){
+      stream.getTracks().forEach(t=>t.stop());
+      return;
+    }
+
+    s.stream=stream;
+    s.track=stream.getVideoTracks()[0];
+
+    $('video').srcObject=stream;
+    await $('video').play();
+
+    if(scene!==s)return;
+
+    const caps=s.track.getCapabilities?.()||{};
+
+    $('torch').disabled=!caps.torch;
+
+    if(caps.zoom){
+      $('zoomLabel').hidden=false;
+      $('zoom').min=caps.zoom.min;
+      $('zoom').max=Math.min(caps.zoom.max,4);
+      $('zoom').step=caps.zoom.step||.1;
+      $('zoom').value=s.track.getSettings().zoom||caps.zoom.min;
+    }
+
+    if(caps.focusMode?.includes('continuous')){
+      try{
+        await s.track.applyConstraints({
+          advanced:[{focusMode:'continuous'}]
+        });
+      }catch{}
+    }
+
+    if(scene===s){
+      barcodeLoop(s);
+      ocrLoop(s);
+    }
+  }catch(e){
+    if(scene===s){
+      closeScanner();
+      toast('Câmera: '+e.message,true);
+    }
+  }
+}
+
+function closeScanner(){
+  const s=scene;
+  scene=null;
+
+  s?.stream?.getTracks().forEach(t=>t.stop());
+
+  $('video').pause();
+  $('video').srcObject=null;
+
+  if($('camera').open)$('camera').close();
+}
+
+function duplicateHint(){
+  const code=$('code').value;
+
+  const r=rows.find(r=>
+    r.dados.tipo===type()&&
+    r.dados.codigo===code&&
+    r.id!==editing?.id
+  );
+
+  $('codeHint').textContent=r&&code
+    ?'Já cadastrado: '+r.dados.item+' · '+STATUS[r.situacao]
+    :'Os zeros à esquerda são preservados.';
+}
+
+/* Eventos */
+
+$('loginForm').onsubmit=async e=>{
+  e.preventDefault();
+
+  $('loginButton').disabled=true;
+  $('loginMessage').textContent='Entrando…';
+
+  try{
+    if(!db)throw Error('Conexão não carregou. Atualize a página.');
+
+    const {data,error}=await db.auth.signInWithPassword({
+      email:$('email').value.trim(),
+      password:$('password').value
+    });
+
+    if(error)throw error;
+
+    $('password').value='';
+    await loginReady(data.session);
+  }catch(e){
+    $('loginMessage').textContent=e.message;
+  }finally{
+    $('loginButton').disabled=false;
+  }
+};
+
+$('logout').onclick=async()=>{
+  if(busy)return;
+  saveDraft();
+  closeScanner();
+  await db.auth.signOut();
+  location.reload();
+};
+
+$('refresh').onclick=async()=>{
+  if(busy)return;
+
+  setBusy(true);
+
+  try{
+    await refresh();
+    toast('Dados atualizados.');
+  }catch(e){
+    toast(e.message,true);
+  }finally{
+    setBusy(false);
+  }
+};
+
+document.querySelectorAll('[data-tab]')
+  .forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+$('room').onchange=()=>{
+  syncForm();
+  saveDraft();
+};
+
+document.querySelectorAll('[name=type]').forEach(r=>{
+  r.onchange=()=>{
+    $('code').value='';
+    syncForm();
+    saveDraft();
+  };
+});
+
+$('code').oninput=()=>{
+  $('code').value=$('code').value.replace(/\D/g,'').slice(0,6);
+  duplicateHint();
+};
+
+$('itemForm').addEventListener('input',saveDraft);
+$('itemForm').addEventListener('change',saveDraft);
+
+$('item').addEventListener('input',suggestions);
+$('item').addEventListener('focus',suggestions);
+
+$('item').addEventListener('keydown',e=>{
+  if(e.key==='Escape')$('suggestions').hidden=true;
+
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    $('suggestions').querySelector('button')?.focus();
+  }
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#suggestions')&&e.target!==$('item')){
+    $('suggestions').hidden=true;
+    $('item').setAttribute('aria-expanded','false');
+  }
+});
+
+$('cancelEdit').onclick=()=>{
+  resetForm();
+  setBusy(false);
+};
+
+$('itemForm').onsubmit=e=>{
+  e.preventDefault();
+
+  if(
+    role==='leitor'||
+    busy||
+    !$('itemForm').reportValidity()
+  )return;
+
+  const d=formData();
+
+  const existing=rows.find(r=>
+    r.dados.tipo===d.tipo&&
+    r.dados.codigo===d.codigo&&
+    d.codigo&&
+    r.id!==editing?.id
+  );
+
+  if(existing){
+    return toast('Código já cadastrado: '+internal(existing.id),true);
+  }
+
+  commit({
+    acao:'salvar',
+    id:editing?.id||null,
+    versao:editing?.versao||null,
+    dados:d
+  });
+};
+
+$('operationForm').onsubmit=e=>{
+  e.preventDefault();
+
+  commit({
+    acao:action,
+    id:selected.id,
+    versao:selected.versao,
+    motivo:$('reason').value.trim(),
+    data:$('downDate').value,
+    documento:$('document').value.trim()
+  });
+};
+
+$('retry').onclick=transmit;
+
+document.querySelectorAll('[data-close]').forEach(b=>{
+  b.onclick=()=>{
+    if(!busy)$(b.dataset.close).close();
+  };
+});
+
+for(const id of [
+  'search',
+  'filterRoom',
+  'filterCategory',
+  'filterType',
+  'filterStatus',
+  'filterShelf',
+  'filterLevel'
+]){
+  $(id).addEventListener('input',()=>{
+    page=1;
+    renderList();
+  });
+}
+
+$('previous').onclick=()=>{
+  page=Math.max(1,page-1);
+  renderList();
+};
+
+$('next').onclick=()=>{
+  page++;
+  renderList();
+};
+
+$('exportAll').onclick=()=>exportExcel(true);
+$('exportFiltered').onclick=()=>exportExcel(false);
+
+$('scan').onclick=openScanner;
+$('closeCamera').onclick=closeScanner;
+
+$('camera').addEventListener('cancel',e=>{
+  e.preventDefault();
+  closeScanner();
+});
+
+$('torch').onclick=async()=>{
+  const s=scene;
+  if(!s?.track)return;
+
+  $('torch').disabled=true;
+
+  try{
+    await s.track.applyConstraints({
+      advanced:[{torch:!s.torch}]
+    });
+
+    if(scene===s){
+      s.torch=!s.torch;
+
+      $('torch').setAttribute('aria-pressed',String(s.torch));
+
+      $('torch').setAttribute(
+        'aria-label',
+        s.torch?'Desligar lanterna':'Ligar lanterna'
+      );
+    }
+  }catch(e){
+    $('cameraStatus').textContent='Lanterna indisponível nesta câmera.';
+  }finally{
+    if(scene===s)$('torch').disabled=false;
+  }
+};
+
+$('zoom').onchange=async()=>{
+  try{
+    await scene?.track?.applyConstraints({
+      advanced:[{zoom:Number($('zoom').value)}]
+    });
+  }catch{
+    if(scene)$('cameraStatus').textContent='Zoom não disponível.';
+  }
+};
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    saveDraft();
+    closeScanner();
+  }
+});
+
+window.addEventListener('pagehide',closeScanner);
+
+const logo=$('logo').cloneNode(true);
+logo.removeAttribute('id');
+logo.removeAttribute('aria-hidden');
+
+$('favicon').href='data:image/svg+xml,'+encodeURIComponent(
+  new XMLSerializer().serializeToString(logo)
+);
+
+db?.auth.onAuthStateChange(event=>{
+  if(event==='SIGNED_OUT'){
+    closeScanner();
+
+    rows=[];
+    checks=[];
+    user=null;
+
+    $('app').hidden=true;
+    $('login').hidden=false;
+    $('logout').hidden=true;
+    $('connection').textContent='Sessão encerrada';
+    $('detailBody').replaceChildren();
+    $('history').replaceChildren();
+
+    for(const id of ['details','operation']){
+      if($(id).open)$(id).close();
+    }
+  }
+});
+
+(async()=>{
+  if(!db){
+    $('loginMessage').textContent=
+      'Biblioteca de conexão indisponível. Atualize a página.';
+    return;
+  }
+
+  const {data,error}=await db.auth.getSession();
+
+  if(error){
+    $('loginMessage').textContent=error.message;
+  }else if(data.session){
+    await loginReady(data.session);
+  }
+})();
+</script>
 </body>
 </html>

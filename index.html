@@ -13,7 +13,10 @@
     <link rel="manifest" href="./site.webmanifest?v=2" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"
+    ></script>
     <style>
       :root {
         color-scheme: light;
@@ -1247,6 +1250,281 @@
           font-size: 11px;
         }
       }
+      .history-entry {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        padding: 12px 14px;
+        margin: 8px 0;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-size: 12px;
+      }
+      .history-entry strong {
+        color: var(--green);
+      }
+      .history-user {
+        margin-left: auto;
+        font-size: 11px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 600px) {
+        .history-entry {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 4px;
+        }
+        .history-user {
+          margin-left: 0;
+        }
+        .intro {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+          margin-top: 12px;
+        }
+        .intro > .actions {
+          order: -1;
+          align-self: flex-end;
+          gap: 8px;
+        }
+        .intro #refresh {
+          min-height: 36px;
+          padding: 6px 9px;
+          font-size: 11px;
+          border-radius: 9px;
+        }
+        .intro #refresh .icon {
+          width: 14px;
+          height: 14px;
+          flex-basis: 14px;
+        }
+        .intro .live {
+          font-size: 10px;
+        }
+        #browse > .card {
+          padding: 18px 14px;
+        }
+        #browse > .card > .bar:first-child {
+          gap: 14px;
+          align-items: stretch;
+        }
+        #browse h2 {
+          font-size: 25px;
+          margin: 5px 0 0;
+        }
+        #browse > .card > .bar:first-child > .actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          width: 100%;
+          gap: 7px;
+        }
+        #browse > .card > .bar:first-child > .actions button {
+          font-size: 11px;
+          padding: 9px 7px;
+          min-height: 40px;
+        }
+        #browse .toolbar {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 7px;
+        }
+        #browse .toolbar input {
+          grid-column: 1/-1;
+          width: 100%;
+          padding: 12px 10px;
+        }
+        #browse .toolbar button {
+          min-height: 40px;
+          font-size: 11px;
+        }
+        #quickRooms {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px;
+        }
+        #quickRooms button {
+          min-width: 0;
+          min-height: 40px;
+          padding: 7px 5px;
+          font-size: 11px;
+        }
+        #browse .filter-panel {
+          padding: 12px;
+        }
+        #browse .filter-panel .choices {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        #browse #filterShelf,
+        #browse #filterLevel {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        #browse .filter-panel button {
+          white-space: normal;
+          min-width: 0;
+          min-height: 40px;
+        }
+        #browse .applied {
+          gap: 5px;
+        }
+        #browse .chip {
+          max-width: 100%;
+          white-space: normal;
+          overflow-wrap: anywhere;
+          font-size: 10px;
+        }
+        #browse #resultCount,
+        #browse #resultCount + span {
+          font-size: 10px;
+        }
+        #browse .tablewrap {
+          overflow: visible;
+          border: 0;
+          background: none;
+          border-radius: 0;
+          margin-top: 14px;
+        }
+        #browse table,
+        #browse tbody {
+          display: block;
+          width: 100%;
+          min-width: 0;
+        }
+        #browse thead {
+          display: none;
+        }
+        #browse .record-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 10px 12px;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          padding: 14px;
+          margin: 0 0 12px;
+          background: linear-gradient(145deg, #fffefa, #f4f7ed);
+        }
+        #browse .record-row > td {
+          display: block;
+          border: 0;
+          padding: 0;
+          min-width: 0;
+          max-width: none;
+          white-space: normal;
+          overflow-wrap: anywhere;
+          font-size: 12px;
+        }
+        #browse .record-row > td:first-child {
+          grid-column: 1;
+          grid-row: 1;
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--green);
+        }
+        #browse .record-row > td:nth-child(4) {
+          grid-column: 2;
+          grid-row: 1;
+          align-self: start;
+        }
+        #browse .record-row > td:nth-child(2),
+        #browse .record-row > td:nth-child(3),
+        #browse .record-row > td:nth-child(5),
+        #browse .record-row > td:nth-child(6) {
+          grid-column: 1/-1;
+        }
+        #browse .record-row > td:nth-child(2)::before,
+        #browse .record-row > td:nth-child(3)::before,
+        #browse .record-row > td:nth-child(5)::before,
+        #browse .record-row > td:nth-child(6)::before {
+          content: attr(data-label);
+          display: block;
+          font-size: 9px;
+          letter-spacing: 0.5px;
+          color: var(--muted);
+          margin-bottom: 2px;
+          text-transform: uppercase;
+        }
+        #browse .record-row > td:nth-child(5) {
+          white-space: pre-wrap;
+        }
+        #browse .record-row > td:last-child {
+          grid-column: 1/-1;
+          border-top: 1px solid var(--line);
+          padding-top: 10px;
+        }
+        #browse .record-row > td:last-child button {
+          width: 100%;
+          min-height: 40px;
+          justify-content: space-between;
+        }
+        #browse .detail-row,
+        #browse .detail-row > td {
+          display: block;
+          width: 100%;
+          padding: 0;
+          border: 0;
+        }
+        #browse .detail-panel {
+          max-width: none;
+          width: 100%;
+          padding: 14px;
+          margin: -6px 0 16px;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          overflow-wrap: anywhere;
+        }
+        #browse .detail-panel dl {
+          grid-template-columns: 1fr;
+          gap: 3px;
+        }
+        #browse .detail-panel dd {
+          margin-bottom: 9px;
+        }
+        #browse .detail-panel .actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        #browse .detail-panel .choices {
+          flex-wrap: wrap;
+        }
+        #browse .detail-panel .choice {
+          flex: 1 1 90px;
+        }
+        #browse .detail-panel .location .choice {
+          min-width: 0;
+        }
+        #browse .pager {
+          gap: 6px;
+        }
+        #browse .pager button {
+          font-size: 11px;
+          padding: 8px 10px;
+        }
+        .activity {
+          grid-template-columns: repeat(14, minmax(44px, 1fr));
+          gap: 5px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          height: 198px;
+          padding: 0 2px 12px;
+          scroll-snap-type: x proximity;
+          -webkit-overflow-scrolling: touch;
+        }
+        .day {
+          scroll-snap-align: start;
+        }
+        .day span {
+          white-space: nowrap;
+          font-size: 10px;
+        }
+        .day i {
+          width: 55%;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -1290,21 +1568,35 @@
       <symbol id="i-refresh" viewBox="0 0 24 24">
         <path d="M20 7V3l-3 3A8 8 0 0 0 4 11M4 17v4l3-3a8 8 0 0 0 13-5M20 3v4h-4M4 21v-4h4" />
       </symbol>
-      <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H4v16h5M9 12h12m-4-4 4 4-4 4" /></symbol>
-      <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 3h13l3 3v15H4V3M8 3v6h8V3M8 21v-7h8v7" /></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24">
+        <path d="M9 4H4v16h5M9 12h12m-4-4 4 4-4 4" />
+      </symbol>
+      <symbol id="i-save" viewBox="0 0 24 24">
+        <path d="M4 3h13l3 3v15H4V3M8 3v6h8V3M8 21v-7h8v7" />
+      </symbol>
       <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
       <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></symbol>
       <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></symbol>
-      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" /></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
+      </symbol>
       <symbol id="i-sheet" viewBox="0 0 24 24">
         <path d="M5 3h10l4 4v14H5V3M15 3v5h4M8 12h8M8 16h8M12 12v4" />
       </symbol>
       <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></symbol>
       <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" /></symbol>
-      <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20l5-1L20 8l-5-5L4 14v6M13 5l5 5" /></symbol>
-      <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 18v3h16v-3" /></symbol>
-      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 4 3 10l6 6M3 10h11a6 6 0 0 1 6 6v4" /></symbol>
-      <symbol id="i-archive" viewBox="0 0 24 24"><path d="M3 3h18v5H3V3M5 8v13h14V8M9 12h6" /></symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24">
+        <path d="M4 20l5-1L20 8l-5-5L4 14v6M13 5l5 5" />
+      </symbol>
+      <symbol id="i-down" viewBox="0 0 24 24">
+        <path d="M12 3v12m-5-5 5 5 5-5M4 18v3h16v-3" />
+      </symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24">
+        <path d="M9 4 3 10l6 6M3 10h11a6 6 0 0 1 6 6v4" />
+      </symbol>
+      <symbol id="i-archive" viewBox="0 0 24 24">
+        <path d="M3 3h18v5H3V3M5 8v13h14V8M9 12h6" />
+      </symbol>
       <symbol id="i-clock" viewBox="0 0 24 24">
         <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 7v5l3 2" />
       </symbol>
@@ -1324,14 +1616,11 @@
       <header class="bar">
         <div class="brand">
           <img class="brand-logo" src="./favicon.svg?v=2" alt="" />
-          <div>
-            <b>ACERVO</b>
-            <small>Inventário do setor</small>
-          </div>
+          <div><b>ACERVO</b><small>Inventário do setor</small></div>
         </div>
         <div class="actions">
-          <span class="account" id="account">Aguardando acesso</span>
-          <button id="logout" hidden>
+          <span class="account" id="account">Aguardando acesso</span
+          ><button id="logout" hidden>
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logout" /></svg>
             Sair
           </button>
@@ -1339,18 +1628,16 @@
       </header>
       <section id="login" class="card">
         <div class="eyebrow">GIT · SME · Curitiba</div>
-        <h1>
-          Seu setor,
-          <br />
-          bem organizado.
-        </h1>
+        <h1>Seu setor,<br />bem organizado.</h1>
         <p class="muted">Entre com sua conta autorizada.</p>
         <form id="loginForm">
-          <label for="email">E-mail</label>
-          <input id="email" type="email" autocomplete="username" required />
-          <label for="password">Senha</label>
-          <input id="password" type="password" autocomplete="current-password" required />
-          <button class="primary" id="loginButton">
+          <label for="email">E-mail</label
+          ><input id="email" type="email" autocomplete="username" required /><label for="password"
+            >Senha</label
+          ><input id="password" type="password" autocomplete="current-password" required /><button
+            class="primary"
+            id="loginButton"
+          >
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lock" /></svg>
             Entrar
           </button>
@@ -1365,9 +1652,11 @@
             <p class="muted">Identifique, registre e encontre.</p>
           </div>
           <div class="actions">
-            <span class="live" id="live" role="status">Conectando</span>
-            <button id="refresh">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh" /></svg>
+            <span class="live" id="live" role="status">Conectando</span
+            ><button id="refresh">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-refresh" />
+              </svg>
               Atualizar
             </button>
           </div>
@@ -1382,13 +1671,11 @@
         <nav class="nav" aria-label="Seções">
           <button data-tab="register" aria-current="page">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus" /></svg>
-            Cadastrar
-          </button>
-          <button data-tab="browse">
+            Cadastrar</button
+          ><button data-tab="browse">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
-            Consultar
-          </button>
-          <button data-tab="dashboard">
+            Consultar</button
+          ><button data-tab="dashboard">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart" /></svg>
             Visão geral
           </button>
@@ -1402,8 +1689,8 @@
               </div>
               <form id="itemForm">
                 <fieldset id="fields">
-                  <label for="item">Qual item você vai registrar?</label>
-                  <input
+                  <label for="item">Qual item você vai registrar?</label
+                  ><input
                     id="item"
                     class="item-input"
                     required
@@ -1415,11 +1702,15 @@
                     aria-expanded="false"
                   />
                   <div id="suggestions" class="suggestions" hidden></div>
-                  <p id="learningHint" class="hint">Escolha um item já registrado ou escreva um novo nome.</p>
+                  <p id="learningHint" class="hint">
+                    Escolha um item já registrado ou escreva um novo nome.
+                  </p>
                   <div id="formRest" hidden>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-box" /></svg>
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <use href="#i-box" />
+                        </svg>
                         01 / Categoria e identificação
                       </div>
                       <fieldset>
@@ -1440,8 +1731,7 @@
                             pattern="[0-9]{6}"
                             autocomplete="off"
                             placeholder="Leia ou digite os 6 números"
-                          />
-                          <button id="scan" class="primary" type="button" aria-label="Ler código">
+                          /><button id="scan" class="primary" type="button" aria-label="Ler código">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                               <use href="#i-scan" />
                             </svg>
@@ -1452,7 +1742,9 @@
                     </div>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin" /></svg>
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                          <use href="#i-pin" />
+                        </svg>
                         02 / Onde está
                       </div>
                       <fieldset>
@@ -1469,30 +1761,29 @@
                           <div id="levels" class="choices levels"></div>
                         </fieldset>
                         <div class="position">
-                          <span>Prateleiras de baixo para cima</span>
-                          <strong id="position">Escolha a posição</strong>
+                          <span>Prateleiras de baixo para cima</span
+                          ><strong id="position">Escolha a posição</strong>
                         </div>
                       </div>
                     </div>
                     <div class="step">
-                      <label for="note">
-                        Observação
-                        <small>· opcional</small>
-                      </label>
-                      <textarea
+                      <label for="note">Observação <small>· opcional</small></label
+                      ><textarea
                         id="note"
                         maxlength="2000"
                         placeholder="Uma referência que ajude a encontrar este item"
-                      ></textarea>
-                      <label class="check">
-                        <input id="repeat" type="checkbox" />
-                        Manter nome e categoria para o próximo item
-                      </label>
+                      ></textarea
+                      ><label class="check"
+                        ><input id="repeat" type="checkbox" />Manter nome e categoria para o próximo
+                        item</label
+                      >
                     </div>
                   </div>
                   <div class="savebar">
                     <button id="save" class="primary">
-                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-save" /></svg>
+                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <use href="#i-save" />
+                      </svg>
                       Salvar e cadastrar próximo
                     </button>
                   </div>
@@ -1503,16 +1794,9 @@
             </div>
             <aside class="card side">
               <div class="eyebrow">Seu inventário agora</div>
-              <h2>
-                Uma visão
-                <br />
-                do seu setor.
-              </h2>
+              <h2>Uma visão<br />do seu setor.</h2>
               <div class="ring" id="sideRing">
-                <div class="ring-center">
-                  <b id="sideTotal">0</b>
-                  <small>itens ativos</small>
-                </div>
+                <div class="ring-center"><b id="sideTotal">0</b><small>itens ativos</small></div>
               </div>
               <div id="sideRooms"></div>
               <p class="hint muted spaced">Toque em um ambiente para consultar seus itens.</p>
@@ -1528,23 +1812,30 @@
               </div>
               <div class="actions">
                 <button id="exportFiltered">
-                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download" /></svg>
-                  Excel do filtro
-                </button>
-                <button class="primary" id="exportAll">
-                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-sheet" /></svg>
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <use href="#i-download" />
+                  </svg>
+                  Excel do filtro</button
+                ><button class="primary" id="exportAll">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <use href="#i-sheet" />
+                  </svg>
                   Excel completo
                 </button>
               </div>
             </div>
             <div class="toolbar">
-              <label class="sr-only" for="search">Buscar no inventário</label>
-              <input id="search" placeholder="Buscar item, código ou observação…" type="search" />
-              <button id="moreFilters" aria-expanded="false" aria-controls="filterPanel">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-filter" /></svg>
-                Mais filtros
-              </button>
-              <button id="clearFilters">Limpar filtros</button>
+              <label class="sr-only" for="search">Buscar no inventário</label
+              ><input
+                id="search"
+                placeholder="Buscar item, código ou observação…"
+                type="search"
+              /><button id="moreFilters" aria-expanded="false" aria-controls="filterPanel">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-filter" />
+                </svg>
+                Mais filtros</button
+              ><button id="clearFilters">Limpar filtros</button>
             </div>
             <div id="quickRooms" class="quick" aria-label="Filtrar por ambiente"></div>
             <div id="filterPanel" class="filter-panel" hidden>
@@ -1573,12 +1864,12 @@
             </div>
             <div id="applied" class="applied"></div>
             <div class="bar">
-              <span id="resultCount" class="muted"></span>
-              <span class="muted">Data/hora de Curitiba</span>
+              <span id="resultCount" class="muted"></span
+              ><span class="muted">Data/hora de Curitiba</span>
             </div>
             <div id="listNotice" class="notice" hidden>
-              Há atualizações na lista. Sua edição está preservada; a lista será atualizada ao salvar ou
-              cancelar.
+              Há atualizações na lista. Sua edição está preservada; a lista será atualizada ao
+              salvar ou cancelar.
             </div>
             <div class="tablewrap">
               <table>
@@ -1598,13 +1889,16 @@
             </div>
             <div class="bar pager">
               <button id="previous">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-left" /></svg>
-                Anterior
-              </button>
-              <span id="pageLabel" class="muted"></span>
-              <button id="next">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-left" />
+                </svg>
+                Anterior</button
+              ><span id="pageLabel" class="muted"></span
+              ><button id="next">
                 Próxima
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-right" /></svg>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-right" />
+                </svg>
               </button>
             </div>
           </div>
@@ -1679,14 +1973,14 @@
       <form id="operationForm">
         <p class="hint" id="operationHint"></p>
         <div id="downFields">
-          <label for="downDate">Data da baixa</label>
-          <input id="downDate" type="date" />
-          <label for="document">Documento/processo · opcional</label>
-          <input id="document" maxlength="200" />
+          <label for="downDate">Data da baixa</label><input id="downDate" type="date" /><label
+            for="document"
+            >Documento/processo · opcional</label
+          ><input id="document" maxlength="200" />
         </div>
-        <label for="reason">Motivo / justificativa</label>
-        <textarea id="reason" required minlength="3" maxlength="2000"></textarea>
-        <button id="confirmOperation" class="primary spaced">
+        <label for="reason">Motivo / justificativa</label
+        ><textarea id="reason" required minlength="3" maxlength="2000"></textarea
+        ><button id="confirmOperation" class="primary spaced">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg>
           Confirmar
         </button>
@@ -1697,9 +1991,10 @@
         <strong id="cameraTitle">Ler identificação</strong>
         <div class="actions">
           <button id="torch" aria-label="Ligar lanterna" aria-pressed="false" disabled>
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-torch" /></svg>
-          </button>
-          <button id="closeCamera">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-torch" />
+            </svg></button
+          ><button id="closeCamera">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
             Fechar
           </button>
@@ -1712,25 +2007,24 @@
       </div>
       <div class="camerafoot">
         <p>
-          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code e OCR trabalham em paralelo.
+          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code e OCR trabalham em
+          paralelo.
         </p>
         <div id="cameraStatus" role="status">Preparando leitores…</div>
-        <label id="zoomLabel" hidden>
-          Zoom
-          <output id="zoomValue"></output>
-          <input id="zoom" type="range" />
-        </label>
+        <label id="zoomLabel" hidden
+          >Zoom <output id="zoomValue"></output><input id="zoom" type="range"
+        /></label>
         <div id="candidates"></div>
       </div>
     </dialog>
     <div class="toast" id="toast" role="status" hidden></div>
-    <template id="editorTemplate">
-      <form id="editForm">
+    <template id="editorTemplate"
+      ><form id="editForm">
         <fieldset id="editFields">
           <div class="grid2">
             <div>
-              <label for="editItem">Item</label>
-              <input id="editItem" required minlength="2" maxlength="120" />
+              <label for="editItem">Item</label
+              ><input id="editItem" required minlength="2" maxlength="120" />
               <fieldset class="spaced">
                 <legend>Categoria</legend>
                 <div id="editCategories" class="choices"></div>
@@ -1742,9 +2036,15 @@
               <div id="editCodeWrap">
                 <label id="editCodeLabel" for="editCode">Código</label>
                 <div class="scanrow">
-                  <input id="editCode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" />
-                  <button id="editScan" type="button" class="primary" aria-label="Ler código">
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scan" /></svg>
+                  <input
+                    id="editCode"
+                    inputmode="numeric"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                  /><button id="editScan" type="button" class="primary" aria-label="Ler código">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <use href="#i-scan" />
+                    </svg>
                   </button>
                 </div>
                 <p id="editCodeHint" class="hint"></p>
@@ -1765,27 +2065,25 @@
                   <div id="editLevels" class="choices levels"></div>
                 </fieldset>
                 <div class="position">
-                  <span>Prateleiras de baixo para cima</span>
-                  <strong id="editPosition"></strong>
+                  <span>Prateleiras de baixo para cima</span><strong id="editPosition"></strong>
                 </div>
               </div>
-              <label for="editNote">Observação</label>
-              <textarea id="editNote" maxlength="2000"></textarea>
+              <label for="editNote">Observação</label
+              ><textarea id="editNote" maxlength="2000"></textarea>
             </div>
           </div>
           <div class="actions spaced">
             <button class="primary" id="editSave">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-save" /></svg>
-              Salvar alterações
-            </button>
-            <button type="button" id="editCancel">
+              Salvar alterações</button
+            ><button type="button" id="editCancel">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
               Cancelar edição
             </button>
           </div>
         </fieldset>
-      </form>
-    </template>
+      </form></template
+    >
 
     <script>
       "use strict";
@@ -1793,7 +2091,11 @@
       const $ = (id) => document.getElementById(id);
       const ROOMS = ["Sala Principal", "Sala da Gerência", "Almoxarifado"];
       const CATEGORIES = ["Móvel", "Tecnologia"];
-      const TYPE = { PMC: "Patrimônio PMC", ICI: "Etiqueta ICI", SEM_IDENTIFICACAO: "Sem identificação" };
+      const TYPE = {
+        PMC: "Patrimônio PMC",
+        ICI: "Etiqueta ICI",
+        SEM_IDENTIFICACAO: "Sem identificação",
+      };
       const STATUS = { ATIVO: "Ativo", BAIXADO: "Baixado", ARQUIVADO: "Arquivado" };
       const ACTION = {
         baixar: "Dar baixa",
@@ -1851,7 +2153,10 @@
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
-      const shortEmail = (s) => String(s || "").split("@")[0];
+      const shortEmail = (s) =>
+        String(s || "")
+          .split("@")[0]
+          .toLocaleUpperCase("pt-BR");
       const value = (name) => document.querySelector('[name="' + name + '"]:checked')?.value || "";
       const type = () => value("type");
       const dateBR = (v) =>
@@ -1977,7 +2282,11 @@
         $("logout").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
-        labelButton($("save"), v ? "Salvando…" : "Salvar e cadastrar próximo", v ? "clock" : "save");
+        labelButton(
+          $("save"),
+          v ? "Salvando…" : "Salvar e cadastrar próximo",
+          v ? "clock" : "save",
+        );
         $("previous").disabled = v || page <= 1;
         $("next").disabled = v || page >= Math.max(1, Math.ceil(filtered().length / 25));
       }
@@ -2050,7 +2359,9 @@
           setChoice("category", "");
           setChoice("type", "");
         }
-        const matches = rows.filter((r) => r.situacao !== "ARQUIVADO" && key(r.dados.item) === current);
+        const matches = rows.filter(
+          (r) => r.situacao !== "ARQUIVADO" && key(r.dados.item) === current,
+        );
         const cat = winner(matches, "categoria"),
           ident = winner(matches, "tipo");
         if (!manual.categoria) setChoice("category", cat);
@@ -2115,7 +2426,11 @@
       }
       function saveDraft() {
         if (!user || busy) return;
-        const ok = storage("draft", { dados: formData(), editing: null, repeat: $("repeat").checked });
+        const ok = storage("draft", {
+          dados: formData(),
+          editing: null,
+          repeat: $("repeat").checked,
+        });
         $("draftInfo").textContent = ok
           ? "Rascunho salvo neste navegador."
           : "Não foi possível guardar o rascunho neste navegador.";
@@ -2124,7 +2439,9 @@
         const d = storage("draft");
         if (!d?.dados) return;
         if (d.editing) {
-          toast("Há um rascunho de edição da versão anterior. Abra o item na consulta para revisá-lo.");
+          toast(
+            "Há um rascunho de edição da versão anterior. Abra o item na consulta para revisá-lo.",
+          );
           return;
         }
         const r = d.dados;
@@ -2162,7 +2479,8 @@
           code = $(e ? "editCode" : "code").value,
           t = value(e ? "editType" : "type"),
           r = rows.find(
-            (r) => r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
+            (r) =>
+              r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
           );
         $(e ? "editCodeHint" : "codeHint").textContent =
           r && code
@@ -2184,7 +2502,9 @@
             $("live").className = "live";
             $("live").textContent =
               "Atualizado " +
-              new Intl.DateTimeFormat("pt-BR", { timeZone: ZONE, timeStyle: "short" }).format(lastSuccess);
+              new Intl.DateTimeFormat("pt-BR", { timeZone: ZONE, timeStyle: "short" }).format(
+                lastSuccess,
+              );
             const snapshot = JSON.stringify([rows, checks, role]);
             if (snapshot !== lastSnapshot) {
               lastSnapshot = snapshot;
@@ -2234,7 +2554,9 @@
             return (
               (!q ||
                 key(
-                  [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(" "),
+                  [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(
+                    " ",
+                  ),
                 ).includes(q)) &&
               (!filters.ambiente || d.ambiente === filters.ambiente) &&
               (!filters.categoria || d.categoria === filters.categoria) &&
@@ -2347,7 +2669,7 @@
         $("next").disabled = busy || page === pages;
         $("results").replaceChildren();
         for (const r of found.slice((page - 1) * 25, page * 25)) {
-          const tr = el("tr");
+          const tr = el("tr", undefined, "record-row");
           tr.dataset.id = r.id;
           const d = r.dados;
           tr.append(
@@ -2360,10 +2682,15 @@
             el(
               "span",
               STATUS[r.situacao],
-              "badge" + (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : ""),
+              "badge" +
+                (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : ""),
             ),
           );
-          tr.append(status, el("td", d.observacao || "—", "note"), el("td", dateBR(r.criado_em), "date"));
+          tr.append(
+            status,
+            el("td", d.observacao || "—", "note"),
+            el("td", dateBR(r.criado_em), "date"),
+          );
           const actionCell = el("td");
           const open = button(
             expanded === r.id ? "Fechar" : "Abrir",
@@ -2379,6 +2706,15 @@
           actionCell.append(open);
           tr.append(actionCell);
           $("results").append(tr);
+          [
+            "Item",
+            "Identificação",
+            "Ambiente",
+            "Situação",
+            "Observação",
+            "Cadastrado em",
+            "Detalhes",
+          ].forEach((label, i) => (tr.children[i].dataset.label = label));
           if (expanded === r.id) {
             const row = el("tr", undefined, "detail-row"),
               cell = el("td"),
@@ -2412,7 +2748,8 @@
         ])
           dl.append(el("dt", label), el("dd", text));
         panel.append(dl);
-        if (r.baixa) panel.append(el("p", "Baixa: " + r.baixa.data + " · " + r.baixa.motivo, "notice"));
+        if (r.baixa)
+          panel.append(el("p", "Baixa: " + r.baixa.data + " · " + r.baixa.motivo, "notice"));
         if (r.legado) {
           const box = el("details");
           box.append(
@@ -2429,7 +2766,11 @@
           );
         if (role === "admin") {
           const a =
-            r.situacao === "BAIXADO" ? "estornar" : r.situacao === "ARQUIVADO" ? "restaurar" : "arquivar";
+            r.situacao === "BAIXADO"
+              ? "estornar"
+              : r.situacao === "ARQUIVADO"
+                ? "restaurar"
+                : "arquivar";
           actions.append(
             button(ACTION[a], () => openOperation(a, r), "", a === "arquivar" ? "archive" : "undo"),
           );
@@ -2442,16 +2783,38 @@
         panel.append(history);
         loadHistory(r.id, content);
       }
+      function historyAction(h) {
+        const action = String(h.acao || "").toLowerCase();
+        const names = {
+          cadastrar: "Registro",
+          criar: "Registro",
+          registro: "Registro",
+          editar: "Edição",
+          edicao: "Edição",
+          baixar: "Baixa",
+          baixa: "Baixa",
+          estornar: "Estorno da baixa",
+          arquivar: "Arquivamento",
+          restaurar: "Restauração",
+          conferir: "Conferência",
+        };
+        if (action === "salvar") return "Edição";
+        return (
+          names[action] ||
+          (action ? action.charAt(0).toUpperCase() + action.slice(1) : "Atualização")
+        );
+      }
       async function loadHistory(id, target) {
         try {
           const data = await rpc("acervo_historico", { p_id: id });
           if (!target.isConnected) return;
           target.replaceChildren(
             ...data.map((h) => {
-              const n = el("details");
+              const n = el("div", undefined, "history-entry");
               n.append(
-                el("summary", h.acao + " · " + dateBR(h.momento) + " · " + shortEmail(h.email)),
-                el("pre", JSON.stringify({ motivo: h.motivo, antes: h.antes, depois: h.depois }, null, 2)),
+                el("strong", historyAction(h)),
+                el("span", dateBR(h.momento)),
+                el("span", shortEmail(h.email) || "Não informado", "history-user"),
               );
               return n;
             }),
@@ -2604,7 +2967,12 @@
           count = (f, v) => active.filter((r) => r.dados[f] === v).length;
         const metrics = [
           ["Itens ativos", active.length, "box", { situacao: "ATIVO" }],
-          ["Baixados", rows.filter((r) => r.situacao === "BAIXADO").length, "down", { situacao: "BAIXADO" }],
+          [
+            "Baixados",
+            rows.filter((r) => r.situacao === "BAIXADO").length,
+            "down",
+            { situacao: "BAIXADO" },
+          ],
           [
             "Sem etiqueta · ativos",
             count("tipo", "SEM_IDENTIFICACAO"),
@@ -2707,11 +3075,19 @@
                   String(r.dados.prateleira) === String(l),
               ).length;
               const b = button("", () =>
-                query({ ambiente: "Almoxarifado", estante: s, prateleira: String(l), situacao: "ATIVO" }),
+                query({
+                  ambiente: "Almoxarifado",
+                  estante: s,
+                  prateleira: String(l),
+                  situacao: "ATIVO",
+                }),
               );
               b.append(el("span", String(l).padStart(2, "0")), el("b", n));
               b.style.setProperty("--heat", Math.min(85, n * 12) + "%");
-              b.setAttribute("aria-label", "Estante " + s + ", prateleira " + l + ": " + n + " itens");
+              b.setAttribute(
+                "aria-label",
+                "Estante " + s + ", prateleira " + l + ": " + n + " itens",
+              );
               col.append(b);
             }
             return col;
@@ -2723,7 +3099,9 @@
         $("unplaced").textContent = missing
           ? missing + " registros ativos ainda sem posição definida."
           : "Todas as posições cadastradas estão representadas.";
-        const done = ROOMS.filter((room) => checks.some((c) => c.ambiente === room && c.conferido)).length;
+        const done = ROOMS.filter((room) =>
+          checks.some((c) => c.ambiente === room && c.conferido),
+        ).length;
         $("conferenceSummary").textContent = done + " de 3 ambientes conferidos";
         $("checks").replaceChildren(
           ...ROOMS.map((room) => {
@@ -2816,7 +3194,11 @@
         choices(
           $("types"),
           "type",
-          Object.entries(TYPE).map(([v, t]) => [v, t, v === "PMC" ? "pmc" : v === "ICI" ? "tag" : "none"]),
+          Object.entries(TYPE).map(([v, t]) => [
+            v,
+            t,
+            v === "PMC" ? "pmc" : v === "ICI" ? "tag" : "none",
+          ]),
           "",
           () => {
             manual.tipo = true;
@@ -2924,7 +3306,9 @@
           renderList();
         }
       };
-      document.querySelectorAll("[data-tab]").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
+      document
+        .querySelectorAll("[data-tab]")
+        .forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
       document.querySelectorAll("[data-close]").forEach(
         (b) =>
           (b.onclick = () => {
@@ -3029,7 +3413,8 @@
         setBusy(true);
         try {
           await refresh();
-          if (!window.ExcelJS) throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
+          if (!window.ExcelJS)
+            throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
           const list = all ? [...rows] : filtered(),
             active = list.filter((r) => r.situacao === "ATIVO");
           const wb = new ExcelJS.Workbook();
@@ -3086,7 +3471,14 @@
                 fitToWidth: 1,
                 fitToHeight: 0,
                 printTitlesRow: "1:6",
-                margins: { left: 0.25, right: 0.25, top: 0.35, bottom: 0.35, header: 0.15, footer: 0.15 },
+                margins: {
+                  left: 0.25,
+                  right: 0.25,
+                  top: 0.35,
+                  bottom: 0.35,
+                  header: 0.15,
+                  footer: 0.15,
+                },
               },
               headerFooter: { oddFooter: "ACERVO · GIT/SME &R &P / &N" },
             });
@@ -3124,7 +3516,12 @@
               for (let j = 1; j <= headers.length; j++) {
                 const cell = row.getCell(j);
                 cell.fill = fill(index % 2 ? color.paper : color.soft);
-                cell.font = { name: "Calibri", size: 11, color: { argb: color.ink }, bold: j === 1 };
+                cell.font = {
+                  name: "Calibri",
+                  size: 11,
+                  color: { argb: color.ink },
+                  bold: j === 1,
+                };
                 cell.alignment = { vertical: "middle", wrapText: true };
                 cell.border = { bottom: { style: "hair", color: { argb: color.line } } };
                 if (dateColumns.includes(j)) cell.numFmt = "dd/mm/yyyy hh:mm:ss";
@@ -3164,7 +3561,10 @@
             ["ATIVOS", active.length],
             ["BAIXADOS", list.filter((r) => r.situacao === "BAIXADO").length],
             ["ARQUIVADOS", list.filter((r) => r.situacao === "ARQUIVADO").length],
-            ["SEM ETIQUETA · ATIVOS", active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length],
+            [
+              "SEM ETIQUETA · ATIVOS",
+              active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length,
+            ],
           ];
           ["A", "C", "E", "G"].forEach((c, i) => {
             const end = String.fromCharCode(c.charCodeAt(0) + 1);
@@ -3175,16 +3575,23 @@
           summaryText("E10:H10", "POR CATEGORIA", 10, color.green, "FFFFFFFF");
           ROOMS.forEach((room, i) => {
             summaryText("A" + (11 + i) + ":C" + (11 + i), room);
-            summary.getCell("D" + (11 + i)).value = active.filter((r) => r.dados.ambiente === room).length;
+            summary.getCell("D" + (11 + i)).value = active.filter(
+              (r) => r.dados.ambiente === room,
+            ).length;
           });
           CATEGORIES.forEach((cat, i) => {
             summaryText("E" + (11 + i) + ":G" + (11 + i), cat);
-            summary.getCell("H" + (11 + i)).value = active.filter((r) => r.dados.categoria === cat).length;
+            summary.getCell("H" + (11 + i)).value = active.filter(
+              (r) => r.dados.categoria === cat,
+            ).length;
           });
           summaryText("A15:H15", "IDENTIFICAÇÃO DOS ATIVOS", 10, color.green, "FFFFFFFF");
           Object.entries(TYPE).forEach(([t, label], i) => {
             summaryText("A" + (16 + i) + ":F" + (16 + i), label);
-            summaryText("G" + (16 + i) + ":H" + (16 + i), active.filter((r) => r.dados.tipo === t).length);
+            summaryText(
+              "G" + (16 + i) + ":H" + (16 + i),
+              active.filter((r) => r.dados.tipo === t).length,
+            );
           });
           summaryText("A20:H20", "CONFERÊNCIA GERAL DOS AMBIENTES", 10, color.green, "FFFFFFFF");
           ROOMS.forEach((room, i) => {
@@ -3192,7 +3599,9 @@
             summaryText("A" + (21 + i * 2) + ":C" + (22 + i * 2), room);
             summaryText(
               "D" + (21 + i * 2) + ":H" + (22 + i * 2),
-              c?.conferido ? "Conferido · " + dateBR(c.momento) + " · " + shortEmail(c.email) : "A conferir",
+              c?.conferido
+                ? "Conferido · " + dateBR(c.momento) + " · " + shortEmail(c.email)
+                : "A conferir",
               10,
             );
           });
@@ -3225,10 +3634,10 @@
             ctx.fillStyle = "#173f35";
             ctx.fillText(String(n), 1000, y);
           });
-          summary.addImage(wb.addImage({ base64: canvas.toDataURL("image/png"), extension: "png" }), {
-            tl: { col: 0, row: 28 },
-            ext: { width: 680, height: 216 },
-          });
+          summary.addImage(
+            wb.addImage({ base64: canvas.toDataURL("image/png"), extension: "png" }),
+            { tl: { col: 0, row: 28 }, ext: { width: 680, height: 216 } },
+          );
           summaryText(
             "A40:H41",
             list.length +
@@ -3263,7 +3672,13 @@
             r.legado?.numero_serie || "",
             r.legado?.localizacao || "",
           ];
-          table("Inventário", headers, list.map(row), [19, 30, 17, 25, 19, 25, 14, 15, 48, 26, 22, 28], [10]);
+          table(
+            "Inventário",
+            headers,
+            list.map(row),
+            [19, 30, 17, 25, 19, 25, 14, 15, 48, 26, 22, 28],
+            [10],
+          );
           table(
             "Sem identificação externa",
             headers,
@@ -3486,7 +3901,9 @@
         if (contrast) {
           for (let i = 0; i < img.data.length; i += 4) {
             let g =
-              (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) * 1.5 + 128;
+              (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) *
+                1.5 +
+              128;
 
             img.data[i] = img.data[i + 1] = img.data[i + 2] = g;
           }
@@ -3498,9 +3915,13 @@
           const rotated = document.createElement("canvas");
           const a = (angle * Math.PI) / 180;
 
-          rotated.width = Math.ceil(Math.abs(c.width * Math.cos(a)) + Math.abs(c.height * Math.sin(a)));
+          rotated.width = Math.ceil(
+            Math.abs(c.width * Math.cos(a)) + Math.abs(c.height * Math.sin(a)),
+          );
 
-          rotated.height = Math.ceil(Math.abs(c.height * Math.cos(a)) + Math.abs(c.width * Math.sin(a)));
+          rotated.height = Math.ceil(
+            Math.abs(c.height * Math.cos(a)) + Math.abs(c.width * Math.sin(a)),
+          );
 
           const rc = rotated.getContext("2d");
 
@@ -3696,7 +4117,8 @@
         scanTarget = target;
         scene = s;
 
-        $("cameraTitle").textContent = "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
+        $("cameraTitle").textContent =
+          "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
         $("cameraStatus").textContent = "Procurando códigos…";
         $("candidates").replaceChildren();
         $("torch").disabled = true;
@@ -3747,7 +4169,10 @@
             $("zoom").min = min;
             $("zoom").max = max;
             $("zoom").step = step;
-            const middle = Math.min(max, Math.max(min, min + Math.round((max - min) / 2 / step) * step));
+            const middle = Math.min(
+              max,
+              Math.max(min, min + Math.round((max - min) / 2 / step) * step),
+            );
             try {
               await cameraSettings(s, { zoom: middle });
             } catch {}
@@ -3790,7 +4215,8 @@
         const min = Number($("zoom").min),
           max = Number($("zoom").max),
           v = Number($("zoom").value);
-        $("zoomValue").textContent = (max > min ? Math.round(((v - min) / (max - min)) * 100) : 0) + "%";
+        $("zoomValue").textContent =
+          (max > min ? Math.round(((v - min) / (max - min)) * 100) : 0) + "%";
       }
       $("scan").onclick = () => openScanner("code");
       $("closeCamera").onclick = closeScanner;

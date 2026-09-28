@@ -2,17 +2,27 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
     <meta name="theme-color" content="#173f35" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="ACERVO" />
     <title>ACERVO · Inventário do setor</title>
     <link rel="icon" href="./favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=2" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./apple-touch-icon.png?v=2"
+    />
     <link rel="manifest" href="./site.webmanifest?v=2" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"
+    ></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"
@@ -40,7 +50,9 @@
       }
       body {
         margin: 0;
-        background: radial-gradient(ellipse at 95% 0%, #e3eddb90, transparent 40%), var(--bg);
+        background:
+          radial-gradient(ellipse at 95% 0%, #e3eddb90, transparent 40%),
+          var(--bg);
         color: var(--ink);
         font:
           14px/1.5 -apple-system,
@@ -1525,6 +1537,56 @@
           width: 55%;
         }
       }
+      .stock-control {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px;
+        background: linear-gradient(120deg, #f2f6e9, #fffefa);
+      }
+      .movement-result {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 12px;
+      }
+      .movement-result h3 {
+        margin-top: 0;
+      }
+      .movement-result .actions {
+        flex-wrap: wrap;
+      }
+      #stockMetrics > button {
+        margin-right: 8px;
+      }
+      #directReasonWrap {
+        margin-bottom: 16px;
+      }
+      .nav {
+        overflow-x: auto;
+      }
+      .nav button {
+        flex-shrink: 0;
+      }
+      @media (max-width: 640px) {
+        .nav {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          overflow: visible;
+        }
+        .nav button {
+          min-width: 0;
+          justify-content: center;
+          padding: 10px;
+          font-size: 12px;
+        }
+        .movement-result .actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .stock-control {
+          padding: 12px;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -1538,7 +1600,9 @@
   </head>
   <body>
     <svg class="svg-library" aria-hidden="true">
-      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
       <symbol id="i-search" viewBox="0 0 24 24">
         <path d="M21 21l-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0" />
       </symbol>
@@ -1552,21 +1616,31 @@
         <path d="M3 21h18M5 21V8l7-5 7 5v13M9 11h6M9 15h6M12 8v1" />
       </symbol>
       <symbol id="i-shelf" viewBox="0 0 24 24">
-        <path d="M4 3v18M20 3v18M4 8h16M4 14h16M4 20h16M7 4h4v4M14 10h3v4M7 16h5v4" />
+        <path
+          d="M4 3v18M20 3v18M4 8h16M4 14h16M4 20h16M7 4h4v4M14 10h3v4M7 16h5v4"
+        />
       </symbol>
       <symbol id="i-pin" viewBox="0 0 24 24">
-        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0M15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+        <path
+          d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0M15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0"
+        />
       </symbol>
-      <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 3h8l10 10-8 8L3 11V3M7 7h.01" /></symbol>
+      <symbol id="i-tag" viewBox="0 0 24 24">
+        <path d="M3 3h8l10 10-8 8L3 11V3M7 7h.01" />
+      </symbol>
       <symbol id="i-pmc" viewBox="0 0 24 24">
         <path d="M3 9l9-6 9 6H3M5 10v9m5-9v9m4-9v9m5-9v9M3 21h18" />
       </symbol>
       <symbol id="i-box" viewBox="0 0 24 24">
         <path d="M3 7l9-4 9 4v10l-9 4-9-4V7M3 7l9 4 9-4M12 11v10M8 5l9 4" />
       </symbol>
-      <symbol id="i-none" viewBox="0 0 24 24"><path d="M5 4h14v16H5V4M9 12h6" /></symbol>
+      <symbol id="i-none" viewBox="0 0 24 24">
+        <path d="M5 4h14v16H5V4M9 12h6" />
+      </symbol>
       <symbol id="i-refresh" viewBox="0 0 24 24">
-        <path d="M20 7V3l-3 3A8 8 0 0 0 4 11M4 17v4l3-3a8 8 0 0 0 13-5M20 3v4h-4M4 21v-4h4" />
+        <path
+          d="M20 7V3l-3 3A8 8 0 0 0 4 11M4 17v4l3-3a8 8 0 0 0 13-5M20 3v4h-4M4 21v-4h4"
+        />
       </symbol>
       <symbol id="i-logout" viewBox="0 0 24 24">
         <path d="M9 4H4v16h5M9 12h12m-4-4 4 4-4 4" />
@@ -1574,17 +1648,27 @@
       <symbol id="i-save" viewBox="0 0 24 24">
         <path d="M4 3h13l3 3v15H4V3M8 3v6h8V3M8 21v-7h8v7" />
       </symbol>
-      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
-      <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></symbol>
-      <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24">
+        <path d="M4 12h16m-6-6 6 6-6 6" />
+      </symbol>
+      <symbol id="i-left" viewBox="0 0 24 24">
+        <path d="M15 5l-7 7 7 7" />
+      </symbol>
+      <symbol id="i-right" viewBox="0 0 24 24">
+        <path d="M9 5l7 7-7 7" />
+      </symbol>
       <symbol id="i-download" viewBox="0 0 24 24">
         <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
       </symbol>
       <symbol id="i-sheet" viewBox="0 0 24 24">
         <path d="M5 3h10l4 4v14H5V3M15 3v5h4M8 12h8M8 16h8M12 12v4" />
       </symbol>
-      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" /></symbol>
-      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" /></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M5 12l4 4L19 6" />
+      </symbol>
       <symbol id="i-edit" viewBox="0 0 24 24">
         <path d="M4 20l5-1L20 8l-5-5L4 14v6M13 5l5 5" />
       </symbol>
@@ -1600,17 +1684,23 @@
       <symbol id="i-clock" viewBox="0 0 24 24">
         <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 7v5l3 2" />
       </symbol>
-      <symbol id="i-levels" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16" /></symbol>
+      <symbol id="i-levels" viewBox="0 0 24 24">
+        <path d="M4 5h16M4 12h16M4 19h16" />
+      </symbol>
       <symbol id="i-lock" viewBox="0 0 24 24">
         <path d="M6 10h12v11H6V10M8 10V6a4 4 0 0 1 8 0v4M12 14v3" />
       </symbol>
       <symbol id="i-scan" viewBox="0 0 24 24">
-        <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7v10m3-10v10m4-10v10m3-10v10" />
+        <path
+          d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7v10m3-10v10m4-10v10m3-10v10"
+        />
       </symbol>
       <symbol id="i-torch" viewBox="0 0 24 24">
         <path d="M7 2h10v5l-3 4v11h-4V11L7 7zM7 6h10m-5 7v3" />
       </symbol>
-      <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4" /></symbol>
+      <symbol id="i-filter" viewBox="0 0 24 24">
+        <path d="M4 6h16M7 12h10M10 18h4" />
+      </symbol>
     </svg>
     <div class="shell">
       <header class="bar">
@@ -1621,7 +1711,9 @@
         <div class="actions">
           <span class="account" id="account">Aguardando acesso</span
           ><button id="logout" hidden>
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-logout" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-logout" />
+            </svg>
             Sair
           </button>
         </div>
@@ -1632,13 +1724,21 @@
         <p class="muted">Entre com sua conta autorizada.</p>
         <form id="loginForm">
           <label for="email">E-mail</label
-          ><input id="email" type="email" autocomplete="username" required /><label for="password"
-            >Senha</label
-          ><input id="password" type="password" autocomplete="current-password" required /><button
-            class="primary"
-            id="loginButton"
-          >
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-lock" /></svg>
+          ><input
+            id="email"
+            type="email"
+            autocomplete="username"
+            required
+          /><label for="password">Senha</label
+          ><input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          /><button class="primary" id="loginButton">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-lock" />
+            </svg>
             Entrar
           </button>
         </form>
@@ -1664,19 +1764,32 @@
         <div id="pendingBox" class="notice" hidden>
           Há uma operação sem confirmação.
           <button id="retry">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-refresh" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-refresh" />
+            </svg>
             Verificar e concluir
           </button>
         </div>
         <nav class="nav" aria-label="Seções">
           <button data-tab="register" aria-current="page">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-plus" />
+            </svg>
             Cadastrar</button
+          ><button data-tab="movements">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-arrow" />
+            </svg>
+            Movimentações</button
           ><button data-tab="browse">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-search" />
+            </svg>
             Consultar</button
           ><button data-tab="dashboard">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chart" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-chart" />
+            </svg>
             Visão geral
           </button>
         </nav>
@@ -1706,12 +1819,17 @@
                     Escolha um item já registrado ou escreva um novo nome.
                   </p>
                   <div id="formRest" hidden>
+                    <div id="controlHost" class="step"></div>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg
+                          class="icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <use href="#i-box" />
                         </svg>
-                        01 / Categoria e identificação
+                        03 / Categoria e identificação
                       </div>
                       <fieldset>
                         <legend>Categoria</legend>
@@ -1731,8 +1849,17 @@
                             pattern="[0-9]{6}"
                             autocomplete="off"
                             placeholder="Leia ou digite os 6 números"
-                          /><button id="scan" class="primary" type="button" aria-label="Ler código">
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                          /><button
+                            id="scan"
+                            class="primary"
+                            type="button"
+                            aria-label="Ler código"
+                          >
+                            <svg
+                              class="icon"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
                               <use href="#i-scan" />
                             </svg>
                           </button>
@@ -1742,10 +1869,14 @@
                     </div>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg
+                          class="icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <use href="#i-pin" />
                         </svg>
-                        02 / Onde está
+                        01 / Onde está
                       </div>
                       <fieldset>
                         <legend>Ambiente</legend>
@@ -1761,25 +1892,44 @@
                           <div id="levels" class="choices levels"></div>
                         </fieldset>
                         <div class="position">
-                          <span>Prateleiras de baixo para cima</span
+                          <span>Prateleiras de cima para baixo</span
                           ><strong id="position">Escolha a posição</strong>
                         </div>
                       </div>
                     </div>
                     <div class="step">
-                      <label for="note">Observação <small>· opcional</small></label
+                      <label for="note"
+                        >Observação <small>· opcional</small></label
                       ><textarea
                         id="note"
                         maxlength="2000"
                         placeholder="Uma referência que ajude a encontrar este item"
                       ></textarea
                       ><label class="check"
-                        ><input id="repeat" type="checkbox" />Manter nome e categoria para o próximo
-                        item</label
+                        ><input id="repeat" type="checkbox" />Manter nome e
+                        categoria para o próximo item</label
                       >
                     </div>
                   </div>
                   <div class="savebar">
+                    <div class="spaced">
+                      <label class="check"
+                        ><input id="directDown" type="checkbox" />Registrar
+                        diretamente como baixado</label
+                      >
+                      <div id="directReasonWrap" hidden>
+                        <label for="directReason">Motivo da baixa</label>
+                        <textarea
+                          id="directReason"
+                          minlength="3"
+                          maxlength="2000"
+                        ></textarea>
+                        <p class="hint">
+                          O cadastro e a baixa serão salvos juntos. Controle
+                          interno, não substitui a baixa patrimonial oficial.
+                        </p>
+                      </div>
+                    </div>
                     <button id="save" class="primary">
                       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                         <use href="#i-save" />
@@ -1789,18 +1939,61 @@
                   </div>
                 </fieldset>
               </form>
-              <p id="draftInfo" class="hint">O rascunho é salvo neste navegador.</p>
+              <p id="draftInfo" class="hint">
+                O rascunho é salvo neste navegador.
+              </p>
               <div id="saved" class="notice" hidden></div>
             </div>
             <aside class="card side">
               <div class="eyebrow">Seu inventário agora</div>
               <h2>Uma visão<br />do seu setor.</h2>
               <div class="ring" id="sideRing">
-                <div class="ring-center"><b id="sideTotal">0</b><small>itens ativos</small></div>
+                <div class="ring-center">
+                  <b id="sideTotal">0</b><small>registros ativos</small>
+                </div>
               </div>
               <div id="sideRooms"></div>
-              <p class="hint muted spaced">Toque em um ambiente para consultar seus itens.</p>
+              <p class="hint muted spaced">
+                Toque em um ambiente para consultar seus itens.
+              </p>
             </aside>
+          </div>
+        </section>
+        <section id="movements" class="tab" hidden>
+          <div class="card">
+            <div class="eyebrow">Entradas, empréstimos e saídas</div>
+            <h2>Movimentar um item</h2>
+            <label for="moveSearch">Nome, patrimônio, ICI ou código ACV</label>
+            <div class="scanrow">
+              <input
+                id="moveSearch"
+                autocomplete="off"
+                maxlength="120"
+                placeholder="Busque ou leia a etiqueta"
+              />
+              <button
+                id="moveScan"
+                class="primary"
+                type="button"
+                aria-label="Ler código para movimentar"
+              >
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-scan" />
+                </svg>
+              </button>
+            </div>
+            <p class="hint">
+              Confira o item antes de confirmar. A leitura não realiza nenhuma
+              movimentação sozinha.
+            </p>
+            <div id="moveResults" class="spaced" aria-live="polite"></div>
+            <div id="moveMissing" class="notice" hidden>
+              Não encontrou? Confira a busca. Se o item ainda não foi
+              registrado, preencha o cadastro completo para dar baixa.
+              <button id="createDown" type="button">
+                Cadastrar e dar baixa
+              </button>
+            </div>
           </div>
         </section>
         <section id="browse" class="tab" hidden>
@@ -1830,14 +2023,22 @@
                 id="search"
                 placeholder="Buscar item, código ou observação…"
                 type="search"
-              /><button id="moreFilters" aria-expanded="false" aria-controls="filterPanel">
+              /><button
+                id="moreFilters"
+                aria-expanded="false"
+                aria-controls="filterPanel"
+              >
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                   <use href="#i-filter" />
                 </svg>
                 Mais filtros</button
               ><button id="clearFilters">Limpar filtros</button>
             </div>
-            <div id="quickRooms" class="quick" aria-label="Filtrar por ambiente"></div>
+            <div
+              id="quickRooms"
+              class="quick"
+              aria-label="Filtrar por ambiente"
+            ></div>
             <div id="filterPanel" class="filter-panel" hidden>
               <fieldset>
                 <legend>Categoria</legend>
@@ -1868,8 +2069,8 @@
               ><span class="muted">Data/hora de Curitiba</span>
             </div>
             <div id="listNotice" class="notice" hidden>
-              Há atualizações na lista. Sua edição está preservada; a lista será atualizada ao
-              salvar ou cancelar.
+              Há atualizações na lista. Sua edição está preservada; a lista será
+              atualizada ao salvar ou cancelar.
             </div>
             <div class="tablewrap">
               <table>
@@ -1915,12 +2116,14 @@
           <div class="dash-grid">
             <div class="card">
               <h3>Onde estão os bens</h3>
-              <p class="hint">Itens ativos por ambiente. Clique para consultar.</p>
+              <p class="hint">
+                Registros ativos por ambiente. Clique para consultar.
+              </p>
               <div id="roomChart"></div>
             </div>
             <div class="card">
               <h3>Composição do acervo</h3>
-              <p class="hint">Itens ativos por categoria.</p>
+              <p class="hint">Registros ativos por categoria.</p>
               <div id="categoryChart"></div>
             </div>
             <div class="card">
@@ -1942,7 +2145,8 @@
             <div class="card wide">
               <h3>Mapa do almoxarifado</h3>
               <p class="hint">
-                Registros ativos por posição. Prateleira 01 na base. Não indica espaço disponível.
+                Registros ativos por posição. Prateleira 01 no topo. Não indica
+                espaço disponível.
               </p>
               <div id="rackMap" class="rack-map"></div>
               <p class="hint" id="unplaced"></p>
@@ -1950,7 +2154,8 @@
             <div class="card">
               <h3>Conferência dos ambientes</h3>
               <p class="hint">
-                Marque após conferir os bens fisicamente. Alterações podem reabrir a conferência.
+                Marque após conferir os bens fisicamente. Alterações podem
+                reabrir a conferência.
               </p>
               <div id="checks"></div>
             </div>
@@ -1966,22 +2171,52 @@
       <div class="bar">
         <h2 id="operationTitle"></h2>
         <button data-close="operation">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#i-close" />
+          </svg>
           Fechar
         </button>
       </div>
       <form id="operationForm">
         <p class="hint" id="operationHint"></p>
+        <div id="moveFields">
+          <div id="moveQuantityWrap">
+            <label for="moveQuantity">Quantidade</label
+            ><input
+              id="moveQuantity"
+              type="number"
+              min="0.001"
+              step="0.001"
+              max="99999999999"
+            />
+            <p class="hint" id="moveBalance"></p>
+          </div>
+          <div id="movePersonWrap">
+            <label for="movePerson" id="movePersonLabel">Responsável</label
+            ><input id="movePerson" minlength="2" maxlength="120" />
+          </div>
+          <div id="moveDestinationWrap">
+            <label for="moveDestination">Local / destino</label
+            ><input id="moveDestination" minlength="2" maxlength="200" />
+          </div>
+        </div>
         <div id="downFields">
-          <label for="downDate">Data da baixa</label><input id="downDate" type="date" /><label
-            for="document"
+          <label for="downDate">Data da baixa</label
+          ><input id="downDate" type="date" /><label for="document"
             >Documento/processo · opcional</label
           ><input id="document" maxlength="200" />
         </div>
         <label for="reason">Motivo / justificativa</label
-        ><textarea id="reason" required minlength="3" maxlength="2000"></textarea
+        ><textarea
+          id="reason"
+          required
+          minlength="3"
+          maxlength="2000"
+        ></textarea
         ><button id="confirmOperation" class="primary spaced">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check" /></svg>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#i-check" />
+          </svg>
           Confirmar
         </button>
       </form>
@@ -1990,12 +2225,19 @@
       <div class="bar">
         <strong id="cameraTitle">Ler identificação</strong>
         <div class="actions">
-          <button id="torch" aria-label="Ligar lanterna" aria-pressed="false" disabled>
+          <button
+            id="torch"
+            aria-label="Ligar lanterna"
+            aria-pressed="false"
+            disabled
+          >
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-torch" />
             </svg></button
           ><button id="closeCamera">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <use href="#i-close" />
+            </svg>
             Fechar
           </button>
         </div>
@@ -2007,8 +2249,8 @@
       </div>
       <div class="camerafoot">
         <p>
-          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code e OCR trabalham em
-          paralelo.
+          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code
+          e OCR trabalham em paralelo.
         </p>
         <div id="cameraStatus" role="status">Preparando leitores…</div>
         <label id="zoomLabel" hidden
@@ -2041,7 +2283,12 @@
                     inputmode="numeric"
                     maxlength="6"
                     pattern="[0-9]{6}"
-                  /><button id="editScan" type="button" class="primary" aria-label="Ler código">
+                  /><button
+                    id="editScan"
+                    type="button"
+                    class="primary"
+                    aria-label="Ler código"
+                  >
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                       <use href="#i-scan" />
                     </svg>
@@ -2065,7 +2312,8 @@
                   <div id="editLevels" class="choices levels"></div>
                 </fieldset>
                 <div class="position">
-                  <span>Prateleiras de baixo para cima</span><strong id="editPosition"></strong>
+                  <span>Prateleiras de cima para baixo</span
+                  ><strong id="editPosition"></strong>
                 </div>
               </div>
               <label for="editNote">Observação</label
@@ -2074,10 +2322,14 @@
           </div>
           <div class="actions spaced">
             <button class="primary" id="editSave">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-save" /></svg>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-save" />
+              </svg>
               Salvar alterações</button
             ><button type="button" id="editCancel">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-close" />
+              </svg>
               Cancelar edição
             </button>
           </div>
@@ -2090,14 +2342,24 @@
       // Configuração e estado. As RPCs e os registros existentes são preservados.
       const $ = (id) => document.getElementById(id);
       const ROOMS = ["Sala Principal", "Sala da Gerência", "Almoxarifado"];
-      const CATEGORIES = ["Móvel", "Tecnologia"];
+      const CATEGORIES = ["Móvel", "Tecnologia", "Material"];
       const TYPE = {
         PMC: "Patrimônio PMC",
         ICI: "Etiqueta ICI",
         SEM_IDENTIFICACAO: "Sem identificação",
       };
-      const STATUS = { ATIVO: "Ativo", BAIXADO: "Baixado", ARQUIVADO: "Arquivado" };
+      const STATUS = {
+        ATIVO: "Ativo",
+        EMPRESTADO: "Emprestado",
+        BAIXADO: "Baixado",
+        ARQUIVADO: "Arquivado",
+      };
       const ACTION = {
+        emprestar: "Emprestar",
+        devolver: "Registrar devolução",
+        entrada: "Entrada de estoque",
+        saida: "Saída de estoque",
+        descarte_estoque: "Descartar quantidade",
         baixar: "Dar baixa",
         estornar: "Estornar baixa",
         arquivar: "Arquivar",
@@ -2126,7 +2388,7 @@
         lastSnapshot = "",
         lastSuccess = null;
       let learnedKey = "",
-        manual = { categoria: false, tipo: false },
+        manual = { categoria: false, tipo: false, controle: false },
         scanTarget = "code";
       let barcodeWorker = null,
         barcodeTask = null,
@@ -2157,7 +2419,8 @@
         String(s || "")
           .split("@")[0]
           .toLocaleUpperCase("pt-BR");
-      const value = (name) => document.querySelector('[name="' + name + '"]:checked')?.value || "";
+      const value = (name) =>
+        document.querySelector('[name="' + name + '"]:checked')?.value || "";
       const type = () => value("type");
       const dateBR = (v) =>
         v
@@ -2219,7 +2482,8 @@
       function storage(name, data) {
         try {
           const k = "acervo2:" + user?.id + ":" + name;
-          if (arguments.length === 1) return JSON.parse(localStorage.getItem(k) || "null");
+          if (arguments.length === 1)
+            return JSON.parse(localStorage.getItem(k) || "null");
           if (data === null) localStorage.removeItem(k);
           else localStorage.setItem(k, JSON.stringify(data));
           return true;
@@ -2238,7 +2502,14 @@
           .querySelectorAll('[name="' + name + '"]')
           .forEach((n) => (n.checked = n.value === String(v || "")));
       }
-      function choices(target, name, options, chosen = "", onchange = () => {}, required = true) {
+      function choices(
+        target,
+        name,
+        options,
+        chosen = "",
+        onchange = () => {},
+        required = true,
+      ) {
         target.replaceChildren(
           ...options.map((o) => {
             const [v, text, ico] = Array.isArray(o) ? o : [o, o, ""];
@@ -2267,7 +2538,9 @@
         );
       }
       function showTab(id) {
-        document.querySelectorAll("main>section").forEach((s) => (s.hidden = s.id !== id));
+        document
+          .querySelectorAll("main>section")
+          .forEach((s) => (s.hidden = s.id !== id));
         document.querySelectorAll("[data-tab]").forEach((b) => {
           if (b.dataset.tab === id) b.setAttribute("aria-current", "page");
           else b.removeAttribute("aria-current");
@@ -2276,19 +2549,27 @@
       function setBusy(v) {
         busy = v;
         $("fields").disabled = v || role === "leitor" || !!pending;
-        document.querySelectorAll("#app button,#operation button").forEach((b) => (b.disabled = v));
-        if ($("editFields")) $("editFields").disabled = v || role === "leitor" || !!pending;
+        document
+          .querySelectorAll("#app button,#operation button")
+          .forEach((b) => (b.disabled = v));
+        if ($("editFields"))
+          $("editFields").disabled = v || role === "leitor" || !!pending;
         $("save").disabled = v || role === "leitor" || !!pending;
         $("logout").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
         labelButton(
           $("save"),
-          v ? "Salvando…" : "Salvar e cadastrar próximo",
+          v
+            ? "Salvando…"
+            : $("directDown").checked
+              ? "Registrar e dar baixa"
+              : "Salvar e cadastrar próximo",
           v ? "clock" : "save",
         );
         $("previous").disabled = v || page <= 1;
-        $("next").disabled = v || page >= Math.max(1, Math.ceil(filtered().length / 25));
+        $("next").disabled =
+          v || page >= Math.max(1, Math.ceil(filtered().length / 25));
       }
       function locationText(r) {
         const d = r.dados;
@@ -2297,6 +2578,334 @@
           : r.legado?.localizacao || "";
       }
       // Cadastro: escolhas nativas e aprendizagem por frequência, sem serviço pago.
+      const CONTROL = [
+        ["INDIVIDUAL", "Individual", "tag"],
+        ["QUANTIDADE", "Por quantidade", "box"],
+      ];
+
+      function mountControlFields(host, prefix = "", record = null) {
+        if (!host) return;
+        const e = prefix === "edit";
+        const id = (s) => (e ? "edit" + s[0].toUpperCase() + s.slice(1) : s);
+        const box = el("div", undefined, "stock-control");
+        const group = el("fieldset"),
+          opts = el("div", undefined, "choices");
+        group.append(el("legend", "Como controlar este item?"), opts);
+        choices(
+          opts,
+          e ? "editControl" : "control",
+          CONTROL,
+          record?.controle || "INDIVIDUAL",
+          () => {
+            if (!e) manual.controle = true;
+            syncControl(prefix);
+          },
+        );
+        if (e) {
+          group.disabled = true;
+          box.append(
+            el(
+              "p",
+              "Controle preservado neste cadastro para manter seu histórico. A escolha é livre ao cadastrar um novo item.",
+              "hint",
+            ),
+          );
+        }
+        box.append(group);
+        const hint = el("p", "", "hint");
+        hint.id = id("controlHint");
+        box.append(hint);
+        const stock = el("div", undefined, "grid2");
+        stock.id = id("stockFields");
+        const input = (parent, name, label, type, initial, attrs = {}) => {
+          const wrap = el("div"),
+            l = el("label", label),
+            n = el("input");
+          n.id = id(name);
+          n.type = type;
+          n.value = initial;
+          l.htmlFor = n.id;
+          Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+          wrap.append(l, n);
+          parent.append(wrap);
+          return n;
+        };
+        const qty = input(
+          stock,
+          "quantity",
+          e ? "Saldo atual" : "Quantidade inicial",
+          "number",
+          record?.saldo ?? 1,
+          { min: 0, max: 99999999999, step: "0.001" },
+        );
+        qty.readOnly = e;
+        const uw = el("div"),
+          ul = el("label", "Unidade de medida"),
+          unit = el("select");
+        unit.id = id("unit");
+        ul.htmlFor = unit.id;
+        for (const u of ["unidade", "rolo", "kg", "metro", "litro", "caixa"]) {
+          const o = el("option", u);
+          o.value = u;
+          unit.append(o);
+        }
+        unit.value = record?.unidade || "unidade";
+        unit.disabled = e;
+        uw.append(ul, unit);
+        stock.append(uw);
+        input(
+          stock,
+          "minimum",
+          "Avisar quando o saldo chegar a",
+          "number",
+          record?.minimo ?? 0,
+          { min: 0, max: 99999999999, step: "0.001" },
+        );
+        box.append(stock);
+        input(
+          box,
+          "extension",
+          "Ramal / referência telefônica · opcional",
+          "text",
+          record?.dados?.ramal || "",
+          { maxlength: 30 },
+        );
+        if (e) host.prepend(box);
+        else host.replaceChildren(box);
+        syncControl(prefix);
+      }
+
+      function syncControl(prefix = "") {
+        const e = prefix === "edit",
+          id = (s) => (e ? "edit" + s[0].toUpperCase() + s.slice(1) : s);
+        const box = $(id("stockFields"));
+        if (!box) return;
+        const stock = value(e ? "editControl" : "control") === "QUANTIDADE";
+        box.hidden = !stock;
+        box.querySelectorAll("input").forEach((n) => {
+          n.disabled = !stock;
+          n.required = stock;
+        });
+        $(id("unit")).disabled = !stock || e;
+        const room = value(e ? "editRoom" : "room");
+        $(id("controlHint")).textContent = stock
+          ? room && room !== "Almoxarifado"
+            ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
+            : "Um código interno para o estoque, com entradas e saídas por quantidade. Selecione Sem identificação abaixo."
+          : "Cada unidade terá seu próprio código e histórico. Você pode escolher outra opção antes de cadastrar.";
+      }
+
+      function syncDirectDown() {
+        const active = $("directDown").checked;
+        $("directReasonWrap").hidden = !active;
+        $("directReason").required = active;
+        $("directReason").disabled = !active;
+        labelButton(
+          $("save"),
+          active ? "Registrar e dar baixa" : "Salvar e cadastrar próximo",
+          active ? "down" : "save",
+        );
+      }
+
+      function movementActions(r) {
+        if (r.situacao === "EMPRESTADO") return ["devolver", "baixar"];
+        if (r.situacao !== "ATIVO") return [];
+        return r.controle === "QUANTIDADE"
+          ? ["entrada", "saida", "descarte_estoque", "baixar"]
+          : ["emprestar", "baixar"];
+      }
+
+      function renderMovementResults() {
+        if (!$("moveResults")) return;
+        const q = key($("moveSearch").value);
+        const exact = rows.filter(
+          (r) => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q),
+        );
+        const found = exact.length
+          ? exact
+          : rows.filter(
+              (r) =>
+                q &&
+                key(
+                  [
+                    r.dados.item,
+                    r.dados.codigo,
+                    internal(r.id),
+                    r.dados.ramal,
+                  ].join(" "),
+                ).includes(q),
+            );
+        $("moveResults").replaceChildren();
+        $("moveMissing").hidden = !q || found.length > 0;
+        if (!q) {
+          $("moveResults").append(
+            el("p", "Busque o item que você quer movimentar.", "muted"),
+          );
+          return;
+        }
+        for (const r of found.slice(0, 20)) {
+          const card = el("div", undefined, "movement-result");
+          card.append(
+            el("h3", r.dados.item),
+            el(
+              "p",
+              `${internal(r.id)} · ${TYPE[r.dados.tipo]} ${r.dados.codigo || ""} · ${STATUS[r.situacao]}`,
+            ),
+            el(
+              "p",
+              `${r.dados.ambiente} · ${locationText(r) || "Sem posição de estante"}`,
+              "hint",
+            ),
+          );
+          if (r.controle === "QUANTIDADE")
+            card.append(el("p", `Saldo: ${r.saldo} ${r.unidade}`, "notice"));
+          if (r.emprestimo)
+            card.append(
+              el(
+                "p",
+                `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
+                "notice",
+              ),
+            );
+          const actions = el("div", undefined, "actions");
+          if (role !== "leitor")
+            for (const a of movementActions(r))
+              actions.append(
+                button(
+                  ACTION[a],
+                  () => openOperation(a, r),
+                  a === "baixar" || a === "descarte_estoque" ? "danger" : "",
+                  a === "devolver" ? "undo" : "arrow",
+                ),
+              );
+          card.append(actions);
+          $("moveResults").append(card);
+        }
+        if (found.length > 20)
+          $("moveResults").append(
+            el(
+              "p",
+              `${found.length} encontrados. Refine a busca para ver os demais.`,
+              "hint",
+            ),
+          );
+      }
+
+      function configureMovement(a, r) {
+        const quantity = ["entrada", "saida", "descarte_estoque"].includes(a),
+          person = ["emprestar", "saida"].includes(a);
+        for (const [wrap, id, on] of [
+          ["moveQuantityWrap", "moveQuantity", quantity],
+          ["movePersonWrap", "movePerson", person],
+          ["moveDestinationWrap", "moveDestination", person],
+        ]) {
+          $(wrap).hidden = !on;
+          $(id).disabled = !on;
+          $(id).required = on;
+          $(id).value = "";
+        }
+        $("movePersonLabel").textContent =
+          a === "saida" ? "Solicitante" : "Responsável";
+        $("moveQuantity").step = ["unidade", "rolo", "caixa"].includes(
+          r.unidade,
+        )
+          ? "1"
+          : "0.001";
+        $("moveQuantity").min = $("moveQuantity").step;
+        $("moveQuantity").max =
+          a === "entrada" ? "99999999999" : String(r.saldo);
+        const updateBalance = () => {
+          const n = Number($("moveQuantity").value || 0);
+          $("moveBalance").textContent =
+            `Saldo atual: ${r.saldo} ${r.unidade}. Após confirmar: ${Number((Number(r.saldo) + (a === "entrada" ? n : -n)).toFixed(3))}.`;
+        };
+        $("moveQuantity").oninput = updateBalance;
+        updateBalance();
+        $("reason").required = [
+          "baixar",
+          "descarte_estoque",
+          "estornar",
+          "arquivar",
+          "restaurar",
+        ].includes(a);
+        $("reason").previousElementSibling.textContent = $("reason").required
+          ? "Motivo / justificativa"
+          : "Observação · opcional";
+        $("downDate").required = false;
+        $("downDate").disabled = true;
+        $("downFields").hidden = true;
+        $("operationHint").textContent =
+          a === "baixar"
+            ? `Baixa imediata de ${r.dados.item}${r.controle === "QUANTIDADE" ? `, zerando todo o saldo de ${r.saldo} ${r.unidade}` : ""}. Não executa baixa patrimonial oficial.`
+            : a === "devolver"
+              ? `Devolução de ${r.emprestimo?.responsavel || ""}. O item volta à disponibilidade em ${r.dados.ambiente} ${locationText(r)}.`
+              : "Data, horário e usuário serão registrados automaticamente. Confira os dados antes de confirmar.";
+        labelButton($("confirmOperation"), ACTION[a], "check");
+      }
+
+      function renderStockMetrics() {
+        let target = $("stockMetrics");
+        if (!target) {
+          target = el("div", undefined, "card spaced");
+          target.id = "stockMetrics";
+          $("dashboard").prepend(target);
+        }
+        target.replaceChildren(el("h2", "Estoque e empréstimos"));
+        const stock = rows.filter(
+            (r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO",
+          ),
+          loans = rows.filter((r) => r.situacao === "EMPRESTADO");
+        const low = stock.filter((r) => Number(r.saldo) <= Number(r.minimo));
+        target.append(
+          el(
+            "p",
+            `${stock.length} estoques ativos · ${loans.length} itens emprestados · ${low.length} estoques no mínimo ou abaixo`,
+            "muted",
+          ),
+        );
+        const actions = el("div", undefined, "actions");
+        actions.append(
+          button(
+            "Consultar empréstimos",
+            () => query({ situacao: "EMPRESTADO" }),
+            "",
+            "arrow",
+          ),
+        );
+        target.append(actions);
+        for (const r of low.slice(0, 8))
+          target.append(
+            button(
+              `${r.dados.item}: ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`,
+              () => {
+                showTab("movements");
+                $("moveSearch").value = internal(r.id);
+                renderMovementResults();
+              },
+              "spaced",
+              "box",
+            ),
+          );
+        if (!low.length)
+          target.append(
+            el("p", "Nenhum estoque no limite configurado.", "hint"),
+          );
+        if (low.length > 8)
+          target.append(
+            el(
+              "p",
+              `Mais ${low.length - 8} estoques no limite. Consulte os saldos na aba Consultar.`,
+              "hint",
+            ),
+          );
+      }
+
+      function validScanValue(v) {
+        return scanTarget === "moveSearch"
+          ? /^\d{6}$/.test(v) || /^ACV-\d+$/i.test(v)
+          : /^\d{6}$/.test(v);
+      }
+
       function syncLocation(prefix = "") {
         const edit = prefix === "edit",
           room = value(edit ? "editRoom" : "room"),
@@ -2311,7 +2920,9 @@
           i.disabled = !warehouse;
         });
         $(edit ? "editPosition" : "position").textContent =
-          shelf && level ? shelf + " · " + level.padStart(2, "0") : "Escolha a posição";
+          shelf && level
+            ? shelf + " · " + level.padStart(2, "0")
+            : "Escolha a posição";
       }
       function syncCode(prefix = "") {
         const edit = prefix === "edit",
@@ -2325,7 +2936,9 @@
         n.required = !!t && !none;
         n.readOnly = none;
         $(edit ? "editScan" : "scan").hidden = none;
-        n.placeholder = none ? "Código próprio gerado ao salvar" : "Leia ou digite os 6 números";
+        n.placeholder = none
+          ? "Código próprio gerado ao salvar"
+          : "Leia ou digite os 6 números";
         if (none) n.value = "";
         $(edit ? "editCodeHint" : "codeHint").textContent = none
           ? "O ACERVO gera um código interno para este item."
@@ -2336,11 +2949,13 @@
         $("formRest").hidden = !ready;
         syncCode();
         syncLocation();
+        syncControl();
       }
       function winner(list, field) {
         const count = new Map();
         for (const r of list) {
-          const v = r.dados[field];
+          const v =
+            field === "controle" ? r.controle || "INDIVIDUAL" : r.dados[field];
           if (v) count.set(v, (count.get(v) || 0) + 1);
         }
         const ranks = [...count].sort((a, b) => b[1] - a[1]);
@@ -2354,10 +2969,11 @@
       function learnItem() {
         const current = key($("item").value);
         if (current !== learnedKey) {
-          manual = { categoria: false, tipo: false };
+          manual = { categoria: false, tipo: false, controle: false };
           learnedKey = current;
           setChoice("category", "");
           setChoice("type", "");
+          setChoice("control", "INDIVIDUAL");
         }
         const matches = rows.filter(
           (r) => r.situacao !== "ARQUIVADO" && key(r.dados.item) === current,
@@ -2366,7 +2982,13 @@
           ident = winner(matches, "tipo");
         if (!manual.categoria) setChoice("category", cat);
         if (!manual.tipo) setChoice("type", ident);
+        const control = winner(matches, "controle");
+        if (!manual.controle && control) setChoice("control", control);
         const suggestions = [];
+        if (control && !manual.controle)
+          suggestions.push(
+            control === "QUANTIDADE" ? "Por quantidade" : "Individual",
+          );
         if (cat && !manual.categoria) suggestions.push(cat);
         if (ident && !manual.tipo) suggestions.push(TYPE[ident]);
         $("learningHint").textContent = suggestions.length
@@ -2384,7 +3006,8 @@
         const q = key($("item").value),
           names = new Map();
         rows.forEach((r) => {
-          if (r.situacao !== "ARQUIVADO") names.set(key(r.dados.item), r.dados.item);
+          if (r.situacao !== "ARQUIVADO")
+            names.set(key(r.dados.item), r.dados.item);
         });
         const found = [...names.values()]
           .filter((n) => key(n).includes(q))
@@ -2418,10 +3041,18 @@
           categoria: value(e ? "editCategory" : "category"),
           item: clean($(e ? "editItem" : "item").value),
           tipo: t,
-          codigo: t === "SEM_IDENTIFICACAO" ? "" : $(e ? "editCode" : "code").value,
-          estante: room === "Almoxarifado" ? value(e ? "editShelf" : "shelf") : "",
-          prateleira: room === "Almoxarifado" ? value(e ? "editLevel" : "level") : "",
+          codigo:
+            t === "SEM_IDENTIFICACAO" ? "" : $(e ? "editCode" : "code").value,
+          estante:
+            room === "Almoxarifado" ? value(e ? "editShelf" : "shelf") : "",
+          prateleira:
+            room === "Almoxarifado" ? value(e ? "editLevel" : "level") : "",
           observacao: $(e ? "editNote" : "note").value.trim(),
+          controle: value(e ? "editControl" : "control") || "INDIVIDUAL",
+          quantidade: $(e ? "editQuantity" : "quantity")?.value || "1",
+          unidade: $(e ? "editUnit" : "unit")?.value || "unidade",
+          minimo: $(e ? "editMinimum" : "minimum")?.value || "0",
+          ramal: $(e ? "editExtension" : "extension")?.value.trim() || "",
         };
       }
       function saveDraft() {
@@ -2430,6 +3061,8 @@
           dados: formData(),
           editing: null,
           repeat: $("repeat").checked,
+          baixaDireta: $("directDown").checked,
+          motivo: $("directReason").value,
         });
         $("draftInfo").textContent = ok
           ? "Rascunho salvo neste navegador."
@@ -2454,7 +3087,15 @@
         setChoice("shelf", r.estante);
         setChoice("level", r.prateleira);
         learnedKey = key(r.item);
-        manual = { categoria: true, tipo: true };
+        setChoice("control", r.controle || "INDIVIDUAL");
+        $("quantity").value = r.quantidade || "1";
+        $("unit").value = r.unidade || "unidade";
+        $("minimum").value = r.minimo || "0";
+        $("extension").value = r.ramal || "";
+        $("directDown").checked = !!d.baixaDireta;
+        $("directReason").value = d.motivo || "";
+        syncDirectDown();
+        manual = { categoria: true, tipo: true, controle: true };
         $("repeat").checked = false;
         syncForm();
       }
@@ -2462,13 +3103,22 @@
         const keep = $("repeat").checked;
         $("code").value = "";
         $("note").value = "";
+        $("quantity").value = "1";
+        $("extension").value = "";
+        $("directDown").checked = false;
+        $("directReason").value = "";
+        syncDirectDown();
         if (!keep) {
           $("item").value = "";
           setChoice("category", "");
           setChoice("type", "");
-          manual = { categoria: false, tipo: false };
+          manual = { categoria: false, tipo: false, controle: false };
+          setChoice("control", "INDIVIDUAL");
+          $("minimum").value = "0";
+          $("unit").value = "unidade";
           learnedKey = "";
-          $("learningHint").textContent = "Escolha um item já registrado ou escreva um novo nome.";
+          $("learningHint").textContent =
+            "Escolha um item já registrado ou escreva um novo nome.";
         }
         $("suggestions").hidden = true;
         $("item").setAttribute("aria-expanded", "false");
@@ -2480,7 +3130,9 @@
           t = value(e ? "editType" : "type"),
           r = rows.find(
             (r) =>
-              r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
+              r.dados.tipo === t &&
+              r.dados.codigo === code &&
+              r.id !== (e ? editor?.id : null),
           );
         $(e ? "editCodeHint" : "codeHint").textContent =
           r && code
@@ -2493,18 +3145,20 @@
         const owner = user?.id;
         refreshTask = (async () => {
           try {
-            const data = await rpc("acervo_ler");
+            const data = await rpc("acervo_ler_v3");
             if (!user || user.id !== owner) return;
             rows = data.itens || [];
             checks = data.conferencias || [];
             role = data.perfil || "leitor";
+            renderMovementResults();
             lastSuccess = new Date();
             $("live").className = "live";
             $("live").textContent =
               "Atualizado " +
-              new Intl.DateTimeFormat("pt-BR", { timeZone: ZONE, timeStyle: "short" }).format(
-                lastSuccess,
-              );
+              new Intl.DateTimeFormat("pt-BR", {
+                timeZone: ZONE,
+                timeStyle: "short",
+              }).format(lastSuccess);
             const snapshot = JSON.stringify([rows, checks, role]);
             if (snapshot !== lastSnapshot) {
               lastSnapshot = snapshot;
@@ -2554,24 +3208,33 @@
             return (
               (!q ||
                 key(
-                  [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(
-                    " ",
-                  ),
+                  [
+                    d.item,
+                    d.codigo,
+                    internal(r.id),
+                    d.observacao,
+                    r.legado?.numero_serie,
+                  ].join(" "),
                 ).includes(q)) &&
               (!filters.ambiente || d.ambiente === filters.ambiente) &&
               (!filters.categoria || d.categoria === filters.categoria) &&
               (!filters.tipo || d.tipo === filters.tipo) &&
               (!filters.situacao || r.situacao === filters.situacao) &&
               (!filters.estante || d.estante === filters.estante) &&
-              (!filters.prateleira || String(d.prateleira) === filters.prateleira) &&
+              (!filters.prateleira ||
+                String(d.prateleira) === filters.prateleira) &&
               (!filters.dia || dayKey(r.criado_em) === filters.dia) &&
               (!filters.item || key(d.item) === key(filters.item))
             );
           })
-          .sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em) || b.id - a.id);
+          .sort(
+            (a, b) =>
+              new Date(b.criado_em) - new Date(a.criado_em) || b.id - a.id,
+          );
       }
       function leaveEditor() {
-        if (editor && !confirm("Descartar a edição em andamento?")) return false;
+        if (editor && !confirm("Descartar a edição em andamento?"))
+          return false;
         editor = null;
         $("listNotice").hidden = true;
         return true;
@@ -2622,7 +3285,10 @@
         filterButtons(
           "filterLevel",
           "prateleira",
-          [1, 2, 3, 4, 5, 6].map((v) => [String(v), String(v).padStart(2, "0")]),
+          [1, 2, 3, 4, 5, 6].map((v) => [
+            String(v),
+            String(v).padStart(2, "0"),
+          ]),
         );
         $("warehouseFilters").hidden = filters.ambiente !== "Almoxarifado";
         const names = {
@@ -2675,15 +3341,34 @@
           tr.append(
             el("td", d.item),
             el("td", d.codigo ? TYPE[d.tipo] + " " + d.codigo : internal(r.id)),
-            el("td", d.ambiente + (locationText(r) ? " · " + locationText(r) : "")),
+            el(
+              "td",
+              d.ambiente + (locationText(r) ? " · " + locationText(r) : ""),
+            ),
           );
+          if (r.controle === "QUANTIDADE")
+            tr.firstChild.append(
+              el("div", `${r.saldo} ${r.unidade} · em estoque`, "hint"),
+            );
+          if (r.emprestimo)
+            tr.firstChild.append(
+              el(
+                "div",
+                `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
+                "hint",
+              ),
+            );
           const status = el("td");
           status.append(
             el(
               "span",
               STATUS[r.situacao],
               "badge" +
-                (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : ""),
+                (r.situacao === "BAIXADO"
+                  ? " down"
+                  : r.situacao === "ARQUIVADO"
+                    ? " archive"
+                    : ""),
             ),
           );
           tr.append(
@@ -2741,15 +3426,39 @@
         const dl = el("dl");
         for (const [label, text] of [
           ["Categoria", r.dados.categoria],
-          ["Identificação", TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : "")],
+          [
+            "Identificação",
+            TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : ""),
+          ],
           ["Localização", r.dados.ambiente + " " + locationText(r)],
           ["Cadastro", dateBR(r.criado_em)],
           ["Observação", r.dados.observacao || "—"],
+          [
+            "Controle",
+            r.controle === "QUANTIDADE"
+              ? `Por quantidade · ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`
+              : "Individual",
+          ],
+          ["Ramal", r.dados.ramal || "—"],
         ])
           dl.append(el("dt", label), el("dd", text));
         panel.append(dl);
+        if (r.emprestimo)
+          panel.append(
+            el(
+              "p",
+              `Emprestado para ${r.emprestimo.responsavel} · ${r.emprestimo.destino} · ${dateBR(r.emprestimo.momento)}`,
+              "notice",
+            ),
+          );
         if (r.baixa)
-          panel.append(el("p", "Baixa: " + r.baixa.data + " · " + r.baixa.motivo, "notice"));
+          panel.append(
+            el(
+              "p",
+              "Baixa: " + r.baixa.data + " · " + r.baixa.motivo,
+              "notice",
+            ),
+          );
         if (r.legado) {
           const box = el("details");
           box.append(
@@ -2759,12 +3468,39 @@
           panel.append(box);
         }
         const actions = el("div", undefined, "actions");
+        if (role !== "leitor") {
+          for (const a of movementActions(r)) {
+            if (a !== "baixar")
+              actions.append(
+                button(
+                  ACTION[a],
+                  () => openOperation(a, r),
+                  "",
+                  a === "devolver" ? "undo" : "arrow",
+                ),
+              );
+          }
+          if (r.situacao === "EMPRESTADO")
+            actions.append(
+              button(
+                "Dar baixa",
+                () => openOperation("baixar", r),
+                "danger",
+                "down",
+              ),
+            );
+        }
         if (role !== "leitor" && r.situacao === "ATIVO")
           actions.append(
             button("Editar aqui", () => startEdit(r, panel), "", "edit"),
-            button("Dar baixa", () => openOperation("baixar", r), "danger", "down"),
+            button(
+              "Dar baixa",
+              () => openOperation("baixar", r),
+              "danger",
+              "down",
+            ),
           );
-        if (role === "admin") {
+        if (role === "admin" && r.situacao !== "EMPRESTADO") {
           const a =
             r.situacao === "BAIXADO"
               ? "estornar"
@@ -2772,7 +3508,12 @@
                 ? "restaurar"
                 : "arquivar";
           actions.append(
-            button(ACTION[a], () => openOperation(a, r), "", a === "arquivar" ? "archive" : "undo"),
+            button(
+              ACTION[a],
+              () => openOperation(a, r),
+              "",
+              a === "arquivar" ? "archive" : "undo",
+            ),
           );
         }
         panel.append(actions);
@@ -2797,11 +3538,19 @@
           arquivar: "Arquivamento",
           restaurar: "Restauração",
           conferir: "Conferência",
+          emprestar: "Empréstimo",
+          devolver: "Devolução",
+          entrada: "Entrada de estoque",
+          saida: "Saída de estoque",
+          descarte_estoque: "Descarte de estoque",
+          cadastrar_baixado: "Registro com baixa",
         };
         if (action === "salvar") return "Edição";
         return (
           names[action] ||
-          (action ? action.charAt(0).toUpperCase() + action.slice(1) : "Atualização")
+          (action
+            ? action.charAt(0).toUpperCase() + action.slice(1)
+            : "Atualização")
         );
       }
       async function loadHistory(id, target) {
@@ -2814,37 +3563,55 @@
               n.append(
                 el("strong", historyAction(h)),
                 el("span", dateBR(h.momento)),
-                el("span", shortEmail(h.email) || "Não informado", "history-user"),
+                el(
+                  "span",
+                  shortEmail(h.email) || "Não informado",
+                  "history-user",
+                ),
               );
               return n;
             }),
           );
-          if (!data.length) target.textContent = "Nenhuma alteração registrada nesta versão.";
+          if (!data.length)
+            target.textContent = "Nenhuma alteração registrada nesta versão.";
         } catch (e) {
           if (target.isConnected) target.textContent = e.message;
         }
       }
       function startEdit(r, panel) {
-        if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+        if (busy || pending)
+          return toast("Conclua a operação pendente primeiro.", true);
         editor = { id: r.id, versao: r.versao };
         panel.replaceChildren(el("h3", "Editar " + internal(r.id)));
         const template = $("editorTemplate").content.cloneNode(true);
         panel.append(template);
         const d = r.dados;
         $("editItem").value = d.item;
+        mountControlFields($("editFields"), "edit", r);
         $("editCode").value = d.codigo || "";
         $("editNote").value = d.observacao || "";
         choices($("editCategories"), "editCategory", CATEGORIES, d.categoria);
-        choices($("editTypes"), "editType", Object.entries(TYPE), d.tipo, () => {
-          $("editCode").value = "";
-          syncCode("edit");
-        });
-        choices($("editRooms"), "editRoom", ROOMS, d.ambiente, () => syncLocation("edit"));
+        choices(
+          $("editTypes"),
+          "editType",
+          Object.entries(TYPE),
+          d.tipo,
+          () => {
+            $("editCode").value = "";
+            syncCode("edit");
+          },
+        );
+        choices($("editRooms"), "editRoom", ROOMS, d.ambiente, () =>
+          syncLocation("edit"),
+        );
         choices($("editShelves"), "editShelf", [..."ABCDE"], d.estante);
         choices(
           $("editLevels"),
           "editLevel",
-          [1, 2, 3, 4, 5, 6].map((v) => [String(v), String(v).padStart(2, "0")]),
+          [1, 2, 3, 4, 5, 6].map((v) => [
+            String(v),
+            String(v).padStart(2, "0"),
+          ]),
           String(d.prateleira || ""),
         );
         document
@@ -2859,11 +3626,14 @@
         };
         $("editScan").onclick = () => openScanner("editCode");
         $("editCode").oninput = () => {
-          $("editCode").value = $("editCode").value.replace(/\D/g, "").slice(0, 6);
+          $("editCode").value = $("editCode")
+            .value.replace(/\D/g, "")
+            .slice(0, 6);
         };
         $("editForm").onsubmit = (e) => {
           e.preventDefault();
-          if (busy || role === "leitor" || !$("editForm").reportValidity()) return;
+          if (busy || role === "leitor" || !$("editForm").reportValidity())
+            return;
           saveRecord("edit");
         };
         $("editItem").focus();
@@ -2872,16 +3642,42 @@
         const d = formData(prefix),
           id = prefix === "edit" ? editor?.id : null;
         const duplicate = rows.find(
-          (r) => d.codigo && r.dados.tipo === d.tipo && r.dados.codigo === d.codigo && r.id !== id,
+          (r) =>
+            d.codigo &&
+            r.dados.tipo === d.tipo &&
+            r.dados.codigo === d.codigo &&
+            r.id !== id,
         );
-        if (duplicate) return toast("Código já cadastrado: " + internal(duplicate.id), true);
+        if (duplicate)
+          return toast("Código já cadastrado: " + internal(duplicate.id), true);
+        if (d.controle === "QUANTIDADE" && d.ambiente !== "Almoxarifado")
+          return toast(
+            "Por quantidade: selecione Almoxarifado ou troque o controle para Individual.",
+            true,
+          );
+        if (d.controle === "QUANTIDADE" && d.tipo !== "SEM_IDENTIFICACAO")
+          return toast(
+            "Um estoque agrupado usa identificação interna. Selecione Sem identificação ou controle Individual.",
+            true,
+          );
         commit(
-          { acao: "salvar", id, versao: prefix === "edit" ? editor.versao : null, dados: d },
+          {
+            acao: "salvar",
+            id,
+            versao: prefix === "edit" ? editor.versao : null,
+            dados: d,
+            baixa_direta: !id && $("directDown").checked,
+            motivo:
+              !id && $("directDown").checked
+                ? $("directReason").value.trim()
+                : "",
+          },
           prefix === "edit" ? "edit" : "create",
         );
       }
       function openOperation(a, r) {
-        if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+        if (busy || pending)
+          return toast("Conclua a operação pendente primeiro.", true);
         selected = r;
         action = a;
         $("operationTitle").textContent = ACTION[a] + " · " + internal(r.id);
@@ -2895,16 +3691,24 @@
         $("downDate").max = today();
         $("reason").value = "";
         $("document").value = "";
+        configureMovement(a, r);
         $("operation").showModal();
       }
       // Uma chave por operação: reenviar após falha não cria registro duplicado.
       async function commit(body, origin = "operation") {
         if (busy || role === "leitor") return;
-        if (pending) return toast("Use Verificar e concluir antes de outra operação.", true);
+        if (pending)
+          return toast(
+            "Use Verificar e concluir antes de outra operação.",
+            true,
+          );
         pending = { chave: crypto.randomUUID(), body, origin };
         if (!storage("pending", pending)) {
           pending = null;
-          return toast("Habilite o armazenamento do navegador antes de salvar.", true);
+          return toast(
+            "Habilite o armazenamento do navegador antes de salvar.",
+            true,
+          );
         }
         await transmit();
       }
@@ -2914,14 +3718,25 @@
         const op = pending;
         try {
           if (refreshTask) await refreshTask.catch(() => {});
-          const result = await rpc("acervo_gravar", { p_chave: op.chave, p: op.body });
+          const result = await rpc("acervo_gravar_v3", {
+            p_chave: op.chave,
+            p: op.body,
+          });
           pending = null;
           storage("pending", null);
-          if (op.body.acao === "salvar" && (op.origin === "create" || !op.body.id)) {
+          if (
+            op.body.acao === "salvar" &&
+            (op.origin === "create" || !op.body.id)
+          ) {
             resetForm();
-            $("saved").textContent = internal(result.id) + " · " + result.dados.item + " salvo.";
+            $("saved").textContent =
+              internal(result.id) + " · " + result.dados.item + " salvo.";
             $("saved").hidden = false;
-            storage("draft", { dados: formData(), editing: null, repeat: $("repeat").checked });
+            storage("draft", {
+              dados: formData(),
+              editing: null,
+              repeat: $("repeat").checked,
+            });
           }
           if (op.origin === "edit" || op.body.id) {
             editor = null;
@@ -2933,7 +3748,10 @@
           try {
             await refresh();
           } catch {
-            toast("Salvo no banco. A lista será atualizada quando a conexão voltar.", true);
+            toast(
+              "Salvo no banco. A lista será atualizada quando a conexão voltar.",
+              true,
+            );
           }
           if (op.origin === "create") $("item").focus();
         } catch (e) {
@@ -2941,7 +3759,10 @@
             pending = null;
             storage("pending", null);
           }
-          toast(e.message || "Sem confirmação. Use Verificar e concluir.", true);
+          toast(
+            e.message || "Sem confirmação. Use Verificar e concluir.",
+            true,
+          );
         } finally {
           setBusy(false);
           if (!editor) renderList();
@@ -2957,16 +3778,21 @@
             fill.style.width = (total ? (n / total) * 100 : 0) + "%";
             track.append(fill);
             b.append(el("span", label), track, el("b", n));
-            b.title = label + ": " + n + (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
+            b.title =
+              label +
+              ": " +
+              n +
+              (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
             return b;
           }),
         );
       }
       function renderMetrics() {
+        renderStockMetrics();
         const active = rows.filter((r) => r.situacao === "ATIVO"),
           count = (f, v) => active.filter((r) => r.dados[f] === v).length;
         const metrics = [
-          ["Itens ativos", active.length, "box", { situacao: "ATIVO" }],
+          ["Registros ativos", active.length, "box", { situacao: "ATIVO" }],
           [
             "Baixados",
             rows.filter((r) => r.situacao === "BAIXADO").length,
@@ -3027,10 +3853,16 @@
           active.length,
           (v) => query({ item: v, situacao: "ATIVO" }),
         );
-        if (!items.size) $("topChart").textContent = "Os itens aparecerão conforme você cadastrar.";
+        if (!items.size)
+          $("topChart").textContent =
+            "Os itens aparecerão conforme você cadastrar.";
         $("sideTotal").textContent = active.length;
-        const a = active.length ? (count("ambiente", ROOMS[0]) / active.length) * 360 : 0,
-          b = active.length ? (count("ambiente", ROOMS[1]) / active.length) * 360 : 0;
+        const a = active.length
+            ? (count("ambiente", ROOMS[0]) / active.length) * 360
+            : 0,
+          b = active.length
+            ? (count("ambiente", ROOMS[1]) / active.length) * 360
+            : 0;
         $("sideRing").style.background =
           `conic-gradient(#d9ecae 0deg ${a}deg,#94b184 ${a}deg ${a + b}deg,#52735e ${a + b}deg 360deg)`;
         $("sideRooms").replaceChildren(
@@ -3058,7 +3890,11 @@
             const b = button("", () => query({ dia: d }), "day"),
               bar = el("i");
             bar.style.height = Math.max(3, (n / max) * 125) + "px";
-            b.append(el("b", n), bar, el("span", d.slice(8) + "/" + d.slice(5, 7)));
+            b.append(
+              el("b", n),
+              bar,
+              el("span", d.slice(8) + "/" + d.slice(5, 7)),
+            );
             b.setAttribute("aria-label", n + " registros em " + d);
             return b;
           }),
@@ -3067,7 +3903,7 @@
           ...[..."ABCDE"].map((s) => {
             const col = el("div", undefined, "rack");
             col.append(el("strong", "Estante " + s));
-            for (let l = 6; l >= 1; l--) {
+            for (let l = 1; l <= 6; l++) {
               const n = active.filter(
                 (r) =>
                   r.dados.ambiente === "Almoxarifado" &&
@@ -3094,7 +3930,9 @@
           }),
         );
         const missing = active.filter(
-          (r) => r.dados.ambiente === "Almoxarifado" && (!r.dados.estante || !r.dados.prateleira),
+          (r) =>
+            r.dados.ambiente === "Almoxarifado" &&
+            (!r.dados.estante || !r.dados.prateleira),
         ).length;
         $("unplaced").textContent = missing
           ? missing + " registros ativos ainda sem posição definida."
@@ -3102,7 +3940,8 @@
         const done = ROOMS.filter((room) =>
           checks.some((c) => c.ambiente === room && c.conferido),
         ).length;
-        $("conferenceSummary").textContent = done + " de 3 ambientes conferidos";
+        $("conferenceSummary").textContent =
+          done + " de 3 ambientes conferidos";
         $("checks").replaceChildren(
           ...ROOMS.map((room) => {
             const c = checks.find((c) => c.ambiente === room) || {},
@@ -3112,7 +3951,10 @@
               el(
                 "p",
                 c.conferido
-                  ? "Conferido em " + dateBR(c.momento) + " · " + shortEmail(c.email)
+                  ? "Conferido em " +
+                      dateBR(c.momento) +
+                      " · " +
+                      shortEmail(c.email)
                   : "A conferir",
                 "hint",
               ),
@@ -3122,8 +3964,16 @@
                 button(
                   c.conferido ? "Reabrir" : "Marcar conferido",
                   () => {
-                    if (confirm("Confirmar alteração da conferência de " + room + "?"))
-                      commit({ acao: "conferir", ambiente: room, conferido: !c.conferido });
+                    if (
+                      confirm(
+                        "Confirmar alteração da conferência de " + room + "?",
+                      )
+                    )
+                      commit({
+                        acao: "conferir",
+                        ambiente: room,
+                        conferido: !c.conferido,
+                      });
                   },
                   "",
                   c.conferido ? "undo" : "check",
@@ -3139,7 +3989,10 @@
             .map((r) => {
               const n = el("div", undefined, "recent-row"),
                 text = el("div");
-              text.append(el("strong", r.dados.item), el("small", dateBR(r.criado_em)));
+              text.append(
+                el("strong", r.dados.item),
+                el("small", dateBR(r.criado_em)),
+              );
               n.append(
                 text,
                 button(
@@ -3182,6 +4035,29 @@
         }
       }
       function initForm() {
+        mountControlFields($("controlHost"));
+        // Ambiente dentro do formulário, antes das escolhas de controle.
+        const roomStep = $("rooms").closest(".step");
+        $("formRest").prepend(roomStep);
+        $("directDown").onchange = syncDirectDown;
+        $("moveSearch").oninput = renderMovementResults;
+        $("moveScan").onclick = () => openScanner("moveSearch");
+        $("createDown").onclick = () => {
+          if (
+            clean($("item").value) &&
+            !confirm("Substituir o rascunho atual por um cadastro para baixa?")
+          )
+            return;
+          $("repeat").checked = false;
+          resetForm();
+          showTab("register");
+          $("directDown").checked = true;
+          syncDirectDown();
+          const q = $("moveSearch").value.trim();
+          if (/^\d{6}$/.test(q)) $("code").value = q;
+          $("item").focus();
+          saveDraft();
+        };
         choices(
           $("categories"),
           "category",
@@ -3211,13 +4087,26 @@
           "room",
           ROOMS.map((v) => [v, v, v === "Almoxarifado" ? "shelf" : "room"]),
           ROOMS[0],
-          () => syncLocation(),
+          () => {
+            syncLocation();
+            syncControl();
+          },
         );
-        choices($("shelves"), "shelf", [..."ABCDE"], "", () => syncLocation(), false);
+        choices(
+          $("shelves"),
+          "shelf",
+          [..."ABCDE"],
+          "",
+          () => syncLocation(),
+          false,
+        );
         choices(
           $("levels"),
           "level",
-          [1, 2, 3, 4, 5, 6].map((v) => [String(v), String(v).padStart(2, "0")]),
+          [1, 2, 3, 4, 5, 6].map((v) => [
+            String(v),
+            String(v).padStart(2, "0"),
+          ]),
           "",
           () => syncLocation(),
           false,
@@ -3256,7 +4145,8 @@
       $("itemForm").addEventListener("change", saveDraft);
       $("itemForm").onsubmit = (e) => {
         e.preventDefault();
-        if (!busy && role !== "leitor" && $("itemForm").reportValidity()) saveRecord();
+        if (!busy && role !== "leitor" && $("itemForm").reportValidity())
+          saveRecord();
       };
       $("operationForm").onsubmit = (e) => {
         e.preventDefault();
@@ -3268,6 +4158,9 @@
             motivo: $("reason").value.trim(),
             data: $("downDate").value,
             documento: $("document").value.trim(),
+            quantidade: $("moveQuantity").value,
+            responsavel: $("movePerson").value.trim(),
+            destino: $("moveDestination").value.trim(),
           });
       };
       $("search").oninput = () => {
@@ -3281,7 +4174,10 @@
       };
       $("moreFilters").onclick = () => {
         $("filterPanel").hidden = !$("filterPanel").hidden;
-        $("moreFilters").setAttribute("aria-expanded", String(!$("filterPanel").hidden));
+        $("moreFilters").setAttribute(
+          "aria-expanded",
+          String(!$("filterPanel").hidden),
+        );
       };
       $("clearFilters").onclick = () => {
         if (!leaveEditor()) return;
@@ -3406,7 +4302,16 @@
             .formatToParts(new Date(value))
             .map((x) => [x.type, x.value]),
         );
-        return new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second));
+        return new Date(
+          Date.UTC(
+            +p.year,
+            +p.month - 1,
+            +p.day,
+            +p.hour,
+            +p.minute,
+            +p.second,
+          ),
+        );
       }
       async function exportExcel(all) {
         if (busy) return;
@@ -3414,7 +4319,9 @@
         try {
           await refresh();
           if (!window.ExcelJS)
-            throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
+            throw Error(
+              "A biblioteca do Excel ainda não carregou. Tente novamente.",
+            );
           const list = all ? [...rows] : filtered(),
             active = list.filter((r) => r.situacao === "ATIVO");
           const wb = new ExcelJS.Workbook();
@@ -3439,7 +4346,11 @@
               ]
                 .filter(Boolean)
                 .join(" · ") || "Todos os registros";
-          const fill = (argb) => ({ type: "pattern", pattern: "solid", fgColor: { argb } });
+          const fill = (argb) => ({
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb },
+          });
           function banner(ws, title, n) {
             ws.mergeCells(1, 1, 2, n);
             const c = ws.getCell(1, 1);
@@ -3451,19 +4362,31 @@
             ws.getRow(2).height = 22;
             ws.mergeCells(3, 1, 3, n);
             ws.getCell(3, 1).value =
-              "GIT · SME · Curitiba | " + dateBR(new Date()) + " | Horário de Curitiba";
-            ws.getCell(3, 1).font = { name: "Calibri", size: 10, color: { argb: color.muted } };
+              "GIT · SME · Curitiba | " +
+              dateBR(new Date()) +
+              " | Horário de Curitiba";
+            ws.getCell(3, 1).font = {
+              name: "Calibri",
+              size: 10,
+              color: { argb: color.muted },
+            };
             ws.getRow(3).height = 23;
             ws.mergeCells(4, 1, 4, n);
             ws.getCell(4, 1).value = scope;
             ws.getCell(4, 1).alignment = { wrapText: true, vertical: "middle" };
-            ws.getCell(4, 1).font = { name: "Calibri", size: 10, color: { argb: color.muted } };
+            ws.getCell(4, 1).font = {
+              name: "Calibri",
+              size: 10,
+              color: { argb: color.muted },
+            };
             ws.getRow(4).height = 32;
           }
           function table(name, headers, data, widths, dateColumns = []) {
             const ws = wb.addWorksheet(name, {
               properties: { tabColor: { argb: color.green } },
-              views: [{ state: "frozen", ySplit: 6, xSplit: 1, showGridLines: false }],
+              views: [
+                { state: "frozen", ySplit: 6, xSplit: 1, showGridLines: false },
+              ],
               pageSetup: {
                 paperSize: 9,
                 orientation: "landscape",
@@ -3488,7 +4411,12 @@
             ws.getRow(6).height = 30;
             ws.getRow(6).eachCell((c) => {
               c.fill = fill(color.green);
-              c.font = { name: "Calibri", size: 10, bold: true, color: { argb: "FFFFFFFF" } };
+              c.font = {
+                name: "Calibri",
+                size: 10,
+                bold: true,
+                color: { argb: "FFFFFFFF" },
+              };
               c.alignment = { vertical: "middle", wrapText: true };
             });
             data.forEach((values, index) => {
@@ -3523,8 +4451,11 @@
                   bold: j === 1,
                 };
                 cell.alignment = { vertical: "middle", wrapText: true };
-                cell.border = { bottom: { style: "hair", color: { argb: color.line } } };
-                if (dateColumns.includes(j)) cell.numFmt = "dd/mm/yyyy hh:mm:ss";
+                cell.border = {
+                  bottom: { style: "hair", color: { argb: color.line } },
+                };
+                if (dateColumns.includes(j))
+                  cell.numFmt = "dd/mm/yyyy hh:mm:ss";
                 else if (typeof cell.value === "string") cell.numFmt = "@";
               }
             });
@@ -3549,18 +4480,36 @@
           summary.columns = Array.from({ length: 8 }, () => ({ width: 12 }));
           for (let i = 1; i <= 41; i++) summary.getRow(i).height = 21;
           banner(summary, "Inventário do setor", 8);
-          function summaryText(range, text, size = 11, bg = color.paper, fg = color.ink) {
+          function summaryText(
+            range,
+            text,
+            size = 11,
+            bg = color.paper,
+            fg = color.ink,
+          ) {
             summary.mergeCells(range);
             const c = summary.getCell(range.split(":")[0]);
             c.value = text;
             c.fill = fill(bg);
-            c.font = { name: size >= 20 ? "Georgia" : "Calibri", size, color: { argb: fg } };
-            c.alignment = { vertical: "middle", wrapText: true, indent: 1, horizontal: "left" };
+            c.font = {
+              name: size >= 20 ? "Georgia" : "Calibri",
+              size,
+              color: { argb: fg },
+            };
+            c.alignment = {
+              vertical: "middle",
+              wrapText: true,
+              indent: 1,
+              horizontal: "left",
+            };
           }
           const values = [
             ["ATIVOS", active.length],
             ["BAIXADOS", list.filter((r) => r.situacao === "BAIXADO").length],
-            ["ARQUIVADOS", list.filter((r) => r.situacao === "ARQUIVADO").length],
+            [
+              "ARQUIVADOS",
+              list.filter((r) => r.situacao === "ARQUIVADO").length,
+            ],
             [
               "SEM ETIQUETA · ATIVOS",
               active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length,
@@ -3571,7 +4520,13 @@
             summaryText(c + "6:" + end + "6", values[i][0], 9, color.soft);
             summaryText(c + "7:" + end + "8", values[i][1], 30, color.soft);
           });
-          summaryText("A10:D10", "DISTRIBUIÇÃO POR AMBIENTE", 10, color.green, "FFFFFFFF");
+          summaryText(
+            "A10:D10",
+            "DISTRIBUIÇÃO POR AMBIENTE",
+            10,
+            color.green,
+            "FFFFFFFF",
+          );
           summaryText("E10:H10", "POR CATEGORIA", 10, color.green, "FFFFFFFF");
           ROOMS.forEach((room, i) => {
             summaryText("A" + (11 + i) + ":C" + (11 + i), room);
@@ -3585,7 +4540,13 @@
               (r) => r.dados.categoria === cat,
             ).length;
           });
-          summaryText("A15:H15", "IDENTIFICAÇÃO DOS ATIVOS", 10, color.green, "FFFFFFFF");
+          summaryText(
+            "A15:H15",
+            "IDENTIFICAÇÃO DOS ATIVOS",
+            10,
+            color.green,
+            "FFFFFFFF",
+          );
           Object.entries(TYPE).forEach(([t, label], i) => {
             summaryText("A" + (16 + i) + ":F" + (16 + i), label);
             summaryText(
@@ -3593,14 +4554,23 @@
               active.filter((r) => r.dados.tipo === t).length,
             );
           });
-          summaryText("A20:H20", "CONFERÊNCIA GERAL DOS AMBIENTES", 10, color.green, "FFFFFFFF");
+          summaryText(
+            "A20:H20",
+            "CONFERÊNCIA GERAL DOS AMBIENTES",
+            10,
+            color.green,
+            "FFFFFFFF",
+          );
           ROOMS.forEach((room, i) => {
             const c = checks.find((c) => c.ambiente === room);
             summaryText("A" + (21 + i * 2) + ":C" + (22 + i * 2), room);
             summaryText(
               "D" + (21 + i * 2) + ":H" + (22 + i * 2),
               c?.conferido
-                ? "Conferido · " + dateBR(c.momento) + " · " + shortEmail(c.email)
+                ? "Conferido · " +
+                    dateBR(c.momento) +
+                    " · " +
+                    shortEmail(c.email)
                 : "A conferir",
               10,
             );
@@ -3613,10 +4583,12 @@
           ctx.fillRect(0, 0, 1100, 350);
           ctx.fillStyle = "#173f35";
           ctx.font = "26px Georgia";
-          ctx.fillText("Itens ativos por ambiente", 25, 42);
+          ctx.fillText("Registros ativos por ambiente", 25, 42);
           const max = Math.max(
             1,
-            ...ROOMS.map((room) => active.filter((r) => r.dados.ambiente === room).length),
+            ...ROOMS.map(
+              (room) => active.filter((r) => r.dados.ambiente === room).length,
+            ),
           );
           ROOMS.forEach((room, i) => {
             const n = active.filter((r) => r.dados.ambiente === room).length,
@@ -3635,7 +4607,10 @@
             ctx.fillText(String(n), 1000, y);
           });
           summary.addImage(
-            wb.addImage({ base64: canvas.toDataURL("image/png"), extension: "png" }),
+            wb.addImage({
+              base64: canvas.toDataURL("image/png"),
+              extension: "png",
+            }),
             { tl: { col: 0, row: 28 }, ext: { width: 680, height: 216 } },
           );
           summaryText(
@@ -3712,6 +4687,57 @@
               ]),
             [19, 30, 22, 18, 55, 28, 32, 26],
           );
+          table(
+            "Estoque",
+            [
+              "Código interno",
+              "Material",
+              "Saldo",
+              "Unidade",
+              "Mínimo",
+              "Posição",
+              "Situação",
+              "Observação",
+            ],
+            list
+              .filter((r) => r.controle === "QUANTIDADE")
+              .map((r) => [
+                internal(r.id),
+                r.dados.item,
+                Number(r.saldo),
+                r.unidade,
+                Number(r.minimo),
+                locationText(r),
+                STATUS[r.situacao],
+                r.dados.observacao || "",
+              ]),
+            [20, 32, 16, 18, 16, 18, 20, 48],
+          );
+          table(
+            "Empréstimos",
+            [
+              "Código interno",
+              "Item",
+              "Etiqueta",
+              "Responsável",
+              "Local atual",
+              "Emprestado em (Curitiba)",
+              "Ambiente de origem",
+            ],
+            list
+              .filter((r) => r.situacao === "EMPRESTADO")
+              .map((r) => [
+                internal(r.id),
+                r.dados.item,
+                r.dados.codigo || "",
+                r.emprestimo?.responsavel || "",
+                r.emprestimo?.destino || "",
+                excelDate(r.emprestimo?.momento),
+                r.dados.ambiente,
+              ]),
+            [20, 32, 20, 30, 30, 28, 26],
+            [6],
+          );
           const buffer = await wb.xlsx.writeBuffer(),
             url = URL.createObjectURL(
               new Blob([buffer], {
@@ -3720,7 +4746,12 @@
             );
           const a = document.createElement("a");
           a.href = url;
-          a.download = "ACERVO_" + (all ? "completo" : "filtrado") + "_" + today() + ".xlsx";
+          a.download =
+            "ACERVO_" +
+            (all ? "completo" : "filtrado") +
+            "_" +
+            today() +
+            ".xlsx";
           a.click();
           setTimeout(() => URL.revokeObjectURL(url), 60000);
           toast("Excel gerado com " + list.length + " registros.");
@@ -3784,7 +4815,9 @@
       };
     `;
 
-          const url = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+          const url = URL.createObjectURL(
+            new Blob([source], { type: "text/javascript" }),
+          );
 
           barcodeWorker = new Worker(url);
           URL.revokeObjectURL(url);
@@ -3876,7 +4909,10 @@
 
         if (!v.videoWidth || !vr.width) return null;
 
-        const scale = Math.max(vr.width / v.videoWidth, vr.height / v.videoHeight);
+        const scale = Math.max(
+          vr.width / v.videoWidth,
+          vr.height / v.videoHeight,
+        );
 
         const ox = (vr.width - v.videoWidth * scale) / 2;
         const oy = (vr.height - v.videoHeight * scale) / 2;
@@ -3901,7 +4937,10 @@
         if (contrast) {
           for (let i = 0; i < img.data.length; i += 4) {
             let g =
-              (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) *
+              (img.data[i] * 0.299 +
+                img.data[i + 1] * 0.587 +
+                img.data[i + 2] * 0.114 -
+                128) *
                 1.5 +
               128;
 
@@ -3948,9 +4987,11 @@
         $("candidates").replaceChildren();
 
         for (const [value, entry] of [...s.candidates.entries()].slice(-4)) {
-          if (/^\d{6}$/.test(value)) {
+          if (validScanValue(value)) {
             $("candidates").append(
-              button("Usar " + value + " · " + entry.source, () => acceptCode(s, value)),
+              button("Usar " + value + " · " + entry.source, () =>
+                acceptCode(s, value),
+              ),
             );
           } else {
             const p = el("p");
@@ -3989,7 +5030,12 @@
 
         showCandidates(s);
 
-        if (automatic && /^\d{6}$/.test(value) && count >= 2 && s.candidates.size === 1) {
+        if (
+          automatic &&
+          validScanValue(value) &&
+          count >= 2 &&
+          s.candidates.size === 1
+        ) {
           acceptCode(s, value);
         }
       }
@@ -3999,6 +5045,10 @@
 
         $(scanTarget).value = value;
         closeScanner();
+        if (scanTarget === "moveSearch") {
+          renderMovementResults();
+          return;
+        }
         if (scanTarget === "code") saveDraft();
         duplicateHint();
 
@@ -4020,7 +5070,11 @@
           try {
             n++;
 
-            const frame = crop("barcodeGuide", n % 5 === 0, n % 4 === 2 ? 8 : n % 4 === 3 ? -8 : 0);
+            const frame = crop(
+              "barcodeGuide",
+              n % 5 === 0,
+              n % 4 === 2 ? 8 : n % 4 === 3 ? -8 : 0,
+            );
 
             if (frame) {
               const results = await decode(frame.image);
@@ -4035,7 +5089,8 @@
             }
           } catch (e) {
             if (scene === s) {
-              $("cameraStatus").textContent = "Barras: " + e.message + ". OCR continua disponível.";
+              $("cameraStatus").textContent =
+                "Barras: " + e.message + ". OCR continua disponível.";
             }
 
             if (++errors >= 3) break;
@@ -4064,7 +5119,8 @@
             if (scene !== s) break;
 
             if (!w) {
-              $("cameraStatus").textContent = "OCR indisponível; a leitura de códigos continua.";
+              $("cameraStatus").textContent =
+                "OCR indisponível; a leitura de códigos continua.";
               break;
             }
 
@@ -4087,7 +5143,8 @@
             }
           } catch (e) {
             if (scene === s) {
-              $("cameraStatus").textContent = "OCR falhou; leitura de códigos continua.";
+              $("cameraStatus").textContent =
+                "OCR falhou; leitura de códigos continua.";
             }
 
             break;
@@ -4104,7 +5161,9 @@
           scene ||
           busy ||
           pending ||
-          value(target === "editCode" ? "editType" : "type") === "SEM_IDENTIFICACAO"
+          (target !== "moveSearch" &&
+            value(target === "editCode" ? "editType" : "type") ===
+              "SEM_IDENTIFICACAO")
         )
           return;
 
@@ -4118,7 +5177,9 @@
         scene = s;
 
         $("cameraTitle").textContent =
-          "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
+          target === "moveSearch"
+            ? "Buscar item para movimentar"
+            : "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
         $("cameraStatus").textContent = "Procurando códigos…";
         $("candidates").replaceChildren();
         $("torch").disabled = true;
@@ -4233,10 +5294,15 @@
           if (scene === s) {
             s.torch = !s.torch;
             $("torch").setAttribute("aria-pressed", String(s.torch));
-            $("torch").setAttribute("aria-label", s.torch ? "Desligar lanterna" : "Ligar lanterna");
+            $("torch").setAttribute(
+              "aria-label",
+              s.torch ? "Desligar lanterna" : "Ligar lanterna",
+            );
           }
         } catch {
-          if (scene === s) $("cameraStatus").textContent = "Lanterna indisponível nesta câmera.";
+          if (scene === s)
+            $("cameraStatus").textContent =
+              "Lanterna indisponível nesta câmera.";
         } finally {
           if (scene === s) $("torch").disabled = false;
         }
@@ -4248,7 +5314,9 @@
         try {
           await cameraSettings(s, { zoom: Number($("zoom").value) });
         } catch {
-          if (scene === s) $("cameraStatus").textContent = "Não foi possível aplicar esse zoom.";
+          if (scene === s)
+            $("cameraStatus").textContent =
+              "Não foi possível aplicar esse zoom.";
         } finally {
           if (scene === s) {
             $("zoom").value = s.track.getSettings().zoom ?? $("zoom").value;
@@ -4262,13 +5330,16 @@
           options = {};
         for (const key of ["zoom", "torch", "focusMode"])
           if (current[key] !== undefined) options[key] = current[key];
-        await s.track.applyConstraints({ advanced: [{ ...options, ...change }] });
+        await s.track.applyConstraints({
+          advanced: [{ ...options, ...change }],
+        });
       }
 
       initForm();
       (async () => {
         if (!db) {
-          $("loginMessage").textContent = "Biblioteca de conexão indisponível. Atualize a página.";
+          $("loginMessage").textContent =
+            "Biblioteca de conexão indisponível. Atualize a página.";
           return;
         }
         const { data, error } = await db.auth.getSession();

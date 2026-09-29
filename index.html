@@ -562,7 +562,7 @@
       }
       .stats {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin: 20px 0;
       }
@@ -1538,10 +1538,22 @@
         }
       }
       .stock-control {
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 16px;
-        background: linear-gradient(120deg, #f2f6e9, #fffefa);
+        padding: 0;
+      }
+      .optional-fields > summary {
+        cursor: pointer;
+        color: var(--muted);
+        padding: 12px 0;
+        font-size: 13px;
+      }
+      .optional-fields[open] > summary {
+        margin-bottom: 10px;
+      }
+      #registrationSave {
+        display: block;
+      }
+      #registrationSave > button {
+        width: 100%;
       }
       .movement-result {
         border: 1px solid var(--line);
@@ -1554,9 +1566,6 @@
       }
       .movement-result .actions {
         flex-wrap: wrap;
-      }
-      #stockMetrics > button {
-        margin-right: 8px;
       }
       #directReasonWrap {
         margin-bottom: 16px;
@@ -1897,7 +1906,8 @@
                         </div>
                       </div>
                     </div>
-                    <div class="step">
+                    <details class="step optional-fields">
+                      <summary>Observação e cadastro em sequência</summary>
                       <label for="note"
                         >Observação <small>· opcional</small></label
                       ><textarea
@@ -1909,15 +1919,19 @@
                         ><input id="repeat" type="checkbox" />Manter nome e
                         categoria para o próximo item</label
                       >
-                    </div>
+                    </details>
                   </div>
-                  <div class="savebar">
+                  <div class="savebar" id="registrationSave" hidden>
                     <div class="spaced">
-                      <label class="check"
-                        ><input id="directDown" type="checkbox" />Registrar
-                        diretamente como baixado</label
-                      >
+                      <input id="directDown" type="checkbox" hidden />
                       <div id="directReasonWrap" hidden>
+                        <p>
+                          Cadastro para descarte · o item será salvo como
+                          baixado.
+                        </p>
+                        <button type="button" id="cancelDirectDown">
+                          Voltar ao cadastro ativo
+                        </button>
                         <label for="directReason">Motivo da baixa</label>
                         <textarea
                           id="directReason"
@@ -2396,6 +2410,7 @@
         ocrBusy = false,
         barcodeBusy = false;
       let filters = {
+        controle: "",
         ambiente: "",
         categoria: "",
         tipo: "",
@@ -2590,7 +2605,7 @@
         const box = el("div", undefined, "stock-control");
         const group = el("fieldset"),
           opts = el("div", undefined, "choices");
-        group.append(el("legend", "Como controlar este item?"), opts);
+        group.append(el("legend", "Controle"), opts);
         choices(
           opts,
           e ? "editControl" : "control",
@@ -2639,37 +2654,36 @@
           { min: 0, max: 99999999999, step: "0.001" },
         );
         qty.readOnly = e;
-        const uw = el("div"),
-          ul = el("label", "Unidade de medida"),
-          unit = el("select");
+        const unit = el("input");
         unit.id = id("unit");
-        ul.htmlFor = unit.id;
-        for (const u of ["unidade", "rolo", "kg", "metro", "litro", "caixa"]) {
-          const o = el("option", u);
-          o.value = u;
-          unit.append(o);
-        }
+        unit.type = "hidden";
         unit.value = record?.unidade || "unidade";
         unit.disabled = e;
-        uw.append(ul, unit);
-        stock.append(uw);
+        stock.append(unit);
+        const extras = el("details", undefined, "optional-fields");
+        extras.append(el("summary", "Alerta de saldo · opcional"));
         input(
-          stock,
+          extras,
           "minimum",
           "Avisar quando o saldo chegar a",
           "number",
           record?.minimo ?? 0,
           { min: 0, max: 99999999999, step: "0.001" },
         );
+        stock.append(extras);
         box.append(stock);
+        const phone = el("details", undefined, "optional-fields");
+        phone.append(el("summary", "Adicionar ramal · opcional"));
+        phone.open = !!record?.dados?.ramal;
         input(
-          box,
+          phone,
           "extension",
           "Ramal / referência telefônica · opcional",
           "text",
           record?.dados?.ramal || "",
           { maxlength: 30 },
         );
+        box.append(phone);
         if (e) host.prepend(box);
         else host.replaceChildren(box);
         syncControl(prefix);
@@ -2684,15 +2698,15 @@
         box.hidden = !stock;
         box.querySelectorAll("input").forEach((n) => {
           n.disabled = !stock;
-          n.required = stock;
+          n.required = stock && n.id === id("quantity");
         });
         $(id("unit")).disabled = !stock || e;
         const room = value(e ? "editRoom" : "room");
         $(id("controlHint")).textContent = stock
           ? room && room !== "Almoxarifado"
             ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
-            : "Um código interno para o estoque, com entradas e saídas por quantidade. Selecione Sem identificação abaixo."
-          : "Cada unidade terá seu próprio código e histórico. Você pode escolher outra opção antes de cadastrar.";
+            : "Saldo em unidades. Use Sem identificação para gerar o código do estoque."
+          : "Um código e histórico por item.";
       }
 
       function syncDirectDown() {
@@ -2843,63 +2857,6 @@
         labelButton($("confirmOperation"), ACTION[a], "check");
       }
 
-      function renderStockMetrics() {
-        let target = $("stockMetrics");
-        if (!target) {
-          target = el("div", undefined, "card spaced");
-          target.id = "stockMetrics";
-          $("dashboard").prepend(target);
-        }
-        target.replaceChildren(el("h2", "Estoque e empréstimos"));
-        const stock = rows.filter(
-            (r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO",
-          ),
-          loans = rows.filter((r) => r.situacao === "EMPRESTADO");
-        const low = stock.filter((r) => Number(r.saldo) <= Number(r.minimo));
-        target.append(
-          el(
-            "p",
-            `${stock.length} estoques ativos · ${loans.length} itens emprestados · ${low.length} estoques no mínimo ou abaixo`,
-            "muted",
-          ),
-        );
-        const actions = el("div", undefined, "actions");
-        actions.append(
-          button(
-            "Consultar empréstimos",
-            () => query({ situacao: "EMPRESTADO" }),
-            "",
-            "arrow",
-          ),
-        );
-        target.append(actions);
-        for (const r of low.slice(0, 8))
-          target.append(
-            button(
-              `${r.dados.item}: ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`,
-              () => {
-                showTab("movements");
-                $("moveSearch").value = internal(r.id);
-                renderMovementResults();
-              },
-              "spaced",
-              "box",
-            ),
-          );
-        if (!low.length)
-          target.append(
-            el("p", "Nenhum estoque no limite configurado.", "hint"),
-          );
-        if (low.length > 8)
-          target.append(
-            el(
-              "p",
-              `Mais ${low.length - 8} estoques no limite. Consulte os saldos na aba Consultar.`,
-              "hint",
-            ),
-          );
-      }
-
       function validScanValue(v) {
         return scanTarget === "moveSearch"
           ? /^\d{6}$/.test(v) || /^ACV-\d+$/i.test(v)
@@ -2947,6 +2904,7 @@
       function syncForm() {
         const ready = clean($("item").value).length >= 2;
         $("formRest").hidden = !ready;
+        $("registrationSave").hidden = !ready;
         syncCode();
         syncLocation();
         syncControl();
@@ -3217,6 +3175,8 @@
                   ].join(" "),
                 ).includes(q)) &&
               (!filters.ambiente || d.ambiente === filters.ambiente) &&
+              (!filters.controle ||
+                (r.controle || "INDIVIDUAL") === filters.controle) &&
               (!filters.categoria || d.categoria === filters.categoria) &&
               (!filters.tipo || d.tipo === filters.tipo) &&
               (!filters.situacao || r.situacao === filters.situacao) &&
@@ -3292,6 +3252,7 @@
         );
         $("warehouseFilters").hidden = filters.ambiente !== "Almoxarifado";
         const names = {
+          controle: "Controle",
           ambiente: "Ambiente",
           categoria: "Categoria",
           tipo: "Identificação",
@@ -3306,7 +3267,11 @@
             .filter(([, v]) => v)
             .map(([f, v]) =>
               button(
-                names[f] + ": " + (TYPE[v] || STATUS[v] || v),
+                names[f] +
+                  ": " +
+                  (TYPE[v] ||
+                    STATUS[v] ||
+                    (v === "QUANTIDADE" ? "Por quantidade" : v)),
                 () => changeFilter(f, ""),
                 "chip",
                 "close",
@@ -3788,11 +3753,22 @@
         );
       }
       function renderMetrics() {
-        renderStockMetrics();
         const active = rows.filter((r) => r.situacao === "ATIVO"),
           count = (f, v) => active.filter((r) => r.dados[f] === v).length;
         const metrics = [
           ["Registros ativos", active.length, "box", { situacao: "ATIVO" }],
+          [
+            "Emprestados",
+            rows.filter((r) => r.situacao === "EMPRESTADO").length,
+            "arrow",
+            { situacao: "EMPRESTADO" },
+          ],
+          [
+            "Estoques ativos",
+            active.filter((r) => r.controle === "QUANTIDADE").length,
+            "box",
+            { situacao: "ATIVO", controle: "QUANTIDADE" },
+          ],
           [
             "Baixados",
             rows.filter((r) => r.situacao === "BAIXADO").length,
@@ -3937,6 +3913,32 @@
         $("unplaced").textContent = missing
           ? missing + " registros ativos ainda sem posição definida."
           : "Todas as posições cadastradas estão representadas.";
+        let alerts = $("stockAlerts");
+        if (!alerts) {
+          alerts = el("div", undefined, "actions spaced");
+          alerts.id = "stockAlerts";
+          $("unplaced").after(alerts);
+        }
+        alerts.replaceChildren(
+          ...active
+            .filter(
+              (r) =>
+                r.controle === "QUANTIDADE" &&
+                Number(r.saldo) <= Number(r.minimo),
+            )
+            .map((r) =>
+              button(
+                `${r.dados.item}: ${r.saldo} un. · saldo no mínimo`,
+                () => {
+                  showTab("movements");
+                  $("moveSearch").value = internal(r.id);
+                  renderMovementResults();
+                },
+                "chip",
+                "box",
+              ),
+            ),
+        );
         const done = ROOMS.filter((room) =>
           checks.some((c) => c.ambiente === room && c.conferido),
         ).length;
@@ -4040,6 +4042,12 @@
         const roomStep = $("rooms").closest(".step");
         $("formRest").prepend(roomStep);
         $("directDown").onchange = syncDirectDown;
+        $("cancelDirectDown").onclick = () => {
+          $("directDown").checked = false;
+          $("directReason").value = "";
+          syncDirectDown();
+          saveDraft();
+        };
         $("moveSearch").oninput = renderMovementResults;
         $("moveScan").onclick = () => openScanner("moveSearch");
         $("createDown").onclick = () => {

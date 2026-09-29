@@ -1540,6 +1540,138 @@
       .stock-control {
         padding: 0;
       }
+      #register .workspace {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      #register .side {
+        display: none;
+      }
+      #formRest {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr);
+        gap: 0 28px;
+      }
+      #whereBlock {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      #identityBlock {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      #notesBlock {
+        grid-column: 1 / -1;
+      }
+      #controlHost {
+        border: 0;
+        padding-top: 0;
+        margin-top: 0;
+      }
+      #identityBlock > .step-title {
+        margin-top: 16px;
+      }
+      #levels {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+      #levels .choice span {
+        min-height: 32px;
+        justify-content: flex-start;
+        padding: 6px 14px;
+        border-bottom-width: 3px;
+      }
+      .item-category {
+        margin: 20px 0;
+        max-width: 560px;
+      }
+      .initial-state {
+        max-width: 380px;
+      }
+      .registration-summary {
+        padding: 16px 18px;
+        background: linear-gradient(120deg, #edf3e2, #f8faf3);
+        border-left: 3px solid #7f9b59;
+        border-radius: 0 12px 12px 0;
+        line-height: 1.7;
+      }
+      .disposal .registration-summary {
+        background: #fff0e9;
+        border-color: #ad6345;
+      }
+      .disposal #save {
+        background: linear-gradient(120deg, #995d42, #744432);
+      }
+      #registrationSave {
+        position: static;
+        padding: 0;
+        background: transparent;
+        border: 0;
+      }
+      #note {
+        min-height: 72px;
+      }
+      .availability {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin: 16px 0 24px;
+      }
+      .availability-track {
+        display: flex;
+        flex: 1 1 220px;
+        height: 14px;
+        overflow: hidden;
+        border-radius: 20px;
+        background: #e9eee4;
+      }
+      .availability-track button {
+        padding: 0;
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        background: #315845;
+      }
+      .availability-track button:last-child {
+        background: #b6c98d;
+      }
+      @media (max-width: 700px) {
+        #formRest {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        #whereBlock {
+          order: 0;
+        }
+        #identityBlock {
+          order: 1;
+        }
+        #notesBlock {
+          order: 2;
+        }
+        #registrationSave {
+          position: static;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        #location:not([hidden]),
+        #stockFields:not([hidden]),
+        #directReasonWrap:not([hidden]) {
+          animation: fieldReveal 0.22s ease-out;
+        }
+        @keyframes fieldReveal {
+          from {
+            opacity: 0;
+            transform: translateY(5px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      }
       .optional-fields > summary {
         cursor: pointer;
         color: var(--muted);
@@ -1906,8 +2038,7 @@
                         </div>
                       </div>
                     </div>
-                    <details class="step optional-fields">
-                      <summary>Observação e cadastro em sequência</summary>
+                    <div class="step" id="notesBlock">
                       <label for="note"
                         >Observação <small>· opcional</small></label
                       ><textarea
@@ -1915,15 +2046,21 @@
                         maxlength="2000"
                         placeholder="Uma referência que ajude a encontrar este item"
                       ></textarea
-                      ><label class="check"
-                        ><input id="repeat" type="checkbox" />Manter nome e
-                        categoria para o próximo item</label
-                      >
-                    </details>
+                      ><input id="repeat" type="checkbox" hidden />
+                    </div>
                   </div>
                   <div class="savebar" id="registrationSave" hidden>
                     <div class="spaced">
+                      <fieldset class="initial-state">
+                        <legend>Situação inicial</legend>
+                        <div class="choices" id="initialState"></div>
+                      </fieldset>
                       <input id="directDown" type="checkbox" hidden />
+                      <p
+                        id="registrationSummary"
+                        class="registration-summary"
+                        aria-live="polite"
+                      ></p>
                       <div id="directReasonWrap" hidden>
                         <p>
                           Cadastro para descarte · o item será salvo como
@@ -2127,17 +2264,26 @@
             <span id="conferenceSummary" class="badge"></span>
           </div>
           <div id="stats" class="stats"></div>
+          <div id="availability" class="availability"></div>
+          <div class="card">
+            <h3>Últimas movimentações</h3>
+            <p class="hint">
+              Ações registradas, com pessoa e horário de Curitiba.
+            </p>
+            <div id="movementTimeline"></div>
+          </div>
           <div class="dash-grid">
             <div class="card">
               <h3>Onde estão os bens</h3>
               <p class="hint">
-                Registros ativos por ambiente. Clique para consultar.
+                Ativos e emprestados por ambiente de origem. Clique para
+                consultar.
               </p>
               <div id="roomChart"></div>
             </div>
             <div class="card">
               <h3>Composição do acervo</h3>
-              <p class="hint">Registros ativos por categoria.</p>
+              <p class="hint">Ativos e emprestados por categoria.</p>
               <div id="categoryChart"></div>
             </div>
             <div class="card">
@@ -2578,8 +2724,8 @@
           v
             ? "Salvando…"
             : $("directDown").checked
-              ? "Registrar e dar baixa"
-              : "Salvar e cadastrar próximo",
+              ? "Registrar descarte"
+              : "Salvar registro",
           v ? "clock" : "save",
         );
         $("previous").disabled = v || page <= 1;
@@ -2660,8 +2806,7 @@
         unit.value = record?.unidade || "unidade";
         unit.disabled = e;
         stock.append(unit);
-        const extras = el("details", undefined, "optional-fields");
-        extras.append(el("summary", "Alerta de saldo · opcional"));
+        const extras = el("div");
         input(
           extras,
           "minimum",
@@ -2672,18 +2817,6 @@
         );
         stock.append(extras);
         box.append(stock);
-        const phone = el("details", undefined, "optional-fields");
-        phone.append(el("summary", "Adicionar ramal · opcional"));
-        phone.open = !!record?.dados?.ramal;
-        input(
-          phone,
-          "extension",
-          "Ramal / referência telefônica · opcional",
-          "text",
-          record?.dados?.ramal || "",
-          { maxlength: 30 },
-        );
-        box.append(phone);
         if (e) host.prepend(box);
         else host.replaceChildren(box);
         syncControl(prefix);
@@ -2701,22 +2834,31 @@
           n.required = stock && n.id === id("quantity");
         });
         $(id("unit")).disabled = !stock || e;
+        if (!e) {
+          if (stock) setChoice("type", "SEM_IDENTIFICACAO");
+          $("types").closest("fieldset").hidden = stock;
+          syncCode();
+          updateRegistrationSummary();
+        }
         const room = value(e ? "editRoom" : "room");
         $(id("controlHint")).textContent = stock
           ? room && room !== "Almoxarifado"
             ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
-            : "Saldo em unidades. Use Sem identificação para gerar o código do estoque."
+            : "Código interno gerado ao salvar. Saldo em unidades."
           : "Um código e histórico por item.";
       }
 
       function syncDirectDown() {
         const active = $("directDown").checked;
+        setChoice("initialStatus", active ? "BAIXADO" : "ATIVO");
+        $("itemForm").classList.toggle("disposal", active);
+        updateRegistrationSummary();
         $("directReasonWrap").hidden = !active;
         $("directReason").required = active;
         $("directReason").disabled = !active;
         labelButton(
           $("save"),
-          active ? "Registrar e dar baixa" : "Salvar e cadastrar próximo",
+          active ? "Registrar descarte" : "Salvar registro",
           active ? "down" : "save",
         );
       }
@@ -2908,6 +3050,7 @@
         syncCode();
         syncLocation();
         syncControl();
+        updateRegistrationSummary();
       }
       function winner(list, field) {
         const count = new Map();
@@ -3010,8 +3153,52 @@
           quantidade: $(e ? "editQuantity" : "quantity")?.value || "1",
           unidade: $(e ? "editUnit" : "unit")?.value || "unidade",
           minimo: $(e ? "editMinimum" : "minimum")?.value || "0",
-          ramal: $(e ? "editExtension" : "extension")?.value.trim() || "",
+          ramal: e
+            ? rows.find((r) => r.id === editor?.id)?.dados?.ramal || ""
+            : "",
         };
+      }
+      function updateRegistrationSummary() {
+        if (!$("registrationSummary")) return;
+        const d = formData();
+        const stock = d.controle === "QUANTIDADE";
+        const place =
+          d.ambiente === "Almoxarifado"
+            ? `Estante ${d.estante || "?"}, prateleira ${d.prateleira || "?"}`
+            : d.ambiente;
+        $("registrationSummary").textContent = clean(d.item)
+          ? `${stock ? d.quantidade + " unidades de" : "1"} ${d.item} · ${stock || d.tipo === "SEM_IDENTIFICACAO" ? "Código interno automático" : (d.tipo || "Escolha a identificação") + " " + d.codigo} · ${place || "Escolha o ambiente"} · ${$("directDown").checked ? "Será registrado como descartado" : "Ativo"}`
+          : "Preencha a ficha para conferir o registro.";
+      }
+      function repeatRegistration(d) {
+        if (
+          clean($("item").value) &&
+          !confirm("Substituir o rascunho por outro item igual?")
+        )
+          return;
+        resetForm();
+        $("item").value = d.item;
+        for (const [name, field] of [
+          ["category", "categoria"],
+          ["type", "tipo"],
+          ["room", "ambiente"],
+          ["shelf", "estante"],
+          ["level", "prateleira"],
+          ["control", "controle"],
+        ])
+          setChoice(name, d[field]);
+        $("minimum").value = d.minimo || "0";
+        manual = { categoria: true, tipo: true, controle: true };
+        learnedKey = key(d.item);
+        syncForm();
+        saveDraft();
+        $("saved").hidden = true;
+        (d.controle === "QUANTIDADE"
+          ? $("quantity")
+          : d.tipo === "SEM_IDENTIFICACAO"
+            ? $("item")
+            : $("code")
+        ).focus();
       }
       function saveDraft() {
         if (!user || busy) return;
@@ -3049,7 +3236,6 @@
         $("quantity").value = r.quantidade || "1";
         $("unit").value = r.unidade || "unidade";
         $("minimum").value = r.minimo || "0";
-        $("extension").value = r.ramal || "";
         $("directDown").checked = !!d.baixaDireta;
         $("directReason").value = d.motivo || "";
         syncDirectDown();
@@ -3058,11 +3244,10 @@
         syncForm();
       }
       function resetForm() {
-        const keep = $("repeat").checked;
+        const keep = false;
         $("code").value = "";
         $("note").value = "";
         $("quantity").value = "1";
-        $("extension").value = "";
         $("directDown").checked = false;
         $("directReason").value = "";
         syncDirectDown();
@@ -3121,6 +3306,7 @@
             if (snapshot !== lastSnapshot) {
               lastSnapshot = snapshot;
               renderMetrics();
+              renderMovementTimeline();
               if (editor) {
                 $("listNotice").hidden = false;
                 if (role === "leitor") $("editFields").disabled = true;
@@ -3179,7 +3365,10 @@
                 (r.controle || "INDIVIDUAL") === filters.controle) &&
               (!filters.categoria || d.categoria === filters.categoria) &&
               (!filters.tipo || d.tipo === filters.tipo) &&
-              (!filters.situacao || r.situacao === filters.situacao) &&
+              (!filters.situacao ||
+                (filters.situacao === "EM_USO"
+                  ? ["ATIVO", "EMPRESTADO"].includes(r.situacao)
+                  : r.situacao === filters.situacao)) &&
               (!filters.estante || d.estante === filters.estante) &&
               (!filters.prateleira ||
                 String(d.prateleira) === filters.prateleira) &&
@@ -3270,7 +3459,7 @@
                 names[f] +
                   ": " +
                   (TYPE[v] ||
-                    STATUS[v] ||
+                    (v === "EM_USO" ? "Ativos e emprestados" : STATUS[v]) ||
                     (v === "QUANTIDADE" ? "Por quantidade" : v)),
                 () => changeFilter(f, ""),
                 "chip",
@@ -3404,7 +3593,6 @@
               ? `Por quantidade · ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`
               : "Individual",
           ],
-          ["Ramal", r.dados.ramal || "—"],
         ])
           dl.append(el("dt", label), el("dd", text));
         panel.append(dl);
@@ -3693,9 +3881,20 @@
             op.body.acao === "salvar" &&
             (op.origin === "create" || !op.body.id)
           ) {
+            const template = { ...op.body.dados };
             resetForm();
-            $("saved").textContent =
-              internal(result.id) + " · " + result.dados.item + " salvo.";
+            $("saved").replaceChildren(
+              el(
+                "p",
+                internal(result.id) + " · " + result.dados.item + " salvo.",
+              ),
+              button(
+                "Cadastrar outro igual",
+                () => repeatRegistration(template),
+                "",
+                "plus",
+              ),
+            );
             $("saved").hidden = false;
             storage("draft", {
               dados: formData(),
@@ -3752,9 +3951,118 @@
           }),
         );
       }
+      let timelineGeneration = 0;
+      const timelineCache = new Map();
+      async function renderMovementTimeline() {
+        const generation = ++timelineGeneration;
+        const owner = user?.id;
+        const candidates = [...rows]
+          .sort(
+            (a, b) =>
+              new Date(b.atualizado_em || b.criado_em) -
+              new Date(a.atualizado_em || a.criado_em),
+          )
+          .slice(0, 12);
+        $("movementTimeline").textContent = "Carregando movimentações…";
+        try {
+          const histories = await Promise.all(
+            candidates.map(async (r) => {
+              const cacheKey = `${owner}:${r.id}:${r.versao}`;
+              let history = timelineCache.get(cacheKey);
+              if (!history) {
+                history = await rpc("acervo_historico", { p_id: r.id });
+                timelineCache.set(cacheKey, history);
+              }
+              return history.map((h) => ({
+                ...h,
+                itemName: r.dados.item,
+                itemId: r.id,
+              }));
+            }),
+          );
+          if (generation !== timelineGeneration || user?.id !== owner) return;
+          const events = histories
+            .flat()
+            .sort(
+              (a, b) =>
+                new Date(b.momento) - new Date(a.momento) || b.id - a.id,
+            )
+            .slice(0, 12);
+          $("movementTimeline").replaceChildren(
+            ...events.map((h) => {
+              const row = el("div", undefined, "recent-row");
+              row.append(
+                el("strong", h.itemName),
+                el("span", historyAction(h)),
+                el("small", `${shortEmail(h.email)} · ${dateBR(h.momento)}`),
+                button(
+                  "Consultar",
+                  () => {
+                    query({});
+                    $("search").value = internal(h.itemId);
+                    renderList();
+                  },
+                  "",
+                  "right",
+                ),
+              );
+              return row;
+            }),
+          );
+          if (!events.length)
+            $("movementTimeline").textContent =
+              "As movimentações aparecerão aqui.";
+        } catch {
+          if (generation === timelineGeneration)
+            $("movementTimeline").replaceChildren(
+              el("p", "Não foi possível carregar as movimentações."),
+              button("Tentar novamente", renderMovementTimeline),
+            );
+        }
+      }
       function renderMetrics() {
+        const individual = rows.filter(
+          (r) =>
+            r.controle !== "QUANTIDADE" &&
+            ["ATIVO", "EMPRESTADO"].includes(r.situacao),
+        );
+        const available = individual.filter(
+          (r) => r.situacao === "ATIVO",
+        ).length;
+        const borrowed = individual.length - available;
+        const track = el("div", undefined, "availability-track");
+        for (const [label, n, state] of [
+          ["Disponíveis", available, "ATIVO"],
+          ["Emprestados", borrowed, "EMPRESTADO"],
+        ]) {
+          if (!n) continue;
+          const b = button("", () =>
+            query({ controle: "INDIVIDUAL", situacao: state }),
+          );
+          b.style.width = (n / individual.length) * 100 + "%";
+          b.setAttribute("aria-label", `${label}: ${n}`);
+          b.title = `${label}: ${n}`;
+          track.append(b);
+        }
+        $("availability").replaceChildren(
+          el("strong", `${individual.length} bens em uso`),
+          track,
+          button(
+            `${available} disponíveis`,
+            () => query({ controle: "INDIVIDUAL", situacao: "ATIVO" }),
+            "chip",
+          ),
+          button(
+            `${borrowed} emprestados`,
+            () => query({ controle: "INDIVIDUAL", situacao: "EMPRESTADO" }),
+            "chip",
+          ),
+        );
         const active = rows.filter((r) => r.situacao === "ATIVO"),
-          count = (f, v) => active.filter((r) => r.dados[f] === v).length;
+          inUse = rows.filter((r) =>
+            ["ATIVO", "EMPRESTADO"].includes(r.situacao),
+          ),
+          count = (f, v) => inUse.filter((r) => r.dados[f] === v).length;
         const metrics = [
           ["Registros ativos", active.length, "box", { situacao: "ATIVO" }],
           [
@@ -3777,7 +4085,7 @@
           ],
           [
             "Sem etiqueta · ativos",
-            count("tipo", "SEM_IDENTIFICACAO"),
+            active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length,
             "none",
             { situacao: "ATIVO", tipo: "SEM_IDENTIFICACAO" },
           ],
@@ -3798,23 +4106,23 @@
         chart(
           "roomChart",
           ROOMS.map((v) => [v, count("ambiente", v)]),
-          active.length,
-          (v) => query({ ambiente: v, situacao: "ATIVO" }),
+          inUse.length,
+          (v) => query({ ambiente: v, situacao: "EM_USO" }),
         );
         chart(
           "categoryChart",
           CATEGORIES.map((v) => [v, count("categoria", v)]),
-          active.length,
-          (v) => query({ categoria: v, situacao: "ATIVO" }),
+          inUse.length,
+          (v) => query({ categoria: v, situacao: "EM_USO" }),
         );
         chart(
           "typeChart",
           Object.entries(TYPE).map(([v, n]) => [n, count("tipo", v), v]),
-          active.length,
-          (v) => query({ tipo: v, situacao: "ATIVO" }),
+          inUse.length,
+          (v) => query({ tipo: v, situacao: "EM_USO" }),
         );
         const items = new Map();
-        active.forEach((r) => {
+        inUse.forEach((r) => {
           const k = key(r.dados.item),
             o = items.get(k) || { name: r.dados.item, n: 0 };
           o.n++;
@@ -3826,8 +4134,8 @@
             .sort((a, b) => b.n - a.n)
             .slice(0, 6)
             .map((o) => [o.name, o.n]),
-          active.length,
-          (v) => query({ item: v, situacao: "ATIVO" }),
+          inUse.length,
+          (v) => query({ item: v, situacao: "EM_USO" }),
         );
         if (!items.size)
           $("topChart").textContent =
@@ -3895,6 +4203,18 @@
                 }),
               );
               b.append(el("span", String(l).padStart(2, "0")), el("b", n));
+              const low = active.some(
+                (r) =>
+                  r.controle === "QUANTIDADE" &&
+                  r.dados.estante === s &&
+                  String(r.dados.prateleira) === String(l) &&
+                  Number(r.saldo) <= Number(r.minimo),
+              );
+              if (low) {
+                b.append(el("span", "!"));
+                b.title = "Material no saldo mínimo nesta posição";
+                b.style.outline = "2px solid #ad7750";
+              }
               b.style.setProperty("--heat", Math.min(85, n * 12) + "%");
               b.setAttribute(
                 "aria-label",
@@ -4038,9 +4358,36 @@
       }
       function initForm() {
         mountControlFields($("controlHost"));
-        // Ambiente dentro do formulário, antes das escolhas de controle.
+        const rest = $("formRest");
         const roomStep = $("rooms").closest(".step");
-        $("formRest").prepend(roomStep);
+        roomStep.id = "whereBlock";
+        const identity = $("types").closest(".step");
+        identity.id = "identityBlock";
+        identity.querySelector(".step-title").textContent =
+          "03 / Como registrar";
+        const category = $("categories").closest("fieldset");
+        category.classList.add("item-category");
+        $("learningHint").after(category);
+        const heading = el("div", "01 / O que é", "step-title");
+        $("item").previousElementSibling.before(heading);
+        roomStep.querySelector(".step-title").textContent = "02 / Onde fica";
+        rest.prepend(roomStep);
+        identity.querySelector(".step-title").after($("controlHost"));
+        choices(
+          $("initialState"),
+          "initialStatus",
+          [
+            ["ATIVO", "Ativo", "check"],
+            ["BAIXADO", "Baixado / descarte", "down"],
+          ],
+          "ATIVO",
+          () => {
+            $("directDown").checked = value("initialStatus") === "BAIXADO";
+            syncDirectDown();
+          },
+        );
+        $("itemForm").addEventListener("input", updateRegistrationSummary);
+        $("itemForm").addEventListener("change", updateRegistrationSummary);
         $("directDown").onchange = syncDirectDown;
         $("cancelDirectDown").onclick = () => {
           $("directDown").checked = false;

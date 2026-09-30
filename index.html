@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-jei22ozMmRcpz6aSXultffgkts1lOhlC/38mDF7QzYA=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-g8BQYyKrUHapqZqnyJEBaC3S0YiCvGTi1yN+zl8Nl7I=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -2138,7 +2138,7 @@
           radial-gradient(ellipse at center, #45664370, transparent 65%),
           #10392f;
         pointer-events: none;
-        transition: opacity 0.25s;
+        transition: opacity 0.38s;
       }
       #introMark {
         width: 112px;
@@ -2162,7 +2162,7 @@
         background: transparent;
       }
       .brand-intro.departing #introMark {
-        transition: transform 0.42s var(--ease);
+        transition: transform 0.85s var(--ease);
       }
       @media (hover: hover) and (pointer: fine) {
         button:hover:not(:disabled),
@@ -2300,29 +2300,362 @@
           animation: none;
         }
       }
+      /* Mesma marca original em todos os tamanhos. */
+      .brand-intro .acervo-mark {
+        animation: original-mark-in 1.1s var(--ease) both;
+      }
+      .brand-intro.departing .acervo-mark {
+        animation: none;
+      }
+      @keyframes original-mark-in {
+        from {
+          opacity: 0;
+          filter: blur(8px);
+          transform: translateY(12px) scale(0.9);
+          clip-path: inset(100% 0 0 0 round 18px);
+        }
+        65% {
+          opacity: 1;
+          filter: blur(0);
+        }
+        to {
+          opacity: 1;
+          filter: blur(0);
+          transform: translateY(0) scale(1);
+          clip-path: inset(0 round 18px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .brand-intro .acervo-mark {
+          animation: none;
+        }
+      }
+      /* ACERVO 3.5.2 · Luz presente em toda a interface. */
+      :root {
+        --light-lime: #d7f58b;
+        --surface-shadow: 0 20px 48px -24px #164b3a45,
+          0 5px 14px -8px #173f3526, 0 0 36px -16px #b5e16970;
+      }
+      body:not(.auth-screen) {
+        background:
+          radial-gradient(ellipse at 90% 4%, #dcf2bca3, transparent 38%),
+          radial-gradient(ellipse at 3% 55%, #dce8b98c, transparent 42%),
+          #f3f4ee;
+      }
+      .shell > header {
+        flex-wrap: nowrap;
+        padding-bottom: 22px;
+        border-bottom-color: #bccca46b;
+      }
+      .brand { gap: 15px; min-width: 0; }
+      .brand-logo {
+        width: 70px;
+        height: 70px;
+        flex: 0 0 70px;
+        filter: drop-shadow(0 7px 10px #17433328);
+      }
+      .brand b { font-size: 37px; letter-spacing: -1.1px; }
+      .brand small { font-size: 11px; margin-top: 6px; }
+      .header-meta {
+        display: grid;
+        justify-items: end;
+        gap: 3px;
+        min-width: 0;
+        align-self: center;
+      }
+      .header-meta .actions { flex-wrap: nowrap; gap: 9px; }
+      .header-meta .account {
+        font-size: 10px;
+        color: #637565;
+        letter-spacing: 0.045em;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .header-meta button {
+        min-height: 30px;
+        padding: 5px 7px;
+        border-color: transparent;
+        background: transparent;
+        color: #5e7262;
+        font-size: 11px;
+        box-shadow: none;
+      }
+      .header-meta button .icon { width: 14px; height: 14px; flex-basis: 14px; }
+      .header-meta #refresh { width: 30px; }
+      .header-meta .live { font-size: 9px; }
+      .header-meta .live::before { box-shadow: 0 0 9px #a6ca66; }
+      .intro { margin: 27px 0 23px; }
+      .nav {
+        position: relative;
+        isolation: isolate;
+        overflow: visible;
+        padding: 6px;
+        gap: 5px;
+        border-radius: 17px;
+        border: 1px solid #9fc15ca6;
+        background: linear-gradient(115deg, #244d3d, #133c31);
+        box-shadow: 0 0 0 4px #d9efab45, 0 0 30px #b6dd7080,
+          0 12px 28px -14px #17433380, inset 0 1px 0 #d7f58b38;
+        margin: 24px 0 28px;
+      }
+      .nav::before {
+        content: "";
+        position: absolute;
+        height: 1px;
+        top: -1px;
+        left: 10%;
+        right: 10%;
+        background: linear-gradient(90deg, transparent, #edffb8, transparent);
+        box-shadow: 0 0 11px #d7f58b;
+        pointer-events: none;
+      }
+      .nav button {
+        position: relative;
+        z-index: 1;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        color: #e1eccf;
+        font-weight: 600;
+        padding: 11px 20px;
+        min-height: 45px;
+        background: transparent;
+        box-shadow: none;
+        transform: none;
+        transition: color 0.3s, background-color 0.3s;
+      }
+      .nav button[aria-current="page"] {
+        color: #163d2c;
+        background: #dcf6a4;
+        border-color: transparent;
+        font-weight: 600;
+        box-shadow: 0 0 18px #d7f58b55;
+      }
+      .nav.has-lens button[aria-current="page"] {
+        background: transparent;
+        box-shadow: none;
+      }
+      .nav button:focus-visible { outline-color: #e9ffb2; outline-offset: 2px; }
+      .nav-lens {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        border: 1px solid #efffc9;
+        border-radius: 11px;
+        background: linear-gradient(120deg, #f0fbd2, #cce88e);
+        box-shadow: 0 0 17px #d7f58b70, 0 3px 10px #0e302c30,
+          inset 0 1px 0 #ffffffb3;
+        pointer-events: none;
+        opacity: 0;
+        transition: transform 0.58s cubic-bezier(0.22, 0.8, 0.24, 1),
+          width 0.58s cubic-bezier(0.22, 0.8, 0.24, 1), height 0.4s;
+      }
+      .nav.has-lens .nav-lens { opacity: 1; }
+      #app .card,
+      dialog {
+        border-color: #cdddaf;
+        background: radial-gradient(ellipse at 100% 0, #edf6dc80, transparent 54%),
+          linear-gradient(155deg, #fff, #fcfdf8);
+        box-shadow: var(--surface-shadow), inset 0 1px 0 #fff;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+      #app .card:focus-within {
+        border-color: #b3cc87;
+        box-shadow: var(--surface-shadow), 0 0 0 3px #d7f58b26;
+      }
+      #app .card.side {
+        background: radial-gradient(ellipse at 90% 0, #6e954750, transparent 65%),
+          linear-gradient(150deg, #245543, #103a30);
+      }
+      .step { border-top-color: #d6e2c7; }
+      .step-title { color: #5d744c; }
+      input:not([type="radio"]):not([type="checkbox"]), textarea {
+        background-color: #fcfdf9;
+        transition: box-shadow 0.25s, border-color 0.25s, background-color 0.25s;
+      }
+      input:not([type="radio"]):not([type="checkbox"]):focus, textarea:focus {
+        background-color: #fff;
+        border-color: #8ba953;
+        box-shadow: 0 0 0 3px #d4ed9c75, 0 0 22px -7px #afd370b3;
+      }
+      .choice span {
+        background: linear-gradient(140deg, #fff, #f4f7ef);
+        border-color: #d5dfc8;
+        box-shadow: 0 3px 8px -5px #163d3230, inset 0 1px 0 #fff;
+      }
+      .choice input:checked + span {
+        background: radial-gradient(ellipse at 10% 0, #98b45770, transparent 80%),
+          linear-gradient(120deg, #355a3b, #173f35);
+        border-color: #85a94e;
+        color: #f5fbe7;
+        box-shadow: 0 0 0 2px #d7f58b40, 0 0 19px -4px #b1d76d8c,
+          0 5px 11px -6px #173f3590, inset 0 1px 0 #e7ffb44d;
+      }
+      .choice input:focus-visible + span {
+        outline: 2px solid #577431;
+        outline-offset: 4px;
+      }
+      .primary {
+        border-color: #94ad61;
+        box-shadow: 0 0 0 2px #d8edab33, 0 0 24px -8px #9bc354a6,
+          0 6px 14px -7px #163d3580, inset 0 1px 0 #d7f58b47;
+      }
+      .stat {
+        border: 1px solid #d0dfb5;
+        background: linear-gradient(145deg, #fff, #f0f6e5);
+        box-shadow: 0 10px 25px -16px #164b3a66, 0 0 20px -10px #bbdf80a6;
+      }
+      .stat:first-child {
+        color: #f0f9dd;
+        background: radial-gradient(ellipse at top right, #99b34855, transparent 75%),
+          linear-gradient(125deg, #345941, #173f35);
+        border-color: #9cba69;
+        box-shadow: 0 0 25px -5px #b5d97680, 0 10px 22px -12px #173f3570;
+      }
+      .stat:first-child .icon { color: #d7f58b; }
+      .availability { border-color: #cbdcac; box-shadow: 0 7px 20px -14px #53762b55; }
+      .movement-result, .detail-panel {
+        border-color: #cfdfb9;
+        background: linear-gradient(135deg, #fff, #f2f7e9);
+        box-shadow: 0 9px 20px -15px #204b3866, inset 0 1px 0 #fff;
+      }
+      .fill {
+        background: linear-gradient(90deg, #315b42, #9acb59);
+        box-shadow: 0 0 12px #aacf6966;
+      }
+      .registration-summary,
+      .disposal .registration-summary {
+        margin: 20px 0;
+        padding: 20px 22px;
+        border: 1px solid #c9dcb1;
+        border-radius: 15px;
+        background: radial-gradient(ellipse at 100% 0, #d4ed9d66, transparent 65%),
+          linear-gradient(135deg, #f8fbee, #f1f6e8);
+        box-shadow: 0 7px 22px -17px #3e683f70, inset 0 1px 0 #fff;
+      }
+      .summary-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .summary-title { min-width: 0; }
+      .summary-eyebrow {
+        display: block;
+        font-size: 9px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: #617550;
+        margin-bottom: 5px;
+      }
+      .summary-title strong {
+        display: block;
+        font-size: 17px;
+        line-height: 1.4;
+        font-weight: 600;
+        color: #214b35;
+        overflow-wrap: anywhere;
+      }
+      .summary-status {
+        display: inline-flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 6px;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 9px;
+        border: 1px solid #bed593;
+        border-radius: 7px;
+        color: #365126;
+        background: #e2eecb;
+      }
+      .summary-status .icon { width: 13px; height: 13px; flex-basis: 13px; }
+      .summary-facts {
+        display: grid;
+        grid-template-columns: 0.8fr 1fr 1.2fr;
+        gap: 16px;
+        margin: 16px 0 0;
+        padding-top: 14px;
+        border-top: 1px solid #cbdcba;
+      }
+      .summary-facts > div { min-width: 0; }
+      .summary-facts dt { color: #66775c; font-size: 10px; margin: 0 0 4px; }
+      .summary-facts dd { margin: 0; color: #294533; font-size: 12px; overflow-wrap: anywhere; }
+      .summary-facts dd small { display: block; font-size: 10px; margin-top: 3px; }
+      .disposal .registration-summary {
+        background: linear-gradient(135deg, #fff9f0, #fbefe7);
+        border-color: #e1c8b7;
+      }
+      .disposal .summary-status { background: #f7e3d6; border-color: #d7b59c; color: #825138; }
+      .disposal .summary-facts { border-color: #e5cdbc; }
+      @media (hover: hover) and (pointer: fine) {
+        .nav button:hover:not(:disabled) {
+          transform: none;
+          border-color: transparent;
+          box-shadow: none;
+          background-color: #eaffbb12;
+          color: #f3ffdd;
+        }
+        .nav button[aria-current="page"]:hover:not(:disabled) { color: #163d2c; background: transparent; }
+        .header-meta button:hover:not(:disabled) { background: #e7eedb; box-shadow: none; transform: none; }
+        .choice:hover span { border-color: #a6bf77; box-shadow: 0 0 17px -6px #bddf83b3; }
+        .primary:hover:not(:disabled) {
+          box-shadow: 0 0 0 3px #d7f58b47, 0 0 29px -4px #afd273a6, 0 9px 20px -9px #173f3580;
+        }
+        .stat:hover:not(:disabled) { box-shadow: 0 0 0 2px #d7f58b47, 0 10px 25px -12px #80a24ca6; }
+        #browse tbody tr:not(.detail-row):hover { background: #e9f3d9b3; }
+      }
+      .nav button:active:not(:disabled) { transform: none; }
+      @media (max-width: 850px) {
+        .brand-logo { width: 60px; height: 60px; flex-basis: 60px; }
+        .brand b { font-size: 31px; }
+        .nav button { padding: 11px 8px; }
+      }
+      @media (max-width: 640px) {
+        .shell > header { gap: 8px; padding-bottom: 17px; }
+        .brand { gap: 10px; }
+        .brand-logo { width: 54px; height: 54px; flex-basis: 54px; }
+        .brand b { font-size: 29px; letter-spacing: -0.8px; }
+        .brand small { font-size: 9px; margin-top: 4px; }
+        .header-meta { gap: 0; }
+        .header-meta .actions { gap: 2px; }
+        .header-meta .account { max-width: 76px; font-size: 8px; }
+        .header-meta button { min-height: 38px; padding: 5px; font-size: 10px; }
+        .header-meta #refresh { width: 36px; }
+        .header-meta .live { font-size: 8px; gap: 4px; }
+        .intro { margin: 22px 0 18px; }
+        .nav { gap: 5px; margin: 22px 0 25px; border-radius: 17px; }
+        .nav button { font-size: 12px; padding: 11px 7px; min-height: 45px; }
+        .registration-summary, .disposal .registration-summary { padding: 17px; }
+        .summary-heading { align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+        .summary-title strong { font-size: 16px; }
+        .summary-facts { grid-template-columns: 1fr 1fr; gap: 13px; }
+        .summary-facts > div:last-child { grid-column: 1 / -1; }
+      }
+      @media (max-width: 360px) {
+        .brand-logo { width: 46px; height: 46px; flex-basis: 46px; }
+        .brand b { font-size: 25px; }
+        .brand small { font-size: 8px; }
+        .header-meta .account { max-width: 64px; }
+        .header-meta .live { max-width: 86px; text-align: right; line-height: 1.3; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-lens { transition: none !important; }
+      }
     </style>
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
       <div id="introMark">
-        <svg
+        <img
           class="acervo-mark"
-          viewBox="0 0 64 64"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect class="mark-bg" x="2" y="2" width="60" height="60" rx="18" />
-          <g
-            stroke="#d9f49c"
-            stroke-width="3.2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path class="mark-bar mark-one" d="M18 44V25h10v19H18 M21 30h4" />
-            <path class="mark-bar mark-two" d="M36 44V19h10v25H36 M39 24h4" />
-            <path class="mark-base" d="M17 49h30" />
-          </g>
-        </svg>
+          src="./favicon.svg?v=2"
+          alt=""
+          width="64"
+          height="64"
+        />
       </div>
     </div>
     <div id="contextTip" class="context-tip" role="tooltip" hidden></div>
@@ -2433,40 +2766,17 @@
       <header class="bar">
         <div class="brand">
           <span class="brand-logo"
-            ><svg
+            ><img
               class="acervo-mark"
-              viewBox="0 0 64 64"
-              fill="none"
-              aria-hidden="true"
-            >
-              <rect
-                class="mark-bg"
-                x="2"
-                y="2"
-                width="60"
-                height="60"
-                rx="18"
-              />
-              <g
-                stroke="#d9f49c"
-                stroke-width="3.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  class="mark-bar mark-one"
-                  d="M18 44V25h10v19H18 M21 30h4"
-                />
-                <path
-                  class="mark-bar mark-two"
-                  d="M36 44V19h10v25H36 M39 24h4"
-                />
-                <path class="mark-base" d="M17 49h30" />
-              </g></svg
-          ></span>
+              src="./favicon.svg?v=2"
+              alt=""
+              width="64"
+              height="64"
+          /></span>
           <div><b>ACERVO</b><small>Inventário do setor</small></div>
         </div>
-        <div class="actions">
+        <div class="header-meta">
+          <div class="actions session-row">
           <span class="account" id="account">Aguardando acesso</span
           ><button id="logout" hidden>
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -2474,42 +2784,27 @@
             </svg>
             Sair
           </button>
+          </div>
+          <div class="actions sync-row" id="syncTools" hidden>
+            <span class="live" id="live" role="status">Conectando</span>
+            <button id="refresh" type="button" aria-label="Atualizar inventário">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-refresh" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
       <section id="login" class="card">
         <div class="login-brand">
           <div id="loginMark">
-            <svg
+            <img
               class="acervo-mark"
-              viewBox="0 0 64 64"
-              fill="none"
-              aria-hidden="true"
-            >
-              <rect
-                class="mark-bg"
-                x="2"
-                y="2"
-                width="60"
-                height="60"
-                rx="18"
-              />
-              <g
-                stroke="#d9f49c"
-                stroke-width="3.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  class="mark-bar mark-one"
-                  d="M18 44V25h10v19H18 M21 30h4"
-                />
-                <path
-                  class="mark-bar mark-two"
-                  d="M36 44V19h10v25H36 M39 24h4"
-                />
-                <path class="mark-base" d="M17 49h30" />
-              </g>
-            </svg>
+              src="./favicon.svg?v=2"
+              alt=""
+              width="64"
+              height="64"
+            />
           </div>
           <div><b>ACERVO</b><span>Inventário do setor</span></div>
         </div>
@@ -2551,15 +2846,6 @@
             <div class="eyebrow">GIT / SME · Curitiba</div>
             <h1>Cada bem, no seu lugar.</h1>
           </div>
-          <div class="actions">
-            <span class="live" id="live" role="status">Conectando</span
-            ><button id="refresh">
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <use href="#i-refresh" />
-              </svg>
-              Atualizar
-            </button>
-          </div>
         </div>
         <div id="pendingBox" class="notice" hidden>
           Há uma operação sem confirmação.
@@ -2571,6 +2857,7 @@
           </button>
         </div>
         <nav class="nav" aria-label="Seções">
+          <span class="nav-lens" aria-hidden="true"></span>
           <button data-tab="register" aria-current="page">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-plus" />
@@ -2722,11 +3009,12 @@
                         <div class="choices" id="initialState"></div>
                       </fieldset>
                       <input id="directDown" type="checkbox" hidden />
-                      <p
+                      <div
                         id="registrationSummary"
                         class="registration-summary"
                         aria-live="polite"
-                      ></p>
+                        aria-atomic="true"
+                      ></div>
                       <div id="directReasonWrap" hidden>
                         <p>
                           Cadastro para descarte · o item será salvo como
@@ -3423,6 +3711,22 @@
           }),
         );
       }
+      function updateNavIndicator(animate = true) {
+        const nav = document.querySelector(".nav");
+        const lens = nav?.querySelector(".nav-lens");
+        const current = nav?.querySelector('[aria-current="page"]');
+        if (!lens || !current || !nav.offsetWidth) return;
+        lens.style.transition =
+          animate && lens.dataset.ready &&
+          !matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "" : "none";
+        lens.style.width = current.offsetWidth + "px";
+        lens.style.height = current.offsetHeight + "px";
+        lens.style.transform =
+          `translate(${current.offsetLeft}px, ${current.offsetTop}px)`;
+        lens.dataset.ready = "true";
+        nav.classList.add("has-lens");
+      }
       function showTab(id) {
         document
           .querySelectorAll("main>section")
@@ -3431,6 +3735,7 @@
           if (b.dataset.tab === id) b.setAttribute("aria-current", "page");
           else b.removeAttribute("aria-current");
         });
+        updateNavIndicator();
       }
       function setBusy(v) {
         busy = v;
@@ -3442,6 +3747,7 @@
           $("editFields").disabled = v || role === "leitor" || !!pending;
         $("save").disabled = v || role === "leitor" || !!pending;
         $("logout").disabled = v;
+        $("refresh").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
         labelButton(
@@ -3896,13 +4202,38 @@
         if (!$("registrationSummary")) return;
         const d = formData();
         const stock = d.controle === "QUANTIDADE";
-        const place =
+        const summary = $("registrationSummary");
+        if (!clean(d.item)) {
+          summary.replaceChildren(el("span", "Preencha a ficha para conferir o registro."));
+          return;
+        }
+        const down = $("directDown").checked;
+        const heading = el("div", undefined, "summary-heading");
+        const title = el("div", undefined, "summary-title");
+        title.append(el("span", "Seu registro", "summary-eyebrow"), el("strong", d.item));
+        const status = el("span", down ? "Baixado / descarte" : "Ativo", "summary-status");
+        status.append(icon(down ? "down" : "check"));
+        heading.append(title, status);
+        const facts = el("dl", undefined, "summary-facts");
+        function fact(label, text, detail) {
+          const wrap = el("div");
+          const val = el("dd", text);
+          if (detail) val.append(el("small", detail));
+          wrap.append(el("dt", label), val);
+          facts.append(wrap);
+        }
+        const amount = Number(d.quantidade);
+        fact("Quantidade", stock
+          ? d.quantidade === "" ? "A informar" : `${Number.isFinite(amount) ? amount.toLocaleString("pt-BR", { maximumFractionDigits: 3 }) : d.quantidade} ${amount === 1 ? "unidade" : "unidades"}`
+          : "1 bem individual");
+        fact("Identificação", stock || d.tipo === "SEM_IDENTIFICACAO"
+          ? "Código automático"
+          : d.tipo ? `${d.tipo} ${d.codigo || "a informar"}` : "A selecionar");
+        fact("Localização", d.ambiente || "A selecionar",
           d.ambiente === "Almoxarifado"
-            ? `Estante ${d.estante || "?"}, prateleira ${d.prateleira || "?"}`
-            : d.ambiente;
-        $("registrationSummary").textContent = clean(d.item)
-          ? `${stock ? d.quantidade + " unidades de" : "1"} ${d.item} · ${stock || d.tipo === "SEM_IDENTIFICACAO" ? "Código interno automático" : (d.tipo || "Escolha a identificação") + " " + d.codigo} · ${place || "Escolha o ambiente"} · ${$("directDown").checked ? "Será registrado como descartado" : "Ativo"}`
-          : "Preencha a ficha para conferir o registro.";
+            ? `Estante ${d.estante || "a selecionar"} · Prateleira ${d.prateleira || "a selecionar"}`
+            : "");
+        summary.replaceChildren(heading, facts);
       }
       function repeatRegistration(d) {
         if (
@@ -6563,6 +6894,8 @@
         };
         function syncScreen() {
           document.body.classList.toggle("auth-screen", !$("login").hidden);
+          $("syncTools").hidden = !$("login").hidden;
+          requestAnimationFrame(() => updateNavIndicator(false));
           if ($("login").hidden) {
             $("brandIntro")?.remove();
             $("password").type = "password";
@@ -6575,6 +6908,14 @@
           attributeFilter: ["hidden"],
         });
         syncScreen();
+        const nav = document.querySelector(".nav");
+        if (typeof ResizeObserver !== "undefined") {
+          const navObserver = new ResizeObserver(() => updateNavIndicator(false));
+          navObserver.observe(nav);
+          nav.querySelectorAll("button").forEach((button) => navObserver.observe(button));
+        } else {
+          addEventListener("resize", () => updateNavIndicator(false));
+        }
         const intro = $("brandIntro");
         if (intro) {
           if (reduced.matches) intro.remove();
@@ -6594,9 +6935,9 @@
                 ")";
               setTimeout(() => {
                 intro.style.opacity = "0";
-                setTimeout(() => intro.remove(), 260);
-              }, 410);
-            }, 520);
+                setTimeout(() => intro.remove(), 380);
+              }, 850);
+            }, 1300);
         }
         $("draftInfo").textContent = "Rascunho automático";
         $("draftInfo").dataset.help =

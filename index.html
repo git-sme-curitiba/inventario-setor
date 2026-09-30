@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-iRpW3tQUqudQjUnVIbce+WAkCbROwZxc7gKKj72uvt4=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-jei22ozMmRcpz6aSXultffgkts1lOhlC/38mDF7QzYA=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -1814,14 +1814,518 @@
           scroll-behavior: auto !important;
         }
       }
+
+      /* ACERVO · Luz, profundidade e movimento */
       ::selection {
-  background: #d9ecae;
-  color: #173e32;
-  text-shadow: none;
-}
+        background: #d9ecae;
+        color: #173f35;
+        text-shadow: none;
+      }
+      :root {
+        --lift: 0 12px 34px -20px #17433345, 0 2px 6px #173f3506;
+        --glow: 0 0 0 3px #d9ecae55, 0 8px 24px -14px #8eb94790;
+      }
+      body {
+        background:
+          radial-gradient(ellipse at 90% 0%, #dce9c780, transparent 42%),
+          radial-gradient(ellipse at 0% 50%, #e8efdd70, transparent 38%),
+          #f3f4ee;
+        transition: background-color 0.45s;
+      }
+      .card {
+        background: linear-gradient(155deg, #fff 15%, #fcfdf8 100%);
+        border-color: #dce4d6;
+        box-shadow:
+          var(--lift),
+          inset 0 1px 0 #fff;
+      }
+      .card.side {
+        background:
+          radial-gradient(ellipse at top right, #59795070, transparent 65%),
+          linear-gradient(150deg, #245543, #103a30);
+        box-shadow: 0 18px 38px -22px #153d3580;
+      }
+      button,
+      .choice span,
+      .export-menu summary {
+        transition:
+          background 0.25s,
+          box-shadow 0.25s,
+          border-color 0.25s,
+          transform 0.25s var(--ease);
+      }
+      button {
+        position: relative;
+      }
+      .primary {
+        background:
+          radial-gradient(
+            circle at var(--px, 20%) var(--py, 0%),
+            #70934866,
+            transparent 65%
+          ),
+          linear-gradient(125deg, #325e46, #153e33);
+        box-shadow:
+          0 5px 12px -5px #173f3550,
+          inset 0 1px 0 #def8b52b;
+      }
+      .primary::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        background: linear-gradient(
+          110deg,
+          transparent 30%,
+          #edffc21b 48%,
+          transparent 66%
+        );
+        background-size: 260% 100%;
+        background-position: 100% 0;
+        transition: background-position 0.65s var(--ease);
+      }
+      .choice input:checked + span {
+        background:
+          radial-gradient(ellipse at top left, #72924d45, transparent 80%),
+          linear-gradient(125deg, #315a43, #153f35);
+        border-color: #40674c;
+        box-shadow:
+          0 5px 12px -7px #133f3590,
+          inset 0 1px 0 #e5ffb52c;
+        color: #f0f9de;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: #88a75c;
+        box-shadow: var(--glow);
+      }
+      .brand-logo {
+        display: block;
+        filter: drop-shadow(0 5px 6px #173f351c);
+      }
+      .acervo-mark {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+      .mark-bg {
+        fill: #173f35;
+      }
+      .mark-bar,
+      .mark-base {
+        transform-origin: center;
+        transition:
+          transform 0.35s var(--ease),
+          filter 0.35s;
+      }
+      .brand:hover .mark-one {
+        transform: translateY(-3px);
+      }
+      .brand:hover .mark-two {
+        transform: translateY(2px);
+        filter: drop-shadow(0 0 3px #d9ecae70);
+      }
+      .tab {
+        animation: rise-in 0.35s var(--ease) both;
+      }
+      .detail-panel {
+        animation: rise-in 0.28s var(--ease) both;
+        box-shadow:
+          inset 0 1px 0 #fff,
+          0 8px 20px -16px #173f3540;
+      }
+      .motion-enter {
+        animation: rise-in 0.55s var(--ease) both;
+      }
+      .intro h1 {
+        letter-spacing: -0.045em;
+      }
+      .step-title {
+        letter-spacing: 0.12em;
+      }
+      .toast:not(.error) {
+        box-shadow:
+          0 0 0 1px #d9ecae60,
+          0 8px 32px #173f3530;
+        animation: rise-in 0.25s var(--ease);
+      }
+      .help-dot {
+        display: inline-flex;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        min-height: 22px;
+        padding: 0;
+        font-size: 12px;
+        vertical-align: middle;
+        background: #edf3e6;
+        border-color: #d9e4cc;
+      }
+      [data-help] {
+        cursor: help;
+      }
+      #learningHint {
+        width: fit-content;
+        color: #5b7447;
+      }
+      .context-tip {
+        position: fixed;
+        z-index: 1000;
+        max-width: min(300px, calc(100vw - 24px));
+        padding: 11px 14px;
+        border: 1px solid #d4eab23b;
+        border-radius: 12px;
+        color: #f2f8e8;
+        background: #163e35;
+        box-shadow: 0 8px 30px #153f3530;
+        font-size: 12px;
+        line-height: 1.5;
+        pointer-events: none;
+        animation: tip-in 0.15s ease;
+      }
+      .export-menu {
+        position: relative;
+      }
+      .export-menu summary {
+        list-style: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 9px 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        cursor: pointer;
+        background: #fbfcf8;
+        font-size: 13px;
+      }
+      .export-menu summary::-webkit-details-marker {
+        display: none;
+      }
+      .export-menu summary:focus-visible {
+        outline: 2px solid #78934a;
+        outline-offset: 3px;
+      }
+      .export-options {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 15;
+        min-width: 230px;
+        padding: 8px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: 0 15px 40px -12px #173f3545;
+        animation: tip-in 0.18s ease;
+      }
+      .export-options button {
+        width: 100%;
+        justify-content: flex-start;
+        margin: 3px 0;
+      }
+      .auth-screen {
+        min-height: 100svh;
+        background:
+          radial-gradient(ellipse at 70% 5%, #56744880, transparent 52%),
+          radial-gradient(ellipse at 5% 90%, #346c5270, transparent 48%),
+          #10392f;
+      }
+      .auth-screen .shell {
+        min-height: 100svh;
+        display: grid;
+        align-content: center;
+        padding-top: 32px;
+        padding-bottom: 32px;
+      }
+      .auth-screen .shell > header {
+        display: none;
+      }
+      #login {
+        position: relative;
+        width: min(100%, 430px);
+        margin: 0 auto;
+        padding: 34px;
+        border: 1px solid #eaffbd25;
+        background: linear-gradient(155deg, #fffefc, #f0f3e8);
+        box-shadow:
+          0 35px 90px -30px #031b2ca0,
+          0 0 75px -35px #c5ec8b55;
+        animation: rise-in 0.45s var(--ease);
+      }
+      #login h1 {
+        font-size: 34px;
+        letter-spacing: -0.04em;
+        margin: 24px 0 22px;
+      }
+      #login .eyebrow {
+        font-size: 10px;
+        margin-top: 20px;
+      }
+      .login-brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      #loginMark {
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+      }
+      .login-brand b {
+        display: block;
+        font-size: 27px;
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+      }
+      .login-brand span {
+        display: block;
+        font-size: 11px;
+        margin-top: 5px;
+        color: #637566;
+      }
+      #login label {
+        margin-top: 14px;
+      }
+      #login input {
+        background: #ffffffc0;
+      }
+      .password-toggle {
+        float: right;
+        min-height: 28px;
+        margin-top: 6px;
+        padding: 2px 7px;
+        font-size: 11px;
+        background: transparent;
+        border-color: transparent;
+      }
+      #loginButton {
+        clear: both;
+        min-height: 46px;
+        margin-top: 22px;
+      }
+      #loginMessage {
+        margin-bottom: 0;
+        color: #a44035;
+      }
+      #loginMessage:empty {
+        display: none;
+      }
+      #loginButton.loading {
+        opacity: 1;
+        cursor: progress;
+      }
+      #loginButton.loading .icon {
+        display: none;
+      }
+      #loginButton.loading::before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        border: 2px solid #eff8de40;
+        border-top-color: #d9ecae;
+        border-radius: 50%;
+        animation: loader-spin 0.7s linear infinite;
+      }
+      .brand-intro {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        z-index: 200;
+        background:
+          radial-gradient(ellipse at center, #45664370, transparent 65%),
+          #10392f;
+        pointer-events: none;
+        transition: opacity 0.25s;
+      }
+      #introMark {
+        width: 112px;
+        height: 112px;
+        position: relative;
+        filter: drop-shadow(0 0 35px #d9ecae35);
+      }
+      .brand-intro .mark-bar,
+      .brand-intro .mark-base {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: mark-draw 0.5s var(--ease) forwards;
+      }
+      .brand-intro .mark-two {
+        animation-delay: 0.12s;
+      }
+      .brand-intro .mark-base {
+        animation-delay: 0.23s;
+      }
+      .brand-intro.departing {
+        background: transparent;
+      }
+      .brand-intro.departing #introMark {
+        transition: transform 0.42s var(--ease);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        button:hover:not(:disabled),
+        .export-menu summary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 18px -10px #173f3560;
+          border-color: #a8be8c;
+        }
+        .primary:hover:not(:disabled) {
+          background:
+            radial-gradient(
+              circle at var(--px, 50%) var(--py, 0%),
+              #b8de6c40,
+              transparent 65%
+            ),
+            linear-gradient(125deg, #3b684b, #194738);
+          box-shadow:
+            0 0 0 1px #b9db8235,
+            0 8px 25px -12px #7ea74b90;
+        }
+        .primary:hover::after {
+          background-position: 0 0;
+        }
+        .choice:hover span {
+          border-color: #adc28c;
+          transform: translateY(-1px);
+          box-shadow: 0 5px 14px -10px #173f3550;
+        }
+      }
+      button:active:not(:disabled) {
+        transform: translateY(1px) scale(0.985);
+      }
+      @keyframes rise-in {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes tip-in {
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes mark-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes loader-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 640px) {
+        #login {
+          padding: 26px;
+        }
+        .export-menu {
+          margin-left: auto;
+        }
+        .intro h1 {
+          font-size: clamp(30px, 8vw, 44px);
+        }
+        .auth-screen .shell {
+          padding: 22px 18px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+        .brand-intro {
+          display: none;
+        }
+      }
+      .shell > header {
+        animation: tip-in 0.5s var(--ease) both;
+      }
+      #dashboard .card > .help-dot {
+        float: right;
+        margin-top: -32px;
+      }
+      #register > .workspace > .card {
+        border-top-color: #d4e5bb;
+      }
+      .nav {
+        box-shadow:
+          inset 0 1px 0 #ffffff80,
+          0 5px 16px -14px #173f3530;
+      }
+      .card:focus-within {
+        border-color: #c5d7b4;
+      }
+      #registrationSave > button {
+        min-width: 180px;
+      }
+      .fill {
+        background: linear-gradient(90deg, #355e44, #a1bd6b);
+        box-shadow: 0 0 10px #b7d98220;
+      }
+      .saved-flash {
+        animation: saved-light 0.7s ease-out;
+      }
+      @keyframes saved-light {
+        35% {
+          box-shadow:
+            0 0 0 5px #cceba055,
+            0 0 30px -8px #a8d76d90;
+        }
+      }
+      @media (hover: hover) {
+        tbody tr:not(.detail-row):hover {
+          background: #edf4e44d;
+        }
+      }
+      .scanrow > button .icon {
+        width: 22px;
+        height: 22px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .saved-flash {
+          animation: none;
+        }
+      }
     </style>
   </head>
-  <body>
+  <body class="auth-screen">
+    <div id="brandIntro" class="brand-intro" aria-hidden="true">
+      <div id="introMark">
+        <svg
+          class="acervo-mark"
+          viewBox="0 0 64 64"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect class="mark-bg" x="2" y="2" width="60" height="60" rx="18" />
+          <g
+            stroke="#d9f49c"
+            stroke-width="3.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path class="mark-bar mark-one" d="M18 44V25h10v19H18 M21 30h4" />
+            <path class="mark-bar mark-two" d="M36 44V19h10v25H36 M39 24h4" />
+            <path class="mark-base" d="M17 49h30" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div id="contextTip" class="context-tip" role="tooltip" hidden></div>
     <svg class="svg-library" aria-hidden="true">
       <symbol id="i-plus" viewBox="0 0 24 24">
         <path d="M12 5v14M5 12h14" />
@@ -1928,7 +2432,38 @@
     <div class="shell">
       <header class="bar">
         <div class="brand">
-          <img class="brand-logo" src="./favicon.svg?v=2" alt="" />
+          <span class="brand-logo"
+            ><svg
+              class="acervo-mark"
+              viewBox="0 0 64 64"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                class="mark-bg"
+                x="2"
+                y="2"
+                width="60"
+                height="60"
+                rx="18"
+              />
+              <g
+                stroke="#d9f49c"
+                stroke-width="3.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  class="mark-bar mark-one"
+                  d="M18 44V25h10v19H18 M21 30h4"
+                />
+                <path
+                  class="mark-bar mark-two"
+                  d="M36 44V19h10v25H36 M39 24h4"
+                />
+                <path class="mark-base" d="M17 49h30" />
+              </g></svg
+          ></span>
           <div><b>ACERVO</b><small>Inventário do setor</small></div>
         </div>
         <div class="actions">
@@ -1942,9 +2477,44 @@
         </div>
       </header>
       <section id="login" class="card">
+        <div class="login-brand">
+          <div id="loginMark">
+            <svg
+              class="acervo-mark"
+              viewBox="0 0 64 64"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                class="mark-bg"
+                x="2"
+                y="2"
+                width="60"
+                height="60"
+                rx="18"
+              />
+              <g
+                stroke="#d9f49c"
+                stroke-width="3.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  class="mark-bar mark-one"
+                  d="M18 44V25h10v19H18 M21 30h4"
+                />
+                <path
+                  class="mark-bar mark-two"
+                  d="M36 44V19h10v25H36 M39 24h4"
+                />
+                <path class="mark-base" d="M17 49h30" />
+              </g>
+            </svg>
+          </div>
+          <div><b>ACERVO</b><span>Inventário do setor</span></div>
+        </div>
         <div class="eyebrow">GIT · SME · Curitiba</div>
-        <h1>Seu setor,<br />bem organizado.</h1>
-        <p class="muted">Entre com sua conta autorizada.</p>
+        <h1>Bem-vindo.</h1>
         <form id="loginForm">
           <label for="email">E-mail</label
           ><input
@@ -1958,7 +2528,15 @@
             type="password"
             autocomplete="current-password"
             required
-          /><button class="primary" id="loginButton">
+          /><button
+            type="button"
+            id="togglePassword"
+            class="password-toggle"
+            aria-label="Mostrar senha"
+            aria-pressed="false"
+          >
+            Mostrar</button
+          ><button class="primary" id="loginButton">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-lock" />
             </svg>
@@ -1972,7 +2550,6 @@
           <div>
             <div class="eyebrow">GIT / SME · Curitiba</div>
             <h1>Cada bem, no seu lugar.</h1>
-            <p class="muted">Identifique, registre e encontre.</p>
           </div>
           <div class="actions">
             <span class="live" id="live" role="status">Conectando</span
@@ -2021,11 +2598,10 @@
             <div class="card">
               <div class="bar">
                 <h2>Novo registro</h2>
-                <span class="eyebrow">Um item por vez</span>
               </div>
               <form id="itemForm">
                 <fieldset id="fields">
-                  <label for="item">Qual item você vai registrar?</label
+                  <label for="item">Item</label
                   ><input
                     id="item"
                     class="item-input"
@@ -2033,13 +2609,13 @@
                     minlength="2"
                     maxlength="120"
                     autocomplete="off"
-                    placeholder="Digite o item. Ex.: Monitor"
+                    placeholder="Ex.: Monitor"
                     aria-controls="suggestions"
                     aria-expanded="false"
                   />
                   <div id="suggestions" class="suggestions" hidden></div>
                   <p id="learningHint" class="hint">
-                    Escolha um item já registrado ou escreva um novo nome.
+                    Sugestões conforme você digita.
                   </p>
                   <div id="formRest" hidden>
                     <div id="controlHost" class="step"></div>
@@ -2071,7 +2647,7 @@
                             maxlength="6"
                             pattern="[0-9]{6}"
                             autocomplete="off"
-                            placeholder="Leia ou digite os 6 números"
+                            placeholder="Código de 6 dígitos"
                           /><button
                             id="scan"
                             class="primary"
@@ -2115,7 +2691,15 @@
                           <div id="levels" class="choices levels"></div>
                         </fieldset>
                         <div class="position">
-                          <span>Prateleiras de cima para baixo</span
+                          <span
+                            ><button
+                              type="button"
+                              class="help-dot"
+                              data-help="Prateleiras numeradas de cima para baixo: 01 no topo, 06 na base."
+                              aria-label="Como contar as prateleiras"
+                            >
+                              ?
+                            </button></span
                           ><strong id="position">Escolha a posição</strong>
                         </div>
                       </div>
@@ -2167,7 +2751,7 @@
                       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                         <use href="#i-save" />
                       </svg>
-                      Salvar e cadastrar próximo
+                      Cadastrar
                     </button>
                   </div>
                 </fieldset>
@@ -2179,16 +2763,13 @@
             </div>
             <aside class="card side">
               <div class="eyebrow">Seu inventário agora</div>
-              <h2>Uma visão<br />do seu setor.</h2>
+              <h2>Seu setor.</h2>
               <div class="ring" id="sideRing">
                 <div class="ring-center">
                   <b id="sideTotal">0</b><small>registros ativos</small>
                 </div>
               </div>
               <div id="sideRooms"></div>
-              <p class="hint muted spaced">
-                Toque em um ambiente para consultar seus itens.
-              </p>
             </aside>
           </div>
         </section>
@@ -2236,19 +2817,26 @@
                 <div class="eyebrow">Encontre e organize</div>
                 <h2>Consultar inventário</h2>
               </div>
-              <div class="actions">
-                <button id="exportFiltered">
+              <details class="export-menu">
+                <summary>
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <use href="#i-download" />
-                  </svg>
-                  Excel do filtro</button
-                ><button class="primary" id="exportAll">
-                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <use href="#i-sheet" />
-                  </svg>
-                  Excel completo
-                </button>
-              </div>
+                    <use href="#i-download" /></svg
+                  >Exportar
+                </summary>
+                <div class="export-options">
+                  <button id="exportFiltered">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <use href="#i-download" />
+                    </svg>
+                    Resultado da consulta</button
+                  ><button class="primary" id="exportAll">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <use href="#i-sheet" />
+                    </svg>
+                    Inventário completo
+                  </button>
+                </div>
+              </details>
             </div>
             <div class="toolbar">
               <label class="sr-only" for="search">Buscar no inventário</label
@@ -2349,23 +2937,39 @@
           <div id="availability" class="availability"></div>
           <div class="card">
             <h3>Últimas movimentações</h3>
-            <p class="hint">
-              Ações registradas, com pessoa e horário de Curitiba.
-            </p>
+            <button
+              type="button"
+              class="help-dot"
+              data-help="Ações registradas, com pessoa e horário de Curitiba."
+              aria-label="Informações sobre este painel"
+            >
+              ?
+            </button>
             <div id="movementTimeline"></div>
           </div>
           <div class="dash-grid">
             <div class="card">
               <h3>Onde estão os bens</h3>
-              <p class="hint">
-                Ativos e emprestados por ambiente de origem. Clique para
-                consultar.
-              </p>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Ativos e emprestados por ambiente de origem. Clique para consultar."
+                aria-label="Informações sobre este painel"
+              >
+                ?
+              </button>
               <div id="roomChart"></div>
             </div>
             <div class="card">
               <h3>Composição do acervo</h3>
-              <p class="hint">Ativos e emprestados por categoria.</p>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Ativos e emprestados por categoria."
+                aria-label="Informações sobre este painel"
+              >
+                ?
+              </button>
               <div id="categoryChart"></div>
             </div>
             <div class="card">
@@ -2374,7 +2978,14 @@
             </div>
             <div class="card">
               <h3>Itens mais frequentes</h3>
-              <p class="hint">Até seis tipos, entre os bens ativos.</p>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Até seis tipos, entre os bens ativos."
+                aria-label="Informações sobre este painel"
+              >
+                ?
+              </button>
               <div id="topChart"></div>
             </div>
             <div class="card wide">
@@ -2386,19 +2997,27 @@
             </div>
             <div class="card wide">
               <h3>Mapa do almoxarifado</h3>
-              <p class="hint">
-                Registros ativos por posição. Prateleira 01 no topo. Não indica
-                espaço disponível.
-              </p>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Registros ativos por posição. Prateleira 01 no topo. Não indica espaço disponível."
+                aria-label="Informações sobre este painel"
+              >
+                ?
+              </button>
               <div id="rackMap" class="rack-map"></div>
               <p class="hint" id="unplaced"></p>
             </div>
             <div class="card">
               <h3>Conferência dos ambientes</h3>
-              <p class="hint">
-                Marque após conferir os bens fisicamente. Alterações podem
-                reabrir a conferência.
-              </p>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Marque após conferir os bens fisicamente. Alterações podem reabrir a conferência."
+                aria-label="Informações sobre este painel"
+              >
+                ?
+              </button>
               <div id="checks"></div>
             </div>
             <div class="card">
@@ -2554,7 +3173,15 @@
                   <div id="editLevels" class="choices levels"></div>
                 </fieldset>
                 <div class="position">
-                  <span>Prateleiras de cima para baixo</span
+                  <span
+                    ><button
+                      type="button"
+                      class="help-dot"
+                      data-help="Prateleiras numeradas de cima para baixo: 01 no topo, 06 na base."
+                      aria-label="Como contar as prateleiras"
+                    >
+                      ?
+                    </button></span
                   ><strong id="editPosition"></strong>
                 </div>
               </div>
@@ -2823,7 +3450,7 @@
             ? "Salvando…"
             : $("directDown").checked
               ? "Registrar descarte"
-              : "Salvar registro",
+              : "Cadastrar",
           v ? "clock" : "save",
         );
         $("previous").disabled = v || page <= 1;
@@ -2908,7 +3535,7 @@
         input(
           extras,
           "minimum",
-          "Avisar quando o saldo chegar a",
+          "Estoque mínimo",
           "number",
           record?.minimo ?? 0,
           { min: 0, max: 99999999999, step: "0.001" },
@@ -2942,8 +3569,12 @@
         $(id("controlHint")).textContent = stock
           ? room && room !== "Almoxarifado"
             ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
-            : "Código interno gerado ao salvar. Saldo em unidades."
-          : "Um código e histórico por item.";
+            : "Saldo em unidades ⓘ"
+          : "Individual ⓘ";
+        $(id("controlHint")).dataset.help = stock
+          ? "Um registro reúne várias unidades. As saídas reduzem o saldo. Disponível no almoxarifado."
+          : "Cada bem tem seu próprio código, movimentações e histórico.";
+        $(id("controlHint")).tabIndex = 0;
       }
 
       function syncDirectDown() {
@@ -2956,7 +3587,7 @@
         $("directReason").disabled = !active;
         labelButton(
           $("save"),
-          active ? "Registrar descarte" : "Salvar registro",
+          active ? "Registrar descarte" : "Cadastrar",
           active ? "down" : "save",
         );
       }
@@ -3133,13 +3764,14 @@
         n.required = !!t && !none;
         n.readOnly = none;
         $(edit ? "editScan" : "scan").hidden = none;
-        n.placeholder = none
-          ? "Código próprio gerado ao salvar"
-          : "Leia ou digite os 6 números";
+        n.placeholder = none ? "Código automático" : "Código de 6 dígitos";
         if (none) n.value = "";
-        $(edit ? "editCodeHint" : "codeHint").textContent = none
-          ? "O ACERVO gera um código interno para este item."
-          : "Os zeros à esquerda são preservados.";
+        const help = $(edit ? "editCodeHint" : "codeHint");
+        help.textContent = "Sobre o código ⓘ";
+        help.dataset.help = none
+          ? "O ACERVO gera um código interno ao cadastrar. Você não precisa preencher este campo."
+          : "PMC e ICI usam seis números. Os zeros à esquerda são preservados.";
+        help.tabIndex = 0;
       }
       function syncForm() {
         const ready = clean($("item").value).length >= 2;
@@ -3191,14 +3823,18 @@
         if (cat && !manual.categoria) suggestions.push(cat);
         if (ident && !manual.tipo) suggestions.push(TYPE[ident]);
         $("learningHint").textContent = suggestions.length
-          ? "Sugestão pelos " +
-            matches.length +
-            " registros deste item: " +
-            suggestions.join(" · ") +
-            ". Você pode trocar."
+          ? "Sugestão aplicada ⓘ"
           : matches.length
-            ? "Sem um padrão claro. Escolha categoria e identificação."
-            : "Item novo? Escolha a categoria e a identificação abaixo.";
+            ? "Escolha as opções abaixo."
+            : "Novo item";
+        $("learningHint").dataset.help = suggestions.length
+          ? "Com base em " +
+            matches.length +
+            " registros: " +
+            suggestions.join(" · ") +
+            ". Todas as opções podem ser alteradas."
+          : "Escolha um nome existente ou cadastre um novo. As sugestões se baseiam no histórico do inventário.";
+        $("learningHint").tabIndex = 0;
         syncForm();
       }
       function suggestions() {
@@ -3308,7 +3944,7 @@
           motivo: $("directReason").value,
         });
         $("draftInfo").textContent = ok
-          ? "Rascunho salvo neste navegador."
+          ? "Rascunho salvo"
           : "Não foi possível guardar o rascunho neste navegador.";
       }
       function restoreDraft() {
@@ -3358,8 +3994,7 @@
           $("minimum").value = "0";
           $("unit").value = "unidade";
           learnedKey = "";
-          $("learningHint").textContent =
-            "Escolha um item já registrado ou escreva um novo nome.";
+          $("learningHint").textContent = "Sugestões conforme você digita.";
         }
         $("suggestions").hidden = true;
         $("item").setAttribute("aria-expanded", "false");
@@ -3378,7 +4013,7 @@
         $(e ? "editCodeHint" : "codeHint").textContent =
           r && code
             ? "Já cadastrado: " + r.dados.item + " · " + STATUS[r.situacao]
-            : "Os zeros à esquerda são preservados.";
+            : "Sobre o código ⓘ";
       }
       // Atualização automática usa as mesmas RPCs autorizadas do sistema.
       async function refresh() {
@@ -4014,6 +4649,9 @@
             $("listNotice").hidden = true;
           }
           if ($("operation").open) $("operation").close();
+          $("save").classList.remove("saved-flash");
+          requestAnimationFrame(() => $("save").classList.add("saved-flash"));
+          setTimeout(() => $("save").classList.remove("saved-flash"), 700);
           toast("Operação salva.");
           try {
             await refresh();
@@ -4692,8 +5330,12 @@
       $("exportFiltered").onclick = () => exportExcel(false);
       $("loginForm").onsubmit = async (e) => {
         e.preventDefault();
+        if ($("loginButton").disabled) return;
         $("loginButton").disabled = true;
-        $("loginMessage").textContent = "Entrando…";
+        $("loginButton").classList.add("loading");
+        $("loginButton").setAttribute("aria-busy", "true");
+        labelButton($("loginButton"), "Entrando…", "lock");
+        $("loginMessage").textContent = "";
         try {
           if (!db) throw Error("Conexão indisponível. Atualize a página.");
           const { data, error } = await db.auth.signInWithPassword({
@@ -4707,6 +5349,9 @@
           $("loginMessage").textContent = e.message;
         } finally {
           $("loginButton").disabled = false;
+          $("loginButton").classList.remove("loading");
+          $("loginButton").removeAttribute("aria-busy");
+          labelButton($("loginButton"), "Entrar", "lock");
         }
       };
       function endSession() {
@@ -5836,6 +6481,154 @@
       }
 
       initForm();
+
+      // Camada visual: dicas, entrada da marca e respostas ao toque.
+      function initVisualExperience() {
+        const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+        const tip = $("contextTip");
+        let activeHelp = null;
+        function closeTip() {
+          if (activeHelp) activeHelp.removeAttribute("aria-describedby");
+          activeHelp = null;
+          tip.hidden = true;
+        }
+        function openTip(target) {
+          closeTip();
+          activeHelp = target;
+          tip.textContent = target.dataset.help;
+          tip.hidden = false;
+          target.setAttribute("aria-describedby", "contextTip");
+          const r = target.getBoundingClientRect(),
+            t = tip.getBoundingClientRect();
+          tip.style.left =
+            Math.max(12, Math.min(innerWidth - t.width - 12, r.left)) + "px";
+          tip.style.top =
+            Math.max(
+              12,
+              r.bottom + t.height + 12 > innerHeight
+                ? r.top - t.height - 8
+                : r.bottom + 8,
+            ) + "px";
+        }
+        document.addEventListener("pointerover", (e) => {
+          const t = e.target.closest("[data-help]");
+          if (t && t !== activeHelp && e.pointerType !== "touch") openTip(t);
+        });
+        document.addEventListener("pointerout", (e) => {
+          if (
+            activeHelp &&
+            !activeHelp.contains(e.relatedTarget) &&
+            activeHelp.contains(e.target)
+          )
+            closeTip();
+        });
+        document.addEventListener("focusin", (e) => {
+          const t = e.target.closest("[data-help]");
+          if (t) openTip(t);
+          else closeTip();
+        });
+        document.addEventListener("click", (e) => {
+          const t = e.target.closest("[data-help]");
+          if (t) openTip(t);
+          else closeTip();
+          if (!e.target.closest(".export-menu"))
+            document.querySelector(".export-menu")?.removeAttribute("open");
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeTip();
+        });
+        addEventListener("scroll", closeTip, { passive: true, capture: true });
+        addEventListener("resize", closeTip);
+        document.addEventListener(
+          "pointermove",
+          (e) => {
+            if (reduced.matches || e.pointerType !== "mouse") return;
+            const b = e.target.closest(".primary");
+            if (!b) return;
+            const r = b.getBoundingClientRect();
+            b.style.setProperty("--px", e.clientX - r.left + "px");
+            b.style.setProperty("--py", e.clientY - r.top + "px");
+          },
+          { passive: true },
+        );
+        $("togglePassword").onclick = () => {
+          const show = $("password").type === "password";
+          $("password").type = show ? "text" : "password";
+          $("togglePassword").textContent = show ? "Ocultar" : "Mostrar";
+          $("togglePassword").setAttribute(
+            "aria-label",
+            show ? "Ocultar senha" : "Mostrar senha",
+          );
+          $("togglePassword").setAttribute("aria-pressed", String(show));
+        };
+        function syncScreen() {
+          document.body.classList.toggle("auth-screen", !$("login").hidden);
+          if ($("login").hidden) {
+            $("brandIntro")?.remove();
+            $("password").type = "password";
+            $("togglePassword").textContent = "Mostrar";
+            $("togglePassword").setAttribute("aria-pressed", "false");
+          }
+        }
+        new MutationObserver(syncScreen).observe($("login"), {
+          attributes: true,
+          attributeFilter: ["hidden"],
+        });
+        syncScreen();
+        const intro = $("brandIntro");
+        if (intro) {
+          if (reduced.matches) intro.remove();
+          else
+            setTimeout(() => {
+              if (!intro.isConnected) return;
+              const from = $("introMark").getBoundingClientRect(),
+                to = $("loginMark").getBoundingClientRect();
+              intro.classList.add("departing");
+              $("introMark").style.transform =
+                "translate(" +
+                (to.left + to.width / 2 - from.left - from.width / 2) +
+                "px," +
+                (to.top + to.height / 2 - from.top - from.height / 2) +
+                "px) scale(" +
+                to.width / from.width +
+                ")";
+              setTimeout(() => {
+                intro.style.opacity = "0";
+                setTimeout(() => intro.remove(), 260);
+              }, 410);
+            }, 520);
+        }
+        $("draftInfo").textContent = "Rascunho automático";
+        $("draftInfo").dataset.help =
+          "O rascunho fica neste navegador, associado à sua conta. O registro definitivo acontece ao cadastrar.";
+        $("draftInfo").tabIndex = 0;
+        document.querySelectorAll(".step-title").forEach((n) => {
+          n.textContent = n.textContent.replace(/^0[1-3] \/ /, "");
+        });
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries)
+              if (e.isIntersecting) {
+                if (!reduced.matches) e.target.classList.add("motion-enter");
+                observer.unobserve(e.target);
+              }
+          },
+          { threshold: 0.08 },
+        );
+        document
+          .querySelectorAll("#app .card")
+          .forEach((n) => observer.observe(n));
+        for (const id of ["exportFiltered", "exportAll"])
+          $(id).addEventListener("click", () =>
+            document.querySelector(".export-menu").removeAttribute("open"),
+          );
+        $("refresh").setAttribute("aria-label", "Atualizar inventário");
+        $("refresh").dataset.help = "Atualizar inventário";
+        const refreshIcon = $("refresh").querySelector("svg");
+        $("refresh").replaceChildren(refreshIcon);
+      }
+      initVisualExperience();
+
       (async () => {
         if (!db) {
           $("loginMessage").textContent =

@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-g8BQYyKrUHapqZqnyJEBaC3S0YiCvGTi1yN+zl8Nl7I=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-KUl2+ykvuQyFa5PokQdzKt6fKJk8AT2UCuiRsi19TKc=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -2394,10 +2394,10 @@
         padding: 6px;
         gap: 5px;
         border-radius: 17px;
-        border: 1px solid #9fc15ca6;
-        background: linear-gradient(115deg, #244d3d, #133c31);
-        box-shadow: 0 0 0 4px #d9efab45, 0 0 30px #b6dd7080,
-          0 12px 28px -14px #17433380, inset 0 1px 0 #d7f58b38;
+        border: 1px solid #d4dfc7;
+        background: linear-gradient(115deg, #edf0e8, #e6ece2);
+        box-shadow: 0 0 0 3px #d9efab40, 0 0 26px #b6dd705c,
+          0 9px 22px -13px #17433345, inset 0 1px 0 #ffffffc9;
         margin: 24px 0 28px;
       }
       .nav::before {
@@ -2407,8 +2407,8 @@
         top: -1px;
         left: 10%;
         right: 10%;
-        background: linear-gradient(90deg, transparent, #edffb8, transparent);
-        box-shadow: 0 0 11px #d7f58b;
+        background: linear-gradient(90deg, transparent, #f5ffe2, transparent);
+        box-shadow: 0 0 11px #c9ea8d;
         pointer-events: none;
       }
       .nav button {
@@ -2416,18 +2416,19 @@
         z-index: 1;
         border: 1px solid transparent;
         border-radius: 11px;
-        color: #e1eccf;
+        color: #365245;
         font-weight: 600;
         padding: 11px 20px;
         min-height: 45px;
         background: transparent;
         box-shadow: none;
         transform: none;
-        transition: color 0.3s, background-color 0.3s;
+        transition: color 0.3s, background-color 0.3s,
+          transform 0.2s var(--ease), box-shadow 0.2s;
       }
       .nav button[aria-current="page"] {
         color: #163d2c;
-        background: #dcf6a4;
+        background: #fffefa;
         border-color: transparent;
         font-weight: 600;
         box-shadow: 0 0 18px #d7f58b55;
@@ -2436,17 +2437,17 @@
         background: transparent;
         box-shadow: none;
       }
-      .nav button:focus-visible { outline-color: #e9ffb2; outline-offset: 2px; }
+      .nav button:focus-visible { outline-color: #6d883e; outline-offset: 2px; }
       .nav-lens {
         position: absolute;
         top: 0;
         left: 0;
         z-index: 0;
-        border: 1px solid #efffc9;
+        border: 1px solid #d7e2ca;
         border-radius: 11px;
-        background: linear-gradient(120deg, #f0fbd2, #cce88e);
-        box-shadow: 0 0 17px #d7f58b70, 0 3px 10px #0e302c30,
-          inset 0 1px 0 #ffffffb3;
+        background: linear-gradient(120deg, #ffffff, #fbfcf8);
+        box-shadow: 0 0 17px #d7f58b70, 0 5px 12px -5px #173f3540,
+          inset 0 1px 0 #fff;
         pointer-events: none;
         opacity: 0;
         transition: transform 0.58s cubic-bezier(0.22, 0.8, 0.24, 1),
@@ -2527,8 +2528,8 @@
       }
       .registration-summary,
       .disposal .registration-summary {
-        margin: 20px 0;
-        padding: 20px 22px;
+        margin: 12px 0;
+        padding: 12px 15px;
         border: 1px solid #c9dcb1;
         border-radius: 15px;
         background: radial-gradient(ellipse at 100% 0, #d4ed9d66, transparent 65%),
@@ -2539,7 +2540,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
+        gap: 10px;
       }
       .summary-title { min-width: 0; }
       .summary-eyebrow {
@@ -2552,7 +2553,7 @@
       }
       .summary-title strong {
         display: block;
-        font-size: 17px;
+        font-size: 14px;
         line-height: 1.4;
         font-weight: 600;
         color: #214b35;
@@ -2563,9 +2564,9 @@
         flex: 0 0 auto;
         align-items: center;
         gap: 6px;
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 600;
-        padding: 4px 9px;
+        padding: 3px 7px;
         border: 1px solid #bed593;
         border-radius: 7px;
         color: #365126;
@@ -2575,14 +2576,14 @@
       .summary-facts {
         display: grid;
         grid-template-columns: 0.8fr 1fr 1.2fr;
-        gap: 16px;
-        margin: 16px 0 0;
-        padding-top: 14px;
+        gap: 12px;
+        margin: 9px 0 0;
+        padding-top: 9px;
         border-top: 1px solid #cbdcba;
       }
       .summary-facts > div { min-width: 0; }
-      .summary-facts dt { color: #66775c; font-size: 10px; margin: 0 0 4px; }
-      .summary-facts dd { margin: 0; color: #294533; font-size: 12px; overflow-wrap: anywhere; }
+      .summary-facts dt { color: #66775c; font-size: 9px; margin: 0 0 2px; }
+      .summary-facts dd { margin: 0; color: #294533; font-size: 11px; overflow-wrap: anywhere; }
       .summary-facts dd small { display: block; font-size: 10px; margin-top: 3px; }
       .disposal .registration-summary {
         background: linear-gradient(135deg, #fff9f0, #fbefe7);
@@ -2592,13 +2593,13 @@
       .disposal .summary-facts { border-color: #e5cdbc; }
       @media (hover: hover) and (pointer: fine) {
         .nav button:hover:not(:disabled) {
-          transform: none;
+          transform: translateY(-2px);
           border-color: transparent;
-          box-shadow: none;
-          background-color: #eaffbb12;
-          color: #f3ffdd;
+          box-shadow: 0 6px 12px -7px #173f3566;
+          background-color: #ffffff8c;
+          color: #173f35;
         }
-        .nav button[aria-current="page"]:hover:not(:disabled) { color: #163d2c; background: transparent; }
+        .nav button[aria-current="page"]:hover:not(:disabled) { color: #163d2c; background: #ffffff55; }
         .header-meta button:hover:not(:disabled) { background: #e7eedb; box-shadow: none; transform: none; }
         .choice:hover span { border-color: #a6bf77; box-shadow: 0 0 17px -6px #bddf83b3; }
         .primary:hover:not(:disabled) {
@@ -2607,7 +2608,11 @@
         .stat:hover:not(:disabled) { box-shadow: 0 0 0 2px #d7f58b47, 0 10px 25px -12px #80a24ca6; }
         #browse tbody tr:not(.detail-row):hover { background: #e9f3d9b3; }
       }
-      .nav button:active:not(:disabled) { transform: none; }
+      .nav button:active:not(:disabled) {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: inset 0 2px 5px #173f351a;
+      }
+      body.intro-active #loginMark { visibility: hidden; }
       @media (max-width: 850px) {
         .brand-logo { width: 60px; height: 60px; flex-basis: 60px; }
         .brand b { font-size: 31px; }
@@ -2628,10 +2633,10 @@
         .intro { margin: 22px 0 18px; }
         .nav { gap: 5px; margin: 22px 0 25px; border-radius: 17px; }
         .nav button { font-size: 12px; padding: 11px 7px; min-height: 45px; }
-        .registration-summary, .disposal .registration-summary { padding: 17px; }
-        .summary-heading { align-items: flex-start; flex-wrap: wrap; gap: 10px; }
-        .summary-title strong { font-size: 16px; }
-        .summary-facts { grid-template-columns: 1fr 1fr; gap: 13px; }
+        .registration-summary, .disposal .registration-summary { padding: 11px 12px; }
+        .summary-heading { align-items: flex-start; flex-wrap: wrap; gap: 7px; }
+        .summary-title strong { font-size: 13px; }
+        .summary-facts { grid-template-columns: 1fr 1fr; gap: 9px; }
         .summary-facts > div:last-child { grid-column: 1 / -1; }
       }
       @media (max-width: 360px) {
@@ -2643,6 +2648,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         .nav-lens { transition: none !important; }
+        body.intro-active #loginMark { visibility: visible; }
       }
     </style>
   </head>
@@ -3020,9 +3026,6 @@
                           Cadastro para descarte · o item será salvo como
                           baixado.
                         </p>
-                        <button type="button" id="cancelDirectDown">
-                          Voltar ao cadastro ativo
-                        </button>
                         <label for="directReason">Motivo da baixa</label>
                         <textarea
                           id="directReason"
@@ -3579,6 +3582,15 @@
         item: "",
       };
       const internal = (id) => "ACV-" + String(id).padStart(5, "0");
+      // Prévia visual, sem reservar ou alterar a sequência do banco.
+      function nextInternalPreview() {
+        if (!lastSuccess && !rows.length) return "";
+        const last = rows.reduce((max, row) => {
+          const id = Number(row.id);
+          return Number.isSafeInteger(id) && id > max ? id : max;
+        }, 0);
+        return Number.isSafeInteger(last + 1) ? internal(last + 1) : "";
+      }
       const clean = (s) =>
         String(s || "")
           .trim()
@@ -4063,19 +4075,26 @@
           t = value(edit ? "editType" : "type"),
           n = $(edit ? "editCode" : "code"),
           none = t === "SEM_IDENTIFICACAO";
+        if (!none && n.readOnly) n.value = "";
         $(edit ? "editCodeWrap" : "codeWrap").hidden = !t;
         $(edit ? "editCodeLabel" : "codeLabel").textContent = none
           ? "Identificação interna"
           : TYPE[t] || "Identificação";
         n.required = !!t && !none;
         n.readOnly = none;
+        n.pattern = none ? "ACV-[0-9]{5,}" : "[0-9]{6}";
+        n.maxLength = none ? 64 : 6;
         $(edit ? "editScan" : "scan").hidden = none;
         n.placeholder = none ? "Código automático" : "Código de 6 dígitos";
-        if (none) n.value = "";
+        if (none) n.value = edit && editor?.id
+          ? internal(editor.id) : nextInternalPreview();
         const help = $(edit ? "editCodeHint" : "codeHint");
-        help.textContent = "Sobre o código ⓘ";
+        help.textContent = none && !edit && n.value
+          ? "Código previsto ⓘ" : "Sobre o código ⓘ";
         help.dataset.help = none
-          ? "O ACERVO gera um código interno ao cadastrar. Você não precisa preencher este campo."
+          ? edit
+            ? "Código interno deste registro."
+            : "Prévia calculada pelo último registro disponível. O banco confirma o número ao salvar; ele pode mudar se houver outro cadastro ou lacunas na sequência."
           : "PMC e ICI usam seis números. Os zeros à esquerda são preservados.";
         help.tabIndex = 0;
       }
@@ -4210,7 +4229,7 @@
         const down = $("directDown").checked;
         const heading = el("div", undefined, "summary-heading");
         const title = el("div", undefined, "summary-title");
-        title.append(el("span", "Seu registro", "summary-eyebrow"), el("strong", d.item));
+        title.append(el("strong", d.item));
         const status = el("span", down ? "Baixado / descarte" : "Ativo", "summary-status");
         status.append(icon(down ? "down" : "check"));
         heading.append(title, status);
@@ -4226,8 +4245,10 @@
         fact("Quantidade", stock
           ? d.quantidade === "" ? "A informar" : `${Number.isFinite(amount) ? amount.toLocaleString("pt-BR", { maximumFractionDigits: 3 }) : d.quantidade} ${amount === 1 ? "unidade" : "unidades"}`
           : "1 bem individual");
-        fact("Identificação", stock || d.tipo === "SEM_IDENTIFICACAO"
-          ? "Código automático"
+        const automatic = stock || d.tipo === "SEM_IDENTIFICACAO";
+        const preview = automatic ? nextInternalPreview() : "";
+        fact(automatic && preview ? "Código previsto" : "Identificação", automatic
+          ? preview || "Gerado ao salvar"
           : d.tipo ? `${d.tipo} ${d.codigo || "a informar"}` : "A selecionar");
         fact("Localização", d.ambiente || "A selecionar",
           d.ambiente === "Almoxarifado"
@@ -4377,6 +4398,8 @@
               } else renderList();
             }
             updateRoomCounts();
+            if (type() === "SEM_IDENTIFICACAO") syncCode();
+            updateRegistrationSummary();
             $("fields").disabled = busy || !!pending || role === "leitor";
           } catch (e) {
             if (e.code === "42501") {
@@ -5467,12 +5490,6 @@
         $("itemForm").addEventListener("input", updateRegistrationSummary);
         $("itemForm").addEventListener("change", updateRegistrationSummary);
         $("directDown").onchange = syncDirectDown;
-        $("cancelDirectDown").onclick = () => {
-          $("directDown").checked = false;
-          $("directReason").value = "";
-          syncDirectDown();
-          saveDraft();
-        };
         $("moveSearch").oninput = renderMovementResults;
         $("moveScan").onclick = () => openScanner("moveSearch");
         $("createDown").onclick = () => {
@@ -6892,12 +6909,16 @@
           );
           $("togglePassword").setAttribute("aria-pressed", String(show));
         };
+        function finishIntro() {
+          $("brandIntro")?.remove();
+          document.body.classList.remove("intro-active");
+        }
         function syncScreen() {
           document.body.classList.toggle("auth-screen", !$("login").hidden);
           $("syncTools").hidden = !$("login").hidden;
           requestAnimationFrame(() => updateNavIndicator(false));
           if ($("login").hidden) {
-            $("brandIntro")?.remove();
+            finishIntro();
             $("password").type = "password";
             $("togglePassword").textContent = "Mostrar";
             $("togglePassword").setAttribute("aria-pressed", "false");
@@ -6918,8 +6939,9 @@
         }
         const intro = $("brandIntro");
         if (intro) {
-          if (reduced.matches) intro.remove();
-          else
+          if (reduced.matches) finishIntro();
+          else {
+            document.body.classList.add("intro-active");
             setTimeout(() => {
               if (!intro.isConnected) return;
               const from = $("introMark").getBoundingClientRect(),
@@ -6934,11 +6956,18 @@
                 to.width / from.width +
                 ")";
               setTimeout(() => {
+                if (!intro.isConnected) return;
+                $("introMark").style.visibility = "hidden";
+                document.body.classList.remove("intro-active");
                 intro.style.opacity = "0";
-                setTimeout(() => intro.remove(), 380);
+                setTimeout(finishIntro, 380);
               }, 850);
             }, 1300);
+          }
         }
+        reduced.addEventListener("change", () => {
+          if (reduced.matches) finishIntro();
+        });
         $("draftInfo").textContent = "Rascunho automático";
         $("draftInfo").dataset.help =
           "O rascunho fica neste navegador, associado à sua conta. O registro definitivo acontece ao cadastrar.";

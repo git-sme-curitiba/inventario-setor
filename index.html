@@ -2337,10 +2337,13 @@
           0 5px 14px -8px #173f3526, 0 0 36px -16px #b5e16970;
       }
       body:not(.auth-screen) {
+        min-height: 100vh;
+        min-height: 100dvh;
         background:
           radial-gradient(ellipse at 90% 4%, #dcf2bca3, transparent 38%),
           radial-gradient(ellipse at 3% 55%, #dce8b98c, transparent 42%),
           #f3f4ee;
+        background-repeat: no-repeat;
       }
       .shell > header {
         flex-wrap: nowrap;

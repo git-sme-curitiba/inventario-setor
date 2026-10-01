@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-KUl2+ykvuQyFa5PokQdzKt6fKJk8AT2UCuiRsi19TKc=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-iLvIwtC+3JpI+aHtYID7OTLeJHqweBuSMqxuxqEyndk=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -1953,15 +1953,54 @@
       }
       .help-dot {
         display: inline-flex;
-        border-radius: 50%;
+        border-radius: 6px;
         width: 22px;
         height: 22px;
         min-height: 22px;
         padding: 0;
-        font-size: 12px;
         vertical-align: middle;
-        background: #edf3e6;
-        border-color: #d9e4cc;
+        color: #587064;
+        background: #f8f9f4;
+        border-color: #d9e1d5;
+      }
+      .help-dot .icon {
+        width: 15px;
+        height: 15px;
+        flex-basis: 15px;
+      }
+      .help-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        width: fit-content;
+        max-width: 100%;
+        border-radius: 4px;
+      }
+      .help-hint .help-cue {
+        width: 16px;
+        height: 16px;
+        flex-basis: 16px;
+        color: #74856e;
+        transition: color 0.18s, filter 0.18s;
+      }
+      .help-hint:focus-visible {
+        outline: 2px solid #78934a;
+        outline-offset: 3px;
+      }
+      .help-dot:focus-visible,
+      .help-hint:focus-visible .help-cue {
+        color: #173f35;
+      }
+      @media (hover: hover) {
+        .help-dot:hover:not(:disabled) {
+          color: #173f35;
+          border-color: #9bb488;
+          box-shadow: 0 0 0 3px #d9ecae45, 0 3px 9px #173f350d;
+        }
+        .help-hint:hover .help-cue {
+          color: #173f35;
+          filter: drop-shadow(0 0 3px #b4cd8d80);
+        }
       }
       [data-help] {
         cursor: help;
@@ -2682,7 +2721,8 @@
         <path d="M3 21h18M5 21V5h14v16M9 9h2m2 0h2M9 13h2m2 0h2M10 21v-4h4v4" />
       </symbol>
       <symbol id="i-management" viewBox="0 0 24 24">
-        <path d="M3 21h18M5 21V8l7-5 7 5v13M9 11h6M9 15h6M12 8v1" />
+        <rect x="3" y="7" width="18" height="14" rx="2" />
+        <path d="M8 7V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3M3 12a20 20 0 0 0 18 0M10 12v3h4v-3" />
       </symbol>
       <symbol id="i-shelf" viewBox="0 0 24 24">
         <path
@@ -2694,14 +2734,31 @@
           d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0M15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0"
         />
       </symbol>
-      <symbol id="i-tag" viewBox="0 0 24 24">
-        <path d="M3 3h8l10 10-8 8L3 11V3M7 7h.01" />
+      <symbol id="i-ici" viewBox="0 0 24 24">
+        <path d="M4 5h13l4 4v10H4V5M8 9v6m3-6v6m3-6v6m3-4v4" />
       </symbol>
       <symbol id="i-pmc" viewBox="0 0 24 24">
         <path d="M3 9l9-6 9 6H3M5 10v9m5-9v9m4-9v9m5-9v9M3 21h18" />
       </symbol>
-      <symbol id="i-box" viewBox="0 0 24 24">
-        <path d="M3 7l9-4 9 4v10l-9 4-9-4V7M3 7l9 4 9-4M12 11v10M8 5l9 4" />
+      <symbol id="i-furniture" viewBox="0 0 24 24">
+        <rect x="7" y="3" width="10" height="9" rx="2" />
+        <path d="M6 12h12v4H6v-4M7 16v5m10-5v5" />
+      </symbol>
+      <symbol id="i-technology" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="12" rx="2" />
+        <path d="M12 16v5m-4 0h8M3 12h18" />
+      </symbol>
+      <symbol id="i-materials" viewBox="0 0 24 24">
+        <path d="M4 14h16l-1 7H5l-1-7M6 14V8m6 6V8M15 14V3h4v11m-4-7h2m-2 3h2M8 18h8" />
+        <ellipse cx="9" cy="8" rx="3" ry="1.8" />
+      </symbol>
+      <symbol id="i-individual" viewBox="0 0 24 24">
+        <rect x="6" y="3" width="12" height="18" rx="2" />
+        <rect x="9" y="6" width="6" height="6" rx="1" />
+        <path d="M9 16h6" />
+      </symbol>
+      <symbol id="i-stock" viewBox="0 0 24 24">
+        <path d="M8 4h12v12M3 9h13v12H3V9M8 9v4h3V9" />
       </symbol>
       <symbol id="i-none" viewBox="0 0 24 24">
         <path d="M5 4h14v16H5V4M9 12h6" />
@@ -2717,8 +2774,30 @@
       <symbol id="i-save" viewBox="0 0 24 24">
         <path d="M4 3h13l3 3v15H4V3M8 3v6h8V3M8 21v-7h8v7" />
       </symbol>
-      <symbol id="i-arrow" viewBox="0 0 24 24">
-        <path d="M4 12h16m-6-6 6 6-6 6" />
+      <symbol id="i-movement" viewBox="0 0 24 24">
+        <path d="M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4" />
+      </symbol>
+      <symbol id="i-loan" viewBox="0 0 24 24">
+        <rect x="3" y="10" width="10" height="11" rx="1.5" />
+        <path d="M7 10v4h2v-4M9 5h12m-4-4 4 4-4 4" />
+      </symbol>
+      <symbol id="i-return" viewBox="0 0 24 24">
+        <rect x="11" y="10" width="10" height="11" rx="1.5" />
+        <path d="M15 10v4h2v-4M15 5H3m4-4-4 4 4 4" />
+      </symbol>
+      <symbol id="i-stock-in" viewBox="0 0 24 24">
+        <path d="M3 13v8h18v-8M3 13h4m10 0h4M12 3v12m-4-4 4 4 4-4" />
+      </symbol>
+      <symbol id="i-stock-out" viewBox="0 0 24 24">
+        <path d="M3 13v8h18v-8M3 13h4m10 0h4M12 15V3m-4 4 4-4 4 4" />
+      </symbol>
+      <symbol id="i-discard" viewBox="0 0 24 24">
+        <path d="M3 6h18M8 6V3h8v3M5 6l1 15h12l1-15M10 10v7m4-7v7" />
+      </symbol>
+      <symbol id="i-writeoff" viewBox="0 0 24 24">
+        <path d="M10 21H4V3h10l5 5v3M14 3v5h5M8 12h3M8 16h1" />
+        <circle cx="17" cy="17" r="4.5" />
+        <path d="M15 17h4" />
       </symbol>
       <symbol id="i-left" viewBox="0 0 24 24">
         <path d="M15 5l-7 7 7 7" />
@@ -2732,6 +2811,9 @@
       <symbol id="i-sheet" viewBox="0 0 24 24">
         <path d="M5 3h10l4 4v14H5V3M15 3v5h4M8 12h8M8 16h8M12 12v4" />
       </symbol>
+      <symbol id="i-sheet-filter" viewBox="0 0 24 24">
+        <path d="M5 3h10l4 4v14H5V3M15 3v5h4M8 11h8l-3 4v3h-2v-3l-3-4" />
+      </symbol>
       <symbol id="i-close" viewBox="0 0 24 24">
         <path d="M6 6l12 12M18 6 6 18" />
       </symbol>
@@ -2741,11 +2823,11 @@
       <symbol id="i-edit" viewBox="0 0 24 24">
         <path d="M4 20l5-1L20 8l-5-5L4 14v6M13 5l5 5" />
       </symbol>
-      <symbol id="i-down" viewBox="0 0 24 24">
-        <path d="M12 3v12m-5-5 5 5 5-5M4 18v3h16v-3" />
+      <symbol id="i-reverse" viewBox="0 0 24 24">
+        <path d="M11 21h8V8l-5-5H5v6M14 3v5h5M8 11l-4 4 4 4M4 15h8a3 3 0 0 1 0 6" />
       </symbol>
-      <symbol id="i-undo" viewBox="0 0 24 24">
-        <path d="M9 4 3 10l6 6M3 10h11a6 6 0 0 1 6 6v4" />
+      <symbol id="i-restore" viewBox="0 0 24 24">
+        <path d="M3 3h18v5H3V3M5 8v13h14V8M12 18v-7m-3 3 3-3 3 3" />
       </symbol>
       <symbol id="i-archive" viewBox="0 0 24 24">
         <path d="M3 3h18v5H3V3M5 8v13h14V8M9 12h6" />
@@ -2754,7 +2836,56 @@
         <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 7v5l3 2" />
       </symbol>
       <symbol id="i-levels" viewBox="0 0 24 24">
-        <path d="M4 5h16M4 12h16M4 19h16" />
+        <path d="M8 5h13M8 12h13M8 19h13M3 3v4m0 3v4m0 3v4" />
+      </symbol>
+      <symbol id="i-sequence" viewBox="0 0 24 24">
+        <path d="M3 4v16M8 5h6M8 12h9M8 19h13M3 5h1m-1 7h1m-1 7h1" />
+      </symbol>
+      <symbol id="i-code" viewBox="0 0 24 24">
+        <path d="M6 5H3v14h3M18 5h3v14h-3M10 7l-1 10m6-10-1 10M7 10h10M7 14h10" />
+      </symbol>
+      <symbol id="i-suggestion" viewBox="0 0 24 24">
+        <path d="M12 3l2.3 6.7L21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3L12 3M19 3v4m-2-2h4" />
+      </symbol>
+      <symbol id="i-draft" viewBox="0 0 24 24">
+        <path d="M11 21H4V3h10l5 5v3M14 3v5h5M8 8h3M8 12h4M13 21l1-4 5-5 3 3-5 5-4 1M17 14l3 3" />
+      </symbol>
+      <symbol id="i-history" viewBox="0 0 24 24">
+        <path d="M11 21H4V3h13v7M8 7h5M8 11h2" />
+        <circle cx="16" cy="16" r="6" />
+        <path d="M16 13v3l2 1" />
+      </symbol>
+      <symbol id="i-composition" viewBox="0 0 24 24">
+        <path d="M10 3a9 9 0 1 0 11 11H10V3M14 3a9 9 0 0 1 7 7h-7V3" />
+      </symbol>
+      <symbol id="i-ranking" viewBox="0 0 24 24">
+        <path d="M3 4v16h18M7 5h13v3H7V5M7 11h9v3H7v-3M7 17h5v3H7v-3" />
+      </symbol>
+      <symbol id="i-rack-map" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="1.5" />
+        <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+        <path d="M5 11h2v2H5v-2" />
+      </symbol>
+      <symbol id="i-audit" viewBox="0 0 24 24">
+        <path d="M8 5H5v16h14V5h-3M8 3h8v4H8V3M8 14l3 3 5-6" />
+      </symbol>
+      <symbol id="i-reopen" viewBox="0 0 24 24">
+        <path d="M11 21H5V5h3m8 0h3v5M8 3h8v4H8V3M14 13h-3v3m0-3a6 6 0 1 1-1 6" />
+      </symbol>
+      <symbol id="i-available" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M7 7h10M7 11h5M7 15h3M13 17l2 2 4-5" />
+      </symbol>
+      <symbol id="i-stock-alert" viewBox="0 0 24 24">
+        <path d="M9 20H3V5h12v4M3 10h8M7 5v3h4V5M16 11l6 10H10l6-10M16 15v2m0 2v.01" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24">
+        <path d="M8 5V3h13v13h-2" />
+        <rect x="3" y="8" width="13" height="13" rx="1.5" />
+        <path d="M9.5 12v5M7 14.5h5" />
+      </symbol>
+      <symbol id="i-warning" viewBox="0 0 24 24">
+        <path d="M12 3l10 18H2L12 3M12 9v5m0 3v.01" />
       </symbol>
       <symbol id="i-lock" viewBox="0 0 24 24">
         <path d="M6 10h12v11H6V10M8 10V6a4 4 0 0 1 8 0v4M12 14v3" />
@@ -2874,7 +3005,7 @@
             Cadastrar</button
           ><button data-tab="movements">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <use href="#i-arrow" />
+              <use href="#i-movement" />
             </svg>
             Movimentações</button
           ><button data-tab="browse">
@@ -2922,7 +3053,7 @@
                           viewBox="0 0 24 24"
                           aria-hidden="true"
                         >
-                          <use href="#i-box" />
+                          <use href="#i-composition" />
                         </svg>
                         03 / Categoria e identificação
                       </div>
@@ -2994,7 +3125,9 @@
                               data-help="Prateleiras numeradas de cima para baixo: 01 no topo, 06 na base."
                               aria-label="Como contar as prateleiras"
                             >
-                              ?
+                              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <use href="#i-levels" />
+                              </svg>
                             </button></span
                           ><strong id="position">Escolha a posição</strong>
                         </div>
@@ -3120,7 +3253,7 @@
                 <div class="export-options">
                   <button id="exportFiltered">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                      <use href="#i-download" />
+                      <use href="#i-sheet-filter" />
                     </svg>
                     Resultado da consulta</button
                   ><button class="primary" id="exportAll">
@@ -3235,9 +3368,11 @@
               type="button"
               class="help-dot"
               data-help="Ações registradas, com pessoa e horário de Curitiba."
-              aria-label="Informações sobre este painel"
+              aria-label="Ajuda sobre as últimas movimentações"
             >
-              ?
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <use href="#i-history" />
+              </svg>
             </button>
             <div id="movementTimeline"></div>
           </div>
@@ -3248,9 +3383,11 @@
                 type="button"
                 class="help-dot"
                 data-help="Ativos e emprestados por ambiente de origem. Clique para consultar."
-                aria-label="Informações sobre este painel"
+                aria-label="Ajuda sobre a localização dos bens"
               >
-                ?
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-pin" />
+                </svg>
               </button>
               <div id="roomChart"></div>
             </div>
@@ -3260,9 +3397,11 @@
                 type="button"
                 class="help-dot"
                 data-help="Ativos e emprestados por categoria."
-                aria-label="Informações sobre este painel"
+                aria-label="Ajuda sobre a composição do acervo"
               >
-                ?
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-composition" />
+                </svg>
               </button>
               <div id="categoryChart"></div>
             </div>
@@ -3276,9 +3415,11 @@
                 type="button"
                 class="help-dot"
                 data-help="Até seis tipos, entre os bens ativos."
-                aria-label="Informações sobre este painel"
+                aria-label="Ajuda sobre os itens mais frequentes"
               >
-                ?
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-ranking" />
+                </svg>
               </button>
               <div id="topChart"></div>
             </div>
@@ -3295,9 +3436,11 @@
                 type="button"
                 class="help-dot"
                 data-help="Registros ativos por posição. Prateleira 01 no topo. Não indica espaço disponível."
-                aria-label="Informações sobre este painel"
+                aria-label="Ajuda sobre o mapa do almoxarifado"
               >
-                ?
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-rack-map" />
+                </svg>
               </button>
               <div id="rackMap" class="rack-map"></div>
               <p class="hint" id="unplaced"></p>
@@ -3308,9 +3451,11 @@
                 type="button"
                 class="help-dot"
                 data-help="Marque após conferir os bens fisicamente. Alterações podem reabrir a conferência."
-                aria-label="Informações sobre este painel"
+                aria-label="Ajuda sobre a conferência dos ambientes"
               >
-                ?
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-audit" />
+                </svg>
               </button>
               <div id="checks"></div>
             </div>
@@ -3474,7 +3619,9 @@
                       data-help="Prateleiras numeradas de cima para baixo: 01 no topo, 06 na base."
                       aria-label="Como contar as prateleiras"
                     >
-                      ?
+                      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <use href="#i-levels" />
+                      </svg>
                     </button></span
                   ><strong id="editPosition"></strong>
                 </div>
@@ -3527,6 +3674,33 @@
         estornar: "Estornar baixa",
         arquivar: "Arquivar",
         restaurar: "Restaurar",
+      };
+      // Um desenho por significado, consistente entre cadastro, edição e painéis.
+      const CATEGORY_ICON = {
+        "Móvel": "furniture",
+        Tecnologia: "technology",
+        Material: "materials",
+      };
+      const ROOM_ICON = {
+        "Sala Principal": "room",
+        "Sala da Gerência": "management",
+        Almoxarifado: "shelf",
+      };
+      const TYPE_ICON = {
+        PMC: "pmc",
+        ICI: "ici",
+        SEM_IDENTIFICACAO: "none",
+      };
+      const ACTION_ICON = {
+        emprestar: "loan",
+        devolver: "return",
+        entrada: "stock-in",
+        saida: "stock-out",
+        descarte_estoque: "discard",
+        baixar: "writeoff",
+        estornar: "reverse",
+        arquivar: "archive",
+        restaurar: "restore",
       };
       const ZONE = "America/Sao_Paulo";
       // Tokens antigos persistentes não são migrados para a sessão por aba.
@@ -3653,6 +3827,12 @@
         if (name) n.append(icon(name));
         n.append(document.createTextNode(text));
       }
+      function setHelpHint(n, text, name) {
+        const cue = icon(name);
+        cue.classList.add("help-cue");
+        n.classList.add("help-hint");
+        n.replaceChildren(el("span", text), cue);
+      }
       function button(text, fn, cls = "", name = "") {
         const n = el("button", undefined, cls);
         n.type = "button";
@@ -3772,7 +3952,7 @@
             : $("directDown").checked
               ? "Registrar descarte"
               : "Cadastrar",
-          v ? "clock" : "save",
+          v ? "clock" : $("directDown").checked ? "discard" : "save",
         );
         $("previous").disabled = v || page <= 1;
         $("next").disabled =
@@ -3786,8 +3966,8 @@
       }
       // Cadastro: escolhas nativas e aprendizagem por frequência, sem serviço pago.
       const CONTROL = [
-        ["INDIVIDUAL", "Individual", "tag"],
-        ["QUANTIDADE", "Por quantidade", "box"],
+        ["INDIVIDUAL", "Individual", "individual"],
+        ["QUANTIDADE", "Por quantidade", "stock"],
       ];
 
       function mountControlFields(host, prefix = "", record = null) {
@@ -3887,11 +4067,15 @@
           updateRegistrationSummary();
         }
         const room = value(e ? "editRoom" : "room");
-        $(id("controlHint")).textContent = stock
-          ? room && room !== "Almoxarifado"
-            ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
-            : "Saldo em unidades ⓘ"
-          : "Individual ⓘ";
+        setHelpHint(
+          $(id("controlHint")),
+          stock
+            ? room && room !== "Almoxarifado"
+              ? "Estoque por quantidade: selecione Almoxarifado. O ambiente não será trocado automaticamente."
+              : "Saldo em unidades"
+            : "Individual",
+          stock ? "stock" : "individual",
+        );
         $(id("controlHint")).dataset.help = stock
           ? "Um registro reúne várias unidades. As saídas reduzem o saldo. Disponível no almoxarifado."
           : "Cada bem tem seu próprio código, movimentações e histórico.";
@@ -3909,7 +4093,7 @@
         labelButton(
           $("save"),
           active ? "Registrar descarte" : "Cadastrar",
-          active ? "down" : "save",
+          active ? "discard" : "save",
         );
       }
 
@@ -3981,7 +4165,7 @@
                   ACTION[a],
                   () => openOperation(a, r),
                   a === "baixar" || a === "descarte_estoque" ? "danger" : "",
-                  a === "devolver" ? "undo" : "arrow",
+                  ACTION_ICON[a],
                 ),
               );
           card.append(actions);
@@ -4046,7 +4230,7 @@
             : a === "devolver"
               ? `Devolução de ${r.emprestimo?.responsavel || ""}. O item volta à disponibilidade em ${r.dados.ambiente} ${locationText(r)}.`
               : "Data, horário e usuário serão registrados automaticamente. Confira os dados antes de confirmar.";
-        labelButton($("confirmOperation"), ACTION[a], "check");
+        labelButton($("confirmOperation"), ACTION[a], ACTION_ICON[a]);
       }
 
       function validScanValue(v) {
@@ -4092,8 +4276,11 @@
         if (none) n.value = edit && editor?.id
           ? internal(editor.id) : nextInternalPreview();
         const help = $(edit ? "editCodeHint" : "codeHint");
-        help.textContent = none && !edit && n.value
-          ? "Código previsto ⓘ" : "Sobre o código ⓘ";
+        setHelpHint(
+          help,
+          none && !edit && n.value ? "Código previsto" : "Sobre o código",
+          none ? "sequence" : "code",
+        );
         help.dataset.help = none
           ? edit
             ? "Código interno deste registro."
@@ -4150,11 +4337,15 @@
           );
         if (cat && !manual.categoria) suggestions.push(cat);
         if (ident && !manual.tipo) suggestions.push(TYPE[ident]);
-        $("learningHint").textContent = suggestions.length
-          ? "Sugestão aplicada ⓘ"
-          : matches.length
-            ? "Escolha as opções abaixo."
-            : "Novo item";
+        setHelpHint(
+          $("learningHint"),
+          suggestions.length
+            ? "Sugestão aplicada"
+            : matches.length
+              ? "Escolha as opções abaixo."
+              : "Novo item",
+          "suggestion",
+        );
         $("learningHint").dataset.help = suggestions.length
           ? "Com base em " +
             matches.length +
@@ -4188,7 +4379,7 @@
                 saveDraft();
               },
               "",
-              "box",
+              "suggestion",
             ),
           ),
         );
@@ -4234,7 +4425,7 @@
         const title = el("div", undefined, "summary-title");
         title.append(el("strong", d.item));
         const status = el("span", down ? "Baixado / descarte" : "Ativo", "summary-status");
-        status.append(icon(down ? "down" : "check"));
+        status.append(icon(down ? "discard" : "check"));
         heading.append(title, status);
         const facts = el("dl", undefined, "summary-facts");
         function fact(label, text, detail) {
@@ -4298,9 +4489,11 @@
           baixaDireta: $("directDown").checked,
           motivo: $("directReason").value,
         });
-        $("draftInfo").textContent = ok
-          ? "Rascunho salvo"
-          : "Não foi possível guardar o rascunho neste navegador.";
+        setHelpHint(
+          $("draftInfo"),
+          ok ? "Rascunho salvo" : "Não foi possível guardar o rascunho neste navegador.",
+          "draft",
+        );
       }
       function restoreDraft() {
         const d = storage("draft");
@@ -4349,7 +4542,9 @@
           $("minimum").value = "0";
           $("unit").value = "unidade";
           learnedKey = "";
-          $("learningHint").textContent = "Sugestões conforme você digita.";
+          setHelpHint($("learningHint"), "Sugestões conforme você digita.", "suggestion");
+          $("learningHint").dataset.help =
+            "Escolha um nome existente ou cadastre um novo. As sugestões se baseiam no histórico do inventário.";
         }
         $("suggestions").hidden = true;
         $("item").setAttribute("aria-expanded", "false");
@@ -4365,10 +4560,13 @@
               r.dados.codigo === code &&
               r.id !== (e ? editor?.id : null),
           );
-        $(e ? "editCodeHint" : "codeHint").textContent =
+        setHelpHint(
+          $(e ? "editCodeHint" : "codeHint"),
           r && code
             ? "Já cadastrado: " + r.dados.item + " · " + STATUS[r.situacao]
-            : "Sobre o código ⓘ";
+            : "Sobre o código",
+          r && code ? "warning" : t === "SEM_IDENTIFICACAO" ? "sequence" : "code",
+        );
       }
       // Atualização automática usa as mesmas RPCs autorizadas do sistema.
       async function refresh() {
@@ -4725,7 +4923,7 @@
                   ACTION[a],
                   () => openOperation(a, r),
                   "",
-                  a === "devolver" ? "undo" : "arrow",
+                  ACTION_ICON[a],
                 ),
               );
           }
@@ -4735,7 +4933,7 @@
                 "Dar baixa",
                 () => openOperation("baixar", r),
                 "danger",
-                "down",
+                ACTION_ICON.baixar,
               ),
             );
         }
@@ -4746,7 +4944,7 @@
               "Dar baixa",
               () => openOperation("baixar", r),
               "danger",
-              "down",
+              ACTION_ICON.baixar,
             ),
           );
         if (role === "admin" && r.situacao !== "EMPRESTADO") {
@@ -4761,7 +4959,7 @@
               ACTION[a],
               () => openOperation(a, r),
               "",
-              a === "arquivar" ? "archive" : "undo",
+              ACTION_ICON[a],
             ),
           );
         }
@@ -4839,19 +5037,28 @@
         mountControlFields($("editFields"), "edit", r);
         $("editCode").value = d.codigo || "";
         $("editNote").value = d.observacao || "";
-        choices($("editCategories"), "editCategory", CATEGORIES, d.categoria);
+        choices(
+          $("editCategories"),
+          "editCategory",
+          CATEGORIES.map((v) => [v, v, CATEGORY_ICON[v]]),
+          d.categoria,
+        );
         choices(
           $("editTypes"),
           "editType",
-          Object.entries(TYPE),
+          Object.entries(TYPE).map(([v, t]) => [v, t, TYPE_ICON[v]]),
           d.tipo,
           () => {
             $("editCode").value = "";
             syncCode("edit");
           },
         );
-        choices($("editRooms"), "editRoom", ROOMS, d.ambiente, () =>
-          syncLocation("edit"),
+        choices(
+          $("editRooms"),
+          "editRoom",
+          ROOMS.map((v) => [v, v, ROOM_ICON[v]]),
+          d.ambiente,
+          () => syncLocation("edit"),
         );
         choices($("editShelves"), "editShelf", [..."ABCDE"], d.estante);
         choices(
@@ -4990,7 +5197,7 @@
                 "Cadastrar outro igual",
                 () => repeatRegistration(template),
                 "",
-                "plus",
+                "copy",
               ),
             );
             $("saved").hidden = false;
@@ -5165,23 +5372,23 @@
           ),
           count = (f, v) => inUse.filter((r) => r.dados[f] === v).length;
         const metrics = [
-          ["Registros ativos", active.length, "box", { situacao: "ATIVO" }],
+          ["Registros ativos", active.length, "available", { situacao: "ATIVO" }],
           [
             "Emprestados",
             rows.filter((r) => r.situacao === "EMPRESTADO").length,
-            "arrow",
+            "loan",
             { situacao: "EMPRESTADO" },
           ],
           [
             "Estoques ativos",
             active.filter((r) => r.controle === "QUANTIDADE").length,
-            "box",
+            "stock",
             { situacao: "ATIVO", controle: "QUANTIDADE" },
           ],
           [
             "Baixados",
             rows.filter((r) => r.situacao === "BAIXADO").length,
-            "down",
+            "writeoff",
             { situacao: "BAIXADO" },
           ],
           [
@@ -5256,7 +5463,7 @@
               room,
               () => query({ ambiente: room, situacao: "ATIVO" }),
               "",
-              room === "Almoxarifado" ? "shelf" : "room",
+              ROOM_ICON[room],
             );
             n.append(el("b", count("ambiente", room)));
             return n;
@@ -5356,7 +5563,7 @@
                   renderMovementResults();
                 },
                 "chip",
-                "box",
+                "stock-alert",
               ),
             ),
         );
@@ -5399,7 +5606,7 @@
                       });
                   },
                   "",
-                  c.conferido ? "undo" : "check",
+                  c.conferido ? "reopen" : "audit",
                 ),
               );
             return line;
@@ -5482,7 +5689,7 @@
           "initialStatus",
           [
             ["ATIVO", "Ativo", "check"],
-            ["BAIXADO", "Baixado / descarte", "down"],
+            ["BAIXADO", "Baixado / descarte", "discard"],
           ],
           "ATIVO",
           () => {
@@ -5514,7 +5721,7 @@
         choices(
           $("categories"),
           "category",
-          CATEGORIES.map((v, i) => [v, v, i ? "chart" : "box"]),
+          CATEGORIES.map((v) => [v, v, CATEGORY_ICON[v]]),
           "",
           () => {
             manual.categoria = true;
@@ -5523,11 +5730,7 @@
         choices(
           $("types"),
           "type",
-          Object.entries(TYPE).map(([v, t]) => [
-            v,
-            t,
-            v === "PMC" ? "pmc" : v === "ICI" ? "tag" : "none",
-          ]),
+          Object.entries(TYPE).map(([v, t]) => [v, t, TYPE_ICON[v]]),
           "",
           () => {
             manual.tipo = true;
@@ -5538,7 +5741,7 @@
         choices(
           $("rooms"),
           "room",
-          ROOMS.map((v) => [v, v, v === "Almoxarifado" ? "shelf" : "room"]),
+          ROOMS.map((v) => [v, v, ROOM_ICON[v]]),
           ROOMS[0],
           () => {
             syncLocation();
@@ -6843,12 +7046,7 @@
           activeHelp = null;
           tip.hidden = true;
         }
-        function openTip(target) {
-          closeTip();
-          activeHelp = target;
-          tip.textContent = target.dataset.help;
-          tip.hidden = false;
-          target.setAttribute("aria-describedby", "contextTip");
+        function positionTip(target) {
           const r = target.getBoundingClientRect(),
             t = tip.getBoundingClientRect();
           tip.style.left =
@@ -6860,6 +7058,24 @@
                 ? r.top - t.height - 8
                 : r.bottom + 8,
             ) + "px";
+        }
+        function openTip(target) {
+          closeTip();
+          activeHelp = target;
+          tip.textContent = target.dataset.help;
+          tip.hidden = false;
+          target.setAttribute("aria-describedby", "contextTip");
+          positionTip(target);
+        }
+        function moveTip() {
+          if (!activeHelp) return;
+          const r = activeHelp.getBoundingClientRect();
+          // O foco pelo teclado pode rolar a página até o ícone de ajuda.
+          if (activeHelp === document.activeElement &&
+              r.bottom > 0 && r.top < innerHeight &&
+              r.right > 0 && r.left < innerWidth)
+            positionTip(activeHelp);
+          else closeTip();
         }
         document.addEventListener("pointerover", (e) => {
           const t = e.target.closest("[data-help]");
@@ -6888,8 +7104,8 @@
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape") closeTip();
         });
-        addEventListener("scroll", closeTip, { passive: true, capture: true });
-        addEventListener("resize", closeTip);
+        addEventListener("scroll", moveTip, { passive: true, capture: true });
+        addEventListener("resize", moveTip);
         document.addEventListener(
           "pointermove",
           (e) => {
@@ -6971,10 +7187,15 @@
         reduced.addEventListener("change", () => {
           if (reduced.matches) finishIntro();
         });
-        $("draftInfo").textContent = "Rascunho automático";
+        setHelpHint($("draftInfo"), "Rascunho automático", "draft");
         $("draftInfo").dataset.help =
           "O rascunho fica neste navegador, associado à sua conta. O registro definitivo acontece ao cadastrar.";
         $("draftInfo").tabIndex = 0;
+        setHelpHint($("learningHint"), $("learningHint").textContent.trim(), "suggestion");
+        if (!$("learningHint").dataset.help)
+          $("learningHint").dataset.help =
+            "Escolha um nome existente ou cadastre um novo. As sugestões se baseiam no histórico do inventário.";
+        $("learningHint").tabIndex = 0;
         document.querySelectorAll(".step-title").forEach((n) => {
           n.textContent = n.textContent.replace(/^0[1-3] \/ /, "");
         });

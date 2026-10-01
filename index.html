@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-OU2PEAoa4dDyZ3ctJRYqwVCRu2l/vwpB5dUeIvTo1pI=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-6Hjjb+MUlEDOUBaitx255SPtLLfGDrEH5gteSAXMcaY=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -2692,6 +2692,20 @@
         .nav-lens { transition: none !important; }
         body.intro-active #loginMark { visibility: visible; }
       }
+      .stock-watch { margin-bottom: 24px; }
+      .stock-watch-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+      .stock-watch-head h3 { margin: 5px 0 0; }
+      .stock-alert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; margin-top: 16px; }
+      .stock-alert-card { min-width: 0; padding: 16px; border: 1px solid #e5d9c4; border-radius: 13px; background: #fcfaf5; }
+      .stock-alert-card h4 { margin: 10px 0 4px; font-size: 16px; overflow-wrap: anywhere; }
+      .stock-alert-status { display: inline-flex; align-items: center; gap: 6px; color: #855a2f; font-size: 12px; font-weight: 600; }
+      .stock-alert-status .icon { width: 17px; height: 17px; }
+      .stock-alert-values { display: flex; gap: 24px; margin: 14px 0; }
+      .stock-alert-values small { display: block; color: var(--muted); font-size: 11px; }
+      .stock-alert-values strong { display: block; color: var(--ink); font-size: 22px; }
+      .stock-alert-card .hint { margin: 3px 0; overflow-wrap: anywhere; }
+      .stock-alert-card button { padding: 8px 12px; font-size: 12px; }
+      .stock-alert-empty { margin: 0; padding: 14px 16px; background: #f5f8f0; border-radius: 10px; color: var(--muted); }
     </style>
   </head>
   <body class="auth-screen">
@@ -3362,6 +3376,17 @@
           </div>
           <div id="stats" class="stats"></div>
           <div id="availability" class="availability"></div>
+          <section class="card stock-watch" aria-labelledby="stockWatchTitle">
+            <div class="stock-watch-head">
+              <div>
+                <div class="eyebrow">Acompanhamento do estoque</div>
+                <h3 id="stockWatchTitle">Materiais para repor</h3>
+              </div>
+              <span id="stockAlertCount" class="badge"></span>
+            </div>
+            <p class="hint">Estoques ativos com saldo no mínimo ou abaixo dele.</p>
+            <div id="stockAlerts" class="stock-alert-grid" aria-live="polite"></div>
+          </section>
           <div class="card">
             <h3>Últimas movimentações</h3>
             <button
@@ -5541,32 +5566,40 @@
         $("unplaced").textContent = missing
           ? missing + " registros ativos ainda sem posição definida."
           : "Todas as posições cadastradas estão representadas.";
-        let alerts = $("stockAlerts");
-        if (!alerts) {
-          alerts = el("div", undefined, "actions spaced");
-          alerts.id = "stockAlerts";
-          $("unplaced").after(alerts);
-        }
-        alerts.replaceChildren(
-          ...active
-            .filter(
-              (r) =>
-                r.controle === "QUANTIDADE" &&
-                Number(r.saldo) <= Number(r.minimo),
-            )
-            .map((r) =>
-              button(
-                `${r.dados.item}: ${r.saldo} un. · saldo no mínimo`,
-                () => {
-                  showTab("movements");
-                  $("moveSearch").value = internal(r.id);
-                  renderMovementResults();
-                },
-                "chip",
-                "stock-alert",
-              ),
-            ),
+        const lowStock = active.filter((r) => r.controle === "QUANTIDADE" &&
+          Number(r.saldo) <= Number(r.minimo)).sort((a, b) =>
+          Number(a.saldo > 0) - Number(b.saldo > 0) ||
+          Number(a.saldo) / Math.max(1, Number(a.minimo)) -
+          Number(b.saldo) / Math.max(1, Number(b.minimo)) ||
+          String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR")
         );
+        $("stockAlertCount").textContent = lowStock.length +
+          (lowStock.length === 1 ? " material" : " materiais");
+        const numberBR = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 3 });
+        $("stockAlerts").replaceChildren(...(lowStock.length ? lowStock.map((r) => {
+          const card = el("article", undefined, "stock-alert-card");
+          const state = el("span", undefined, "stock-alert-status");
+          state.append(icon("stock-alert"), el("span", Number(r.saldo) <= 0 ? "Sem saldo" :
+            Number(r.saldo) < Number(r.minimo) ? "Abaixo do mínimo" : "No mínimo"));
+          const amounts = el("div", undefined, "stock-alert-values");
+          for (const [label, n] of [["Saldo atual", r.saldo], ["Mínimo", r.minimo]]) {
+            const group = el("div");
+            group.append(el("small", label), el("strong", numberBR(n)));
+            amounts.append(group);
+          }
+          const open = button("Consultar material", () => {
+            if (!leaveEditor()) return;
+            query({});
+            $("search").value = internal(r.id);
+            expanded = r.id;
+            renderList();
+          }, "", "right");
+          open.disabled = busy;
+          card.append(state, el("h4", r.dados.item),
+            el("p", internal(r.id) + " · " + (r.unidade || "unidade"), "hint"), amounts,
+            el("p", [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · "), "hint"), open);
+          return card;
+        }) : [el("p", "Nenhum material está no mínimo ou abaixo dele neste momento.", "stock-alert-empty")]));
         const done = ROOMS.filter((room) =>
           checks.some((c) => c.ambiente === room && c.conferido),
         ).length;
@@ -6106,6 +6139,21 @@
               logoId = wb.addImage({ base64: image.toDataURL("image/png"), extension: "png" });
             } catch { /* A exportação continua se a marca estiver indisponível. */ }
           }
+          // Âncoras de duas células evitam o atributo inválido que o ExcelJS
+          // 4.4.0 escreve em oneCellAnchor. A marca mantém 31 px de altura.
+          function addLogo(ws, start, col = 0, colOff = 7200, rowOff = 18000) {
+            if (logoId === null) return;
+            let endRow = start - 1, endOff = rowOff + 31 * 9525;
+            while (endOff >= (ws.getRow(endRow + 1).height || 15) * 12700) {
+              endOff -= (ws.getRow(endRow + 1).height || 15) * 12700;
+              endRow++;
+            }
+            ws.addImage(logoId, {
+              tl: { nativeCol: col, nativeColOff: colOff, nativeRow: start - 1, nativeRowOff: rowOff },
+              br: { nativeCol: col, nativeColOff: colOff + 31 * 9525, nativeRow: endRow, nativeRowOff: Math.round(endOff) },
+              editAs: "oneCell",
+            });
+          }
           function brand(ws, start, lastCol) {
             const edge = ws.getColumn(lastCol).letter;
             const left = Math.min(2, lastCol - 2);
@@ -6120,9 +6168,7 @@
             text(ws, right + (start + 1) + ":" + edge + (start + 1), "Horário de Curitiba", { size: 9, fg: color.muted, align: "right" });
             ws.getRow(start).height = 23;
             ws.getRow(start + 1).height = 16;
-            if (logoId !== null) ws.addImage(logoId, {
-              tl: { col: 0.04, row: start - 0.92 }, ext: { width: 31, height: 31 },
-            });
+            addLogo(ws, start);
           }
           function banner(ws, title, lastCol) {
             brand(ws, 1, lastCol);
@@ -6208,13 +6254,15 @@
                 cell.border = { bottom: { style: "hair", color: { argb: color.line } } };
                 if ((options.dates || []).includes(j)) cell.numFmt = "dd/mm/yyyy hh:mm:ss";
                 else if (typeof cell.value === "string") cell.numFmt = "@";
-                if (options.details && j === 9 && String(cell.value).length > 100)
-                  cell.note = String(cell.value);
+                // A observação completa fica na célula I e no Relatório A4.
+                // Notas junto de tabelas geram legacyDrawing fora de ordem
+                // no ExcelJS 4.4.0 e fazem o Excel descartar a planilha.
               }
             });
             if (options.details) {
               ws.properties.outlineLevelCol = 1;
-              ws.properties.outlineProperties = { summaryRight: false, summaryBelow: true };
+              // Use as propriedades padrão: outlineProperties personalizadas
+              // são serializadas depois de pageSetUpPr no ExcelJS 4.4.0.
               for (let c = 9; c <= 12; c++) {
                 ws.getColumn(c).outlineLevel = 1;
                 ws.getColumn(c).hidden = true;
@@ -6245,7 +6293,7 @@
           text(summary, "D3:O3", "GIT / SME · Curitiba", { size: 9, fg: color.muted });
           text(summary, "Q2:AD2", all ? "Inventário completo" : "Inventário filtrado", { size: 9, align: "right", fg: color.muted });
           text(summary, "Q3:AD3", issued + " · Curitiba", { size: 9, align: "right", fg: color.muted });
-          if (logoId !== null) summary.addImage(logoId, { tl: { col: 1, row: 1 }, ext: { width: 31, height: 31 } });
+          addLogo(summary, 2, 1, 0, 0);
           text(summary, "B5:AD5", "Inventário do setor", { serif: true, size: 26, fg: color.green });
           text(summary, "B6:AD6", scope, { size: 9, fg: color.muted,
             border: { bottom: { style: "thin", color: { argb: "FFB7CD9B" } } },

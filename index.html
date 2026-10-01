@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-iLvIwtC+3JpI+aHtYID7OTLeJHqweBuSMqxuxqEyndk=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-OU2PEAoa4dDyZ3ctJRYqwVCRu2l/vwpB5dUeIvTo1pI=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -6018,439 +6018,486 @@
         try {
           await refresh();
           if (!window.ExcelJS)
-            throw Error(
-              "A biblioteca do Excel ainda não carregou. Tente novamente.",
-            );
-          const list = all ? [...rows] : filtered(),
-            active = list.filter((r) => r.situacao === "ATIVO");
+            throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
+          const emitted = new Date();
+          const list = all ? [...rows] : filtered();
+          const active = list.filter((r) => r.situacao === "ATIVO");
+          const withoutId = active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO");
+          const checked = ROOMS.filter((room) => checks.some((c) => c.ambiente === room && c.conferido)).length;
           const wb = new ExcelJS.Workbook();
           wb.creator = "ACERVO · GIT/SME";
-          wb.created = new Date();
+          wb.created = emitted;
+          wb.modified = emitted;
+          wb.subject = "Inventário do setor · GIT / SME · Curitiba";
+          wb.calcProperties.fullCalcOnLoad = true;
           const color = {
-            green: "FF173F35",
-            lime: "FFD9ECAE",
-            ink: "FF263E35",
-            muted: "FF6E7D70",
-            soft: "FFF0F4E9",
-            paper: "FFFFFEFA",
-            line: "FFDFE6D8",
+            green: "FF173F35", lime: "FFD9ECAE", ink: "FF263E35",
+            muted: "FF587064", soft: "FFF5F8F0", paper: "FFF6F5F0",
+            white: "FFFFFFFF", line: "FFDFE6D8", amber: "FF99642C",
+            warning: "FFFCF5E8", chart: "FF587F4D", neutral: "FFE4E3D9",
           };
-          const scope = all
-            ? "Inventário completo"
-            : [
-                ...Object.entries(filters)
-                  .filter(([, v]) => v)
-                  .map(([k, v]) => k + ": " + (TYPE[v] || STATUS[v] || v)),
-                $("search").value ? "Busca: " + $("search").value : "",
-              ]
-                .filter(Boolean)
-                .join(" · ") || "Todos os registros";
-          const fill = (argb) => ({
-            type: "pattern",
-            pattern: "solid",
-            fgColor: { argb },
-          });
-          function banner(ws, title, n) {
-            ws.mergeCells(1, 1, 2, n);
-            const c = ws.getCell(1, 1);
-            c.value = "ACERVO  /  " + title;
-            c.font = { name: "Georgia", size: 23, color: { argb: color.lime } };
-            c.fill = fill(color.green);
-            c.alignment = { vertical: "middle", indent: 1 };
-            ws.getRow(1).height = 24;
-            ws.getRow(2).height = 22;
-            ws.mergeCells(3, 1, 3, n);
-            ws.getCell(3, 1).value =
-              "GIT · SME · Curitiba | " +
-              dateBR(new Date()) +
-              " | Horário de Curitiba";
-            ws.getCell(3, 1).font = {
-              name: "Calibri",
-              size: 10,
-              color: { argb: color.muted },
+          const filterNames = {
+            controle: "Controle", ambiente: "Ambiente", categoria: "Categoria",
+            tipo: "Identificação", situacao: "Situação", estante: "Estante",
+            prateleira: "Prateleira", dia: "Cadastro", item: "Item",
+          };
+          const scope = all ? "Inventário completo" : (
+            Object.entries(filters).filter(([, v]) => v).map(([k, v]) =>
+              (filterNames[k] || k) + ": " + (TYPE[v] || STATUS[v] ||
+                ({ EM_USO: "Em uso", INDIVIDUAL: "Individual", QUANTIDADE: "Por quantidade" })[v] || v)
+            ).concat($("search").value ? ["Busca: " + $("search").value] : []).join(" · ") || "Todos os registros"
+          );
+          const issued = dateBR(emitted);
+          const shortDate = (v) => v ? new Intl.DateTimeFormat("pt-BR", {
+            timeZone: ZONE, dateStyle: "short",
+          }).format(new Date(v)) : "";
+          const fill = (argb) => ({ type: "pattern", pattern: "solid", fgColor: { argb } });
+          function text(ws, range, value, options = {}) {
+            if (range.includes(":")) ws.mergeCells(range);
+            const cell = ws.getCell(range.split(":")[0]);
+            cell.value = value;
+            cell.font = {
+              name: options.serif ? "Georgia" : "Arial", size: options.size || 11,
+              color: { argb: options.fg || color.ink }, bold: !!options.bold,
             };
-            ws.getRow(3).height = 23;
-            ws.mergeCells(4, 1, 4, n);
-            ws.getCell(4, 1).value = scope;
-            ws.getCell(4, 1).alignment = { wrapText: true, vertical: "middle" };
-            ws.getCell(4, 1).font = {
-              name: "Calibri",
-              size: 10,
-              color: { argb: color.muted },
+            cell.alignment = {
+              vertical: "middle", horizontal: options.align || "left",
+              wrapText: true, indent: options.indent || 0,
             };
-            ws.getRow(4).height = 32;
+            if (options.bg) cell.fill = fill(options.bg);
+            if (options.border) cell.border = options.border;
+            return cell;
           }
-          function table(name, headers, data, widths, dateColumns = []) {
+          function paint(ws, firstRow, lastRow, firstCol, lastCol, bg) {
+            for (let r = firstRow; r <= lastRow; r++)
+              for (let c = firstCol; c <= lastCol; c++) ws.getCell(r, c).fill = fill(bg);
+          }
+          const measure = document.createElement("canvas").getContext("2d");
+          measure.font = "14.67px Arial";
+          function wrap(value, pixels) {
+            const lines = [];
+            String(value ?? "").split(/\r?\n/).forEach((paragraph) => {
+              let line = "";
+              for (const word of paragraph.split(/\s+/).filter(Boolean)) {
+                const next = line ? line + " " + word : word;
+                if (measure.measureText(next).width <= pixels) { line = next; continue; }
+                if (line) { lines.push(line); line = ""; }
+                let part = "";
+                for (const ch of word) {
+                  if (part && measure.measureText(part + ch).width > pixels) {
+                    lines.push(part); part = "";
+                  }
+                  part += ch;
+                }
+                line = part;
+              }
+              lines.push(line);
+            });
+            return lines;
+          }
+          // A mesma marca do aplicativo, sem baixar nem substituir o favicon.
+          let logoId = null;
+          const logo = document.querySelector('img[src*="favicon.svg"]');
+          if (logo?.complete && logo.naturalWidth) {
+            try {
+              const image = document.createElement("canvas");
+              image.width = image.height = 128;
+              image.getContext("2d").drawImage(logo, 0, 0, 128, 128);
+              logoId = wb.addImage({ base64: image.toDataURL("image/png"), extension: "png" });
+            } catch { /* A exportação continua se a marca estiver indisponível. */ }
+          }
+          function brand(ws, start, lastCol) {
+            const edge = ws.getColumn(lastCol).letter;
+            const left = Math.min(2, lastCol - 2);
+            text(ws, "A" + start + ":" + ws.getColumn(left).letter + start, "ACERVO", {
+              size: 13, fg: color.green, indent: logoId === null ? 0 : 4,
+            });
+            text(ws, "A" + (start + 1) + ":" + ws.getColumn(left).letter + (start + 1), "GIT / SME · Curitiba", {
+              size: 9, fg: color.muted, indent: logoId === null ? 0 : 4,
+            });
+            const right = ws.getColumn(left + 1).letter;
+            text(ws, right + start + ":" + edge + start, "Emitido em " + issued, { size: 9, fg: color.muted, align: "right" });
+            text(ws, right + (start + 1) + ":" + edge + (start + 1), "Horário de Curitiba", { size: 9, fg: color.muted, align: "right" });
+            ws.getRow(start).height = 23;
+            ws.getRow(start + 1).height = 16;
+            if (logoId !== null) ws.addImage(logoId, {
+              tl: { col: 0.04, row: start - 0.92 }, ext: { width: 31, height: 31 },
+            });
+          }
+          function banner(ws, title, lastCol) {
+            brand(ws, 1, lastCol);
+            const edge = ws.getColumn(lastCol).letter;
+            text(ws, "A3:" + edge + "3", title, { serif: true, size: 25, fg: color.green });
+            ws.getRow(3).height = 40;
+            text(ws, "A4:" + edge + "4", scope, {
+              size: 9, fg: color.muted,
+              border: { bottom: { style: "thin", color: { argb: color.line } } },
+            });
+            const width = ws.columns.slice(0, lastCol).reduce((n, c) => n + c.width * 7, 0);
+            ws.getRow(4).height = Math.max(25, wrap(scope, width - 20).length * 12 + 10);
+            ws.getRow(6).height = 10;
+          }
+          const inventoryHeaders = [
+            "Código interno", "Item", "Categoria", "Identificação", "Código externo",
+            "Ambiente", "Posição", "Situação", "Observação", "Cadastrado em (Curitiba)",
+            "Série anterior", "Localização anterior",
+          ];
+          const inventoryRow = (r) => [
+            internal(r.id), r.dados.item, r.dados.categoria, TYPE[r.dados.tipo] || r.dados.tipo,
+            String(r.dados.codigo || ""), r.dados.ambiente, locationText(r), STATUS[r.situacao] || r.situacao,
+            r.dados.observacao || "", excelDate(r.criado_em),
+            r.legado?.numero_serie || "", r.legado?.localizacao || "",
+          ];
+          function table(name, tableName, headers, data, widths, options = {}) {
+            const shown = options.details ? 8 : headers.length;
             const ws = wb.addWorksheet(name, {
-              properties: { tabColor: { argb: color.green } },
-              views: [
-                { state: "frozen", ySplit: 6, xSplit: 1, showGridLines: false },
-              ],
+              properties: { tabColor: { argb: options.tabColor || color.green } },
+              views: [{ state: "frozen", ySplit: 7, xSplit: 2, topLeftCell: "C8", showGridLines: false, zoomScale: 90 }],
               pageSetup: {
-                paperSize: 9,
-                orientation: "landscape",
-                fitToPage: true,
-                fitToWidth: 1,
-                fitToHeight: 0,
-                printTitlesRow: "1:6",
-                margins: {
-                  left: 0.25,
-                  right: 0.25,
-                  top: 0.35,
-                  bottom: 0.35,
-                  header: 0.15,
-                  footer: 0.15,
-                },
+                paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1,
+                fitToHeight: 0, printTitlesRow: "1:7",
+                margins: { left: 0.3, right: 0.3, top: 0.35, bottom: 0.35, header: 0.15, footer: 0.15 },
               },
-              headerFooter: { oddFooter: "ACERVO · GIT/SME &R &P / &N" },
+              headerFooter: { oddFooter: "&LACERVO · GIT / SME&C" + shortDate(emitted) + "&RPágina &P de &N" },
             });
             ws.columns = widths.map((width) => ({ width }));
-            banner(ws, name, headers.length);
-            ws.getRow(6).values = headers;
-            ws.getRow(6).height = 30;
-            ws.getRow(6).eachCell((c) => {
-              c.fill = fill(color.green);
-              c.font = {
-                name: "Calibri",
-                size: 10,
-                bold: true,
-                color: { argb: "FFFFFFFF" },
-              };
-              c.alignment = { vertical: "middle", wrapText: true };
+            banner(ws, name, shown);
+            text(ws, "A5:B5", data.length ? {
+              formula: 'SUBTOTAL(103,A8:A' + (data.length + 7) + ')&" registros visíveis"',
+              result: data.length + " registros visíveis",
+            } : "0 registros", { size: 10, fg: color.muted });
+            text(ws, "C5:" + ws.getColumn(shown).letter + "5", options.details
+              ? "Filtre pelos cabeçalhos · detalhes em I:L, no + acima das colunas"
+              : "Filtre pelos cabeçalhos", { size: 9, fg: color.muted, align: "right" });
+            ws.getRow(5).height = 26;
+            if (data.length) ws.addTable({
+              name: tableName, ref: "A7", headerRow: true, totalsRow: false,
+              style: { theme: null, showRowStripes: false, showColumnStripes: false },
+              columns: headers.map((name) => ({ name, filterButton: true })), rows: data,
             });
-            data.forEach((values, index) => {
-              const row = ws.getRow(index + 7);
-              row.values = values;
-              row.height = Math.min(
-                409,
-                Math.max(
-                  32,
-                  ...values.map((v, j) =>
-                    v instanceof Date
-                      ? 32
-                      : Math.ceil(
-                          Math.max(
-                            ...String(v ?? "")
-                              .split("\n")
-                              .map((s) => s.length),
-                          ) / Math.max(8, widths[j] - 3),
-                        ) *
-                          14 +
-                        12,
-                  ),
-                ),
-              );
+            else {
+              ws.getRow(7).values = headers;
+              ws.autoFilter = { from: "A7", to: ws.getColumn(headers.length).letter + "7" };
+              text(ws, "A8:" + ws.getColumn(shown).letter + "8", "Nenhum registro neste recorte.", {
+                size: 11, fg: color.muted, bg: color.soft, indent: 1,
+              });
+              ws.getRow(8).height = 40;
+            }
+            ws.getRow(7).height = 33;
+            for (let j = 1; j <= headers.length; j++) {
+              const cell = ws.getCell(7, j);
+              cell.fill = fill(color.green);
+              cell.font = { name: "Arial", size: 10, bold: true, color: { argb: color.white } };
+              cell.alignment = { vertical: "middle", wrapText: true, indent: 1 };
+              cell.border = { right: { style: "hair", color: { argb: "FF668176" } } };
+            }
+            data.forEach((values, i) => {
+              const row = ws.getRow(i + 8);
+              row.height = Math.min(409, Math.max(31, ...values.slice(0, shown).map((v, j) =>
+                v instanceof Date ? 31 : wrap(v, widths[j] * 7 - 18).length * 14 + 10
+              )));
               for (let j = 1; j <= headers.length; j++) {
                 const cell = row.getCell(j);
-                cell.fill = fill(index % 2 ? color.paper : color.soft);
+                const missing = options.details && j === 4 && values[3] === TYPE.SEM_IDENTIFICACAO;
+                cell.fill = fill(missing ? color.warning : i % 2 ? color.soft : color.white);
                 cell.font = {
-                  name: "Calibri",
-                  size: 11,
-                  color: { argb: color.ink },
-                  bold: j === 1,
+                  name: "Arial", size: 11, bold: j === 1,
+                  color: { argb: missing ? color.amber : color.ink },
                 };
-                cell.alignment = { vertical: "middle", wrapText: true };
-                cell.border = {
-                  bottom: { style: "hair", color: { argb: color.line } },
-                };
-                if (dateColumns.includes(j))
-                  cell.numFmt = "dd/mm/yyyy hh:mm:ss";
+                cell.alignment = { vertical: "middle", wrapText: true, indent: 1 };
+                cell.border = { bottom: { style: "hair", color: { argb: color.line } } };
+                if ((options.dates || []).includes(j)) cell.numFmt = "dd/mm/yyyy hh:mm:ss";
                 else if (typeof cell.value === "string") cell.numFmt = "@";
+                if (options.details && j === 9 && String(cell.value).length > 100)
+                  cell.note = String(cell.value);
               }
             });
-            ws.autoFilter = {
-              from: { row: 6, column: 1 },
-              to: { row: Math.max(6, ws.rowCount), column: headers.length },
-            };
+            if (options.details) {
+              ws.properties.outlineLevelCol = 1;
+              ws.properties.outlineProperties = { summaryRight: false, summaryBelow: true };
+              for (let c = 9; c <= 12; c++) {
+                ws.getColumn(c).outlineLevel = 1;
+                ws.getColumn(c).hidden = true;
+              }
+            }
+            ws.pageSetup.printArea = "A1:" + ws.getColumn(shown).letter + Math.max(8, data.length + 7);
             return ws;
           }
           const summary = wb.addWorksheet("Resumo", {
-            views: [{ showGridLines: false }],
+            properties: { tabColor: { argb: color.green } },
+            views: [{ showGridLines: false, zoomScale: 90 }],
             pageSetup: {
-              paperSize: 9,
-              orientation: "portrait",
-              fitToPage: true,
-              fitToWidth: 1,
-              fitToHeight: 1,
-              printArea: "A1:H41",
+              paperSize: 9, orientation: "portrait", fitToPage: true, fitToWidth: 1,
+              fitToHeight: 1, printArea: "A1:AE43",
+              margins: { left: 0.25, right: 0.25, top: 0.3, bottom: 0.3, header: 0.12, footer: 0.12 },
             },
-            headerFooter: { oddFooter: "ACERVO · Resumo do inventário &R &P" },
+            headerFooter: { oddFooter: "&LACERVO · Inventário do setor&R" + issued },
           });
-          summary.columns = Array.from({ length: 8 }, () => ({ width: 12 }));
-          for (let i = 1; i <= 41; i++) summary.getRow(i).height = 21;
-          banner(summary, "Inventário do setor", 8);
-          function summaryText(
-            range,
-            text,
-            size = 11,
-            bg = color.paper,
-            fg = color.ink,
-          ) {
-            summary.mergeCells(range);
-            const c = summary.getCell(range.split(":")[0]);
-            c.value = text;
-            c.fill = fill(bg);
-            c.font = {
-              name: size >= 20 ? "Georgia" : "Calibri",
-              size,
-              color: { argb: fg },
-            };
-            c.alignment = {
-              vertical: "middle",
-              wrapText: true,
-              indent: 1,
-              horizontal: "left",
-            };
+          summary.columns = Array.from({ length: 31 }, (_, i) => ({ width: i === 0 || i === 30 ? 2 : 4 }));
+          for (let r = 1; r <= 43; r++) summary.getRow(r).height = 15;
+          paint(summary, 1, 43, 1, 31, color.paper);
+          summary.getRow(1).height = 9;
+          summary.getRow(2).height = 22;
+          summary.getRow(3).height = 15;
+          summary.getRow(4).height = 8;
+          summary.getRow(5).height = 35;
+          text(summary, "D2:O2", "ACERVO", { size: 13, fg: color.green });
+          text(summary, "D3:O3", "GIT / SME · Curitiba", { size: 9, fg: color.muted });
+          text(summary, "Q2:AD2", all ? "Inventário completo" : "Inventário filtrado", { size: 9, align: "right", fg: color.muted });
+          text(summary, "Q3:AD3", issued + " · Curitiba", { size: 9, align: "right", fg: color.muted });
+          if (logoId !== null) summary.addImage(logoId, { tl: { col: 1, row: 1 }, ext: { width: 31, height: 31 } });
+          text(summary, "B5:AD5", "Inventário do setor", { serif: true, size: 26, fg: color.green });
+          text(summary, "B6:AD6", scope, { size: 9, fg: color.muted,
+            border: { bottom: { style: "thin", color: { argb: "FFB7CD9B" } } },
+          });
+          summary.getRow(6).height = Math.max(22, wrap(scope, 920).length * 12 + 8);
+          summary.getRow(7).height = 12;
+          const metrics = [
+            ["B", "J", "Registros ativos", active.length, color.green, color.white],
+            ["L", "T", "Sem identificação externa", withoutId.length, color.white, color.green],
+            ["V", "AD", "Ambientes conferidos", checked + " / " + ROOMS.length, color.white, color.green],
+          ];
+          metrics.forEach(([from, to, label, value, bg, fg], i) => {
+            const first = summary.getColumn(from).number, last = summary.getColumn(to).number;
+            paint(summary, 8, 11, first, last, bg);
+            text(summary, from + "8:" + to + "8", label, { size: 10, bg, fg, indent: 1,
+              border: i ? { top: { style: "medium", color: { argb: "FFB7CD9B" } } } : undefined,
+            });
+            text(summary, from + "9:" + to + "10", value, { size: 32, bg, fg, indent: 1 });
+          });
+          summary.getRow(8).height = 27;
+          summary.getRow(9).height = 27;
+          summary.getRow(10).height = 17;
+          summary.getRow(11).height = 11;
+          summary.getRow(12).height = 16;
+          paint(summary, 13, 25, 2, 15, color.white);
+          paint(summary, 13, 25, 17, 30, color.white);
+          text(summary, "B14:O15", "Onde estão os bens", { serif: true, size: 18, indent: 1 });
+          text(summary, "Q14:AD15", "Como estão identificados", { serif: true, size: 18, indent: 1 });
+          function chart(draw) {
+            const canvas = document.createElement("canvas");
+            canvas.width = 900; canvas.height = 330;
+            const ctx = canvas.getContext("2d");
+            ctx.scale(2, 2); ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 450, 165);
+            draw(ctx);
+            return wb.addImage({ base64: canvas.toDataURL("image/png"), extension: "png" });
           }
-          const values = [
-            ["ATIVOS", active.length],
-            ["BAIXADOS", list.filter((r) => r.situacao === "BAIXADO").length],
-            [
-              "ARQUIVADOS",
-              list.filter((r) => r.situacao === "ARQUIVADO").length,
-            ],
-            [
-              "SEM ETIQUETA · ATIVOS",
-              active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length,
-            ],
-          ];
-          ["A", "C", "E", "G"].forEach((c, i) => {
-            const end = String.fromCharCode(c.charCodeAt(0) + 1);
-            summaryText(c + "6:" + end + "6", values[i][0], 9, color.soft);
-            summaryText(c + "7:" + end + "8", values[i][1], 30, color.soft);
+          const roomCounts = ROOMS.map((room) => active.filter((r) => r.dados.ambiente === room).length);
+          const bars = chart((ctx) => {
+            const max = Math.max(1, ...roomCounts);
+            ROOMS.forEach((room, i) => {
+              const y = 22 + i * 51;
+              ctx.font = "13px Arial"; ctx.fillStyle = "#263e35"; ctx.textAlign = "left";
+              ctx.fillText(room, 16, y); ctx.textAlign = "right";
+              ctx.fillText(String(roomCounts[i]), 434, y);
+              ctx.fillStyle = "#edf1e6"; ctx.fillRect(16, y + 9, 418, 8);
+              ctx.fillStyle = "#587f4d"; ctx.fillRect(16, y + 9, roomCounts[i] / max * 418, 8);
+            });
           });
-          summaryText(
-            "A10:D10",
-            "DISTRIBUIÇÃO POR AMBIENTE",
-            10,
-            color.green,
-            "FFFFFFFF",
-          );
-          summaryText("E10:H10", "POR CATEGORIA", 10, color.green, "FFFFFFFF");
-          ROOMS.forEach((room, i) => {
-            summaryText("A" + (11 + i) + ":C" + (11 + i), room);
-            summary.getCell("D" + (11 + i)).value = active.filter(
-              (r) => r.dados.ambiente === room,
-            ).length;
+          const idCounts = Object.keys(TYPE).map((t) => active.filter((r) => r.dados.tipo === t).length);
+          const donut = chart((ctx) => {
+            const tones = ["#173f35", "#9cb675", "#e4e3d9"];
+            const labels = ["PMC", "ICI", "Sem identificação"];
+            ctx.lineWidth = 18;
+            ctx.strokeStyle = "#edf1e6"; ctx.beginPath(); ctx.arc(80, 81, 51, 0, Math.PI * 2); ctx.stroke();
+            let angle = -Math.PI / 2;
+            if (active.length) idCounts.forEach((n, i) => {
+              if (!n) return;
+              const end = angle + n / active.length * Math.PI * 2;
+              ctx.strokeStyle = tones[i]; ctx.beginPath(); ctx.arc(80, 81, 51, angle, end); ctx.stroke(); angle = end;
+            });
+            ctx.textAlign = "center"; ctx.fillStyle = "#173f35"; ctx.font = "25px Arial";
+            ctx.fillText(String(active.length), 80, 81);
+            ctx.fillStyle = "#587064"; ctx.font = "11px Arial"; ctx.fillText("registros", 80, 100);
+            labels.forEach((label, i) => {
+              const y = 45 + i * 36;
+              ctx.fillStyle = tones[i]; ctx.fillRect(162, y - 8, 8, 8);
+              ctx.textAlign = "left"; ctx.fillStyle = "#263e35"; ctx.font = "13px Arial";
+              ctx.fillText(label, 181, y);
+              ctx.textAlign = "right"; ctx.fillText(String(idCounts[i]), 434, y);
+            });
           });
+          summary.addImage(bars, { tl: { col: 1.1, row: 16 }, br: { col: 14.9, row: 24 } });
+          summary.addImage(donut, { tl: { col: 16.1, row: 16 }, br: { col: 29.9, row: 24 } });
+          summary.getRow(26).height = 16;
+          paint(summary, 27, 37, 2, 15, color.white);
+          paint(summary, 27, 37, 17, 30, color.white);
+          text(summary, "B28:O29", "Categorias", { serif: true, size: 18, indent: 1 });
+          text(summary, "Q28:AD29", "Conferência dos ambientes", { serif: true, size: 18, indent: 1 });
+          const rule = { bottom: { style: "hair", color: { argb: color.line } } };
           CATEGORIES.forEach((cat, i) => {
-            summaryText("E" + (11 + i) + ":G" + (11 + i), cat);
-            summary.getCell("H" + (11 + i)).value = active.filter(
-              (r) => r.dados.categoria === cat,
-            ).length;
+            const r = 31 + i * 2;
+            text(summary, "C" + r + ":L" + (r + 1), cat, { size: 10, border: rule });
+            text(summary, "M" + r + ":N" + (r + 1), active.filter((r) => r.dados.categoria === cat).length, { size: 12, align: "right", border: rule });
           });
-          summaryText(
-            "A15:H15",
-            "IDENTIFICAÇÃO DOS ATIVOS",
-            10,
-            color.green,
-            "FFFFFFFF",
-          );
-          Object.entries(TYPE).forEach(([t, label], i) => {
-            summaryText("A" + (16 + i) + ":F" + (16 + i), label);
-            summaryText(
-              "G" + (16 + i) + ":H" + (16 + i),
-              active.filter((r) => r.dados.tipo === t).length,
-            );
-          });
-          summaryText(
-            "A20:H20",
-            "CONFERÊNCIA GERAL DOS AMBIENTES",
-            10,
-            color.green,
-            "FFFFFFFF",
-          );
           ROOMS.forEach((room, i) => {
-            const c = checks.find((c) => c.ambiente === room);
-            summaryText("A" + (21 + i * 2) + ":C" + (22 + i * 2), room);
-            summaryText(
-              "D" + (21 + i * 2) + ":H" + (22 + i * 2),
-              c?.conferido
-                ? "Conferido · " +
-                    dateBR(c.momento) +
-                    " · " +
-                    shortEmail(c.email)
-                : "A conferir",
-              10,
-            );
+            const r = 31 + i * 2, check = checks.find((c) => c.ambiente === room);
+            text(summary, "R" + r + ":W" + (r + 1), room, { size: 10, border: rule });
+            const cell = text(summary, "X" + r + ":AC" + (r + 1), check?.conferido
+              ? "Conferido em " + shortDate(check.momento) : "A conferir", {
+              size: 9, align: "right", fg: check?.conferido ? color.muted : color.amber, border: rule,
+            });
+            if (check?.conferido) cell.note = "Conferido em " + dateBR(check.momento) + "\nResponsável: " + (check.email || "Não informado");
           });
-          const canvas = document.createElement("canvas");
-          canvas.width = 1100;
-          canvas.height = 350;
-          const ctx = canvas.getContext("2d");
-          ctx.fillStyle = "#f6f5f0";
-          ctx.fillRect(0, 0, 1100, 350);
-          ctx.fillStyle = "#173f35";
-          ctx.font = "26px Georgia";
-          ctx.fillText("Registros ativos por ambiente", 25, 42);
-          const max = Math.max(
-            1,
-            ...ROOMS.map(
-              (room) => active.filter((r) => r.dados.ambiente === room).length,
-            ),
-          );
-          ROOMS.forEach((room, i) => {
-            const n = active.filter((r) => r.dados.ambiente === room).length,
-              y = 105 + i * 90;
-            ctx.fillStyle = "#173f35";
-            ctx.font = "20px sans-serif";
-            ctx.fillText(room, 25, y);
-            ctx.fillStyle = "#e1e8d7";
-            ctx.fillRect(285, y - 23, 690, 30);
-            const g = ctx.createLinearGradient(285, 0, 975, 0);
-            g.addColorStop(0, "#9cb675");
-            g.addColorStop(1, "#234d3b");
-            ctx.fillStyle = g;
-            ctx.fillRect(285, y - 23, (n / max) * 690, 30);
-            ctx.fillStyle = "#173f35";
-            ctx.fillText(String(n), 1000, y);
+          summary.getRow(38).height = 11;
+          const otherStatus = ["EMPRESTADO", "BAIXADO", "ARQUIVADO"].map((s) =>
+            STATUS[s] + "s: " + list.filter((r) => r.situacao === s).length
+          ).join(" · ");
+          text(summary, "B39:AD39", list.length + " registros exportados · " + otherStatus, { size: 9, fg: color.muted });
+          text(summary, "B40:AD41", "Indicadores e gráficos consideram os registros ativos deste recorte. A conferência é geral do setor. Dados da emissão; uma nova exportação atualiza o arquivo.", { size: 9, fg: color.muted });
+          const links = [
+            ["B43:J43", "Consultar inventário", "Inventário"],
+            ["L43:T43", "Ver sem identificação", "Sem identificação externa"],
+            ["V43:AD43", "Imprimir relatório A4", "Relatório A4"],
+          ];
+          links.forEach(([range, label, name]) => text(summary, range, {
+            text: label, hyperlink: "#'" + name + "'!A1",
+          }, { size: 10, fg: color.green, bg: color.soft, align: "center" }));
+          summary.getRow(43).height = 25;
+          const widths = [18, 35, 18, 26, 19, 26, 15, 17, 55, 27, 24, 30];
+          table("Inventário", "ACERVO_Inventario", inventoryHeaders, list.map(inventoryRow), widths, { details: true, dates: [10] });
+          table("Sem identificação externa", "ACERVO_SemIdentificacao", inventoryHeaders,
+            list.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").map(inventoryRow), widths,
+            { details: true, dates: [10], tabColor: "FFB7CD9B" });
+          table("Baixas", "ACERVO_Baixas", [
+            "Código interno", "Item", "Identificação", "Data da baixa", "Motivo",
+            "Documento/processo", "Responsável", "Ambiente anterior",
+          ], list.filter((r) => r.situacao === "BAIXADO").map((r) => [
+            internal(r.id), r.dados.item, String(r.dados.codigo || internal(r.id)), r.baixa?.data || "",
+            r.baixa?.motivo || "", r.baixa?.documento || "", r.baixa?.email || "", r.baixa?.ambiente || "",
+          ]), [18, 35, 24, 20, 55, 30, 34, 28]);
+          table("Estoque", "ACERVO_Estoque", [
+            "Código interno", "Material", "Saldo", "Unidade", "Mínimo", "Posição", "Situação", "Observação",
+          ], list.filter((r) => r.controle === "QUANTIDADE").map((r) => [
+            internal(r.id), r.dados.item, Number(r.saldo), r.unidade, Number(r.minimo),
+            locationText(r), STATUS[r.situacao], r.dados.observacao || "",
+          ]), [18, 35, 14, 18, 14, 19, 20, 55]);
+          table("Empréstimos", "ACERVO_Emprestimos", [
+            "Código interno", "Item", "Etiqueta", "Responsável", "Local atual",
+            "Emprestado em (Curitiba)", "Ambiente de origem",
+          ], list.filter((r) => r.situacao === "EMPRESTADO").map((r) => [
+            internal(r.id), r.dados.item, String(r.dados.codigo || ""), r.emprestimo?.responsavel || "",
+            r.emprestimo?.destino || "", excelDate(r.emprestimo?.momento), r.dados.ambiente,
+          ]), [18, 35, 23, 32, 32, 28, 28], { dates: [6] });
+          // Cada página recebe sua marca, ambiente e cabeçalho, inclusive nas continuações.
+          const report = wb.addWorksheet("Relatório A4", {
+            properties: { tabColor: { argb: "FFB7CD9B" } },
+            views: [{ showGridLines: false, zoomScale: 85 }],
+            pageSetup: {
+              paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 0,
+              margins: { left: 0.3, right: 0.3, top: 0.35, bottom: 0.35, header: 0.15, footer: 0.15 },
+            },
+            headerFooter: { oddFooter: "&LInventário do setor · ACERVO&C" + shortDate(emitted) + "&RPágina &P de &N" },
           });
-          summary.addImage(
-            wb.addImage({
-              base64: canvas.toDataURL("image/png"),
-              extension: "png",
-            }),
-            { tl: { col: 0, row: 28 }, ext: { width: 680, height: 216 } },
-          );
-          summaryText(
-            "A40:H41",
-            list.length +
-              " registros no recorte. Gráficos consideram apenas ativos. A conferência é geral do setor, mesmo em exportações filtradas.",
-            10,
-          );
-          const headers = [
-            "Código interno",
-            "Item",
-            "Categoria",
-            "Identificação",
-            "Código externo",
-            "Ambiente",
-            "Posição",
-            "Situação",
-            "Observação",
-            "Cadastrado em (Curitiba)",
-            "Série anterior",
-            "Localização anterior",
-          ];
-          const row = (r) => [
-            internal(r.id),
-            r.dados.item,
-            r.dados.categoria,
-            TYPE[r.dados.tipo],
-            String(r.dados.codigo || ""),
-            r.dados.ambiente,
-            locationText(r),
-            STATUS[r.situacao],
-            r.dados.observacao || "",
-            excelDate(r.criado_em),
-            r.legado?.numero_serie || "",
-            r.legado?.localizacao || "",
-          ];
-          table(
-            "Inventário",
-            headers,
-            list.map(row),
-            [19, 30, 17, 25, 19, 25, 14, 15, 48, 26, 22, 28],
-            [10],
-          );
-          table(
-            "Sem identificação externa",
-            headers,
-            list.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").map(row),
-            [19, 30, 17, 25, 19, 25, 14, 15, 48, 26, 22, 28],
-            [10],
-          );
-          table(
-            "Baixas",
-            [
-              "Código interno",
-              "Item",
-              "Identificação",
-              "Data da baixa",
-              "Motivo",
-              "Documento/processo",
-              "Responsável",
-              "Ambiente anterior",
-            ],
-            list
-              .filter((r) => r.situacao === "BAIXADO")
-              .map((r) => [
-                internal(r.id),
-                r.dados.item,
-                r.dados.codigo || internal(r.id),
-                r.baixa?.data || "",
-                r.baixa?.motivo || "",
-                r.baixa?.documento || "",
-                r.baixa?.email || "",
-                r.baixa?.ambiente || "",
-              ]),
-            [19, 30, 22, 18, 55, 28, 32, 26],
-          );
-          table(
-            "Estoque",
-            [
-              "Código interno",
-              "Material",
-              "Saldo",
-              "Unidade",
-              "Mínimo",
-              "Posição",
-              "Situação",
-              "Observação",
-            ],
-            list
-              .filter((r) => r.controle === "QUANTIDADE")
-              .map((r) => [
-                internal(r.id),
-                r.dados.item,
-                Number(r.saldo),
-                r.unidade,
-                Number(r.minimo),
-                locationText(r),
-                STATUS[r.situacao],
-                r.dados.observacao || "",
-              ]),
-            [20, 32, 16, 18, 16, 18, 20, 48],
-          );
-          table(
-            "Empréstimos",
-            [
-              "Código interno",
-              "Item",
-              "Etiqueta",
-              "Responsável",
-              "Local atual",
-              "Emprestado em (Curitiba)",
-              "Ambiente de origem",
-            ],
-            list
-              .filter((r) => r.situacao === "EMPRESTADO")
-              .map((r) => [
-                internal(r.id),
-                r.dados.item,
-                r.dados.codigo || "",
-                r.emprestimo?.responsavel || "",
-                r.emprestimo?.destino || "",
-                excelDate(r.emprestimo?.momento),
-                r.dados.ambiente,
-              ]),
-            [20, 32, 20, 30, 30, 28, 26],
-            [6],
-          );
-          const buffer = await wb.xlsx.writeBuffer(),
-            url = URL.createObjectURL(
-              new Blob([buffer], {
-                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-              }),
-            );
+          const reportWidths = [18, 43, 24, 65];
+          report.columns = reportWidths.map((width) => ({ width }));
+          const scopeLines = wrap(scope, 1020);
+          const reportScope = scopeLines.length <= 5 ? scope
+            : scopeLines.slice(0, 4).join("\n") + "\n… Critérios completos na aba Inventário.";
+          const reportScopeHeight = Math.max(25, wrap(reportScope, 1020).length * 12 + 8);
+          const bodyBudget = 330 - (reportScopeHeight - 25);
+          const chunkLines = Math.min(16, Math.floor((bodyBudget - 10) / 14));
+          const roomNames = [...new Set(ROOMS.concat(list.map((r) => r.dados.ambiente || "Ambiente não informado")))];
+          const groups = roomNames.map((room) => ({ room, records: list.filter((r) => (r.dados.ambiente || "Ambiente não informado") === room) })).filter((g) => g.records.length);
+          if (!groups.length) groups.push({ room: "Sem registros neste recorte", records: [] });
+          let nextRow = 1;
+          groups.forEach(({ room, records }) => {
+            const chunks = [];
+            records.forEach((r) => {
+              const info = [];
+              if (r.situacao !== "ATIVO") info.push("Situação: " + (STATUS[r.situacao] || r.situacao));
+              if (locationText(r)) info.push("Posição: " + locationText(r));
+              if (r.controle === "QUANTIDADE") info.push("Saldo: " + Number(r.saldo) + " " + (r.unidade || "unidades"));
+              if (r.dados.observacao) info.push(r.dados.observacao);
+              const label = r.dados.tipo === "SEM_IDENTIFICACAO" ? "Sem identificação"
+                : (r.dados.tipo || "") + (r.dados.codigo ? " " + String(r.dados.codigo) : "");
+              const values = [internal(r.id), r.dados.item || "", label, info.join("\n")];
+              const lines = values.map((v, j) => wrap(v, reportWidths[j] * 7 - 18));
+              const count = Math.max(...lines.map((v) => v.length));
+              for (let offset = 0; offset < count; offset += chunkLines) {
+                const remaining = Math.max(Math.min(chunkLines, count - offset), lines[0].length, lines[2].length);
+                chunks.push({
+                  values: lines.map((v, j) => j === 0 ? values[0]
+                    : j === 2 ? values[2]
+                    : j === 1 && offset >= v.length ? "Continuação do registro"
+                    : v.slice(offset, offset + chunkLines).join("\n")),
+                  height: Math.max(25, remaining * 14 + 10),
+                });
+              }
+            });
+            const pages = [[]]; let used = 0;
+            chunks.forEach((chunk) => {
+              if (used && used + chunk.height > bodyBudget) { pages.push([]); used = 0; }
+              pages[pages.length - 1].push(chunk); used += chunk.height;
+            });
+            // Evita uma última página com um único registro, mantendo a ordem.
+            if (pages.length > 1 && pages[pages.length - 1].length < 3) {
+              const last = pages[pages.length - 1], previous = pages[pages.length - 2];
+              let lastHeight = last.reduce((n, r) => n + r.height, 0);
+              while (last.length < 3 && previous.length > 3 && lastHeight + previous[previous.length - 1].height <= bodyBudget) {
+                const moved = previous.pop(); last.unshift(moved); lastHeight += moved.height;
+              }
+            }
+            pages.forEach((pageRows, pageIndex) => {
+              if (nextRow > 1) report.getRow(nextRow - 1).addPageBreak();
+              const start = nextRow;
+              brand(report, start, 4);
+              text(report, "A" + (start + 2) + ":D" + (start + 2), "Relação de bens", { serif: true, size: 25, fg: color.green });
+              report.getRow(start + 2).height = 37;
+              const scopeCell = text(report, "A" + (start + 3) + ":D" + (start + 3), reportScope, { size: 9, fg: color.muted,
+                border: { bottom: { style: "thin", color: { argb: color.green } } },
+              });
+              if (reportScope !== scope) scopeCell.note = scope;
+              report.getRow(start + 3).height = reportScopeHeight;
+              text(report, "A" + (start + 4) + ":B" + (start + 4), room, { size: 12, fg: color.green });
+              text(report, "C" + (start + 4) + ":D" + (start + 4), records.length + " registros no ambiente · " + (pageIndex + 1) + " / " + pages.length,
+                { size: 9, fg: color.muted, align: "right" });
+              report.getRow(start + 4).height = 30;
+              const header = report.getRow(start + 5);
+              header.values = ["Código interno", "Item", "Etiqueta", "Observação"];
+              header.height = 28;
+              header.eachCell((cell) => {
+                cell.fill = fill("FFEDF2E3");
+                cell.font = { name: "Arial", size: 10, color: { argb: color.green } };
+                cell.alignment = { vertical: "middle", indent: 1 };
+                cell.border = { top: { style: "hair", color: { argb: "FFB7CD9B" } }, bottom: { style: "hair", color: { argb: "FFB7CD9B" } } };
+              });
+              nextRow = start + 6;
+              let pageHeight = 0;
+              pageRows.forEach((chunk) => {
+                const row = report.getRow(nextRow++);
+                row.values = chunk.values; row.height = chunk.height; pageHeight += chunk.height;
+                for (let j = 1; j <= 4; j++) {
+                  const cell = row.getCell(j);
+                  cell.font = { name: "Arial", size: 11, color: { argb: color.ink } };
+                  cell.alignment = { vertical: "middle", wrapText: true, indent: 1 };
+                  cell.numFmt = "@";
+                  cell.border = { bottom: { style: "hair", color: { argb: color.line } } };
+                }
+              });
+              if (!pageRows.length) {
+                text(report, "A" + nextRow + ":D" + nextRow, "Nenhum registro corresponde à consulta exportada.", { fg: color.muted });
+                report.getRow(nextRow++).height = 32; pageHeight = 32;
+              }
+              report.getRow(nextRow++).height = Math.max(12, bodyBudget - pageHeight + 12);
+              const identified = records.filter((r) => ["PMC", "ICI"].includes(r.dados.tipo)).length;
+              const untagged = records.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length;
+              text(report, "A" + nextRow + ":D" + nextRow,
+                records.length + " registros no ambiente · " + identified + " com etiqueta PMC ou ICI · " + untagged + " sem identificação externa", {
+                  size: 9, fg: color.muted, border: { top: { style: "hair", color: { argb: "FFB7CD9B" } } },
+                });
+              report.getRow(nextRow).height = 26;
+              nextRow++;
+            });
+          });
+          report.pageSetup.printArea = "A1:D" + (nextRow - 1);
+          const buffer = await wb.xlsx.writeBuffer();
+          const url = URL.createObjectURL(new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          }));
           const a = document.createElement("a");
           a.href = url;
-          a.download =
-            "ACERVO_" +
-            (all ? "completo" : "filtrado") +
-            "_" +
-            today() +
-            ".xlsx";
+          a.download = "ACERVO_" + (all ? "completo" : "filtrado") + "_" + dayKey(emitted) + ".xlsx";
           a.click();
           setTimeout(() => URL.revokeObjectURL(url), 60000);
           toast("Excel gerado com " + list.length + " registros.");

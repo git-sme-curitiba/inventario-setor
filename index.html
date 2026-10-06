@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-AAqOw7/RohhOH4O2ckUWmG6btfBiFvKpfSwHVHCKvsE=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src 'self' 'sha256-tg3EInQ4zi0lsdHrJOzLhcsklxb9NIV74YNQRVtbsN8=' https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -1303,7 +1303,27 @@
         font-weight: 600;
         overflow-wrap: anywhere;
       }
+      .history .history-details {
+        flex-basis: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        width: 100%;
+        gap: 6px;
+        margin: 4px 0 0;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+        color: var(--ink);
+      }
+      .history .history-details > div {
+        display: grid;
+        grid-template-columns: 110px minmax(0, 1fr);
+        gap: 10px;
+      }
+      .history .history-details dt { color: var(--muted); }
+      .history .history-details dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+      .movement-event-detail { display: block; margin-top: 4px; line-height: 1.5; }
       @media (max-width: 600px) {
+        .history .history-details > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
         .history-entry {
           display: grid;
           grid-template-columns: minmax(0, 1fr);
@@ -4296,7 +4316,7 @@
         n.readOnly = none;
         n.pattern = none ? "ACV-[0-9]{5,}" : "[0-9]{6}";
         n.maxLength = none ? 64 : 6;
-        $(edit ? "editScan" : "scan").hidden = none;
+        $(edit ? "editScan" : "scan").hidden = none || !mobileCamera();
         n.placeholder = none ? "Código automático" : "Código de 6 dígitos";
         if (none) n.value = edit && editor?.id
           ? internal(editor.id) : nextInternalPreview();
@@ -5017,13 +5037,88 @@
           descarte_estoque: "Descarte de estoque",
           cadastrar_baixado: "Registro com baixa",
         };
-        if (action === "salvar") return "Edição";
+        if (action === "salvar") return h.antes === null && h.depois ? "Registro" : "Edição";
         return (
           names[action] ||
           (action
             ? action.charAt(0).toUpperCase() + action.slice(1)
             : "Atualização")
         );
+      }
+      // Usa os retratos gravados pelo banco, sem consultar o saldo atual do item.
+      function historyFacts(h) {
+        const object = (v) => v && typeof v === "object" && !Array.isArray(v) ? v : {};
+        const before = object(h.antes), after = object(h.depois);
+        const movement = object(after.movimento);
+        const a = String(h.acao || "").toLowerCase();
+        const registration = ["cadastrar", "criar", "registro", "cadastrar_baixado"].includes(a) ||
+          (a === "salvar" && h.antes === null);
+        const facts = [];
+        const add = (label, v) => {
+          if (v !== undefined && v !== null && String(v).trim()) facts.push([label, String(v)]);
+        };
+        const number = (v) => v !== null && v !== undefined && v !== "" &&
+          Number.isFinite(Number(v)) ? Number(v) : null;
+        const format = (v) => Number(v).toLocaleString("pt-BR", { maximumFractionDigits: 3 });
+        const stock = (after.controle || before.controle) === "QUANTIDADE";
+        const unit = after.unidade || before.unidade || "";
+        const amount = (v) => unit ? `${format(v)} ${unit === "unidade" && Number(v) !== 1 ? "unidades" : unit}` : format(v);
+        const initial = number(before.saldo), final = number(after.saldo);
+        if (["entrada", "saida", "descarte_estoque"].includes(a)) {
+          const delta = initial !== null && final !== null ? final - initial : null;
+          const recorded = number(movement.quantidade);
+          const derived = delta !== null && (a === "entrada" ? delta > 0 : delta < 0)
+            ? Math.abs(delta) : null;
+          const quantity = recorded !== null && recorded > 0 ? recorded : derived;
+          if (quantity !== null) add("Quantidade", amount(quantity));
+        }
+        if (stock && initial !== null && final !== null && initial !== final)
+          add("Saldo", `${format(initial)} → ${amount(final)}`);
+        else if (stock && registration && !Object.keys(before).length && final !== null)
+          add("Saldo inicial", amount(final));
+        const loan = a === "devolver" ? object(before.emprestimo) : object(after.emprestimo);
+        if (["emprestar", "devolver", "saida"].includes(a)) {
+          add(a === "saida" ? "Solicitante" : "Responsável", movement.responsavel || loan.responsavel);
+          add("Destino", movement.destino || loan.destino);
+        }
+        if (before.situacao && after.situacao && before.situacao !== after.situacao)
+          add("Situação", `${STATUS[before.situacao] || before.situacao} → ${STATUS[after.situacao] || after.situacao}`);
+        const bd = object(before.dados), ad = object(after.dados);
+        if (["salvar", "editar", "edicao"].includes(a) && Object.keys(before).length) {
+          for (const [field, label] of [["item", "Item"], ["categoria", "Categoria"],
+            ["ambiente", "Ambiente"], ["tipo", "Identificação"], ["codigo", "Código da etiqueta"],
+            ["estante", "Estante"], ["prateleira", "Prateleira"],
+            ["observacao", "Observação"], ["ramal", "Ramal"]]) {
+            if (field in bd && field in ad && String(bd[field] ?? "") !== String(ad[field] ?? "")) {
+              const display = (v) => field === "tipo" ? TYPE[v] || v : v;
+              add(label, `${display(bd[field]) || "Não informado"} → ${display(ad[field]) || "Não informado"}`);
+            }
+          }
+          const oldMin = number(before.minimo), newMin = number(after.minimo);
+          if (stock && oldMin !== null && newMin !== null && oldMin !== newMin)
+            add("Estoque mínimo", `${format(oldMin)} → ${amount(newMin)}`);
+        }
+        if (registration) {
+          add("Identificação", ad.tipo === "SEM_IDENTIFICACAO"
+            ? after.id ? internal(after.id) : "Código interno" : [TYPE[ad.tipo], ad.codigo].filter(Boolean).join(" · "));
+          add("Ambiente", ad.ambiente);
+          if (ad.estante && ad.prateleira) add("Posição", `${ad.estante} · ${String(ad.prateleira).padStart(2, "0")}`);
+        }
+        add("Motivo / observação", h.motivo);
+        if (["baixar", "baixa", "cadastrar_baixado"].includes(a))
+          add("Documento", object(after.baixa).documento);
+        return facts;
+      }
+      function appendHistoryDetails(target, h) {
+        const facts = historyFacts(h);
+        if (!facts.length) return;
+        const list = el("dl", undefined, "history-details");
+        for (const [label, detail] of facts) {
+          const line = el("div");
+          line.append(el("dt", label), el("dd", detail));
+          list.append(line);
+        }
+        target.append(list);
       }
       async function loadHistory(id, target) {
         try {
@@ -5041,6 +5136,7 @@
                   "history-user",
                 ),
               );
+              appendHistoryDetails(n, h);
               return n;
             }),
           );
@@ -5324,9 +5420,14 @@
           $("movementTimeline").replaceChildren(
             ...events.map((h) => {
               const row = el("div", undefined, "recent-row");
+              const event = el("div");
+              event.append(el("span", historyAction(h)));
+              const facts = historyFacts(h);
+              if (facts.length) event.append(el("small", facts.slice(0, 2)
+                .map(([label, detail]) => `${label}: ${detail}`).join(" · "), "movement-event-detail"));
               row.append(
                 el("strong", h.itemName),
-                el("span", historyAction(h)),
+                event,
                 el("small", `${shortEmail(h.email)} · ${dateBR(h.momento)}`),
                 button(
                   "Consultar",
@@ -5692,8 +5793,10 @@
           setBusy(false);
           if (role === "leitor") showTab("browse");
           startPolling();
-          warmBarcode();
-          warmOCR();
+          if (mobileCamera()) {
+            warmBarcode();
+            warmOCR();
+          }
         } catch (e) {
           $("app").hidden = true;
           $("login").hidden = false;
@@ -5734,6 +5837,7 @@
         $("itemForm").addEventListener("change", updateRegistrationSummary);
         $("directDown").onchange = syncDirectDown;
         $("moveSearch").oninput = renderMovementResults;
+        $("moveScan").hidden = !mobileCamera();
         $("moveScan").onclick = () => openScanner("moveSearch");
         $("createDown").onclick = () => {
           if (
@@ -6951,7 +7055,13 @@
         }
       }
 
+      function mobileCamera() {
+        const ua = navigator.userAgent || "";
+        return /Android|iPhone|iPad|iPod/i.test(ua) ||
+          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      }
       async function openScanner(target = "code") {
+        if (!mobileCamera()) return;
         if (
           scene ||
           busy ||

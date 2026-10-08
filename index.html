@@ -5,13 +5,13 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-qJDLQ1LjR8mOMx71K0gh60FWHc4THqwMzeNDI0rn/eo=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-hLUVtP7XO0cqDf713ZHvmuBGuBiYG0HSW4mJvK2/TyE=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <meta name="theme-color" content="#075099" />
+    <meta name="theme-color" content="#214cc2" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="ACERVO" />
@@ -2951,6 +2951,283 @@
         #editFields > .grid2 > div { padding: 14px; }
         #editFields > .actions { bottom: -16px; }
       }
+
+      /* ACERVO 3.5.13 · Azul royal, entrada coordenada e identidade dos acessos. */
+      .auth-screen, .brand-intro:not(.departing) {
+        background:
+          radial-gradient(ellipse at 78% 12%, #5789ff75, transparent 55%),
+          radial-gradient(ellipse at 5% 88%, #167de04d, transparent 52%),
+          linear-gradient(135deg, #143683, #214cc2 52%, #173b94);
+      }
+      #introMark { filter: drop-shadow(0 16px 30px #071c6680) drop-shadow(0 0 32px #8dd9ff70); }
+      #login {
+        max-width: 460px;
+        width: min(100%, 460px);
+        padding: 34px;
+        border-radius: 24px;
+        background: linear-gradient(150deg, #ffffff, #f4f8ff 65%, #e8f0fd);
+        border: 1px solid #bad2f0;
+        box-shadow: 0 32px 85px -22px #06185396, inset 0 1px 0 #ffffff;
+        animation: access-panel-in .65s var(--ease) both;
+      }
+      #login::before {
+        content: "";
+        position: absolute;
+        inset: 0 26px auto;
+        height: 3px;
+        border-radius: 0 0 8px 8px;
+        background: linear-gradient(90deg, #214bc4, #2faff7, #214bc4);
+      }
+      #login h1 { margin: 24px 0 22px; color: #173669; font-size: 35px; }
+      #login .eyebrow { color: #315e95; }
+      #login input, #userAccessDialog input {
+        min-height: 48px;
+        background: #ffffff;
+        border: 1px solid #aac5e3;
+        border-radius: 12px;
+        box-shadow: inset 0 2px 4px #173b9406;
+        color: #193b65;
+        transition: border-color .2s, box-shadow .2s;
+      }
+      #login input:focus, #userAccessDialog input:focus {
+        outline: 2px solid #3374de;
+        outline-offset: 2px;
+        border-color: #3374de;
+        box-shadow: 0 0 0 4px #3374de14;
+      }
+      #login label, #userAccessDialog label { color: #294e77; font-size: 12px; font-weight: 600; }
+      .password-field { position: relative; }
+      .password-field input { padding-right: 52px; }
+      .password-field .password-toggle {
+        position: absolute;
+        top: 50%; right: 5px;
+        transform: translateY(-50%);
+        float: none; margin: 0; padding: 0;
+        width: 42px; min-height: 42px;
+        border-radius: 9px;
+        border: 1px solid transparent;
+        color: #466891; background: transparent;
+        box-shadow: none;
+      }
+      .password-field .password-toggle .icon { width: 20px; height: 20px; flex-basis: 20px; }
+      .password-field .password-toggle:hover:not(:disabled) {
+        background: #eaf2ff; border-color: #c2d7f2;
+        transform: translateY(-50%); box-shadow: none;
+      }
+      .password-field .password-toggle[aria-pressed="true"] { background: #e3edff; color: #214cc2; }
+      #loginButton, #saveFirstPassword, #newUserSave {
+        min-height: 48px;
+        border: 1px solid #1a46b5;
+        border-radius: 12px;
+        background: linear-gradient(125deg, #326ae0, #214bc4 60%, #173c9b);
+        color: #ffffff;
+        box-shadow: 0 8px 18px -8px #214cc285, inset 0 1px 0 #ffffff26;
+      }
+      #loginButton:hover:not(:disabled), #saveFirstPassword:hover:not(:disabled), #newUserSave:hover:not(:disabled) {
+        background: linear-gradient(125deg, #3978ee, #214bc4);
+        box-shadow: 0 0 0 3px #4a92f523, 0 12px 22px -9px #214cc29c;
+      }
+      #saveFirstPassword:disabled { opacity: .55; box-shadow: none; }
+      body.intro-active:not(.intro-reveal) #login { animation: none; opacity: 0; }
+      body.intro-active .institution-footer { opacity: 0; }
+      body.intro-active.intro-landed #loginMark { visibility: visible; }
+      body.intro-reveal #login > .login-brand,
+      body.screen-ready #login > .login-brand { animation: access-element-in .5s .08s var(--ease) both; }
+      body.intro-reveal #login > .eyebrow,
+      body.screen-ready #login > .eyebrow { animation: access-element-in .5s .13s var(--ease) both; }
+      body.intro-reveal #login > h1,
+      body.screen-ready #login > h1 { animation: access-element-in .5s .18s var(--ease) both; }
+      #loginForm:not([hidden]) { animation: access-element-in .55s .24s var(--ease) both; }
+      .auth-screen .institution-footer { border-color: #c4dcff40; color: #deebff; }
+      .auth-screen .institution-credits strong { color: #ffffff; }
+      .auth-screen .institution-logo { filter: brightness(0) invert(1); opacity: .92; }
+      #login.first-access-active { width: min(100%, 580px); max-width: 580px; }
+      #login.first-access-active h1 { margin-bottom: 10px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 32px; font-weight: 650; letter-spacing: -.04em; }
+      #firstAccess { margin-top: 0; animation: access-element-in .45s var(--ease) both; }
+      .security-state {
+        display: flex; align-items: center; gap: 11px;
+        margin: 18px 0 20px; padding: 13px 15px;
+        border: 1px solid #a8c9f0; border-radius: 14px;
+        background: linear-gradient(115deg, #e0ecff, #eef7ff);
+      }
+      .security-state > .icon { width: 26px; height: 26px; flex: 0 0 26px; color: #2457bb; }
+      .security-state strong { display: block; font-size: 12px; font-weight: 600; color: #21477a; }
+      .security-state span { display: block; color: #496987; font-size: 11px; margin-top: 2px; }
+      .access-description { font-size: 13px; color: #4f6886; margin: 0; }
+      .password-policy {
+        padding: 15px; margin: 17px 0;
+        background: #eaf1fc; border: 1px solid #b5cbea; border-radius: 14px;
+      }
+      .policy-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+      .policy-heading strong { font-size: 11px; color: #345b8b; }
+      #passwordRuleCount { font-size: 10px; color: #48658a; font-variant-numeric: tabular-nums; }
+      #passwordRuleProgress { width: 100%; height: 5px; margin: 9px 0 0; border: 0; border-radius: 5px; background: #cbdaf0; accent-color: #2c64d6; }
+      #passwordRuleProgress::-webkit-progress-bar { border-radius: 5px; background: #cbdaf0; }
+      #passwordRuleProgress::-webkit-progress-value { border-radius: 5px; background: linear-gradient(90deg, #2d5cce, #2b9ae6); transition: width .2s ease; }
+      #passwordRuleProgress::-moz-progress-bar { border-radius: 5px; background: #2c64d6; }
+      .password-rules {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px;
+        border: 0; border-radius: 0; padding: 0; margin: 12px 0 0;
+        background: transparent; font-size: 11px;
+      }
+      .password-rules li { margin: 0; align-items: flex-start; gap: 7px; color: #4d6687; }
+      .password-rules li:last-child { grid-column: 1 / -1; }
+      .password-rules li::before {
+        content: ""; display: inline-block; flex: 0 0 14px;
+        width: 14px; height: 14px; margin-top: 2px;
+        border: 1px solid #95b2d6; border-radius: 50%; background: #f7faff;
+      }
+      .password-rules li.met { color: #1e4c95; }
+      .password-rules li.met::before {
+        content: "✓"; text-align: center; line-height: 13px; font-size: 10px;
+        background: #285ccb; border-color: #285ccb; color: white;
+      }
+      #passwordMatchHint { min-height: 18px; margin: 7px 0 0; font-size: 11px; color: #536b87; }
+      #passwordMatchHint.matched { color: #2259b4; }
+      #firstAccessForm > .actions { gap: 10px; flex-direction: column; align-items: stretch; margin-top: 16px; }
+      #leaveFirstAccess { min-height: 38px; border-color: #b8cde7; border-radius: 10px; background: #f2f6fd; font-size: 12px; }
+      #firstAccessMessage:empty, #newUserMessage:empty { display: none; }
+      #userAccessDialog {
+        width: min(550px, calc(100vw - 32px));
+        max-height: calc(100svh - 32px);
+        padding: 0; overflow: auto;
+        border: 1px solid #92b8e5; border-radius: 22px;
+        background: linear-gradient(150deg, #ffffff, #eff5fd);
+        box-shadow: 0 38px 100px -18px #071d698c;
+      }
+      #userAccessDialog[open] { animation: access-panel-in .38s var(--ease) both; }
+      #userAccessDialog::backdrop { background: #10255091; backdrop-filter: blur(8px); }
+      .access-dialog-hero {
+        position: relative; padding: 27px 28px 24px; overflow: hidden;
+        background: radial-gradient(ellipse at 95% 5%, #54a7ed6e, transparent 62%), linear-gradient(125deg, #173883, #2454c6);
+        border-bottom: 1px solid #244fae; color: #ffffff;
+      }
+      .access-dialog-hero::after {
+        content: ""; position: absolute; right: -32px; top: 42px;
+        width: 160px; height: 160px; border: 1px solid #c2e4ff25; border-radius: 40px;
+        transform: rotate(24deg); pointer-events: none;
+      }
+      .access-dialog-kicker { display: flex; gap: 8px; align-items: center; color: #d2e4ff; font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; }
+      .access-dialog-kicker::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #87d9ff; box-shadow: 0 0 9px #87d9ff; }
+      .access-dialog-title { display: flex; align-items: center; gap: 13px; margin-top: 17px; }
+      .access-dialog-mark { display: grid; place-items: center; width: 46px; height: 46px; flex: 0 0 46px; border: 1px solid #a6d5ff73; border-radius: 13px; background: #ffffff15; box-shadow: inset 0 1px 0 #ffffff1a; }
+      .access-dialog-mark .icon { width: 25px; height: 25px; flex-basis: 25px; }
+      #userAccessTitle { color: #ffffff; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 27px; font-weight: 650; letter-spacing: -.7px; }
+      .access-dialog-hero p { margin: 12px 0 0; max-width: 370px; color: #e0edff; font-size: 12px; line-height: 1.65; }
+      #closeUserAccess {
+        position: absolute; right: 18px; top: 17px; z-index: 1;
+        width: 34px; min-height: 34px; padding: 0;
+        background: #ffffff13; border: 1px solid #bfdcff5c; border-radius: 10px; color: white;
+      }
+      #closeUserAccess:hover:not(:disabled) { background: #ffffff28; border-color: #ffffff9c; transform: none; box-shadow: none; }
+      .access-dialog-body { padding: 23px 28px 26px; }
+      .access-flow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 22px; }
+      .access-flow-step { display: flex; gap: 8px; align-items: center; padding: 10px; border: 1px solid #bdd1ea; border-radius: 12px; background: #eaf2fc; }
+      .access-flow-step > span { color: #2f61bd; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .access-flow-step strong { display: block; color: #35577e; font-size: 10px; font-weight: 600; }
+      .access-flow-step small { display: block; color: #607894; font-size: 10px; }
+      #newUserForm label:first-child { margin-top: 0; }
+      #newUserSave { width: 100%; margin-top: 22px; }
+      .access-field-help { margin: 7px 0 0; color: #5f7897; font-size: 11px; }
+      #newUserResult { padding: 20px; margin: 0; border: 1px solid #8aafe1; border-radius: 15px; background: linear-gradient(125deg, #e1edff, #f3f8ff); overflow-wrap: anywhere; animation: access-element-in .4s var(--ease) both; }
+      #newUserResult > strong { display: flex; align-items: center; gap: 8px; font-size: 18px; color: #2451a5; }
+      #newUserResult > strong .icon { width: 22px; height: 22px; flex-basis: 22px; }
+      #newUserResult p { font-size: 12px; color: #466383; }
+      #newUserResult p:nth-of-type(2) { padding: 12px 14px; background: #ffffff; border: 1px dashed #86aee3; border-radius: 10px; color: #234982; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
+      @keyframes access-panel-in { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: none; } }
+      @keyframes access-element-in { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: none; } }
+      #app > .intro { animation: access-element-in .5s var(--ease) both; }
+      #app > .nav { animation: access-element-in .55s .08s var(--ease) both; }
+      @media (max-width: 640px) {
+        #login, #login.first-access-active { width: 100%; padding: 26px 23px; border-radius: 21px; }
+        #login h1 { font-size: 31px; }
+        .access-dialog-hero { padding: 24px 20px 20px; }
+        .access-dialog-body { padding: 20px; }
+        #userAccessTitle { font-size: 25px; }
+        .access-flow { gap: 8px; }
+        .access-flow-step { padding: 9px 8px; gap: 6px; }
+      }
+      @media (max-width: 360px) {
+        #login, #login.first-access-active { padding: 24px 18px; }
+        .password-rules { grid-template-columns: 1fr; gap: 7px; }
+        .access-flow { grid-template-columns: 1fr; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body.intro-active:not(.intro-reveal) #login, body.intro-active .institution-footer { opacity: 1; }
+      }
+
+      /* ACERVO 3.5.14 · Pessoas e perfis, com a mesma identidade dos acessos. */
+      #userAccessDialog { width: min(840px, calc(100vw - 32px)); }
+      #userAccessDialog.creating-person { width: min(580px, calc(100vw - 32px)); }
+      .access-dialog-hero p { max-width: 600px; }
+      #accessBack { margin: 14px 0 0; padding: 5px 9px; min-height: 30px; border-radius: 8px; background: #ffffff12; color: #e4efff; border-color: #c6e1ff45; font-size: 11px; }
+      #accessBack:hover:not(:disabled) { transform: none; background: #ffffff25; box-shadow: none; }
+      .people-toolbar { display: flex; gap: 14px; align-items: flex-end; margin-bottom: 17px; }
+      .people-search { flex: 1; min-width: 0; }
+      .people-search label { display: block; margin: 0 0 6px; }
+      #addPerson { min-height: 48px; border-radius: 12px; color: white; background: linear-gradient(125deg,#326ae0,#214bc4); border-color: #1a46b5; flex-shrink: 0; }
+      .people-summary { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin: 8px 0 12px; }
+      #peopleCount { color: #3c5b85; font-size: 11px; font-weight: 600; }
+      #refreshPeople { min-height: 30px; font-size: 11px; padding: 5px 9px; border-radius: 8px; }
+      #peopleList { display: grid; gap: 10px; }
+      .people-row { display: grid; grid-template-columns: 38px minmax(0,1fr) auto; gap: 12px; padding: 15px; align-items: center; border: 1px solid #b4cbea; border-radius: 14px; background: linear-gradient(120deg,#ffffff,#f5f8ff); }
+      .people-avatar { display: grid; place-items: center; width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; color: #2a5ab2; background: #e3edff; border: 1px solid #b1cbef; font-weight: 650; font-size: 12px; }
+      .people-person { min-width: 0; }
+      .people-name { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; color: #244776; font-size: 13px; font-weight: 650; overflow-wrap: anywhere; }
+      .people-self { font-size: 9px; padding: 2px 6px; border-radius: 6px; color: #315ba4; background: #e4edff; border: 1px solid #bacff1; font-weight: 500; }
+      .people-email { margin: 3px 0 8px; font-size: 11px; color: #607795; overflow-wrap: anywhere; }
+      .people-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; }
+      .people-role, .people-status { display: inline-flex; align-items: center; font-size: 9px; padding: 3px 7px; border-radius: 6px; line-height: 1.4; }
+      .people-role { color: #27539b; background: #e5eeff; border: 1px solid #b6ccf0; font-weight: 600; }
+      .people-role.admin { color: #ffffff; background: #2956b3; border-color: #2956b3; }
+      .people-role.editor { color: #245e83; background: #e2f2fc; border-color: #aed1e7; }
+      .people-role.unassigned { color: #8a6328; background: #fff4df; border-color: #e1c694; }
+      .people-status { color: #5b7493; background: #eef3fb; border: 1px solid #cad9ed; }
+      .people-actions { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
+      .people-actions button { min-height: 34px; padding: 6px 9px; border-radius: 8px; font-size: 10px; }
+      .people-actions .icon { width: 14px; height: 14px; flex-basis: 14px; }
+      .people-empty { color: #607795; border: 1px dashed #b4cbea; border-radius: 12px; padding: 22px 18px; font-size: 12px; text-align: center; background: #f1f6fe; }
+      #peoplePagination { justify-content: space-between; margin-top: 17px; gap: 8px; }
+      #peoplePagination button { min-height: 34px; font-size: 11px; border-radius: 9px; }
+      #peoplePage { color: #536d90; font-size: 11px; }
+      .role-fieldset { min-width: 0; padding: 0; margin: 22px 0 0; border: 0; }
+      .role-fieldset legend { padding: 0; color: #294e77; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+      .role-options { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+      #userAccessDialog .role-option { position: relative; margin: 0; padding: 14px 11px; min-width: 0; border: 1px solid #b7cdea; border-radius: 12px; background: #f6f9ff; cursor: pointer; }
+      #userAccessDialog .role-option input[type="radio"] { position: absolute; top: 14px; left: 11px; width: 14px; height: 14px; min-height: 0; margin: 0; padding: 0; accent-color: #2c5fc9; box-shadow: none; }
+      .role-option strong { display: block; padding-left: 22px; color: #32568b; font-size: 11px; font-weight: 650; }
+      .role-option small { display: block; margin-top: 8px; color: #60789a; font-size: 10px; line-height: 1.55; font-weight: 400; }
+      #userAccessDialog .role-option:has(input:checked) { border-color: #3972d6; background: #e7f0ff; box-shadow: 0 0 0 2px #3972d615; }
+      .role-option:focus-within { outline: 2px solid #3374de; outline-offset: 2px; }
+      .profile-person { display: flex; align-items: center; gap: 12px; padding: 15px; border: 1px solid #b7cdea; border-radius: 13px; background: #eaf2ff; }
+      #profilePersonName { display: block; color: #2b4e80; font-size: 14px; }
+      #profilePersonEmail { display: block; font-size: 11px; color: #5c7697; overflow-wrap: anywhere; margin-top: 3px; }
+      #savePersonRole { flex: 1; color: white; border-radius: 11px; background: linear-gradient(125deg,#326ae0,#214bc4); border-color: #1a46b5; min-height: 45px; }
+      #cancelPersonRole { border-radius: 11px; min-height: 45px; }
+      #deletePersonDialog { width: min(460px,calc(100vw - 32px)); padding: 0; border-radius: 20px; border: 1px solid #db99aa; background: #fff8fa; }
+      .delete-person-heading { padding: 24px; background: linear-gradient(120deg,#fff0f4,#fbe1e9); border-bottom: 1px solid #e0a5b6; }
+      .delete-person-heading h2 { margin: 8px 0 0; color: #a22442; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size: 25px; font-weight: 650; letter-spacing: -.6px; }
+      .delete-person-heading .eyebrow { color: #9a3c54; }
+      .delete-person-body { padding: 21px 24px 24px; }
+      #deletePersonName { display: block; color: #783547; font-size: 14px; }
+      #deletePersonEmail { display: block; color: #8e6270; font-size: 12px; overflow-wrap: anywhere; margin: 3px 0 14px; }
+      .delete-person-body p { font-size: 12px; color: #735260; }
+      #confirmPersonDelete { color: white; background: linear-gradient(125deg,#c83b57,#a71f3b); border-color: #a51f3b; border-radius: 10px; }
+      #deletePersonMessage { color: #a32442; font-size: 12px; }
+      #deletePersonMessage:empty { display: none; }
+      #deletePersonDialog::backdrop { background: #25162c75; }
+      @media(max-width:640px) {
+        .people-toolbar { flex-wrap: wrap; gap: 10px; }
+        .people-search { flex-basis: 100%; }
+        #addPerson { width: 100%; min-height: 42px; }
+        .people-row { grid-template-columns: 34px minmax(0,1fr); gap: 10px; padding: 12px; }
+        .people-avatar { width: 34px; height: 34px; }
+        .people-actions { grid-column: 1 / -1; justify-content: flex-start; padding-top: 10px; border-top: 1px solid #d2dfef; }
+        .role-options { grid-template-columns: 1fr; }
+        #userAccessDialog .role-option { padding: 12px 13px; }
+        #userAccessDialog .role-option input[type="radio"] { top: 13px; left: 13px; }
+        .role-option small { margin-top: 5px; padding-left: 22px; }
+      }
     </style>
   </head>
   <body class="auth-screen">
@@ -2967,6 +3244,12 @@
     </div>
     <div id="contextTip" class="context-tip" role="tooltip" hidden></div>
     <svg class="svg-library" aria-hidden="true">
+
+      <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12"/><circle cx="12" cy="12" r="3"/></symbol>
+      <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A12 12 0 0 1 12 5c6.4 0 10 7 10 7a19 19 0 0 1-3 3.9M6.5 6.6A21 21 0 0 0 2 12s3.6 7 10 7a13 13 0 0 0 5.4-1.2M10 10a3 3 0 0 0 4 4"/></symbol>
+      <symbol id="i-shield-key" viewBox="0 0 24 24"><path d="M12 2l8 3v6c0 5-3.7 8.4-8 11-4.3-2.6-8-6-8-11V5l8-3M12 12v4"/><circle cx="12" cy="10" r="2"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M2 21v-3a7 7 0 0 1 14 0v3M16 3a4 4 0 0 1 0 8m3 3a6 6 0 0 1 3 4v3"/></symbol>
+      <symbol id="i-user-add" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M2 21v-3a7 7 0 0 1 13-3M19 10v8m-4-4h8"/></symbol>
       <symbol id="i-plus" viewBox="0 0 24 24">
         <path d="M12 5v14M5 12h14" />
       </symbol>
@@ -3210,45 +3493,41 @@
         <div class="eyebrow">Prefeitura de Curitiba</div>
         <h1 id="loginHeading">Bem-vindo.</h1>
         <form id="loginForm">
-          <label for="email">E-mail</label
-          ><input
-            id="email"
-            type="email"
-            autocomplete="username"
-            required
-          /><label for="password">Senha</label
-          ><input
-            id="password"
-            type="password"
-            autocomplete="current-password"
-            required
-          /><button
-            type="button"
-            id="togglePassword"
-            class="password-toggle"
-            aria-label="Mostrar senha"
-            aria-pressed="false"
-          >
-            Mostrar</button
-          ><button class="primary" id="loginButton">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <use href="#i-lock" />
-            </svg>
-            Entrar
-          </button>
+          <label for="email">E-mail</label>
+          <input id="email" type="email" autocomplete="username" required />
+          <label for="password">Senha</label>
+          <div class="password-field">
+            <input id="password" type="password" autocomplete="current-password" required />
+            <button type="button" id="togglePassword" class="password-toggle" data-password-target="password" data-password-label="senha" aria-controls="password" aria-label="Mostrar senha" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg></button>
+          </div>
+          <button class="primary" id="loginButton"><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Entrar</button>
         </form>
         <div id="firstAccess" hidden>
-          <p class="hint">Este é seu primeiro acesso. Crie uma senha pessoal para continuar.</p>
+          <p class="access-description">Escolha uma senha pessoal para concluir seu primeiro acesso.</p>
+          <div class="security-state"><svg class="icon" aria-hidden="true"><use href="#i-shield-key" /></svg><div><strong>Última etapa para entrar no Acervo</strong><span>A senha inicial será substituída pela que você criar aqui.</span></div></div>
           <form id="firstAccessForm">
-            <label for="newPassword">Nova senha</label><input id="newPassword" type="password" required minlength="8" maxlength="72" autocomplete="new-password" />
-            <ul class="password-rules" aria-label="Requisitos da nova senha">
-              <li data-password-rule="length">Pelo menos 8 caracteres</li>
-              <li data-password-rule="upper">Uma letra maiúscula</li>
-              <li data-password-rule="lower">Uma letra minúscula</li>
-              <li data-password-rule="number">Um número</li>
-              <li data-password-rule="special">Dois caracteres especiais, como @ e !</li>
-            </ul>
-            <label for="confirmPassword">Repita a nova senha</label><input id="confirmPassword" type="password" required maxlength="72" autocomplete="new-password" />
+            <label for="newPassword">Nova senha</label>
+            <div class="password-field">
+              <input id="newPassword" type="password" required minlength="8" maxlength="72" autocomplete="new-password" aria-describedby="passwordRequirements" />
+              <button type="button" id="toggleNewPassword" class="password-toggle" data-password-target="newPassword" data-password-label="nova senha" aria-controls="newPassword" aria-label="Mostrar nova senha" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg></button>
+            </div>
+            <div class="password-policy" id="passwordRequirements">
+              <div class="policy-heading"><strong>Sua senha precisa ter</strong><span id="passwordRuleCount">0 de 5 requisitos atendidos</span></div>
+              <progress id="passwordRuleProgress" value="0" max="5" aria-label="Requisitos da senha atendidos"></progress>
+              <ul class="password-rules" aria-label="Requisitos da nova senha">
+                <li data-password-rule="length">Pelo menos 8 caracteres</li>
+                <li data-password-rule="upper">Uma letra maiúscula</li>
+                <li data-password-rule="lower">Uma letra minúscula</li>
+                <li data-password-rule="number">Um número</li>
+                <li data-password-rule="special">Dois caracteres especiais, como @ e !</li>
+              </ul>
+            </div>
+            <label for="confirmPassword">Repita a nova senha</label>
+            <div class="password-field">
+              <input id="confirmPassword" type="password" required maxlength="72" autocomplete="new-password" aria-describedby="passwordMatchHint" />
+              <button type="button" id="toggleConfirmPassword" class="password-toggle" data-password-target="confirmPassword" data-password-label="confirmação da senha" aria-controls="confirmPassword" aria-label="Mostrar confirmação da senha" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg></button>
+            </div>
+            <p id="passwordMatchHint" aria-live="polite">Digite a mesma senha nos dois campos.</p>
             <div class="actions spaced"><button id="saveFirstPassword" class="primary" disabled><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Salvar senha e continuar</button><button id="leaveFirstAccess" type="button">Voltar ao login</button></div>
           </form>
           <p id="firstAccessMessage" role="status"></p>
@@ -3634,7 +3913,7 @@
               <div class="eyebrow">Inventário em perspectiva</div>
               <h2>Visão geral</h2>
             </div>
-            <div class="actions"><span id="conferenceSummary" class="badge"></span><button id="manageAccess" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Adicionar pessoa</button></div>
+            <div class="actions"><span id="conferenceSummary" class="badge"></span><button id="manageAccess" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg>Gerenciar pessoas</button></div>
           </div>
           <div id="stats" class="stats"></div>
           <div id="availability" class="availability"></div>
@@ -3768,16 +4047,52 @@
       </div>
       <div id="editDialogContent"></div>
     </dialog>
-    <dialog id="userAccessDialog" aria-labelledby="userAccessTitle">
-      <div class="bar"><h2 id="userAccessTitle">Adicionar pessoa</h2><button type="button" id="closeUserAccess"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>Fechar</button></div>
-      <p class="hint">A conta terá uma senha inicial. Ao entrar pela primeira vez, a pessoa deverá criar sua própria senha.</p>
-      <form id="newUserForm">
-        <label for="newUserName">Nome</label><input id="newUserName" required minlength="2" maxlength="120" autocomplete="name" />
-        <label for="newUserEmail">E-mail</label><input id="newUserEmail" type="email" required maxlength="254" autocomplete="email" />
-        <button id="newUserSave" class="primary spaced"><svg class="icon" aria-hidden="true"><use href="#i-plus" /></svg>Cadastrar pessoa</button>
-      </form>
-      <p id="newUserMessage" role="status"></p>
-      <div id="newUserResult" hidden aria-live="polite"></div>
+    <dialog id="userAccessDialog" aria-labelledby="userAccessTitle" aria-describedby="userAccessDescription">
+      <div class="access-dialog-hero">
+        <div class="access-dialog-kicker">Acervo · Pessoas e acessos</div>
+        <button type="button" id="closeUserAccess" aria-label="Fechar gestão de pessoas"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg></button>
+        <button type="button" id="accessBack" hidden><svg class="icon" aria-hidden="true"><use href="#i-left" /></svg>Voltar às pessoas</button>
+        <div class="access-dialog-title"><span class="access-dialog-mark" id="userAccessMark"><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg></span><h2 id="userAccessTitle">Gerenciar pessoas</h2></div>
+        <p id="userAccessDescription">Veja quem tem uma conta, escolha o perfil e gerencie os acessos ao Acervo.</p>
+      </div>
+      <div class="access-dialog-body">
+        <section id="peoplePanel" aria-label="Pessoas cadastradas">
+          <div class="people-toolbar"><div class="people-search"><label for="peopleSearch">Buscar pessoa</label><input id="peopleSearch" type="search" placeholder="Nome ou e-mail" maxlength="120" autocomplete="off" /></div><button type="button" id="addPerson"><svg class="icon" aria-hidden="true"><use href="#i-user-add" /></svg>Adicionar pessoa</button></div>
+          <div class="people-summary"><span id="peopleCount"></span><button type="button" id="refreshPeople"><svg class="icon" aria-hidden="true"><use href="#i-refresh" /></svg>Atualizar</button></div>
+          <div id="peopleList" aria-busy="false"></div>
+          <div id="peoplePagination" class="actions" hidden><button type="button" id="peoplePrevious"><svg class="icon" aria-hidden="true"><use href="#i-left" /></svg>Anterior</button><span id="peoplePage"></span><button type="button" id="peopleNext">Próxima<svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></button></div>
+        </section>
+        <form id="newUserForm" hidden>
+          <div class="access-flow" aria-label="Como funciona o primeiro acesso">
+            <div class="access-flow-step"><span>01</span><div><strong>Você cria a conta</strong><small>Nome, e-mail e perfil</small></div></div>
+            <div class="access-flow-step"><span>02</span><div><strong>A pessoa cria a senha</strong><small>No primeiro acesso</small></div></div>
+          </div>
+          <label for="newUserName">Nome</label><input id="newUserName" required minlength="2" maxlength="120" autocomplete="name" />
+          <label for="newUserEmail">E-mail</label><input id="newUserEmail" type="email" required maxlength="254" autocomplete="email" aria-describedby="newUserEmailHelp" />
+          <p class="access-field-help" id="newUserEmailHelp">Esse será o e-mail usado para entrar no Acervo.</p>
+          <fieldset class="role-fieldset"><legend>Perfil de acesso</legend><div class="role-options">
+ <label class="role-option"><input type="radio" name="newUserRole" value="leitor" checked required /><strong>Leitor</strong><small>Consulta o acervo e exporta relatórios.</small></label>
+ <label class="role-option"><input type="radio" name="newUserRole" value="editor" required /><strong>Operador</strong><small>Cadastra, edita e registra movimentações.</small></label>
+ <label class="role-option"><input type="radio" name="newUserRole" value="admin" required /><strong>Administrador</strong><small>Realiza operações e gerencia pessoas e acessos.</small></label>
+ </div></fieldset>
+          <button id="newUserSave" class="primary spaced"><svg class="icon" aria-hidden="true"><use href="#i-user-add" /></svg>Cadastrar pessoa</button>
+        </form>
+        <form id="personRoleForm" hidden>
+          <div class="profile-person"><span class="people-avatar" id="profilePersonAvatar"></span><div><strong id="profilePersonName"></strong><span id="profilePersonEmail"></span></div></div>
+          <fieldset class="role-fieldset"><legend>Perfil de acesso</legend><div class="role-options">
+ <label class="role-option"><input type="radio" name="personRole" value="leitor" checked required /><strong>Leitor</strong><small>Consulta o acervo e exporta relatórios.</small></label>
+ <label class="role-option"><input type="radio" name="personRole" value="editor" required /><strong>Operador</strong><small>Cadastra, edita e registra movimentações.</small></label>
+ <label class="role-option"><input type="radio" name="personRole" value="admin" required /><strong>Administrador</strong><small>Realiza operações e gerencia pessoas e acessos.</small></label>
+ </div></fieldset>
+          <div class="actions spaced"><button type="button" id="cancelPersonRole">Cancelar</button><button id="savePersonRole"><svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>Salvar perfil</button></div>
+        </form>
+        <p id="newUserMessage" role="status"></p>
+        <div id="newUserResult" hidden aria-live="polite"></div>
+      </div>
+    </dialog>
+    <dialog id="deletePersonDialog" aria-labelledby="deletePersonTitle" aria-describedby="deletePersonDescription">
+      <div class="delete-person-heading"><div class="eyebrow">Pessoas e acessos</div><h2 id="deletePersonTitle">Excluir pessoa?</h2></div>
+      <div class="delete-person-body"><strong id="deletePersonName"></strong><span id="deletePersonEmail"></span><p id="deletePersonDescription">A conta será excluída e a pessoa perderá o acesso. Os cadastros e as movimentações que ela registrou continuarão no acervo.</p><p id="deletePersonMessage" role="status"></p><div class="actions spaced"><button type="button" id="cancelPersonDelete">Cancelar</button><button type="button" id="confirmPersonDelete"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Excluir pessoa</button></div></div>
     </dialog>
 
     <dialog id="operation">
@@ -4902,6 +5217,9 @@
             checks = data.conferencias || [];
             role = data.perfil || "leitor";
             $("manageAccess").hidden = role !== "admin";
+            if (role !== "admin" && $("userAccessDialog").open) {
+              $("userAccessDialog").close(); resetPeopleManagement();
+            }
             renderMovementResults();
             lastSuccess = new Date();
             $("live").className = "live";
@@ -6092,16 +6410,34 @@
       function mustChangePassword(person) {
         return person?.app_metadata?.acervo_primeiro_acesso === true;
       }
+      function setPasswordVisibility(button, show) {
+        $(button.dataset.passwordTarget).type = show ? "text" : "password";
+        button.setAttribute("aria-label", (show ? "Ocultar " : "Mostrar ") + button.dataset.passwordLabel);
+        button.setAttribute("aria-pressed", String(show));
+        button.querySelector("use").setAttribute("href", show ? "#i-eye-off" : "#i-eye");
+      }
+      function resetPasswordVisibility() {
+        document.querySelectorAll("[data-password-target]").forEach(button => setPasswordVisibility(button, false));
+      }
       function updatePasswordRules() {
         const checks = passwordRequirements($("newPassword").value);
         document.querySelectorAll("[data-password-rule]").forEach(node =>
           node.classList.toggle("met", checks[node.dataset.passwordRule]));
+        const met = Object.values(checks).filter(Boolean).length;
+        $("passwordRuleProgress").value = met;
+        $("passwordRuleCount").textContent = met + " de 5 requisitos atendidos";
+        const confirmed = $("confirmPassword").value;
+        const match = !!confirmed && confirmed === $("newPassword").value;
+        $("passwordMatchHint").textContent = !confirmed ? "Digite a mesma senha nos dois campos." : match ? "As senhas coincidem." : "As senhas ainda estão diferentes.";
+        $("passwordMatchHint").classList.toggle("matched", match);
         $("saveFirstPassword").disabled = passwordChanging ||
           !Object.values(checks).every(Boolean) ||
           $("newPassword").value !== $("confirmPassword").value;
       }
       function resetFirstAccess() {
         $("firstAccessForm").reset();
+        $("login").classList.remove("first-access-active");
+        resetPasswordVisibility();
         $("firstAccess").hidden = true;
         $("loginForm").hidden = false;
         $("loginHeading").textContent = "Bem-vindo.";
@@ -6116,11 +6452,14 @@
         $("login").hidden = false;
         $("loginForm").hidden = true;
         $("firstAccess").hidden = false;
-        $("loginHeading").textContent = "Crie sua senha.";
+        $("login").classList.add("first-access-active");
+        updatePasswordRules();
+        $("loginHeading").textContent = "Defina sua senha.";
         $("loginMessage").textContent = "";
         $("loginButton").disabled = false;
         $("newPassword").focus();
       }
+      let demoPeople = null;
       async function accessService(body) {
         if (IS_DEMO) {
           if (body.acao === "trocar_senha") {
@@ -6129,7 +6468,29 @@
             user.app_metadata = { ...user.app_metadata, acervo_primeiro_acesso: false };
             return { ok: true };
           }
-          return { email: body.email, senha_inicial: "curitiba", demonstracao: true };
+          if (role !== "admin") throw Error("Somente administradores podem gerenciar pessoas.");
+          if (!demoPeople) demoPeople = [
+            { id: user.id, nome: "Administrador da demonstração", email: user.email, perfil: "admin", primeiro_acesso: false },
+            { id: "22222222-2222-4222-8222-222222222222", nome: "Pessoa de exemplo", email: "pessoa.demo@acervo.invalid", perfil: "editor", primeiro_acesso: true }
+          ];
+          if (body.acao === "listar_usuarios") {
+            const search = String(body.busca || "").toLowerCase();
+            const all = demoPeople.filter(p => (p.nome + " " + p.email).toLowerCase().includes(search));
+            return { ok: true, pessoas: all, total: all.length, pagina: 1, limite: 30, demonstracao: true };
+          }
+          if (body.acao === "criar_usuario") {
+            if (demoPeople.some(p => p.email === body.email)) throw Error("Já existe uma conta com esse e-mail.");
+            const person = { id: crypto.randomUUID(), nome: body.nome, email: body.email, perfil: body.perfil || "leitor", primeiro_acesso: true };
+            demoPeople.push(person);
+            return { ok: true, ...person, senha_inicial: "curitiba", demonstracao: true };
+          }
+          if (body.usuario === user.id) throw Error("Sua própria conta permanece como administradora.");
+          const person = demoPeople.find(p => p.id === body.usuario);
+          if (!person) throw Error("Essa conta não foi encontrada.");
+          if (body.acao === "alterar_perfil") person.perfil = body.perfil;
+          else if (body.acao === "excluir_usuario") demoPeople = demoPeople.filter(p => p.id !== body.usuario);
+          else throw Error("Operação não reconhecida.");
+          return { ok: true, demonstracao: true };
         }
         const { data, error } = await db.functions.invoke("acervo-acessos", { body });
         if (error) {
@@ -6197,44 +6558,202 @@
         if (error) { $("firstAccessMessage").textContent = "Não foi possível sair. Tente novamente."; return; }
         endSession();
       };
+      const PEOPLE_ROLES = { leitor: "Leitor", editor: "Operador", admin: "Administrador" };
+      let accessMode = "list", peopleRows = [], peoplePage = 1, peopleTotal = 0,
+        peopleLimit = 30, peopleRequest = 0, peopleSearchTimer = null,
+        profileTarget = null, deleteTarget = null;
+      function personInitials(person) {
+        return (person.nome || person.email || "?").trim().split(/\s+/).slice(0,2).map(v => v[0]).join("").toUpperCase();
+      }
+      function setAccessView(mode) {
+        if (mode !== "list") { ++peopleRequest; clearTimeout(peopleSearchTimer); }
+        accessMode = mode;
+        $("peoplePanel").hidden = mode !== "list";
+        $("newUserForm").hidden = mode !== "create";
+        $("personRoleForm").hidden = mode !== "profile";
+        $("newUserResult").hidden = mode !== "result";
+        $("accessBack").hidden = mode === "list";
+        $("userAccessDialog").classList.toggle("creating-person", mode !== "list");
+        $("newUserMessage").textContent = "";
+        const labels = {
+          list: ["Gerenciar pessoas", "Veja quem tem uma conta, escolha o perfil e gerencie os acessos ao Acervo.", "users"],
+          create: ["Adicionar pessoa", "Crie uma conta com nome, e-mail e perfil. No primeiro acesso, a pessoa define sua própria senha.", "user-add"],
+          profile: ["Alterar perfil", "Escolha o que essa pessoa poderá fazer no Acervo. A alteração vale para as próximas operações.", "shield-key"],
+          result: ["Conta cadastrada", "Repasse o e-mail e a senha inicial à pessoa. Ela criará sua própria senha ao entrar.", "check"],
+        };
+        $("userAccessTitle").textContent = labels[mode][0];
+        $("userAccessDescription").textContent = labels[mode][1];
+        $("userAccessMark").querySelector("use").setAttribute("href", "#i-" + labels[mode][2]);
+      }
+      function resetPeopleManagement() {
+        ++peopleRequest;
+        clearTimeout(peopleSearchTimer);
+        peopleRows = []; peoplePage = 1; peopleTotal = 0;
+        profileTarget = null; deleteTarget = null; accessSaving = false;
+        $("peopleSearch").value = "";
+        $("peopleList").replaceChildren(); $("peopleList").setAttribute("aria-busy", "false");
+        $("peopleCount").textContent = "";
+        $("peoplePagination").hidden = true;
+        $("personRoleForm").reset();
+        if ($("deletePersonDialog").open) $("deletePersonDialog").close();
+        $("deletePersonName").textContent = $("deletePersonEmail").textContent = $("deletePersonMessage").textContent = "";
+        $("profilePersonName").textContent = $("profilePersonEmail").textContent = $("profilePersonAvatar").textContent = "";
+        $("newUserMessage").textContent = "";
+        $("newUserForm").reset(); $("newUserResult").replaceChildren();
+        setPeopleBusy(false);
+        labelButton($("newUserSave"), "Cadastrar pessoa", "user-add");
+        labelButton($("savePersonRole"), "Salvar perfil", "check");
+        labelButton($("confirmPersonDelete"), "Excluir pessoa", "discard");
+        setAccessView("list");
+      }
+      function setPeopleBusy(value) {
+        accessSaving = value;
+        for (const id of ["closeUserAccess", "accessBack", "newUserSave", "savePersonRole", "cancelPersonRole", "confirmPersonDelete", "cancelPersonDelete"])
+          $(id).disabled = value;
+        $("newUserForm").setAttribute("aria-busy", String(value));
+        $("personRoleForm").setAttribute("aria-busy", String(value));
+      }
+      function renderPeople() {
+        const nodes = peopleRows.map(person => {
+          const row = el("div", undefined, "people-row");
+          const avatar = el("span", personInitials(person), "people-avatar"); avatar.setAttribute("aria-hidden", "true");
+          const info = el("div", undefined, "people-person");
+          const name = el("div", person.nome || person.email, "people-name");
+          const self = person.id === user?.id;
+          if (self) name.append(el("span", "Você", "people-self"));
+          const meta = el("div", undefined, "people-meta");
+          meta.append(el("span", PEOPLE_ROLES[person.perfil] || "Sem acesso", "people-role " + (person.perfil || "unassigned")));
+          if (person.perfil) meta.append(el("span", person.primeiro_acesso ? "Primeiro acesso pendente" : "Acesso liberado", "people-status"));
+          info.append(name, el("p", person.email, "people-email"), meta);
+          const actions = el("div", undefined, "people-actions");
+          const profile = el("button"); profile.type = "button";
+          labelButton(profile, person.perfil ? "Alterar perfil" : "Liberar acesso", "shield-key");
+          profile.disabled = self; profile.setAttribute("aria-label", (person.perfil ? "Alterar perfil de " : "Liberar acesso de ") + (person.nome || person.email));
+          if (self) profile.title = "Sua conta permanece como administradora.";
+          profile.onclick = () => editPersonRole(person);
+          const remove = el("button", undefined, "danger"); remove.type = "button";
+          labelButton(remove, "Excluir", "discard"); remove.disabled = self;
+          remove.setAttribute("aria-label", "Excluir " + (person.nome || person.email));
+          if (self) remove.title = "Você não pode excluir sua própria conta.";
+          remove.onclick = () => confirmPersonRemoval(person);
+          actions.append(profile, remove); row.append(avatar, info, actions); return row;
+        });
+        $("peopleList").replaceChildren(...(nodes.length ? nodes : [el("p", "Nenhuma pessoa encontrada.", "people-empty")]));
+        $("peopleCount").textContent = peopleTotal + (peopleTotal === 1 ? " pessoa" : " pessoas");
+        const pages = Math.max(1, Math.ceil(peopleTotal / peopleLimit));
+        $("peoplePagination").hidden = pages <= 1;
+        $("peoplePage").textContent = peoplePage + " de " + pages;
+        $("peoplePrevious").disabled = peoplePage <= 1;
+        $("peopleNext").disabled = peoplePage >= pages;
+      }
+      async function loadPeople(page = peoplePage) {
+        if (role !== "admin" || !$('userAccessDialog').open) return;
+        clearTimeout(peopleSearchTimer);
+        const request = ++peopleRequest, owner = user?.id;
+        $("newUserMessage").textContent = "";
+        $("peopleList").setAttribute("aria-busy", "true");
+        $("peopleList").replaceChildren(el("p", "Carregando pessoas…", "people-empty"));
+        $("peoplePagination").hidden = true;
+        try {
+          const result = await accessService({ acao: "listar_usuarios", busca: $("peopleSearch").value.trim(), pagina: page });
+          if (request !== peopleRequest || owner !== user?.id || !$('userAccessDialog').open) return;
+          peopleRows = result.pessoas || []; peoplePage = result.pagina || 1;
+          peopleTotal = result.total || 0; peopleLimit = result.limite || 30;
+          renderPeople();
+        } catch (error) {
+          if (request !== peopleRequest || owner !== user?.id || !$('userAccessDialog').open) return;
+          peopleRows = []; $("peopleCount").textContent = "";
+          $("peopleList").replaceChildren(el("p", "A lista não pôde ser carregada. Use Atualizar para tentar novamente.", "people-empty"));
+          $("newUserMessage").textContent = error.message;
+        } finally {
+          if (request === peopleRequest && owner === user?.id) $("peopleList").setAttribute("aria-busy", "false");
+        }
+      }
+      function returnToPeople() {
+        if (accessSaving) return;
+        profileTarget = null;
+        setAccessView("list"); loadPeople(); $("peopleSearch").focus();
+      }
+      function editPersonRole(person) {
+        if (role !== "admin" || accessSaving || person.id === user?.id) return;
+        profileTarget = person;
+        $("personRoleForm").reset();
+        $("profilePersonAvatar").textContent = personInitials(person);
+        $("profilePersonName").textContent = person.nome || person.email;
+        $("profilePersonEmail").textContent = person.email;
+        $("personRoleForm").querySelector(`input[value="${PEOPLE_ROLES[person.perfil] ? person.perfil : "leitor"}"]`).checked = true;
+        setAccessView("profile"); $("personRoleForm").querySelector("input:checked").focus();
+      }
+      function confirmPersonRemoval(person) {
+        if (role !== "admin" || accessSaving || person.id === user?.id) return;
+        deleteTarget = person;
+        $("deletePersonName").textContent = person.nome || person.email;
+        $("deletePersonEmail").textContent = person.email;
+        $("deletePersonMessage").textContent = "";
+        $("deletePersonDialog").showModal(); $("cancelPersonDelete").focus();
+      }
       $("manageAccess").onclick = () => {
         if (role !== "admin" || busy || pending) return;
-        $("newUserForm").reset();
-        $("newUserForm").hidden = false;
-        $("newUserResult").hidden = true;
-        $("newUserResult").replaceChildren();
-        $("newUserMessage").textContent = "";
-        $("userAccessDialog").showModal();
-        $("newUserName").focus();
+        resetPeopleManagement(); $("userAccessDialog").showModal();
+        loadPeople(1); $("peopleSearch").focus();
       };
       $("closeUserAccess").onclick = () => { if (!accessSaving) $("userAccessDialog").close(); };
       $("userAccessDialog").addEventListener("cancel", event => { if (accessSaving) event.preventDefault(); });
+      $("userAccessDialog").addEventListener("close", () => { ++peopleRequest; clearTimeout(peopleSearchTimer); });
+      $("peopleSearch").oninput = () => { clearTimeout(peopleSearchTimer); peopleSearchTimer = setTimeout(() => loadPeople(1), 300); };
+      $("refreshPeople").onclick = () => loadPeople();
+      $("peoplePrevious").onclick = () => loadPeople(peoplePage - 1);
+      $("peopleNext").onclick = () => loadPeople(peoplePage + 1);
+      $("accessBack").onclick = $("cancelPersonRole").onclick = returnToPeople;
+      $("addPerson").onclick = () => {
+        if (accessSaving) return;
+        $("newUserForm").reset(); $("newUserResult").replaceChildren();
+        setAccessView("create"); $("newUserName").focus();
+      };
       $("newUserForm").onsubmit = async event => {
         event.preventDefault();
         if (role !== "admin" || accessSaving || !$("newUserForm").reportValidity()) return;
-        accessSaving = true;
-        $("newUserSave").disabled = true;
-        $("closeUserAccess").disabled = true;
-        $("newUserMessage").textContent = "";
+        setPeopleBusy(true); $("newUserMessage").textContent = "";
         labelButton($("newUserSave"), "Cadastrando…", "clock");
         const owner = user?.id;
         try {
-          const result = await accessService({ acao: "criar_usuario", nome: $("newUserName").value.trim(), email: $("newUserEmail").value.trim() });
+          const result = await accessService({ acao: "criar_usuario", nome: $("newUserName").value.trim(), email: $("newUserEmail").value.trim(), perfil: new FormData($("newUserForm")).get("newUserRole") });
           if (user?.id !== owner) return;
-          $("newUserResult").replaceChildren(
-            el("strong", "Conta cadastrada."),
-            el("p", result.email),
-            el("p", "Senha inicial: " + result.senha_inicial),
-            el("p", "No primeiro acesso, a pessoa criará sua própria senha."));
-          $("newUserResult").hidden = false;
-          $("newUserForm").hidden = true;
-        } catch (error) { $("newUserMessage").textContent = error.message; }
-        finally {
-          accessSaving = false;
-          $("newUserSave").disabled = false;
-          $("closeUserAccess").disabled = false;
-          labelButton($("newUserSave"), "Cadastrar pessoa", "plus");
-        }
+          const resultTitle = el("strong", "Conta cadastrada."); resultTitle.prepend(icon("check"));
+          $("newUserResult").replaceChildren(resultTitle, el("p", result.email), el("p", "Senha inicial: " + result.senha_inicial),
+            el("p", "Perfil: " + (PEOPLE_ROLES[result.perfil] || "Leitor")), el("p", "No primeiro acesso, a pessoa criará sua própria senha."));
+          setAccessView("result");
+        } catch (error) { if (user?.id === owner) $("newUserMessage").textContent = error.message; }
+        finally { if (user?.id === owner) { setPeopleBusy(false); labelButton($("newUserSave"), "Cadastrar pessoa", "user-add"); } }
+      };
+      $("personRoleForm").onsubmit = async event => {
+        event.preventDefault();
+        if (role !== "admin" || accessSaving || !profileTarget) return;
+        const owner = user?.id, id = profileTarget.id;
+        setPeopleBusy(true); $("newUserMessage").textContent = "";
+        labelButton($("savePersonRole"), "Salvando…", "clock");
+        try {
+          await accessService({ acao: "alterar_perfil", usuario: id, perfil: new FormData($("personRoleForm")).get("personRole") });
+          if (user?.id !== owner) return;
+          setAccessView("list"); await loadPeople(); toast("Perfil de acesso atualizado.");
+        } catch (error) { if (user?.id === owner) $("newUserMessage").textContent = error.message; }
+        finally { if (user?.id === owner) { setPeopleBusy(false); labelButton($("savePersonRole"), "Salvar perfil", "check"); } }
+      };
+      $("cancelPersonDelete").onclick = () => { if (!accessSaving) $("deletePersonDialog").close(); };
+      $("deletePersonDialog").addEventListener("cancel", event => { if (accessSaving) event.preventDefault(); });
+      $("confirmPersonDelete").onclick = async () => {
+        if (role !== "admin" || accessSaving || !deleteTarget) return;
+        const owner = user?.id, id = deleteTarget.id;
+        setPeopleBusy(true); $("deletePersonMessage").textContent = "";
+        labelButton($("confirmPersonDelete"), "Excluindo…", "clock");
+        try {
+          await accessService({ acao: "excluir_usuario", usuario: id });
+          if (user?.id !== owner) return;
+          $("deletePersonDialog").close(); deleteTarget = null;
+          await loadPeople(); toast("Pessoa excluída. O histórico foi preservado.");
+        } catch (error) {
+          if (user?.id === owner) { $("deletePersonMessage").textContent = error.message; await loadPeople(); }
+        } finally { if (user?.id === owner) { setPeopleBusy(false); labelButton($("confirmPersonDelete"), "Excluir pessoa", "discard"); } }
       };
 
       // Login e eventos.
@@ -6522,6 +7041,7 @@
         clearTimeout(toastTimer);
         $("toast").hidden = true;
         if ($("userAccessDialog").open) $("userAccessDialog").close();
+        resetPeopleManagement(); demoPeople = null;
         $("newUserForm").reset();
         $("newUserResult").replaceChildren();
         $("newUserResult").hidden = true;
@@ -7818,29 +8338,41 @@
           },
           { passive: true },
         );
-        $("togglePassword").onclick = () => {
-          const show = $("password").type === "password";
-          $("password").type = show ? "text" : "password";
-          $("togglePassword").textContent = show ? "Ocultar" : "Mostrar";
-          $("togglePassword").setAttribute(
-            "aria-label",
-            show ? "Ocultar senha" : "Mostrar senha",
-          );
-          $("togglePassword").setAttribute("aria-pressed", String(show));
-        };
-        function finishIntro() {
-          $("brandIntro")?.remove();
-          document.body.classList.remove("intro-active");
+        document.querySelectorAll("[data-password-target]").forEach(button => {
+          button.onclick = () => {
+            const field = $(button.dataset.passwordTarget);
+            const show = field.type === "password";
+            setPasswordVisibility(button, show);
+          };
+        });
+        const footer = document.querySelector(".institution-footer");
+        let footerAnimation = null;
+        function revealFooter() {
+          footerAnimation?.cancel();
+          if (reduced.matches || !footer.animate) return;
+          footerAnimation = footer.animate([
+            { opacity: 0, transform: "translateY(12px)" },
+            { opacity: 1, transform: "translateY(0)" }
+          ], { duration: 650, delay: 160, easing: "cubic-bezier(.2,.75,.25,1)", fill: "backwards" });
         }
+        function finishIntro() {
+          const wasIntro = !!$("brandIntro");
+          $("brandIntro")?.remove();
+          document.body.classList.remove("intro-active", "intro-reveal", "intro-landed");
+          document.body.classList.add("screen-ready");
+          if (wasIntro) revealFooter();
+        }
+        let previousAuthScreen = null;
         function syncScreen() {
-          document.body.classList.toggle("auth-screen", !$("login").hidden);
+          const authScreen = !$("login").hidden;
+          document.body.classList.toggle("auth-screen", authScreen);
+          if (previousAuthScreen !== null && previousAuthScreen !== authScreen && !$("brandIntro")) revealFooter();
+          previousAuthScreen = authScreen;
           $("syncTools").hidden = !$("login").hidden;
           requestAnimationFrame(() => updateNavIndicator(false));
           if ($("login").hidden) {
             finishIntro();
-            $("password").type = "password";
-            $("togglePassword").textContent = "Mostrar";
-            $("togglePassword").setAttribute("aria-pressed", "false");
+            setPasswordVisibility($("togglePassword"), false);
           }
         }
         new MutationObserver(syncScreen).observe($("login"), {
@@ -7866,6 +8398,7 @@
               const from = $("introMark").getBoundingClientRect(),
                 to = $("loginMark").getBoundingClientRect();
               intro.classList.add("departing");
+              document.body.classList.add("intro-reveal");
               $("introMark").style.transform =
                 "translate(" +
                 (to.left + to.width / 2 - from.left - from.width / 2) +
@@ -7877,7 +8410,7 @@
               setTimeout(() => {
                 if (!intro.isConnected) return;
                 $("introMark").style.visibility = "hidden";
-                document.body.classList.remove("intro-active");
+                document.body.classList.add("intro-landed");
                 intro.style.opacity = "0";
                 setTimeout(finishIntro, 380);
               }, 850);
@@ -7885,7 +8418,7 @@
           }
         }
         reduced.addEventListener("change", () => {
-          if (reduced.matches) finishIntro();
+          if (reduced.matches) { footerAnimation?.cancel(); finishIntro(); }
         });
         setHelpHint($("draftInfo"), "Rascunho automático", "draft");
         $("draftInfo").dataset.help =

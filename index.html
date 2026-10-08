@@ -5,13 +5,13 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-hLUVtP7XO0cqDf713ZHvmuBGuBiYG0HSW4mJvK2/TyE=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-5zzONav8FBfA7ugdzZlfDTWZ/dH6g5TMsOHDE7WL2Y0=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <meta name="theme-color" content="#214cc2" />
+    <meta name="theme-color" content="#1580d1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="ACERVO" />
@@ -3228,6 +3228,251 @@
         #userAccessDialog .role-option input[type="radio"] { top: 13px; left: 13px; }
         .role-option small { margin-top: 5px; padding-left: 22px; }
       }
+      /* ACERVO 3.5.15 · Uma paleta comum e uma Visão geral mais objetiva. */
+      :root {
+        --blue: #087cdd;
+        --blue-strong: #0756a1;
+        --blue-deep: #164d80;
+        --blue-heading: linear-gradient(120deg, #164d80, #086bb8);
+        --blue-action: linear-gradient(125deg, #1682d3, #0756a1);
+        --surface: #ffffff;
+        --surface-soft: #edf4fb;
+        --surface-raised: #d6e7f6;
+        --surface-line: #aac7df;
+        --green: var(--blue-strong);
+        --ink: #203f60;
+        --muted: #58718a;
+        --line: var(--surface-line);
+        --soft: var(--surface-soft);
+      }
+      .auth-screen, .brand-intro:not(.departing) {
+        background:
+          radial-gradient(ellipse at 78% 12%, #65c1ff45, transparent 55%),
+          radial-gradient(ellipse at 5% 88%, #219ce03d, transparent 52%),
+          linear-gradient(135deg, #0d61b0, #1580d1 52%, #0b64b5);
+      }
+      body:not(.auth-screen) {
+        background:
+          radial-gradient(ellipse at 90% 6%, #75b9ed4d, transparent 48%),
+          radial-gradient(ellipse at 4% 65%, #9ac5e847, transparent 46%),
+          linear-gradient(140deg, #e8f1fa, #d4e4f3 54%, #e7f0f9);
+      }
+      .primary, #loginButton, #saveFirstPassword, #newUserSave,
+      #addPerson, #savePersonRole {
+        background: var(--blue-action);
+        border-color: #0756a1;
+        color: #ffffff;
+        box-shadow: 0 6px 16px -9px #164d8080, inset 0 1px 0 #ffffff24;
+      }
+      .primary:hover:not(:disabled), #loginButton:hover:not(:disabled),
+      #saveFirstPassword:hover:not(:disabled), #newUserSave:hover:not(:disabled),
+      #addPerson:hover:not(:disabled), #savePersonRole:hover:not(:disabled) {
+        background: linear-gradient(125deg, #218fdf, #0756a1);
+        border-color: #0756a1;
+        box-shadow: 0 0 0 3px #087cdd18, 0 8px 20px -10px #164d80a0;
+      }
+      .choice input:checked + span {
+        background: var(--blue-heading);
+        border-color: #2b87c7;
+      }
+      .card { border-color: var(--surface-line); background: linear-gradient(150deg, var(--surface), #f8fbfe); }
+      #app .card.side { background: radial-gradient(ellipse at 90% 0, #3296d34a, transparent 65%), var(--blue-heading); }
+      .detail-panel, .movement-result {
+        background: linear-gradient(135deg, #e0edf8, var(--surface-raised));
+        border-color: #97b9d7;
+        border-left-color: var(--blue-strong);
+      }
+      .filter-panel, .location, .stock-fields { background: var(--surface-raised); border-color: #99bbd9; }
+      .registration-summary { background: linear-gradient(125deg, #d6e7f6, #eef5fb); border-color: #4c8cbc; }
+      .fill { background: linear-gradient(90deg, var(--blue-deep), #58a0d3); }
+      .header-meta #logout, .header-meta #refresh, .header-meta #manageAccess {
+        min-height: 32px;
+        border: 1px solid #98b8d4;
+        border-radius: 9px;
+        background: linear-gradient(145deg, #ffffffeb, #e8f1fa);
+        color: var(--blue-deep);
+        box-shadow: 0 4px 9px -6px #20497055, inset 0 1px 0 #ffffff;
+      }
+      .header-meta #manageAccess { padding: 5px 9px; gap: 6px; font-size: 11px; }
+      .header-meta #manageAccess:hover:not(:disabled) { background: #deedf9; border-color: #6f9fc6; transform: none; }
+      .header-meta .sync-row { flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+      #login::before { background: linear-gradient(90deg, var(--blue-strong), #27b1f3, var(--blue-strong)); }
+      #login h1 { color: var(--blue-deep); }
+      #login input:focus, #userAccessDialog input:focus { outline-color: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #087cdd14; }
+      .password-field .password-toggle[aria-pressed="true"] { background: #e0eefb; color: var(--blue-strong); }
+      .security-state, .password-policy { background: var(--surface-soft); border-color: var(--surface-line); }
+      .security-state > .icon, .security-state strong, .password-rules li.met { color: var(--blue-strong); }
+      #passwordRuleProgress::-webkit-progress-value { background: linear-gradient(90deg, var(--blue-strong), #169ade); }
+      #passwordRuleProgress::-moz-progress-bar { background: var(--blue); }
+      .password-rules li.met::before { background: var(--blue-strong); border-color: var(--blue-strong); }
+
+      /* Edição, movimentações e pessoas compartilham cabeçalho e superfícies. */
+      dialog:not(#camera) {
+        background: linear-gradient(150deg, var(--surface), var(--surface-soft));
+        border: 1px solid #89aecf;
+        border-top: 4px solid var(--blue-strong);
+        box-shadow: 0 32px 85px -20px #153c698c;
+      }
+      dialog::backdrop, #userAccessDialog::backdrop, #deletePersonDialog::backdrop {
+        background: #153b6480;
+        backdrop-filter: blur(7px);
+      }
+      #editDialog > .dialog-heading, #operation > .bar:first-child,
+      #userAccessDialog > .access-dialog-hero {
+        background: radial-gradient(ellipse at 95% 5%, #45a6df33, transparent 62%), var(--blue-heading);
+        border-bottom: 1px solid #2b70a8;
+        color: #ffffff;
+      }
+      #editDialog > .dialog-heading h2, #operation > .bar:first-child h2,
+      #userAccessTitle {
+        color: #ffffff;
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -.025em;
+      }
+      #editDialog > .dialog-heading .eyebrow { color: #d2e8fb; }
+      #editDialogClose, #operation > .bar:first-child > button, #closeUserAccess {
+        color: #ffffff;
+        background: #ffffff12;
+        border-color: #c8e5fb63;
+        box-shadow: none;
+      }
+      #editDialogClose:hover:not(:disabled), #operation > .bar:first-child > button:hover:not(:disabled),
+      #closeUserAccess:hover:not(:disabled) { background: #ffffff24; border-color: #d2e9fa; box-shadow: none; transform: none; }
+      #operation { padding: 0; }
+      #operation > .bar:first-child { padding: 22px 24px 18px; }
+      #operation > .bar:first-child h2 { margin: 0; }
+      #operationForm { padding: 20px 24px 24px; }
+      #editFields > .actions { background: var(--surface-soft); border-color: var(--surface-line); }
+      #userAccessDialog { background: linear-gradient(150deg, var(--surface), var(--surface-soft)); border-color: #89aecf; border-top-color: var(--blue-strong); }
+      #userAccessDialog .access-dialog-hero p { color: #dceefb; }
+      #userAccessDialog .access-dialog-kicker { color: #d2e8fb; }
+      .people-row { border-color: var(--surface-line); background: linear-gradient(120deg, #ffffff, #f6fafe); }
+      .people-avatar, .profile-person { color: var(--blue-strong); background: #e3effa; border-color: #b1cee6; }
+      .people-name, #profilePersonName, #userAccessDialog label, .role-fieldset legend { color: var(--blue-deep); }
+      .people-role { color: var(--blue-strong); background: #e6f0fa; border-color: #b7cee4; }
+      .people-role.admin { color: #ffffff; background: var(--blue-deep); border-color: var(--blue-deep); }
+      .people-role.editor { color: #1d5a80; background: #e1f0fa; border-color: #a9cce3; }
+      .people-role.unassigned { color: #8a6328; background: #fff4df; border-color: #e1c694; }
+      #userAccessDialog .role-option { background: #f7fbfe; border-color: var(--surface-line); }
+      #userAccessDialog .role-option:has(input:checked) { background: #e3effa; border-color: var(--blue); box-shadow: 0 0 0 2px #087cdd14; }
+      #userAccessDialog .role-option input[type="radio"] { accent-color: var(--blue-strong); }
+      .role-option strong { color: var(--blue-deep); }
+      .role-option:focus-within { outline-color: var(--blue); }
+      #newUserResult { background: #e5f0fa; border-color: #9ebfdb; }
+      #newUserResult > strong, #newUserResult p:nth-of-type(2) { color: var(--blue-strong); }
+      .access-flow-step { background: #edf4fb; border-color: #bfd3e7; }
+      .access-flow-step > span { color: var(--blue-strong); }
+      #operation.destructive { border-top-color: #ad1c36; }
+      #operation.destructive > .bar:first-child { background: linear-gradient(120deg, #8c233e, #b43350); border-bottom-color: #b6576d; }
+      #operation.destructive > .bar:first-child h2 { color: #ffffff; }
+      #deletePersonDialog { border-color: #cf9aaa; border-top-color: #ad1c36; background: #fff8fa; }
+      .delete-person-heading { background: linear-gradient(120deg, #8c233e, #b43350); border-bottom-color: #b6576d; }
+      .delete-person-heading h2 { color: #ffffff; font-family: var(--serif); font-size: 28px; font-weight: 400; }
+      .delete-person-heading .eyebrow { color: #ffe2e9; }
+      .disposal #save, .destructive #confirmOperation { color: #ffffff; background: linear-gradient(125deg, #cc3b52, #ad1c36); border-color: #93172b; }
+
+      /* Três indicadores, atenção ao estoque e um histórico curto. */
+      .dashboard-title { margin-bottom: 8px; align-items: center; }
+      .dashboard-title .eyebrow { color: var(--blue-strong); }
+      .dashboard-title h2 { margin-bottom: 4px; }
+      .dashboard-description { margin: 0; color: var(--muted); font-size: 12px; }
+      #conferenceSummary { min-height: 32px; padding: 6px 10px; font-size: 10px; background: #e0ecf7; border: 1px solid #a1bfd9; color: var(--blue-deep); }
+      #stats { grid-template-columns: repeat(3,minmax(0,1fr)); margin: 19px 0 20px; }
+      #stats .stat:first-child { background: radial-gradient(ellipse at top right,#45a6df33,transparent 75%),var(--blue-heading); border-color: #347bb0; border-top-color: #76bce8; }
+      #stats .stat[data-tone="stock-alert"] { background: linear-gradient(150deg,#ffffff,#fff4df); border-top-color: #b98532; }
+      .dashboard-focus { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; align-items: start; margin-bottom: 20px; }
+      .dashboard-focus > .card { padding: 22px; margin-bottom: 0; }
+      .dashboard-focus .card-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-bottom: 14px; margin-bottom: 12px; border-bottom: 1px solid #bcd2e5; }
+      .dashboard-focus .card-heading h3 { margin: 0; font-size: 22px; }
+      .dashboard-focus .card-heading .icon { color: var(--blue-strong); }
+      #dashboard .dashboard-focus .stock-watch { background: linear-gradient(140deg,#f9fcff,#e9f2fa); border-color: var(--surface-line); }
+      .stock-alert-grid { grid-template-columns: minmax(0,1fr); margin-top: 12px; gap: 10px; }
+      .stock-alert-card { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 12px; padding: 13px 14px; background: #ffffff; border-color: #d3bd93; }
+      .stock-alert-card .stock-alert-status { grid-column: 1; font-size: 10px; gap: 5px; }
+      .stock-alert-status .icon { width: 14px; height: 14px; flex-basis: 14px; }
+      .stock-alert-card h4 { grid-column: 1; margin: 3px 0 0; font-size: 14px; }
+      .stock-alert-card p { grid-column: 1; font-size: 10px; margin: 0; }
+      .stock-alert-values { grid-column: 2; grid-row: 1 / span 4; margin: 0; gap: 15px; align-items: center; text-align: right; }
+      .stock-alert-values small { font-size: 9px; }
+      .stock-alert-values strong { font-size: 20px; }
+      .stock-alert-card button { grid-column: 1 / -1; justify-self: start; margin-top: 7px; min-height: 30px; padding: 5px 8px; font-size: 10px; }
+      .stock-alert-empty { border: 1px solid #b9d2e6; background: #e4f0fa; font-size: 12px; }
+      #stockAlerts:not(.expanded) > :nth-child(n+4), #movementTimeline:not(.expanded) > :nth-child(n+5) { display: none; }
+      .dashboard-more { width: 100%; margin-top: 12px; min-height: 32px; padding: 6px 10px; font-size: 11px; background: #edf4fb; border-color: #aec9df; }
+      .dashboard-more .icon { width: 14px; height: 14px; flex-basis: 14px; transform: rotate(90deg); }
+      .dashboard-more[aria-expanded="true"] .icon { transform: rotate(-90deg); }
+      #movementTimeline .recent-row { grid-template-columns: minmax(0,1fr) auto; gap: 3px 12px; padding: 12px 0; }
+      #movementTimeline .recent-row > strong { grid-column: 1; font-size: 12px; overflow-wrap: anywhere; }
+      #movementTimeline .recent-row > div { grid-column: 1; font-size: 11px; }
+      #movementTimeline .recent-row > div > small { display: none; }
+      #movementTimeline .recent-row > small { grid-column: 1; font-size: 10px; }
+      #movementTimeline .recent-row > button { grid-column: 2; grid-row: 1 / span 3; min-height: 30px; padding: 5px 8px; font-size: 10px; }
+      #movementTimeline:empty { min-height: 70px; }
+      .dashboard-details { margin: 14px 0 0; padding: 0; overflow: hidden; border: 1px solid #98b9d6; border-radius: 15px; background: #f8fbfe; }
+      .dashboard-details > summary { display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; padding: 18px 21px; color: var(--blue-deep); background: linear-gradient(120deg,#dcebf8,#e9f3fb); }
+      .dashboard-details > summary::-webkit-details-marker { display: none; }
+      .dashboard-details > summary > .icon:first-child { width: 21px; height: 21px; flex-basis: 21px; color: var(--blue-strong); }
+      .dashboard-details > summary > span { flex: 1; min-width: 0; }
+      .dashboard-details > summary strong { display: block; font-size: 13px; font-weight: 600; }
+      .dashboard-details > summary small { display: block; margin-top: 2px; font-size: 11px; }
+      .dashboard-details > summary > .icon:last-child { transition: transform .2s; }
+      .dashboard-details[open] > summary { color: white; background: var(--blue-heading); border-bottom: 1px solid #2b70a8; }
+      .dashboard-details[open] > summary .icon, .dashboard-details[open] > summary small { color: #dceefb; }
+      .dashboard-details[open] > summary > .icon:last-child { transform: rotate(90deg); }
+      .dashboard-details > summary:focus-visible { outline: 2px solid var(--blue); outline-offset: -4px; }
+      .dashboard-details-body { padding: 20px; background: #edf4fb; }
+      #secondaryStats { grid-template-columns: repeat(4,minmax(0,1fr)); margin: 0 0 16px; gap: 10px; }
+      #secondaryStats .stat { background: #ffffff; color: var(--ink); padding: 15px 13px; border: 1px solid var(--surface-line); border-top: 3px solid #438bbf; box-shadow: 0 5px 12px -10px #164d8080; }
+      #secondaryStats .stat b { font-size: 28px; }
+      #secondaryStats .stat span { font-size: 10px; }
+      #secondaryStats .stat[data-tone="writeoff"] { border-top-color: #bd3650; background: #fff4f7; }
+      #secondaryStats .stat[data-tone="none"] { border-top-color: #b28731; background: #fffaf0; }
+      #secondaryStats .stat[data-tone="archive"] { border-top-color: #718598; }
+      .dashboard-details .availability { margin: 0 0 18px; background: #d6e7f6; border-color: #99b9d5; }
+      .dashboard-details .dash-grid > .card { padding: 22px; border-top: 3px solid var(--blue-strong); }
+      .dashboard-details .dash-grid .card > h3 { font-size: 22px; }
+      .warehouse-grid { grid-template-columns: minmax(0,1fr); }
+      .warehouse-grid #checks { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+      .warehouse-grid #checks .checkrow { border: 1px solid var(--surface-line); padding: 14px; border-radius: 11px; background: #eef5fb; }
+      .warehouse-grid #checks .checkrow button { min-height: 34px; font-size: 11px; }
+      @media(max-width:820px) {
+        .dashboard-focus { grid-template-columns: minmax(0,1fr); }
+      }
+      @media(max-width:640px) {
+        #stats { gap: 8px; }
+        #stats .stat { padding: 13px 10px; }
+        #stats .stat .icon { width: 16px; height: 16px; flex-basis: 16px; }
+        #stats .stat b { font-size: 28px; margin-top: 12px; }
+        #stats .stat span { font-size: 10px; line-height: 1.35; display: block; }
+        .dashboard-title { gap: 12px; }
+        .dashboard-focus > .card { padding: 18px; }
+        .dashboard-details > summary { padding: 16px; gap: 10px; }
+        .dashboard-details > summary strong { font-size: 12px; }
+        .dashboard-details > summary small { font-size: 10px; }
+        .dashboard-details-body { padding: 13px; }
+        #secondaryStats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+        .dashboard-details .dash-grid > .card { padding: 18px; }
+        .warehouse-grid #checks { grid-template-columns: minmax(0,1fr); }
+        #operation > .bar:first-child { padding: 18px 16px 14px; }
+        #operationForm { padding: 16px; }
+        #editDialog > .dialog-heading h2, #operation > .bar:first-child h2, #userAccessTitle { font-size: 25px; }
+      }
+      @media(max-width:360px) {
+        .header-meta .sync-row { gap: 5px; }
+        .header-meta .sync-row .live { flex-basis: 100%; justify-content: flex-end; max-width: none; }
+        .header-meta #manageAccess { padding: 5px 7px; font-size: 10px; }
+        #stats .stat { padding: 12px 8px; }
+        #stats .stat b { font-size: 26px; }
+        #stats .stat span { font-size: 9px; }
+        .stock-alert-card { grid-template-columns: minmax(0,1fr); }
+        .stock-alert-values { grid-column: 1; grid-row: auto; text-align: left; margin: 6px 0 0; }
+      }
+
+      /* Branco com meios-tons: conserva a árvore e os traços do brasão. */
+      .auth-screen .institution-logo { filter: grayscale(1) invert(1); mix-blend-mode: screen; opacity: 1; }
+
     </style>
   </head>
   <body class="auth-screen">
@@ -3469,6 +3714,7 @@
           </div>
           <div class="actions sync-row" id="syncTools" hidden>
             <span class="live" id="live" role="status">Conectando</span>
+<button id="manageAccess" type="button" hidden aria-label="Gerenciar pessoas" title="Gerenciar pessoas"><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg>Pessoas</button>
             <button id="refresh" type="button" aria-label="Atualizar inventário">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <use href="#i-refresh" />
@@ -3908,42 +4154,27 @@
           </div>
         </section>
         <section id="dashboard" class="tab" hidden>
-          <div class="bar">
-            <div>
-              <div class="eyebrow">Inventário em perspectiva</div>
-              <h2>Visão geral</h2>
-            </div>
-            <div class="actions"><span id="conferenceSummary" class="badge"></span><button id="manageAccess" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg>Gerenciar pessoas</button></div>
+          <div class="bar dashboard-title">
+            <div><div class="eyebrow">Resumo do acervo</div><h2>Visão geral</h2><p class="dashboard-description">O essencial do inventário e o que precisa de atenção.</p></div>
+            <button id="conferenceSummary" class="badge" type="button" title="Abrir conferência dos ambientes" aria-controls="warehouseDetails"></button>
           </div>
           <div id="stats" class="stats"></div>
-          <div id="availability" class="availability"></div>
-          <section class="card stock-watch" aria-labelledby="stockWatchTitle">
-            <div class="stock-watch-head">
-              <div>
-                <div class="eyebrow">Acompanhamento do estoque</div>
-                <h3 id="stockWatchTitle">Materiais para repor</h3>
-              </div>
-              <span id="stockAlertCount" class="badge"></span>
-            </div>
-            <p class="hint">Estoques ativos com saldo no mínimo ou abaixo dele.</p>
-            <div id="stockAlerts" class="stock-alert-grid" aria-live="polite"></div>
-          </section>
-          <div class="card">
-            <h3>Últimas movimentações</h3>
-            <button
-              type="button"
-              class="help-dot"
-              data-help="Ações registradas, com pessoa e horário de Curitiba."
-              aria-label="Ajuda sobre as últimas movimentações"
-            >
-              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                <use href="#i-history" />
-              </svg>
-            </button>
-            <div id="movementTimeline"></div>
+          <div class="dashboard-focus">
+            <section id="stockWatch" class="card stock-watch" aria-labelledby="stockWatchTitle">
+              <div class="card-heading"><h3 id="stockWatchTitle">Materiais para repor</h3><span id="stockAlertCount" class="badge"></span></div>
+              <p class="hint">Saldo no mínimo ou abaixo dele.</p>
+              <div id="stockAlerts" class="stock-alert-grid" aria-live="polite"></div>
+              <button id="toggleStockAlerts" class="dashboard-more" type="button" hidden aria-controls="stockAlerts" aria-expanded="false"></button>
+            </section>
+            <section class="card" aria-labelledby="movementTimelineTitle">
+              <div class="card-heading"><h3 id="movementTimelineTitle">Últimas movimentações</h3><svg class="icon" aria-hidden="true"><use href="#i-history" /></svg></div>
+              <div id="movementTimeline"></div>
+              <button id="toggleMovementTimeline" class="dashboard-more" type="button" hidden aria-controls="movementTimeline" aria-expanded="false"></button>
+            </section>
           </div>
-          <div class="dash-grid">
-            <div class="card">
+          <details id="inventoryDetails" class="dashboard-details">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg><span><strong>Mais indicadores e gráficos</strong><small>Estoques, identificação, baixas e cadastros</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
+            <div class="dashboard-details-body"><div id="secondaryStats" class="stats secondary-stats"></div><div id="availability" class="availability"></div><div class="dash-grid"><div class="card">
               <h3>Onde estão os bens</h3>
               <button
                 type="button"
@@ -3957,7 +4188,7 @@
               </button>
               <div id="roomChart"></div>
             </div>
-            <div class="card">
+<div class="card">
               <h3>Composição do acervo</h3>
               <button
                 type="button"
@@ -3971,11 +4202,11 @@
               </button>
               <div id="categoryChart"></div>
             </div>
-            <div class="card">
+<div class="card">
               <h3>Como estão identificados</h3>
               <div id="typeChart"></div>
             </div>
-            <div class="card">
+<div class="card">
               <h3>Itens mais frequentes</h3>
               <button
                 type="button"
@@ -3989,29 +4220,21 @@
               </button>
               <div id="topChart"></div>
             </div>
-            <div class="card wide">
+<div class="card wide">
               <div class="bar">
                 <h3>Ritmo de cadastro</h3>
                 <span class="muted">Últimos 14 dias · todos os registros</span>
               </div>
               <div id="activity" class="activity"></div>
             </div>
-            <div class="card wide">
-              <h3>Mapa do almoxarifado</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Registros ativos por posição. Prateleira 01 no topo. Não indica espaço disponível."
-                aria-label="Ajuda sobre o mapa do almoxarifado"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-rack-map" />
-                </svg>
-              </button>
-              <div id="rackMap" class="rack-map"></div>
-              <p class="hint" id="unplaced"></p>
-            </div>
-            <div class="card">
+<div class="card">
+              <h3>Cadastros recentes</h3>
+              <div id="recent"></div>
+            </div></div></div>
+          </details>
+          <details id="warehouseDetails" class="dashboard-details">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-audit" /></svg><span><strong>Conferência e almoxarifado</strong><small>Conferir ambientes e consultar posições</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
+            <div class="dashboard-details-body"><div class="dash-grid warehouse-grid"><div class="card">
               <h3>Conferência dos ambientes</h3>
               <button
                 type="button"
@@ -4025,11 +4248,22 @@
               </button>
               <div id="checks"></div>
             </div>
-            <div class="card">
-              <h3>Cadastros recentes</h3>
-              <div id="recent"></div>
-            </div>
-          </div>
+<div class="card wide">
+              <h3>Mapa do almoxarifado</h3>
+              <button
+                type="button"
+                class="help-dot"
+                data-help="Registros ativos por posição. Prateleira 01 no topo. Não indica espaço disponível."
+                aria-label="Ajuda sobre o mapa do almoxarifado"
+              >
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-rack-map" />
+                </svg>
+              </button>
+              <div id="rackMap" class="rack-map"></div>
+              <p class="hint" id="unplaced"></p>
+            </div></div></div>
+          </details>
         </section>
       </main>
       <footer class="institution-footer">
@@ -4579,6 +4813,7 @@
         $("save").disabled = v || role === "leitor" || !!pending;
         $("logout").disabled = v;
         $("refresh").disabled = v;
+        $("manageAccess").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
         labelButton(
@@ -6009,6 +6244,7 @@
               new Date(a.atualizado_em || a.criado_em),
           )
           .slice(0, 12);
+        $("toggleMovementTimeline").hidden = true;
         $("movementTimeline").textContent = "Carregando movimentações…";
         try {
           const histories = await Promise.all(
@@ -6060,6 +6296,7 @@
               return row;
             }),
           );
+          syncDashboardList("movementTimeline", "toggleMovementTimeline", 4, "movimentações");
           if (!events.length)
             $("movementTimeline").textContent =
               "As movimentações aparecerão aqui.";
@@ -6071,6 +6308,26 @@
             );
         }
       }
+      function syncDashboardList(id, controlId, limit, noun) {
+        const list = $(id), control = $(controlId);
+        const remaining = Math.max(0, list.children.length - limit);
+        const expanded = list.classList.contains("expanded");
+        control.hidden = remaining === 0;
+        control.setAttribute("aria-expanded", String(expanded));
+        const label = remaining === 1 ? ({ materiais: "material", movimentações: "movimentação" }[noun] || noun) : noun;
+        labelButton(control, expanded ? "Mostrar menos" : "Ver mais " + remaining + " " + label, "right");
+      }
+      for (const [id, controlId, limit, noun] of [
+        ["stockAlerts", "toggleStockAlerts", 3, "materiais"],
+        ["movementTimeline", "toggleMovementTimeline", 4, "movimentações"],
+      ]) $(controlId).onclick = () => {
+        $(id).classList.toggle("expanded");
+        syncDashboardList(id, controlId, limit, noun);
+      };
+      $("conferenceSummary").onclick = () => {
+        $("warehouseDetails").open = true;
+        $("checks").scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      };
       function renderMetrics() {
         const individual = rows.filter(
           (r) =>
@@ -6096,7 +6353,7 @@
           track.append(b);
         }
         $("availability").replaceChildren(
-          el("strong", `${individual.length} bens em uso`),
+          el("strong", `${individual.length} bens individuais ativos ou emprestados`),
           track,
           button(
             `${available} disponíveis`,
@@ -6114,6 +6371,13 @@
             ["ATIVO", "EMPRESTADO"].includes(r.situacao),
           ),
           count = (f, v) => inUse.filter((r) => r.dados[f] === v).length;
+        const lowStock = active.filter((r) => r.controle === "QUANTIDADE" &&
+          Number(r.saldo) <= Number(r.minimo)).sort((a, b) =>
+          Number(a.saldo > 0) - Number(b.saldo > 0) ||
+          Number(a.saldo) / Math.max(1, Number(a.minimo)) -
+          Number(b.saldo) / Math.max(1, Number(b.minimo)) ||
+          String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR")
+        );
         const metrics = [
           ["Registros ativos", active.length, "available", { situacao: "ATIVO" }],
           [
@@ -6147,14 +6411,15 @@
             { situacao: "ARQUIVADO" },
           ],
         ];
-        $("stats").replaceChildren(
-          ...metrics.map(([t, n, i, p]) => {
-            const b = button("", () => query(p), "stat", i);
-            b.dataset.tone = i;
-            b.append(el("b", n), el("span", t));
-            return b;
-          }),
-        );
+        const metricButton = ([title, total, mark, filter]) => {
+          const b = button("", () => filter ? query(filter) : $("stockWatch").scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }), "stat", mark);
+          b.dataset.tone = mark;
+          b.append(el("b", total), el("span", title));
+          return b;
+        };
+        $("stats").replaceChildren(...[metrics[0], metrics[1],
+          ["Materiais para repor", lowStock.length, "stock-alert", null]].map(metricButton));
+        $("secondaryStats").replaceChildren(...metrics.slice(2).map(metricButton));
         chart(
           "roomChart",
           ROOMS.map((v) => [v, count("ambiente", v)]),
@@ -6285,13 +6550,6 @@
         $("unplaced").textContent = missing
           ? missing + " registros ativos ainda sem posição definida."
           : "Todas as posições cadastradas estão representadas.";
-        const lowStock = active.filter((r) => r.controle === "QUANTIDADE" &&
-          Number(r.saldo) <= Number(r.minimo)).sort((a, b) =>
-          Number(a.saldo > 0) - Number(b.saldo > 0) ||
-          Number(a.saldo) / Math.max(1, Number(a.minimo)) -
-          Number(b.saldo) / Math.max(1, Number(b.minimo)) ||
-          String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR")
-        );
         $("stockAlertCount").textContent = lowStock.length +
           (lowStock.length === 1 ? " material" : " materiais");
         const numberBR = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 3 });
@@ -6319,6 +6577,7 @@
             el("p", [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · "), "hint"), open);
           return card;
         }) : [el("p", "Nenhum material está no mínimo ou abaixo dele neste momento.", "stock-alert-empty")]));
+        syncDashboardList("stockAlerts", "toggleStockAlerts", 3, "materiais");
         const done = ROOMS.filter((room) =>
           checks.some((c) => c.ambiente === room && c.conferido),
         ).length;
@@ -7042,6 +7301,9 @@
         $("toast").hidden = true;
         if ($("userAccessDialog").open) $("userAccessDialog").close();
         resetPeopleManagement(); demoPeople = null;
+        $("inventoryDetails").open = $("warehouseDetails").open = false;
+        for (const id of ["stockAlerts", "movementTimeline"]) $(id).classList.remove("expanded");
+        $("toggleStockAlerts").hidden = $("toggleMovementTimeline").hidden = true;
         $("newUserForm").reset();
         $("newUserResult").replaceChildren();
         $("newUserResult").hidden = true;
@@ -7065,6 +7327,7 @@
           "moveResults",
           "movementTimeline",
           "stats",
+          "secondaryStats",
           "roomChart",
           "categoryChart",
           "typeChart",

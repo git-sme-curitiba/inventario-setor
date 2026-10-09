@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-FmszcBlW6OOF0Z3rn91Hb743sI8ccmttq7k98lX211Q=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-AlaLkUXJS61ozU9/Nsi+kgBpVFNjRjzAPY0+IQol8gE=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -3815,6 +3815,56 @@
       #registrationMain { row-gap: 16px; }
       #register #notesBlock > label { margin: 0 0 6px; font-size: 12px; }
       #register #note { height: 64px; min-height: 64px; padding: 10px 12px; line-height: 20px; resize: vertical; }
+
+      /* ACERVO 3.5.22 · Grupos visuais e duas ações claras no cadastro. */
+      #registrationItem, #registrationCategory, #register #identityBlock, #register #controlHost {
+        padding: 14px; border: 1px solid var(--surface-line); border-radius: 14px;
+        box-shadow: inset 0 1px 0 #ffffffa3;
+      }
+      #registrationItem, #registrationCategory { background: #f7fafd; }
+      #register #identityBlock { background: var(--surface-soft); }
+      #register #controlHost { background: linear-gradient(135deg, #d7e7f5, #eaf3fb); border-color: #99bbd9; }
+      #registrationCategory > legend, #register #identityBlock > legend { float: left; width: 100%; margin: 0 0 9px; color: var(--blue-deep); }
+      #registrationCategory > .choices, #register #identityBlock > .choices { clear: both; }
+      #registrationItem > label { margin: 0 0 9px; color: var(--blue-deep); }
+      #register #controlHost legend { color: var(--blue-deep); }
+      #register #controlHint { margin: 9px 0 0; }
+      #register #stockFields { margin-top: 12px; padding-top: 12px; border-top: 1px solid #99bbd9; }
+      #register #stockFields label { margin-top: 0; }
+      #register #stockFields input { background: #ffffff; }
+      #itemForm.quantity-layout #identityBlock { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+      #registrationSave .registration-actions { display: flex; gap: 10px; margin-top: 14px; }
+      #registrationSave .registration-actions > button { min-height: 46px; padding: 11px 22px; }
+      #registrationSave #save { min-width: 200px; }
+      #discardRegistration { background: #fff0f3; color: #a31f38; border-color: #d88498; }
+      #discardRegistration:hover:not(:disabled) { background: #f8d6df; border-color: #bd3650; }
+      #registrationDiscardDialog { width: min(560px, calc(100vw - 32px)); padding: 0; border-top-color: #bd3650; }
+      .registration-discard-heading { padding: 22px 24px 18px; border-bottom: 1px solid #99bbd9; background: linear-gradient(125deg,#d7e7f5,#eaf3fb); }
+      .registration-discard-heading .eyebrow { color: var(--blue-strong); }
+      .registration-discard-heading h2 { display: flex; gap: 10px; align-items: center; margin: 7px 0 0; font-size: 26px; color: var(--blue-deep); }
+      .registration-discard-heading h2 .icon { color: #b4233d; }
+      #registrationDiscardForm { padding: 20px 24px 24px; }
+      #registrationDiscardItem { padding: 13px 15px; border-radius: 11px; border: 1px solid #d88498; background: #fce7ed; overflow-wrap: anywhere; }
+      #registrationDiscardItem strong { display: block; color: #982039; font-size: 15px; }
+      #registrationDiscardItem span { display: block; color: #813147; margin-top: 5px; font-size: 12px; line-height: 1.5; }
+      #registrationDiscardDescription { margin: 13px 0 18px; font-size: 13px; line-height: 1.6; color: var(--muted); }
+      #directReasonWrap { margin: 0; }
+      #directReasonWrap label { margin: 0 0 8px; color: var(--blue-deep); }
+      #directReason { min-height: 90px; background: #ffffff; }
+      #registrationDiscardForm .actions { justify-content: flex-end; margin-top: 20px; gap: 10px; }
+      #confirmRegistrationDiscard { color: #ffffff; background: linear-gradient(125deg,#cc3b52,#ad1c36); border-color: #93172b; }
+      #confirmRegistrationDiscard:hover:not(:disabled) { background: linear-gradient(125deg,#da4860,#bb2540); }
+      @media (max-width: 640px) {
+        #registrationItem, #registrationCategory, #register #identityBlock, #register #controlHost { padding: 12px; }
+        #itemForm.quantity-layout #identityBlock { padding: 0; }
+        #registrationSave .registration-actions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+        #registrationSave .registration-actions > button { width: 100%; min-width: 0; padding: 10px 8px; font-size: 12px; }
+        .registration-discard-heading { padding: 19px 18px 16px; }
+        .registration-discard-heading h2 { font-size: 23px; }
+        #registrationDiscardForm { padding: 18px; }
+        #registrationDiscardForm .actions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+        #registrationDiscardForm .actions button { padding: 10px 7px; font-size: 12px; white-space: normal; }
+      }
     </style>
   </head>
   <body class="auth-screen">
@@ -4290,10 +4340,6 @@
                   </div>
                   <div class="savebar" id="registrationSave" hidden>
                     <div class="spaced">
-                      <fieldset class="initial-state">
-                        <legend>Situação inicial</legend>
-                        <div class="choices" id="initialState"></div>
-                      </fieldset>
                       <input id="directDown" type="checkbox" hidden />
                       <div
                         id="registrationSummary"
@@ -4301,28 +4347,16 @@
                         aria-live="polite"
                         aria-atomic="true"
                       ></div>
-                      <div id="directReasonWrap" hidden>
-                        <p>
-                          O item ficará no acervo como Descartado, com seu histórico preservado.
-                        </p>
-                        <label for="directReason">Motivo do descarte</label>
-                        <textarea
-                          id="directReason"
-                          minlength="3"
-                          maxlength="2000"
-                        ></textarea>
-                        <p class="hint">
-                          O cadastro e o descarte serão salvos juntos. Controle
-                          interno, não substitui a baixa patrimonial oficial.
-                        </p>
-                      </div>
                     </div>
+                    <div class="registration-actions">
                     <button id="save" class="primary">
                       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                         <use href="#i-save" />
                       </svg>
                       Cadastrar
                     </button>
+                      <button id="discardRegistration" type="button"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Descartar</button>
+                    </div>
                   </div>
                 </fieldset>
               </form>
@@ -4662,6 +4696,25 @@
     <dialog id="deletePersonDialog" aria-labelledby="deletePersonTitle" aria-describedby="deletePersonDescription">
       <div class="delete-person-heading"><div class="eyebrow">Pessoas e acessos</div><h2 id="deletePersonTitle">Excluir pessoa?</h2></div>
       <div class="delete-person-body"><strong id="deletePersonName"></strong><span id="deletePersonEmail"></span><p id="deletePersonDescription">A conta será excluída e a pessoa perderá o acesso. Os cadastros e as movimentações que ela registrou continuarão no acervo.</p><p id="deletePersonMessage" role="status"></p><div class="actions spaced"><button type="button" id="cancelPersonDelete">Cancelar</button><button type="button" id="confirmPersonDelete"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Excluir pessoa</button></div></div>
+    </dialog>
+
+    <dialog id="registrationDiscardDialog" aria-labelledby="registrationDiscardTitle" aria-describedby="registrationDiscardDescription">
+      <div class="registration-discard-heading">
+        <div class="eyebrow">Cadastro · Descarte</div>
+        <h2 id="registrationDiscardTitle"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Registrar como descartado?</h2>
+      </div>
+      <form id="registrationDiscardForm">
+        <div id="registrationDiscardItem"></div>
+        <p id="registrationDiscardDescription">O registro ficará no acervo como <strong>Descartado</strong>, com seu histórico preservado. Não entrará no estoque disponível.</p>
+        <div id="directReasonWrap">
+          <label for="directReason">Observação do descarte <small>· opcional</small></label>
+          <textarea id="directReason" maxlength="2000" rows="3" placeholder="Se quiser, explique o descarte."></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" data-close="registrationDiscardDialog">Cancelar</button>
+          <button id="confirmRegistrationDiscard" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Confirmar descarte</button>
+        </div>
+      </form>
     </dialog>
 
     <dialog id="operation">
@@ -5141,7 +5194,7 @@
         busy = v;
         $("fields").disabled = v || role === "leitor" || !!pending;
         document
-          .querySelectorAll("#app button,#operation button")
+          .querySelectorAll("#app button,#operation button,#registrationDiscardDialog button")
           .forEach((b) => (b.disabled = v));
         if ($("editFields"))
           $("editFields").disabled = v || role === "leitor" || !!pending;
@@ -5151,15 +5204,9 @@
         $("manageAccess").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
-        labelButton(
-          $("save"),
-          v
-            ? "Salvando…"
-            : $("directDown").checked
-              ? "Registrar descarte"
-              : "Cadastrar",
-          v ? "clock" : $("directDown").checked ? "discard" : "save",
-        );
+        labelButton($("save"), v ? "Salvando…" : "Cadastrar", v ? "clock" : "save");
+        $("discardRegistration").disabled = v || role === "leitor" || !!pending;
+        $("directReason").disabled = v;
         $("previous").disabled = v || page <= 1;
         $("next").disabled =
           v || page >= Math.max(1, Math.ceil(filtered().length / 25));
@@ -5296,18 +5343,27 @@
       }
 
       function syncDirectDown() {
-        const active = $("directDown").checked;
-        setChoice("initialStatus", active ? "BAIXADO" : "ATIVO");
-        $("itemForm").classList.toggle("disposal", active);
+        // A ação é decidida pelo botão final, nunca por um estado salvo no rascunho.
+        $("directDown").checked = false;
+        $("itemForm").classList.remove("disposal");
+        $("directReason").required = false;
+        labelButton($("save"), "Cadastrar", "save");
         updateRegistrationSummary();
-        $("directReasonWrap").hidden = !active;
-        $("directReason").required = active;
-        $("directReason").disabled = !active;
-        labelButton(
-          $("save"),
-          active ? "Registrar descarte" : "Cadastrar",
-          active ? "discard" : "save",
+      }
+      function openRegistrationDiscard() {
+        if (busy || role === "leitor") return;
+        if (pending) return toast("Conclua a operação pendente primeiro.", true);
+        if (!$("itemForm").reportValidity()) return;
+        const d = formData();
+        if (!validateRecord(d)) return;
+        const place = d.ambiente === "Almoxarifado"
+          ? `${d.ambiente} · ${d.estante} / ${String(d.prateleira).padStart(2,"0")}` : d.ambiente;
+        $("registrationDiscardItem").replaceChildren(
+          el("strong", d.item),
+          el("span", (d.controle === "QUANTIDADE" ? quantityText(d.quantidade, d.unidade) : "1 bem individual") + " · " + place),
         );
+        $("registrationDiscardDialog").showModal();
+        $("directReason").focus();
       }
 
       function movementActions(r) {
@@ -5706,7 +5762,7 @@
         $("quantity").value = r.quantidade || "1";
         $("unit").value = r.unidade || "unidade";
         $("minimum").value = r.minimo || "0";
-        $("directDown").checked = !!d.baixaDireta;
+        $("directDown").checked = false;
         $("directReason").value = d.motivo || "";
         syncDirectDown();
         manual = { categoria: true, tipo: true, controle: true };
@@ -6387,9 +6443,8 @@
         $(innerWidth <= 640 ? "editDialogClose" : "editItem").focus();
         $("editDialog").scrollTop = 0;
       }
-      function saveRecord(prefix = "") {
-        const d = formData(prefix),
-          id = prefix === "edit" ? editor?.id : null;
+      function validateRecord(d, id = null) {
+        const reject = message => { toast(message, true); return false; };
         const duplicate = rows.find(
           (r) =>
             d.codigo &&
@@ -6398,31 +6453,40 @@
             r.id !== id,
         );
         if (duplicate)
-          return toast("Código já cadastrado: " + internal(duplicate.id), true);
+          return reject("Código já cadastrado: " + internal(duplicate.id), true);
         if (d.controle === "QUANTIDADE" && d.ambiente !== "Almoxarifado")
-          return toast(
+          return reject(
             "Por quantidade: selecione Almoxarifado ou troque o controle para Individual.",
             true,
           );
         if (d.controle === "QUANTIDADE" && d.tipo !== "SEM_IDENTIFICACAO")
-          return toast(
+          return reject(
             "Um estoque agrupado usa identificação interna. Selecione Sem identificação ou controle Individual.",
             true,
           );
+        return true;
+      }
+      function saveRecord(prefix = "", discard = false) {
+        if (busy || role === "leitor" || pending) return false;
+        const d = formData(prefix), id = prefix === "edit" ? editor?.id : null;
+        if (!validateRecord(d, id)) return false;
+        const observation = $("directReason").value.trim();
+        const discardReason = observation
+          ? observation.length >= 3 ? observation : "Observação: " + observation
+          : "Descarte registrado no cadastro.";
         commit(
           {
-            acao: "salvar",
-            id,
+            acao: "salvar", id,
             versao: prefix === "edit" ? editor.versao : null,
             dados: d,
-            baixa_direta: !id && $("directDown").checked,
-            motivo:
-              !id && $("directDown").checked
-                ? $("directReason").value.trim()
-                : "",
+            baixa_direta: !id && discard,
+            motivo: !id && discard
+              ? discardReason
+              : "",
           },
           prefix === "edit" ? "edit" : "create",
         );
+        return true;
       }
       function openOperation(a, r) {
         if (busy || pending)
@@ -7443,32 +7507,24 @@
         const identity = $("types").closest("fieldset"); identity.id = "identityBlock";
         identity.classList.remove("spaced");
         const control = $("controlHost"); control.classList.remove("step");
-        const state = $("initialState").closest("fieldset"); state.id = "registrationState";
         const notes = $("notesBlock"), location = $("location"), code = $("codeWrap");
         main.append(item, category, rest, notes);
         // Mantém os campos nativos; no estoque, a prévia do código acompanha o controle.
         identity.append(code);
         rest.replaceChildren(identity, control);
-        $("registrationSave").querySelector(".spaced").prepend(state, $("directDown"), $("directReasonWrap"));
         body.append(location, main);
         roomStep.remove(); identityStep.remove();
         fields.prepend(header, body);
-        choices(
-          $("initialState"),
-          "initialStatus",
-          [
-            ["ATIVO", "Ativo", "check"],
-            ["BAIXADO", "Descartado", "discard"],
-          ],
-          "ATIVO",
-          () => {
-            $("directDown").checked = value("initialStatus") === "BAIXADO";
-            syncDirectDown();
-          },
-        );
         $("itemForm").addEventListener("input", updateRegistrationSummary);
         $("itemForm").addEventListener("change", updateRegistrationSummary);
-        $("directDown").onchange = syncDirectDown;
+        $("discardRegistration").onclick = openRegistrationDiscard;
+        $("directReason").addEventListener("input", saveDraft);
+        $("registrationDiscardDialog").addEventListener("cancel", event => { if (busy) event.preventDefault(); });
+        $("registrationDiscardForm").onsubmit = event => {
+          event.preventDefault();
+          if (!busy && $("registrationDiscardForm").reportValidity() && $("itemForm").reportValidity() && saveRecord("", true))
+            $("registrationDiscardDialog").close();
+        };
         $("moveSearch").oninput = renderMovementResults;
         $("moveScan").hidden = !mobileCamera();
         $("moveScan").onclick = () => openScanner("moveSearch");
@@ -7481,8 +7537,8 @@
           $("repeat").checked = false;
           resetForm();
           showTab("register");
-          $("directDown").checked = true;
           syncDirectDown();
+          toast("Preencha a ficha e use Descartar para concluir.");
           const q = $("moveSearch").value.trim();
           if (/^\d{6}$/.test(q)) $("code").value = q;
           $("item").focus();
@@ -7682,6 +7738,7 @@
       };
       function endSession() {
         resetFirstAccess();
+        if ($("registrationDiscardDialog").open) $("registrationDiscardDialog").close();
         finishEdit();
         clearTimeout(toastTimer);
         $("toast").hidden = true;

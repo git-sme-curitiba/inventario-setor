@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-QbdUXFt5kykgXc5/7eLeZYeb631OaSXkg3vwllmPSP4=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-FmszcBlW6OOF0Z3rn91Hb743sI8ccmttq7k98lX211Q=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -3639,7 +3639,7 @@
         #register #notesBlock { margin-top: 20px; }
       }
 
-      /* ACERVO 3.5.20 · Leitura direta, identificação integrada e foco na gestão. */
+      /* ACERVO 3.5.21 · Leitura direta, identificação integrada e foco na gestão. */
       #login .login-brand { justify-content: flex-start; align-items: center; }
       #login > .eyebrow, #login:not(.first-access-active) h1 { text-align: left; }
       .account-toolbar { padding: 0; gap: 14px; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
@@ -3800,6 +3800,21 @@
       .discard-summary > .hint { color: #813147; margin: 8px 0; }
       .detail-panel .discard-summary dl { margin-bottom: 0; }
       #browse .detail-panel .actions > button:only-child { grid-column: 1 / -1; }
+
+      /* ACERVO 3.5.21 · Quantidade em primeiro plano, código e observação compactos. */
+      #itemForm.quantity-layout #identityBlock { margin: 12px 0 0; padding: 0; min-width: 0; max-width: 100%; }
+      #itemForm.quantity-layout #identityBlock > legend { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      #itemForm.quantity-layout #codeWrap { display: flex; align-items: center; gap: 7px; width: fit-content; max-width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+      #itemForm.quantity-layout #codeLabel { position: static; width: auto; height: auto; padding: 0; margin: 0; overflow: visible; clip-path: none; white-space: normal; font-size: 11px; line-height: 1.35; color: var(--muted); }
+      #itemForm.quantity-layout #codeWrap .scanrow { flex: 0 1 108px; width: 108px; min-width: 0; }
+      #itemForm.quantity-layout #code { width: 100%; min-width: 0; min-height: 30px; height: 30px; padding: 5px 8px; font-size: 11px; color: var(--muted); background: #f4f8fc; border-color: #bfd2e3; box-shadow: none; }
+      #itemForm.quantity-layout #codeHint { flex: 0 0 auto; margin: 0; display: inline-flex; align-items: center; }
+      #itemForm.quantity-layout #codeHint > span { display: none; }
+      #itemForm.quantity-layout #codeHint .icon { width: 15px; height: 15px; flex-basis: 15px; }
+      #register #notesBlock { grid-column: 1 / -1; grid-row: auto; margin: 0; padding: 0; border: 0; }
+      #registrationMain { row-gap: 16px; }
+      #register #notesBlock > label { margin: 0 0 6px; font-size: 12px; }
+      #register #note { height: 64px; min-height: 64px; padding: 10px 12px; line-height: 20px; resize: vertical; }
     </style>
   </head>
   <body class="auth-screen">
@@ -4267,7 +4282,8 @@
                       ><textarea
                         id="note"
                         maxlength="2000"
-                        placeholder="Uma referência que ajude a encontrar este item"
+                        rows="2"
+                        placeholder="Modelo, condição ou outra informação útil"
                       ></textarea
                       ><input id="repeat" type="checkbox" hidden />
                     </div>
@@ -5254,7 +5270,12 @@
           $("itemForm").classList.toggle("quantity-layout", stock);
           if (stock) setChoice("type", "SEM_IDENTIFICACAO");
           $("types").hidden = stock;
-          $("types").closest("fieldset").querySelector("legend").textContent = stock ? "Código interno" : "Identificação";
+          const identity = $("identityBlock");
+          if (identity) {
+            if (stock) $("stockFields").after(identity);
+            else if (identity.parentElement !== $("formRest")) $("formRest").prepend(identity);
+          }
+          $("types").closest("fieldset").querySelector("legend").textContent = stock ? "Código automático" : "Identificação";
           syncCode();
           updateRegistrationSummary();
         }
@@ -5431,9 +5452,8 @@
           $("identityBlock").dataset.type = t;
           $("types").querySelectorAll("input").forEach(input => input.setAttribute("aria-controls","codeWrap"));
         }
-        $(edit ? "editCodeLabel" : "codeLabel").textContent = none
-          ? "Identificação interna"
-          : TYPE[t] || "Identificação";
+        $(edit ? "editCodeLabel" : "codeLabel").textContent = !edit && value("control") === "QUANTIDADE"
+          ? "Código automático" : none ? "Identificação interna" : TYPE[t] || "Identificação";
         n.required = !!t && !none;
         n.readOnly = none;
         n.pattern = none ? "ACV-[0-9]{5,}" : "[0-9]{6}";
@@ -7425,14 +7445,14 @@
         const control = $("controlHost"); control.classList.remove("step");
         const state = $("initialState").closest("fieldset"); state.id = "registrationState";
         const notes = $("notesBlock"), location = $("location"), code = $("codeWrap");
-        main.append(item, category, rest);
-        // Identificação à esquerda, Controle à direita; código alinhado à situação.
+        main.append(item, category, rest, notes);
+        // Mantém os campos nativos; no estoque, a prévia do código acompanha o controle.
         identity.append(code);
         rest.replaceChildren(identity, control);
         $("registrationSave").querySelector(".spaced").prepend(state, $("directDown"), $("directReasonWrap"));
         body.append(location, main);
         roomStep.remove(); identityStep.remove();
-        fields.prepend(header, body, notes);
+        fields.prepend(header, body);
         choices(
           $("initialState"),
           "initialStatus",

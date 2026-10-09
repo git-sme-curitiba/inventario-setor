@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-3QruoxCk/UOfaE8BCdrJ8YV4GJQ+y9Va9xe0K9h8sTY=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-QbdUXFt5kykgXc5/7eLeZYeb631OaSXkg3vwllmPSP4=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -3638,6 +3638,168 @@
         #register #controlHost .choices .choice span, #itemForm.warehouse-layout #controlHost .choices .choice span { flex-direction: row; min-height: 54px; }
         #register #notesBlock { margin-top: 20px; }
       }
+
+      /* ACERVO 3.5.20 · Leitura direta, identificação integrada e foco na gestão. */
+      #login .login-brand { justify-content: flex-start; align-items: center; }
+      #login > .eyebrow, #login:not(.first-access-active) h1 { text-align: left; }
+      .account-toolbar { padding: 0; gap: 14px; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+      .header-person { gap: 8px; padding: 0; }
+      .account-avatar { width: 26px; height: 26px; flex-basis: 26px; border-radius: 8px; font-size: 11px; }
+      .header-meta .account { max-width: 130px; font-size: 12px; }
+      .account-role { font-size: 10px; }
+      .toolbar-actions { gap: 2px; padding: 4px; border: 1px solid var(--surface-line); border-radius: 12px; background: #ffffff80; }
+      .header-meta #manageAccess, .header-meta #refresh, .header-meta #logout { min-height: 42px; padding: 7px 10px; }
+      .refresh-caption { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+      .header-meta #refresh .live { display: block; max-width: 140px; padding: 0; font-size: 9px; line-height: 1.35; text-align: left; white-space: normal; color: var(--muted); }
+      .header-meta #refresh .live::before { display: none; }
+      .header-meta #refresh .live.stale { color: #ac2943; }
+      #register #formRest { align-items: start; }
+      #register #identityBlock > legend { margin-bottom: 8px; }
+      #register #codeWrap {
+        position: relative; margin-top: 11px; padding: 12px;
+        border: 1px solid var(--surface-line); border-radius: 11px;
+        background: var(--surface-raised); grid-column: auto; grid-row: auto;
+      }
+      #register #identityBlock { --code-anchor: 16.666%; }
+      #register #identityBlock[data-type="ICI"] { --code-anchor: 50%; }
+      #register #identityBlock[data-type="SEM_IDENTIFICACAO"] { --code-anchor: 83.333%; }
+      #register #codeWrap::before {
+        content: ""; position: absolute; top: -6px; left: calc(var(--code-anchor) - 6px);
+        width: 10px; height: 10px; transform: rotate(45deg);
+        background: var(--surface-raised); border-top: 1px solid var(--surface-line); border-left: 1px solid var(--surface-line);
+      }
+      #register #codeLabel { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+      #register #codeHint { margin: 7px 0 0; }
+      #itemForm.quantity-layout #identityBlock { grid-column: 1 / -1; grid-row: 2; }
+      #itemForm.quantity-layout #codeWrap { margin-top: 0; }
+      #itemForm.quantity-layout #codeWrap::before { display: none; }
+      #registrationSave #registrationState { max-width: 430px; margin-bottom: 18px; }
+      #registrationSave #registrationState .choice span { min-height: 44px; }
+      #registrationSave #directReasonWrap { margin: 0 0 18px; }
+      #registrationSave #directReasonWrap > p:first-child { margin-top: 0; }
+      .movement-steps { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; padding: 0; margin: 0 0 24px; list-style: none; }
+      .movement-steps li { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+      .movement-steps b { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 8px; border: 1px solid var(--surface-line); color: var(--blue-strong); background: var(--surface-soft); font-size: 11px; }
+      #movements h2 { margin-bottom: 18px; }
+      #movements label[for="moveSearch"] { margin-top: 0; }
+      .movement-result-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 7px; }
+      .movement-result-heading h3 { margin: 0; }
+      .movement-result-heading .badge { flex-shrink: 0; }
+      .movement-result .movement-location { margin: 7px 0 12px; }
+      .movement-result .movement-code { margin: 0; color: var(--muted); font-size: 12px; }
+      .movement-result .notice { margin: 10px 0; }
+      .movement-empty { display: flex; align-items: center; gap: 9px; padding: 18px 0 2px; color: var(--muted); font-size: 12px; }
+      .movement-empty .icon { color: var(--blue-strong); }
+      #moveMissing strong, #moveMissing span { display: block; }
+      #moveMissing span { margin: 5px 0 12px; font-size: 12px; }
+      .record-options { margin-top: 14px; border-top: 1px solid var(--surface-line); padding-top: 12px; }
+      .record-options > summary { color: var(--muted); font-size: 12px; cursor: pointer; }
+      .record-options p { max-width: 650px; font-size: 12px; line-height: 1.6; margin: 12px 0; }
+      .record-options button { font-size: 12px; }
+      .dashboard-title { margin-bottom: 16px; }
+      .dashboard-title .dashboard-description { margin-top: 4px; }
+      #dashboardPulse { display: flex; align-items: center; gap: 13px; padding: 15px 18px; border: 1px solid var(--surface-line); border-radius: 13px; background: var(--surface-raised); }
+      #dashboardPulse .icon { width: 24px; height: 24px; flex-basis: 24px; color: var(--blue-strong); }
+      #dashboardPulse strong { display: block; font-size: 14px; color: var(--blue-deep); }
+      #dashboardPulse p { margin: 3px 0 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+      #dashboardPulse[data-state="attention"] { background: linear-gradient(125deg,#fff8eb,#fffdf7); border-color: #d4b574; }
+      #dashboardPulse[data-state="attention"] .icon, #dashboardPulse[data-state="attention"] strong { color: #865b22; }
+      #dashboard #stats { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin: 16px 0 20px; }
+      #dashboard #stats .stat { min-width: 0; padding: 19px 17px; }
+      #dashboard #stats .stat b { margin-top: 13px; font-size: 36px; }
+      #dashboard #stats .stat span { display: block; font-size: 12px; line-height: 1.4; }
+      #dashboard #stats .stat small { display: block; margin-top: 5px; font-size: 10px; line-height: 1.5; color: var(--muted); }
+      #dashboard #stats .stat:first-child small { color: #d2e8fb; }
+      .dashboard-focus { grid-template-columns: minmax(0,1.15fr) minmax(0,1fr); }
+      .dashboard-focus .card-heading { margin-bottom: 0; }
+      .dashboard-focus .card-heading h3 { font-size: 23px; }
+      #dashboard .stock-alert-grid { margin-top: 0; gap: 0; }
+      #dashboard .stock-alert-card { grid-template-columns: minmax(0,1fr) auto; gap: 6px 14px; padding: 16px 0; border: 0; border-bottom: 1px solid var(--surface-line); border-radius: 0; background: transparent; box-shadow: none; }
+      #dashboard .stock-alert-card:last-child { border-bottom: 0; }
+      #dashboard .stock-alert-card h4 { grid-column: 1; grid-row: 1; font-size: 14px; margin: 0; }
+      #dashboard .stock-alert-card .stock-alert-status { grid-row: 2; }
+      #dashboard .stock-alert-card .stock-alert-values { grid-row: 1 / span 2; grid-column: 2; gap: 14px; align-self: center; }
+      #dashboard .stock-alert-card .stock-alert-values small { font-size: 10px; }
+      #dashboard .stock-alert-card .stock-alert-values strong { font-size: 24px; }
+      #dashboard .stock-alert-card .stock-alert-location { grid-column: 1 / -1; grid-row: 3; font-size: 11px; }
+      #dashboard .stock-alert-card .attention-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 3px; }
+      #dashboard .stock-alert-card button { grid-column: auto; margin-top: 0; min-height: 34px; font-size: 11px; }
+      .loan-watch-list { display: grid; }
+      .loan-watch-card { padding: 16px 0; border-bottom: 1px solid var(--surface-line); }
+      .loan-watch-card:last-child { border-bottom: 0; }
+      .loan-watch-card h4 { margin: 0 0 6px; font-size: 14px; color: var(--blue-deep); }
+      .loan-watch-card p { margin: 3px 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+      .loan-watch-card .loan-holder { color: var(--ink); }
+      .loan-watch-card .attention-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+      .loan-watch-card button { min-height: 34px; padding: 5px 9px; font-size: 11px; }
+      #loanWatch:not(.expanded) > :nth-child(n+4) { display: none; }
+      .dashboard-empty { padding: 20px 0 5px; color: var(--muted); font-size: 12px; line-height: 1.6; margin: 0; }
+      .dashboard-rooms { margin: 0 0 20px; }
+      .dashboard-rooms-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+      .dashboard-rooms-heading h3 { margin: 0; font-size: 23px; }
+      #roomSummary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+      .room-summary { text-align: left; display: block; padding: 16px; background: linear-gradient(145deg,#ffffff,var(--surface-soft)); border-color: var(--surface-line); border-radius: 13px; white-space: normal; }
+      .room-summary-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 12px; font-weight: 600; color: var(--blue-deep); }
+      .room-summary-count { display: block; font-size: 12px; color: var(--ink); line-height: 1.6; }
+      .room-summary-count b { font-size: 22px; font-weight: 500; }
+      .room-summary-count > span { display: block; margin-top: 4px; font-size: 11px; color: var(--muted); }
+      .room-summary-state { display: block; font-size: 10px; margin-top: 10px; color: var(--muted); }
+      .dashboard-details .timeline-card { margin-bottom: 18px; }
+      .dashboard-details .timeline-card .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+      .dashboard-details .timeline-card h3 { margin: 0; font-size: 23px; }
+      @media (max-width: 950px) {
+        .shell > header.bar { flex-wrap: wrap; gap: 14px; }
+        .header-meta { margin-left: auto; }
+      }
+      @media (max-width: 820px) {
+        .dashboard-focus { grid-template-columns: minmax(0,1fr); }
+        #dashboard #stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+        #itemForm.warehouse-layout #identityBlock, #itemForm.warehouse-layout #controlHost { grid-column: 1; grid-row: auto; }
+      }
+      @media (min-width: 821px) and (max-width: 1100px) {
+        #itemForm.warehouse-layout #identityBlock, #itemForm.warehouse-layout #controlHost { grid-column: 1; grid-row: auto; }
+      }
+      @media (max-width: 760px) {
+        .header-meta { width: 100%; margin-left: 0; }
+        .account-toolbar { justify-content: space-between; }
+      }
+      @media (max-width: 640px) {
+        #dashboard #stats .stat { padding: 16px 13px; }
+        #dashboard #stats .stat b { font-size: 32px; }
+        #dashboard #stats .stat span { font-size: 11px; }
+        #roomSummary { grid-template-columns: minmax(0,1fr); gap: 8px; }
+        .room-summary { padding: 14px; }
+        .room-summary-heading { margin-bottom: 8px; }
+        .movement-steps { gap: 8px 14px; margin-bottom: 20px; }
+        .movement-steps li { font-size: 11px; }
+        .movement-result-heading { align-items: flex-start; }
+        #registrationSave #registrationState { max-width: none; }
+      }
+      @media (max-width: 480px) {
+        .account-toolbar { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+        .header-person { padding-left: 0; }
+        .toolbar-actions { width: 100%; padding: 3px; border-top: 1px solid var(--surface-line); }
+        .header-meta #manageAccess, .header-meta #refresh, .header-meta #logout { flex: 1; padding: 7px 6px; font-size: 11px; min-height: 44px; }
+        .header-meta #refresh { flex: 1.6; }
+        .header-meta #refresh .live { font-size: 8px; }
+        #dashboardPulse { padding: 13px; }
+        .dashboard-focus .card-heading h3, .dashboard-rooms-heading h3 { font-size: 21px; }
+      }
+      @media (max-width: 360px) {
+        #dashboard .stock-alert-card { grid-template-columns: minmax(0,1fr); }
+        #dashboard .stock-alert-card .stock-alert-values { grid-column: 1; grid-row: 3; text-align: left; justify-content: flex-start; }
+        #dashboard .stock-alert-card .stock-alert-location { grid-row: 4; }
+      }
+      @media (prefers-reduced-motion: no-preference) { #register #codeWrap:not([hidden]) { animation: fieldReveal .22s ease-out; } }
+
+      /* Descarte mantém o registro no acervo e destaca seus dados de controle. */
+      #browse > .card > .bar:first-child { flex-wrap: wrap; gap: 12px; }
+      .query-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .discard-summary { padding: 16px; margin: 16px 0; border: 1px solid #dfa0ae; border-radius: 12px; background: linear-gradient(135deg,#fff6f8,#fce7ed); }
+      .discard-summary > strong { display: flex; align-items: center; gap: 8px; color: #a11d36; }
+      .discard-summary > .hint { color: #813147; margin: 8px 0; }
+      .detail-panel .discard-summary dl { margin-bottom: 0; }
+      #browse .detail-panel .actions > button:only-child { grid-column: 1 / -1; }
     </style>
   </head>
   <body class="auth-screen">
@@ -3882,11 +4044,10 @@
             </div>
             <div class="toolbar-actions" id="syncTools" role="group" aria-label="Ações da conta" hidden>
               <button id="manageAccess" type="button" hidden aria-label="Gerenciar pessoas" title="Gerenciar pessoas"><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg><span>Pessoas</span></button>
-              <button id="refresh" type="button" aria-label="Atualizar inventário"><svg class="icon" aria-hidden="true"><use href="#i-refresh" /></svg><span>Atualizar</span></button>
+              <button id="refresh" type="button" aria-label="Atualizar inventário"><svg class="icon" aria-hidden="true"><use href="#i-refresh" /></svg><span class="refresh-caption"><span>Atualizar</span><span class="live" id="live" role="status">Conectando</span></span></button>
               <button id="logout" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-logout" /></svg><span>Sair</span></button>
             </div>
           </div>
-          <span class="live" id="live" role="status">Conectando</span>
         </div>
       </header>
       <section id="login" class="card">
@@ -4126,17 +4287,16 @@
                       ></div>
                       <div id="directReasonWrap" hidden>
                         <p>
-                          Cadastro para descarte · o item será salvo como
-                          baixado.
+                          O item ficará no acervo como Descartado, com seu histórico preservado.
                         </p>
-                        <label for="directReason">Motivo da baixa</label>
+                        <label for="directReason">Motivo do descarte</label>
                         <textarea
                           id="directReason"
                           minlength="3"
                           maxlength="2000"
                         ></textarea>
                         <p class="hint">
-                          O cadastro e a baixa serão salvos juntos. Controle
+                          O cadastro e o descarte serão salvos juntos. Controle
                           interno, não substitui a baixa patrimonial oficial.
                         </p>
                       </div>
@@ -4169,38 +4329,21 @@
         </section>
         <section id="movements" class="tab" hidden>
           <div class="card">
-            <div class="eyebrow">Entradas, empréstimos e saídas</div>
-            <h2>Movimentar um item</h2>
-            <label for="moveSearch">Nome, patrimônio, ICI ou código ACV</label>
+            <h2>Movimentações</h2>
+            <ol class="movement-steps" aria-label="Como registrar uma movimentação">
+              <li><b>1</b>Buscar item</li><li><b>2</b>Escolher ação</li><li><b>3</b>Confirmar</li>
+            </ol>
+            <label for="moveSearch">Buscar item</label>
             <div class="scanrow">
-              <input
-                id="moveSearch"
-                autocomplete="off"
-                maxlength="120"
-                placeholder="Busque ou leia a etiqueta"
-              />
-              <button
-                id="moveScan"
-                class="primary"
-                type="button"
-                aria-label="Ler código para movimentar"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-scan" />
-                </svg>
+              <input id="moveSearch" autocomplete="off" maxlength="120" placeholder="Nome ou código PMC, ICI ou ACV" />
+              <button id="moveScan" class="primary" type="button" aria-label="Ler código para movimentar">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-scan" /></svg>
               </button>
             </div>
-            <p class="hint">
-              Confira o item antes de confirmar. A leitura não realiza nenhuma
-              movimentação sozinha.
-            </p>
             <div id="moveResults" class="spaced" aria-live="polite"></div>
             <div id="moveMissing" class="notice" hidden>
-              Não encontrou? Confira a busca. Se o item ainda não foi
-              registrado, preencha o cadastro completo para dar baixa.
-              <button id="createDown" type="button">
-                Cadastrar e dar baixa
-              </button>
+              <strong>Nenhum item encontrado.</strong><span>Confira o nome ou o código.</span>
+              <button id="createDown" type="button">Cadastrar para descarte</button>
             </div>
           </div>
         </section>
@@ -4211,6 +4354,8 @@
                 <div class="eyebrow">Encontre e organize</div>
                 <h2>Consultar inventário</h2>
               </div>
+              <div class="query-tools">
+                <button id="viewDiscarded" type="button" class="danger" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-writeoff" /></svg>Descartados</button>
               <details class="export-menu">
                 <summary>
                   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -4231,6 +4376,7 @@
                   </button>
                 </div>
               </details>
+              </div>
             </div>
             <div class="toolbar">
               <label class="sr-only" for="search">Buscar no inventário</label
@@ -4321,26 +4467,33 @@
         </section>
         <section id="dashboard" class="tab" hidden>
           <div class="bar dashboard-title">
-            <div><div class="eyebrow">Resumo do acervo</div><h2>Visão geral</h2><p class="dashboard-description">O essencial do inventário e o que precisa de atenção.</p></div>
-            <button id="conferenceSummary" class="badge" type="button" title="Abrir conferência dos ambientes" aria-controls="warehouseDetails"></button>
+            <div><div class="eyebrow">Bens e estoque</div><h2>Visão geral</h2><p class="dashboard-description">Reposição, empréstimos e situação dos ambientes.</p></div>
           </div>
+          <div id="dashboardPulse" role="status"></div>
           <div id="stats" class="stats"></div>
           <div class="dashboard-focus">
             <section id="stockWatch" class="card stock-watch" aria-labelledby="stockWatchTitle">
               <div class="card-heading"><h3 id="stockWatchTitle">Materiais para repor</h3><span id="stockAlertCount" class="badge"></span></div>
-              <p class="hint">Saldo no mínimo ou abaixo dele.</p>
               <div id="stockAlerts" class="stock-alert-grid" aria-live="polite"></div>
               <button id="toggleStockAlerts" class="dashboard-more" type="button" hidden aria-controls="stockAlerts" aria-expanded="false"></button>
             </section>
-            <section class="card" aria-labelledby="movementTimelineTitle">
+            <section class="card" aria-labelledby="loanWatchTitle">
+              <div class="card-heading"><h3 id="loanWatchTitle">Bens emprestados</h3><span id="loanWatchCount" class="badge"></span></div>
+              <div id="loanWatch" class="loan-watch-list"></div>
+              <button id="toggleLoanWatch" class="dashboard-more" type="button" hidden aria-controls="loanWatch" aria-expanded="false"></button>
+            </section>
+          </div>
+          <section class="dashboard-rooms" aria-labelledby="roomSummaryTitle">
+            <div class="dashboard-rooms-heading"><h3 id="roomSummaryTitle">Por ambiente</h3><button id="conferenceSummary" class="badge" type="button" title="Abrir conferência dos ambientes" aria-controls="warehouseDetails"></button></div>
+            <div id="roomSummary"></div>
+          </section>
+          <details id="inventoryDetails" class="dashboard-details">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg><span><strong>Histórico e detalhes do acervo</strong><small>Movimentações, descartes, identificação e gráficos</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
+            <div class="dashboard-details-body">            <section class="card timeline-card" aria-labelledby="movementTimelineTitle">
               <div class="card-heading"><h3 id="movementTimelineTitle">Últimas movimentações</h3><svg class="icon" aria-hidden="true"><use href="#i-history" /></svg></div>
               <div id="movementTimeline"></div>
               <button id="toggleMovementTimeline" class="dashboard-more" type="button" hidden aria-controls="movementTimeline" aria-expanded="false"></button>
-            </section>
-          </div>
-          <details id="inventoryDetails" class="dashboard-details">
-            <summary><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg><span><strong>Mais indicadores e gráficos</strong><small>Estoques, identificação, baixas e cadastros</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
-            <div class="dashboard-details-body"><div id="secondaryStats" class="stats secondary-stats"></div><div id="availability" class="availability"></div><div class="dash-grid"><div class="card">
+            </section><div id="secondaryStats" class="stats secondary-stats"></div><div id="availability" class="availability"></div><div class="dash-grid"><div class="card">
               <h3>Onde estão os bens</h3>
               <button
                 type="button"
@@ -4399,7 +4552,7 @@
             </div></div></div>
           </details>
           <details id="warehouseDetails" class="dashboard-details">
-            <summary><svg class="icon" aria-hidden="true"><use href="#i-audit" /></svg><span><strong>Conferência e almoxarifado</strong><small>Conferir ambientes e consultar posições</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-audit" /></svg><span><strong>Conferência e posições</strong><small>Verificar os ambientes e localizar itens no almoxarifado</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
             <div class="dashboard-details-body"><div class="dash-grid warehouse-grid"><div class="card">
               <h3>Conferência dos ambientes</h3>
               <button
@@ -4529,7 +4682,7 @@
           </div>
         </div>
         <div id="downFields">
-          <label for="downDate">Data da baixa</label
+          <label for="downDate">Data do descarte</label
           ><input id="downDate" type="date" /><label for="document"
             >Documento/processo · opcional</label
           ><input id="document" maxlength="200" />
@@ -4689,7 +4842,7 @@
       const STATUS = {
         ATIVO: "Ativo",
         EMPRESTADO: "Emprestado",
-        BAIXADO: "Baixado",
+        BAIXADO: "Descartado",
         ARQUIVADO: "Arquivado",
       };
       const ACTION = {
@@ -4698,8 +4851,8 @@
         entrada: "Entrada de estoque",
         saida: "Saída de estoque",
         descarte_estoque: "Descartar quantidade",
-        baixar: "Dar baixa",
-        estornar: "Estornar baixa",
+        baixar: "Registrar descarte",
+        estornar: "Reverter descarte",
         arquivar: "Arquivar",
         restaurar: "Restaurar",
       };
@@ -5100,7 +5253,8 @@
         if (!e) {
           $("itemForm").classList.toggle("quantity-layout", stock);
           if (stock) setChoice("type", "SEM_IDENTIFICACAO");
-          $("types").closest("fieldset").hidden = stock;
+          $("types").hidden = stock;
+          $("types").closest("fieldset").querySelector("legend").textContent = stock ? "Código interno" : "Identificação";
           syncCode();
           updateRegistrationSummary();
         }
@@ -5143,80 +5297,45 @@
           : ["emprestar", "baixar"];
       }
 
+      function quantityText(amount,unit = "unidade") {
+        const n = Number(amount), plural = {unidade:"unidades",rolo:"rolos",metro:"metros",litro:"litros",caixa:"caixas",kg:"kg"};
+        return n.toLocaleString("pt-BR",{maximumFractionDigits:3}) + " " + (n === 1 ? unit : plural[unit] || unit);
+      }
       function renderMovementResults() {
         if (!$("moveResults")) return;
         const q = key($("moveSearch").value);
-        const exact = rows.filter(
-          (r) => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q),
-        );
-        const found = exact.length
-          ? exact
-          : rows.filter(
-              (r) =>
-                q &&
-                key(
-                  [
-                    r.dados.item,
-                    r.dados.codigo,
-                    internal(r.id),
-                    r.dados.ramal,
-                  ].join(" "),
-                ).includes(q),
-            );
+        const exact = rows.filter(r => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q));
+        const found = exact.length ? exact : rows.filter(r => q && key([
+          r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal,
+        ].join(" ")).includes(q));
         $("moveResults").replaceChildren();
         $("moveMissing").hidden = !q || found.length > 0;
+        $("createDown").hidden = role === "leitor";
         if (!q) {
-          $("moveResults").append(
-            el("p", "Busque o item que você quer movimentar.", "muted"),
-          );
+          const empty = el("div", undefined, "movement-empty");
+          empty.append(icon("search"), el("span", "Encontre o item para ver as ações disponíveis."));
+          $("moveResults").append(empty);
           return;
         }
-        for (const r of found.slice(0, 20)) {
+        for (const r of found.slice(0,20)) {
           const card = el("div", undefined, "movement-result");
-          card.append(
-            el("h3", r.dados.item),
-            el(
-              "p",
-              `${internal(r.id)} · ${TYPE[r.dados.tipo]} ${r.dados.codigo || ""} · ${STATUS[r.situacao]}`,
-            ),
-            el(
-              "p",
-              `${r.dados.ambiente} · ${locationText(r) || "Sem posição de estante"}`,
-              "hint",
-            ),
-          );
-          if (r.controle === "QUANTIDADE")
-            card.append(el("p", `Saldo: ${r.saldo} ${r.unidade}`, "notice"));
-          if (r.emprestimo)
-            card.append(
-              el(
-                "p",
-                `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
-                "notice",
-              ),
-            );
+          const heading = el("div", undefined, "movement-result-heading");
+          heading.append(el("h3", r.dados.item), el("span", STATUS[r.situacao],
+            "badge" + (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : "")));
+          card.append(heading, el("p", [internal(r.id), r.dados.codigo ? r.dados.tipo + " " + r.dados.codigo : ""].filter(Boolean).join(" · "), "movement-code"));
+          const position = locationText(r);
+          card.append(el("p", [r.dados.ambiente, position].filter(Boolean).join(" · "), "hint movement-location"));
+          if (r.controle === "QUANTIDADE") card.append(el("p", "Saldo: " + quantityText(r.saldo,r.unidade), "notice"));
+          if (r.emprestimo) card.append(el("p", `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`, "notice"));
           const actions = el("div", undefined, "actions");
-          if (role !== "leitor")
-            for (const a of movementActions(r))
-              actions.append(
-                button(
-                  ACTION[a],
-                  () => openOperation(a, r),
-                  a === "baixar" || a === "descarte_estoque" ? "danger" : "",
-                  ACTION_ICON[a],
-                ),
-              );
-          card.append(actions);
-          $("moveResults").append(card);
+          if (role !== "leitor") for (const a of movementActions(r)) actions.append(button(
+            ACTION[a], () => openOperation(a,r), a === "baixar" || a === "descarte_estoque" ? "danger" : "", ACTION_ICON[a],
+          ));
+          if (role === "leitor") card.append(el("p", "Seu perfil permite consultar este item.", "hint"));
+          else if (!actions.children.length) card.append(el("p", r.situacao === "ARQUIVADO" ? "Registro arquivado. Abra os detalhes na consulta para restaurar." : "Item descartado. Consulte os detalhes para ver o motivo e o histórico.", "hint"));
+          card.append(actions); $("moveResults").append(card);
         }
-        if (found.length > 20)
-          $("moveResults").append(
-            el(
-              "p",
-              `${found.length} encontrados. Refine a busca para ver os demais.`,
-              "hint",
-            ),
-          );
+        if (found.length > 20) $("moveResults").append(el("p", `${found.length} itens encontrados. Digite mais detalhes para refinar.`, "hint"));
       }
 
       function configureMovement(a, r) {
@@ -5245,7 +5364,7 @@
         const updateBalance = () => {
           const n = Number($("moveQuantity").value || 0);
           $("moveBalance").textContent =
-            `Saldo atual: ${r.saldo} ${r.unidade}. Após confirmar: ${Number((Number(r.saldo) + (a === "entrada" ? n : -n)).toFixed(3))}.`;
+            `Saldo atual: ${quantityText(r.saldo,r.unidade)}. Após confirmar: ${quantityText(Number((Number(r.saldo) + (a === "entrada" ? n : -n)).toFixed(3)),r.unidade)}.`;
         };
         $("moveQuantity").oninput = updateBalance;
         updateBalance();
@@ -5256,18 +5375,23 @@
           "arquivar",
           "restaurar",
         ].includes(a);
-        $("reason").previousElementSibling.textContent = $("reason").required
-          ? "Motivo / justificativa"
-          : "Observação · opcional";
-        $("downDate").required = false;
-        $("downDate").disabled = true;
-        $("downFields").hidden = true;
-        $("operationHint").textContent =
-          a === "baixar"
-            ? `Baixa imediata de ${r.dados.item}${r.controle === "QUANTIDADE" ? `, zerando todo o saldo de ${r.saldo} ${r.unidade}` : ""}. Não executa baixa patrimonial oficial.`
-            : a === "devolver"
-              ? `Devolução de ${r.emprestimo?.responsavel || ""}. O item volta à disponibilidade em ${r.dados.ambiente} ${locationText(r)}.`
-              : "Data, horário e usuário serão registrados automaticamente. Confira os dados antes de confirmar.";
+        $("reason").previousElementSibling.textContent = ["baixar", "descarte_estoque"].includes(a)
+          ? "Motivo do descarte" : $("reason").required ? "Motivo / justificativa" : "Observação · opcional";
+        $("downDate").required = a === "baixar";
+        $("downDate").disabled = a !== "baixar";
+        $("downFields").hidden = a !== "baixar";
+        const hints = {
+          emprestar: "Informe quem ficará com o bem e onde ele será usado.",
+          devolver: `O bem voltará para ${r.dados.ambiente}${locationText(r) ? " · " + locationText(r) : ""}.`,
+          entrada: "Informe quantas unidades entraram no estoque.",
+          saida: "Informe a quantidade, quem retirou e o destino.",
+          descarte_estoque: "Desconte do saldo apenas as unidades descartadas.",
+          baixar: `O registro continuará no acervo como Descartado, com motivo e histórico${r.controle === "QUANTIDADE" ? `. Todo o saldo (${quantityText(r.saldo,r.unidade)}) será descartado` : ""}.`,
+          arquivar: "Ação descontinuada. Registros antigos permanecem preservados.",
+          restaurar: "Devolve o registro arquivado à lista corrente.",
+          estornar: "Use para corrigir um descarte registrado por engano. O histórico será preservado.",
+        };
+        $("operationHint").textContent = hints[a] || "Confira os dados antes de confirmar.";
         labelButton($("confirmOperation"), ACTION[a], ACTION_ICON[a]);
       }
 
@@ -5303,6 +5427,10 @@
           none = t === "SEM_IDENTIFICACAO";
         if (!none && n.readOnly) n.value = "";
         $(edit ? "editCodeWrap" : "codeWrap").hidden = !t;
+        if (!edit && $("identityBlock")) {
+          $("identityBlock").dataset.type = t;
+          $("types").querySelectorAll("input").forEach(input => input.setAttribute("aria-controls","codeWrap"));
+        }
         $(edit ? "editCodeLabel" : "codeLabel").textContent = none
           ? "Identificação interna"
           : TYPE[t] || "Identificação";
@@ -5311,7 +5439,7 @@
         n.pattern = none ? "ACV-[0-9]{5,}" : "[0-9]{6}";
         n.maxLength = none ? 64 : 6;
         $(edit ? "editScan" : "scan").hidden = none || !mobileCamera();
-        n.placeholder = none ? "Código automático" : "Código de 6 dígitos";
+        n.placeholder = none ? "Código automático" : "6 números da etiqueta";
         if (none) n.value = edit && editor?.id
           ? internal(editor.id) : nextInternalPreview();
         const help = $(edit ? "editCodeHint" : "codeHint");
@@ -5464,7 +5592,7 @@
         const heading = el("div", undefined, "summary-heading");
         const title = el("div", undefined, "summary-title");
         title.append(el("strong", d.item));
-        const status = el("span", down ? "Baixado / descarte" : "Ativo", "summary-status");
+        const status = el("span", down ? "Descartado" : "Ativo", "summary-status");
         status.append(icon(down ? "discard" : "check"));
         heading.append(title, status);
         const facts = el("dl", undefined, "summary-facts");
@@ -5637,6 +5765,7 @@
             const snapshot = JSON.stringify([rows, checks, role]);
             if (snapshot !== lastSnapshot) {
               lastSnapshot = snapshot;
+              renderFilters();
               renderMetrics();
               renderMovementTimeline();
               if (editor) {
@@ -5705,10 +5834,11 @@
                 (r.controle || "INDIVIDUAL") === filters.controle) &&
               (!filters.categoria || d.categoria === filters.categoria) &&
               (!filters.tipo || d.tipo === filters.tipo) &&
-              (!filters.situacao ||
-                (filters.situacao === "EM_USO"
-                  ? ["ATIVO", "EMPRESTADO"].includes(r.situacao)
-                  : r.situacao === filters.situacao)) &&
+              (filters.situacao === "TODOS" ||
+                (!filters.situacao ? r.situacao !== "ARQUIVADO" :
+                  filters.situacao === "EM_USO"
+                    ? ["ATIVO", "EMPRESTADO"].includes(r.situacao)
+                    : r.situacao === filters.situacao)) &&
               (!filters.estante || d.estante === filters.estante) &&
               (!filters.prateleira ||
                 String(d.prateleira) === filters.prateleira) &&
@@ -5738,7 +5868,7 @@
       }
       function filterButtons(target, field, opts) {
         $(target).replaceChildren(
-          ...[["", "Todos"], ...opts].map(([v, t]) => {
+          ...[["", field === "situacao" ? "Lista corrente" : "Todos"], ...opts].map(([v, t]) => {
             const b = button(
               t,
               () => changeFilter(field, v),
@@ -5761,7 +5891,11 @@
           CATEGORIES.map((v) => [v, v]),
         );
         filterButtons("filterType", "tipo", Object.entries(TYPE));
-        filterButtons("filterStatus", "situacao", Object.entries(STATUS));
+        filterButtons("filterStatus", "situacao", [["TODOS", "Todos os registros"], ...Object.entries(STATUS)
+          .filter(([state]) => state !== "ARQUIVADO" || rows.some(r => r.situacao === "ARQUIVADO"))]);
+        const discarded = rows.filter(r => r.situacao === "BAIXADO").length;
+        labelButton($("viewDiscarded"),"Descartados (" + discarded + ")","writeoff");
+        $("viewDiscarded").setAttribute("aria-pressed",String(filters.situacao === "BAIXADO"));
         filterButtons(
           "filterShelf",
           "estante",
@@ -5838,7 +5972,9 @@
           );
           if (r.controle === "QUANTIDADE")
             tr.firstChild.append(
-              el("div", `${r.saldo} ${r.unidade} · em estoque`, "hint"),
+              el("div", r.situacao === "BAIXADO"
+                ? r.baixa?.quantidade != null ? "Descarte: " + quantityText(r.baixa.quantidade,r.unidade) : "Estoque descartado"
+                : `${r.saldo} ${r.unidade} · em estoque`, "hint"),
             );
           if (r.emprestimo)
             tr.firstChild.append(
@@ -5940,14 +6076,20 @@
               "notice",
             ),
           );
-        if (r.baixa)
-          panel.append(
-            el(
-              "p",
-              "Baixa: " + r.baixa.data + " · " + r.baixa.motivo,
-              "notice",
-            ),
-          );
+        if (r.situacao === "BAIXADO") {
+          const disposal = el("aside", undefined, "discard-summary");
+          const title = el("strong");title.append(icon("writeoff"),document.createTextNode("Descarte registrado"));
+          disposal.append(title,el("p","Este item continua no acervo para consulta. Não conta como bem disponível ou estoque ativo.","hint"));
+          const facts = el("dl"), baixa = r.baixa || {};
+          const disposalDate = /^\d{4}-\d{2}-\d{2}$/.test(baixa.data || "")
+            ? baixa.data.split("-").reverse().join("/") : baixa.data || "Não informada";
+          for (const [label,text] of [["Data do descarte",disposalDate],["Motivo",baixa.motivo || "Não informado"],
+            ["Registrado por",baixa.email],["Documento / processo",baixa.documento],
+            ["Quantidade descartada",r.controle === "QUANTIDADE" && baixa.quantidade != null ? quantityText(baixa.quantidade,r.unidade) : ""]]) {
+            if(text)facts.append(el("dt",label),el("dd",text));
+          }
+          disposal.append(facts);panel.append(disposal);
+        }
         if (r.legado) {
           const box = el("details");
           box.append(
@@ -5972,7 +6114,7 @@
           if (r.situacao === "EMPRESTADO")
             actions.append(
               button(
-                "Dar baixa",
+                "Registrar descarte",
                 () => openOperation("baixar", r),
                 "danger",
                 ACTION_ICON.baixar,
@@ -5983,27 +6125,16 @@
           actions.append(
             button("Editar", () => startEdit(r), "", "edit"),
             button(
-              "Dar baixa",
+              "Registrar descarte",
               () => openOperation("baixar", r),
               "danger",
               ACTION_ICON.baixar,
             ),
           );
-        if (role === "admin" && r.situacao !== "EMPRESTADO") {
-          const a =
-            r.situacao === "BAIXADO"
-              ? "estornar"
-              : r.situacao === "ARQUIVADO"
-                ? "restaurar"
-                : "arquivar";
-          actions.append(
-            button(
-              ACTION[a],
-              () => openOperation(a, r),
-              "",
-              ACTION_ICON[a],
-            ),
-          );
+        if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(r.situacao)) {
+          const a = r.situacao === "BAIXADO" ? "estornar" : "restaurar";
+          actions.append(button(ACTION[a], () => openOperation(a,r), "", ACTION_ICON[a]));
+          if (a === "restaurar") panel.append(el("p","Registro arquivado em uma versão anterior. Seus dados e histórico foram preservados. Restaurar devolve o registro à consulta corrente.","hint"));
         }
         panel.append(actions);
         const history = el("div", undefined, "history");
@@ -6021,9 +6152,9 @@
           registro: "Registro",
           editar: "Edição",
           edicao: "Edição",
-          baixar: "Baixa",
-          baixa: "Baixa",
-          estornar: "Estorno da baixa",
+          baixar: "Descarte",
+          baixa: "Descarte",
+          estornar: "Descarte revertido",
           arquivar: "Arquivamento",
           restaurar: "Restauração",
           conferir: "Conferência",
@@ -6032,7 +6163,7 @@
           entrada: "Entrada de estoque",
           saida: "Saída de estoque",
           descarte_estoque: "Descarte de estoque",
-          cadastrar_baixado: "Registro com baixa",
+          cadastrar_baixado: "Cadastro de item descartado",
         };
         if (action === "salvar") return h.antes === null && h.depois ? "Registro" : "Edição";
         return (
@@ -6484,12 +6615,13 @@
         const expanded = list.classList.contains("expanded");
         control.hidden = remaining === 0;
         control.setAttribute("aria-expanded", String(expanded));
-        const label = remaining === 1 ? ({ materiais: "material", movimentações: "movimentação" }[noun] || noun) : noun;
+        const label = remaining === 1 ? ({ materiais: "material", movimentações: "movimentação", empréstimos: "empréstimo" }[noun] || noun) : noun;
         labelButton(control, expanded ? "Mostrar menos" : "Ver mais " + remaining + " " + label, "right");
       }
       for (const [id, controlId, limit, noun] of [
         ["stockAlerts", "toggleStockAlerts", 3, "materiais"],
         ["movementTimeline", "toggleMovementTimeline", 4, "movimentações"],
+        ["loanWatch", "toggleLoanWatch", 3, "empréstimos"],
       ]) $(controlId).onclick = () => {
         $(id).classList.toggle("expanded");
         syncDashboardList(id, controlId, limit, noun);
@@ -6498,6 +6630,51 @@
         $("warehouseDetails").open = true;
         $("checks").scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       };
+      function openDashboardRecord(r) {
+        if (!leaveEditor()) return;
+        query({}); $("search").value = internal(r.id); expanded = r.id; renderList();
+      }
+      function renderExecutiveSummary(active, loans, lowStock) {
+        const stocks = active.filter(r => r.controle === "QUANTIDADE");
+        const pulse = $("dashboardPulse"), copy = el("div");
+        pulse.dataset.state = lowStock.length ? "attention" : "neutral";
+        const heading = lowStock.length ? "Atenção à reposição" : stocks.length ? "Estoque acima do mínimo" : "Estoque ainda não cadastrado";
+        const emptyStocks = lowStock.filter(r => Number(r.saldo) <= 0).length;
+        const description = lowStock.length
+          ? `${lowStock.length} ${lowStock.length === 1 ? "material está" : "materiais estão"} no mínimo ou abaixo dele${emptyStocks ? `; ${emptyStocks} sem saldo` : ""}.`
+          : stocks.length ? "Nenhum material chegou ao mínimo definido no cadastro." : "Cadastre materiais por quantidade no Almoxarifado para acompanhar os saldos.";
+        copy.append(el("strong",heading),el("p",description));
+        pulse.replaceChildren(icon(lowStock.length ? "stock-alert" : "stock"),copy);
+        $("loanWatchCount").textContent = loans.length;
+        $("loanWatch").replaceChildren(...(loans.length ? [...loans]
+          .sort((a,b) => String(a.emprestimo?.momento || a.atualizado_em || "").localeCompare(String(b.emprestimo?.momento || b.atualizado_em || "")))
+          .map(r => {
+            const card = el("article",undefined,"loan-watch-card");
+            card.append(el("h4",r.dados.item),el("p",r.emprestimo?.responsavel || "Responsável não informado","loan-holder"));
+            if (r.emprestimo?.destino) card.append(el("p",r.emprestimo.destino));
+            if (r.emprestimo?.momento) card.append(el("p","Desde " + dateBR(r.emprestimo.momento),"hint"));
+            const actions = el("div",undefined,"attention-actions");
+            actions.append(button("Consultar",()=>openDashboardRecord(r),"","right"));
+            if (role !== "leitor") actions.append(button("Registrar devolução",()=>openOperation("devolver",r),"","return"));
+            card.append(actions);return card;
+          }) : [el("p","Nenhum bem emprestado no momento.","dashboard-empty")]));
+        syncDashboardList("loanWatch","toggleLoanWatch",3,"empréstimos");
+        $("roomSummary").replaceChildren(...ROOMS.map(room => {
+          const roomActive = active.filter(r => r.dados.ambiente === room);
+          const goods = roomActive.filter(r => r.controle !== "QUANTIDADE").length;
+          const stockCount = roomActive.filter(r => r.controle === "QUANTIDADE").length;
+          const low = lowStock.filter(r => r.dados.ambiente === room).length;
+          const checked = checks.some(c => c.ambiente === room && c.conferido);
+          const card = button("",()=>query({ambiente:room,situacao:"ATIVO"}),"room-summary");
+          const title = el("span",undefined,"room-summary-heading");title.append(icon(ROOM_ICON[room]),el("span",room));
+          const counts = el("span",undefined,"room-summary-count");
+          counts.append(el("b",goods),document.createTextNode(goods === 1 ? " bem ativo" : " bens ativos"));
+          if (stockCount) counts.append(el("span", `${stockCount} ${stockCount === 1 ? "estoque" : "estoques"}${low ? ` · ${low} para repor` : ""}`));
+          card.append(title,counts,el("span",checked ? "Conferência registrada" : "Conferência pendente","room-summary-state"));
+          card.setAttribute("aria-label",`${room}: ${goods} bens ativos, ${stockCount} estoques ativos. ${checked ? "Conferido" : "Conferência pendente"}. Consultar itens.`);
+          return card;
+        }));
+      }
       function renderMetrics() {
         const individual = rows.filter(
           (r) =>
@@ -6563,7 +6740,7 @@
             { situacao: "ATIVO", controle: "QUANTIDADE" },
           ],
           [
-            "Baixados",
+            "Descartados",
             rows.filter((r) => r.situacao === "BAIXADO").length,
             "writeoff",
             { situacao: "BAIXADO" },
@@ -6587,9 +6764,19 @@
           b.append(el("b", total), el("span", title));
           return b;
         };
-        $("stats").replaceChildren(...[metrics[0], metrics[1],
-          ["Materiais para repor", lowStock.length, "stock-alert", null]].map(metricButton));
-        $("secondaryStats").replaceChildren(...metrics.slice(2).map(metricButton));
+        const loans = rows.filter(r => r.situacao === "EMPRESTADO");
+        const stockCount = active.filter(r => r.controle === "QUANTIDADE").length;
+        const primary = [
+          ["Bens acompanhados", individual.length, "available", {controle:"INDIVIDUAL",situacao:"EM_USO"}, `${available} ${available === 1 ? "ativo" : "ativos"} · ${borrowed} ${borrowed === 1 ? "emprestado" : "emprestados"}`],
+          ["Bens emprestados", loans.length, "loan", {situacao:"EMPRESTADO"}, "Empréstimos ainda em aberto"],
+          ["Materiais em estoque", stockCount, "stock", {situacao:"ATIVO",controle:"QUANTIDADE"}, "Cadastros por quantidade"],
+          ["Materiais para repor", lowStock.length, "stock-alert", null, "Saldo no mínimo ou abaixo dele"],
+        ];
+        $("stats").replaceChildren(...primary.map(metric => {
+          const b = metricButton(metric);b.append(el("small",metric[4]));return b;
+        }));
+        renderExecutiveSummary(active,loans,lowStock);
+        $("secondaryStats").replaceChildren(...metrics.slice(2).filter(m => m[0] !== "Arquivados" || m[1] > 0).map(metricButton));
         chart(
           "roomChart",
           ROOMS.map((v) => [v, count("ambiente", v)]),
@@ -6726,27 +6913,19 @@
         $("stockAlerts").replaceChildren(...(lowStock.length ? lowStock.map((r) => {
           const card = el("article", undefined, "stock-alert-card");
           const state = el("span", undefined, "stock-alert-status");
-          state.append(icon("stock-alert"), el("span", Number(r.saldo) <= 0 ? "Sem saldo" :
-            Number(r.saldo) < Number(r.minimo) ? "Abaixo do mínimo" : "No mínimo"));
+          state.append(icon("stock-alert"), el("span", Number(r.saldo) <= 0 ? "Sem saldo" : Number(r.saldo) < Number(r.minimo) ? "Abaixo do mínimo" : "No mínimo"));
           const amounts = el("div", undefined, "stock-alert-values");
-          for (const [label, n] of [["Saldo atual", r.saldo], ["Mínimo", r.minimo]]) {
-            const group = el("div");
-            group.append(el("small", label), el("strong", numberBR(n)));
-            amounts.append(group);
+          const unit = ({unidade:"un.",rolo:"rolo",kg:"kg",metro:"m",litro:"L",caixa:"cx."})[r.unidade] || r.unidade || "un.";
+          for (const [label,n] of [[`Saldo (${unit})`,r.saldo],[`Mínimo (${unit})`,r.minimo]]) {
+            const group = el("div");group.append(el("small",label),el("strong",numberBR(n)));amounts.append(group);
           }
-          const open = button("Consultar material", () => {
-            if (!leaveEditor()) return;
-            query({});
-            $("search").value = internal(r.id);
-            expanded = r.id;
-            renderList();
-          }, "", "right");
-          open.disabled = busy;
-          card.append(state, el("h4", r.dados.item),
-            el("p", internal(r.id) + " · " + (r.unidade || "unidade"), "hint"), amounts,
-            el("p", [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · "), "hint"), open);
+          const actions = el("div",undefined,"attention-actions");
+          actions.append(button("Consultar",()=>openDashboardRecord(r),"","right"));
+          if (role !== "leitor") actions.append(button("Registrar entrada",()=>openOperation("entrada",r),"","stock-in"));
+          card.append(el("h4",r.dados.item),state,amounts,
+            el("p",[r.dados.ambiente,locationText(r)].filter(Boolean).join(" · "),"hint stock-alert-location"),actions);
           return card;
-        }) : [el("p", "Nenhum material está no mínimo ou abaixo dele neste momento.", "stock-alert-empty")]));
+        }) : [el("p",active.some(r => r.controle === "QUANTIDADE") ? "Nenhum material precisa de reposição pelo mínimo definido." : "Os materiais com saldo baixo aparecerão aqui após o cadastro do estoque.","dashboard-empty")]));
         syncDashboardList("stockAlerts", "toggleStockAlerts", 3, "materiais");
         const done = ROOMS.filter((room) =>
           checks.some((c) => c.ambiente === room && c.conferido),
@@ -7248,7 +7427,9 @@
         const notes = $("notesBlock"), location = $("location"), code = $("codeWrap");
         main.append(item, category, rest);
         // Identificação à esquerda, Controle à direita; código alinhado à situação.
-        rest.replaceChildren(identity, control, code, state);
+        identity.append(code);
+        rest.replaceChildren(identity, control);
+        $("registrationSave").querySelector(".spaced").prepend(state, $("directDown"), $("directReasonWrap"));
         body.append(location, main);
         roomStep.remove(); identityStep.remove();
         fields.prepend(header, body, notes);
@@ -7257,7 +7438,7 @@
           "initialStatus",
           [
             ["ATIVO", "Ativo", "check"],
-            ["BAIXADO", "Baixado / descarte", "discard"],
+            ["BAIXADO", "Descartado", "discard"],
           ],
           "ATIVO",
           () => {
@@ -7274,7 +7455,7 @@
         $("createDown").onclick = () => {
           if (
             clean($("item").value) &&
-            !confirm("Substituir o rascunho atual por um cadastro para baixa?")
+            !confirm("Substituir o rascunho atual por um cadastro de item descartado?")
           )
             return;
           $("repeat").checked = false;
@@ -7397,6 +7578,7 @@
         expanded = null;
         renderList();
       };
+      $("viewDiscarded").onclick = () => query({situacao:"BAIXADO"});
       $("moreFilters").onclick = () => {
         $("filterPanel").hidden = !$("filterPanel").hidden;
         $("moreFilters").setAttribute(
@@ -7630,9 +7812,10 @@
           };
           const scope = all ? "Inventário completo" : (
             Object.entries(filters).filter(([, v]) => v).map(([k, v]) =>
-              (filterNames[k] || k) + ": " + (TYPE[v] || STATUS[v] ||
+              (filterNames[k] || k) + ": " + (TYPE[v] || (v === "TODOS" ? "Todos os registros" : STATUS[v]) ||
                 ({ EM_USO: "Em uso", INDIVIDUAL: "Individual", QUANTIDADE: "Por quantidade" })[v] || v)
-            ).concat($("search").value ? ["Busca: " + $("search").value] : []).join(" · ") || "Todos os registros"
+            ).concat(!filters.situacao ? ["Situação: Lista corrente (sem arquivados)"] : [])
+              .concat($("search").value ? ["Busca: " + $("search").value] : []).join(" · ") || "Lista corrente"
           );
           const issued = dateBR(emitted);
           const shortDate = (v) => v ? new Intl.DateTimeFormat("pt-BR", {
@@ -7975,8 +8158,8 @@
           table("Sem identificação externa", "ACERVO_SemIdentificacao", inventoryHeaders,
             list.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").map(inventoryRow), widths,
             { details: true, dates: [10], tabColor: "FF92B7D6" });
-          table("Baixas", "ACERVO_Baixas", [
-            "Código interno", "Item", "Identificação", "Data da baixa", "Motivo",
+          table("Descartados", "ACERVO_Baixas", [
+            "Código interno", "Item", "Identificação", "Data do descarte", "Motivo",
             "Documento/processo", "Responsável", "Ambiente anterior",
           ], list.filter((r) => r.situacao === "BAIXADO").map((r) => [
             internal(r.id), r.dados.item, String(r.dados.codigo || internal(r.id)), r.baixa?.data || "",

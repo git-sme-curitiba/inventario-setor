@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="acervo-blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#27b1f3"/>
+      <stop offset="0.48" stop-color="#087cdd"/>
+      <stop offset="1" stop-color="#05489c"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#acervo-blue)"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="16" y="21" width="15" height="29" rx="3"/>
+    <rect x="34" y="14" width="15" height="36" rx="3"/>
+    <path d="M21 27h5M21 32h5M39 20h5M39 25h5M39 30h5M14 51h38"/>
+  </g>
+</svg>

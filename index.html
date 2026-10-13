@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-hRWi19dSfUQ7ReSSwQzTobJ8P0Mr8aYyFKMY1TZnfXA=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-3GPZa8YjPRCBHGXGkj9RNtDxcdakE/wwSLSCV+pg2YA=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -3964,6 +3964,73 @@
         #editFields .editor-location .rooms .choice span { overflow-wrap: anywhere; line-height: 1.4; }
         .editor-location .rooms .choice:has(input[value="Almoxarifado"]) { flex: 1.3; }
       }
+    
+      /* ACERVO 3.5.24 · Cabeçalhos equilibrados e indicadores visuais. */
+      #register #identityBlock, #editIdentityGroup { padding: 0; overflow: hidden; background: #fff; border-color: #99bbd9; }
+      #identityHeading, #controlHeading, #editIdentityHeading, #editControlHeading {
+        min-height: 58px; margin: 0; padding: 10px 12px; color: var(--blue-deep);
+        background: linear-gradient(115deg,#deedfb,#eef6fd); border: 0;
+        border-bottom: 1px solid #adcbe5; box-shadow: inset 3px 0 0 #167bc5;
+      }
+      #identityHeading p, #controlHeading p, #editIdentityHeading p, #editControlHeading p { color: #3d617e; }
+      #identityHeading > .icon, #controlHeading > .icon, #editIdentityHeading > .icon, #editControlHeading > .icon {
+        box-sizing: content-box; padding: 7px; width: 20px; height: 20px; flex-basis: 20px;
+        border: 1px solid #9ebfe0; border-radius: 9px; background: #f9fcff; color: #0869b5;
+      }
+      #register #types, #editTypes { margin: 12px 12px 0; }
+      #register #identityBlock #codeWrap, #editIdentityGroup #editCodeWrap { margin: 8px 12px 12px; }
+      #itemForm.quantity-layout #identityBlock { padding: 0; border: 0; overflow: visible; }
+      .dashboard-visuals { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; margin-bottom: 20px; }
+      #dashboard .dashboard-visuals > .card { margin: 0; padding: 20px; border-color: var(--surface-line); }
+      .visual-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+      .visual-heading > .icon { width: 22px; height: 22px; color: var(--blue-strong); flex: 0 0 22px; }
+      .visual-heading h3 { margin: 0; font-size: 22px; }
+      .visual-heading p { margin: 4px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+      .status-visual { display: flex; align-items: center; gap: 22px; }
+      .status-ring { position: relative; width: 142px; height: 142px; flex: 0 0 142px; border-radius: 50%; background: #e3edf6; }
+      .status-ring::before { content: ''; position: absolute; inset: 19px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px #dbe8f3; }
+      .status-ring-center { position: absolute; inset: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .status-ring-center b { font-size: 30px; color: var(--blue-deep); font-weight: 500; line-height: 1.2; }
+      .status-ring-center span { font-size: 10px; color: var(--muted); }
+      .visual-legend { display: grid; gap: 6px; flex: 1; min-width: 0; }
+      .visual-legend button, .stock-health-row { display: flex; align-items: center; gap: 9px; min-height: 36px; padding: 7px 9px; border: 1px solid transparent; background: transparent; box-shadow: none; color: var(--ink); border-radius: 9px; font-size: 12px; text-align: left; }
+      .visual-legend button:hover { border-color: #a6c6e0; background: #eef6fd; }
+      .legend-dot { display: block; width: 9px; height: 9px; flex: 0 0 9px; border-radius: 3px; background: var(--segment); }
+      .visual-legend button > span:nth-child(2), .stock-health-row > span:nth-child(2) { flex: 1; }
+      .visual-legend b, .stock-health-row b { font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .visual-legend small, .stock-health-row small { min-width: 34px; font-size: 10px; color: var(--muted); text-align: right; }
+      .stock-health-total { display: flex; align-items: baseline; gap: 7px; margin-bottom: 12px; color: var(--muted); font-size: 12px; }
+      .stock-health-total b { color: var(--blue-deep); font-size: 30px; font-weight: 500; }
+      .stock-health-track { display: flex; height: 18px; gap: 3px; margin-bottom: 14px; border-radius: 6px; overflow: hidden; background: #e3edf6; }
+      .stock-health-track > span { height: 100%; background: var(--segment); min-width: 0; }
+      .stock-health-row { padding: 5px 0; min-height: 31px; }
+      .visual-footnote { margin: 12px 0 0; font-size: 10px; line-height: 1.5; color: var(--muted); }
+      .room-summary-meter { display: block; height: 6px; margin: 12px 0 0; border-radius: 4px; background: #dbe9f5; overflow: hidden; }
+      .room-summary-meter > i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#116dbb,#54a8df); }
+      #dashboard .dashboard-description { max-width: 600px; }
+      @media (max-width: 900px) { .status-visual { gap: 12px; } .status-ring { width: 120px; height: 120px; flex-basis: 120px; } }
+      @media (max-width: 700px) { .dashboard-visuals { grid-template-columns: minmax(0,1fr); gap: 12px; } #dashboard .dashboard-visuals > .card { padding: 16px; } }
+      @media (max-width: 360px) { .status-ring { width: 106px; height: 106px; flex-basis: 106px; } .status-ring::before { inset: 15px; } .status-ring-center { inset: 16px; } .visual-legend button { padding: 6px 3px; gap: 6px; font-size: 11px; } .visual-legend small { min-width: 28px; } }
+      /* Perfis: seleção integrada ao card, foco acessível e arredondado. */
+      #userAccessDialog .role-option input[type="radio"] { appearance: none; border: 1.5px solid #8aaccd; border-radius: 50%; background: #fff; outline: none; box-shadow: none; }
+      #userAccessDialog .role-option input[type="radio"]:checked { border-color: #0875c8; background: radial-gradient(circle,#0875c8 0 42%,#fff 45%); }
+      #userAccessDialog .role-option input[type="radio"]:focus { outline: none; box-shadow: none; }
+      #userAccessDialog .role-option:focus-within { outline: none; }
+      #userAccessDialog .role-option:has(input:focus-visible) { outline: none; box-shadow: 0 0 0 3px #0875c84d; border-color: #0875c8; }
+
+      .people-loading { padding: 12px 0; }
+      .people-loading-status { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 16px; color: var(--blue-deep); font-size: 12px; }
+      .people-spinner { width: 18px; height: 18px; border: 2px solid #b6d2e9; border-top-color: #0875c8; border-radius: 50%; animation: people-spin .8s linear infinite; }
+      .people-skeleton { display: flex; align-items: center; gap: 12px; padding: 15px; margin-top: 9px; border: 1px solid #caddec; border-radius: 12px; background: #f5f9fd; }
+      .people-skeleton-avatar { width: 38px; height: 38px; flex: 0 0 38px; border-radius: 12px; }
+      .people-skeleton-copy { display: grid; gap: 8px; flex: 1; min-width: 0; }
+      .people-skeleton-line { display: block; height: 9px; width: 65%; border-radius: 5px; }
+      .people-skeleton-line:last-child { width: 40%; }
+      .people-skeleton-avatar, .people-skeleton-line { background: linear-gradient(90deg,#dce9f4 25%,#eff6fc 50%,#dce9f4 75%); background-size: 200% 100%; animation: people-shimmer 1.5s ease-in-out infinite; }
+      @keyframes people-spin { to { transform: rotate(360deg); } }
+      @keyframes people-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+      @media (prefers-reduced-motion: reduce) { .people-spinner, .people-skeleton-avatar, .people-skeleton-line { animation: none; } }
+      #register #identityBlock:has(#codeWrap[hidden]) #types, #editIdentityGroup:has(#editCodeWrap[hidden]) #editTypes { margin-bottom: 12px; }
     </style>
   </head>
   <body class="auth-screen">
@@ -4617,10 +4684,20 @@
         </section>
         <section id="dashboard" class="tab" hidden>
           <div class="bar dashboard-title">
-            <div><div class="eyebrow">Bens e estoque</div><h2>Visão geral</h2><p class="dashboard-description">Reposição, empréstimos e situação dos ambientes.</p></div>
+            <div><div class="eyebrow">Bens e estoque</div><h2>Visão geral</h2><p class="dashboard-description">Bens, estoques e prioridades em uma só leitura.</p></div>
           </div>
           <div id="dashboardPulse" role="status"></div>
           <div id="stats" class="stats"></div>
+          <div class="dashboard-visuals">
+            <section class="card" aria-labelledby="goodsStatusTitle">
+              <div class="visual-heading"><svg class="icon" aria-hidden="true"><use href="#i-composition" /></svg><div><h3 id="goodsStatusTitle">Situação dos bens</h3><p>Bens individuais ativos, emprestados e descartados</p></div></div>
+              <div id="goodsStatusChart"></div>
+            </section>
+            <section class="card" aria-labelledby="stockHealthTitle">
+              <div class="visual-heading"><svg class="icon" aria-hidden="true"><use href="#i-stock" /></svg><div><h3 id="stockHealthTitle">Saúde dos estoques</h3><p>Materiais ativos comparados ao mínimo cadastrado</p></div></div>
+              <div id="stockHealthChart"></div>
+            </section>
+          </div>
           <div class="dashboard-focus">
             <section id="stockWatch" class="card stock-watch" aria-labelledby="stockWatchTitle">
               <div class="card-heading"><h3 id="stockWatchTitle">Materiais para repor</h3><span id="stockAlertCount" class="badge"></span></div>
@@ -4634,7 +4711,7 @@
             </section>
           </div>
           <section class="dashboard-rooms" aria-labelledby="roomSummaryTitle">
-            <div class="dashboard-rooms-heading"><h3 id="roomSummaryTitle">Por ambiente</h3><button id="conferenceSummary" class="badge" type="button" title="Abrir conferência dos ambientes" aria-controls="warehouseDetails"></button></div>
+            <div class="dashboard-rooms-heading"><h3 id="roomSummaryTitle">Por ambiente</h3><span class="muted">Clique para consultar os itens</span></div>
             <div id="roomSummary"></div>
           </section>
           <details id="inventoryDetails" class="dashboard-details">
@@ -4644,20 +4721,6 @@
               <div id="movementTimeline"></div>
               <button id="toggleMovementTimeline" class="dashboard-more" type="button" hidden aria-controls="movementTimeline" aria-expanded="false"></button>
             </section><div id="secondaryStats" class="stats secondary-stats"></div><div id="availability" class="availability"></div><div class="dash-grid"><div class="card">
-              <h3>Onde estão os bens</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Ativos e emprestados por ambiente de origem. Clique para consultar."
-                aria-label="Ajuda sobre a localização dos bens"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-pin" />
-                </svg>
-              </button>
-              <div id="roomChart"></div>
-            </div>
-<div class="card">
               <h3>Composição do acervo</h3>
               <button
                 type="button"
@@ -4701,38 +4764,7 @@
               <div id="recent"></div>
             </div></div></div>
           </details>
-          <details id="warehouseDetails" class="dashboard-details">
-            <summary><svg class="icon" aria-hidden="true"><use href="#i-audit" /></svg><span><strong>Conferência e posições</strong><small>Verificar os ambientes e localizar itens no almoxarifado</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
-            <div class="dashboard-details-body"><div class="dash-grid warehouse-grid"><div class="card">
-              <h3>Conferência dos ambientes</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Marque após conferir os bens fisicamente. Alterações podem reabrir a conferência."
-                aria-label="Ajuda sobre a conferência dos ambientes"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-audit" />
-                </svg>
-              </button>
-              <div id="checks"></div>
-            </div>
-<div class="card wide">
-              <h3>Mapa do almoxarifado</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Registros ativos por posição. Prateleira 01 no topo. Não indica espaço disponível."
-                aria-label="Ajuda sobre o mapa do almoxarifado"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-rack-map" />
-                </svg>
-              </button>
-              <div id="rackMap" class="rack-map"></div>
-              <p class="hint" id="unplaced"></p>
-            </div></div></div>
-          </details>
+
         </section>
       </main>
       <footer class="institution-footer">
@@ -6846,10 +6878,6 @@
         $(id).classList.toggle("expanded");
         syncDashboardList(id, controlId, limit, noun);
       };
-      $("conferenceSummary").onclick = () => {
-        $("warehouseDetails").open = true;
-        $("checks").scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      };
       function openDashboardRecord(r) {
         if (!leaveEditor()) return;
         query({}); $("search").value = internal(r.id); expanded = r.id; renderList();
@@ -6884,16 +6912,57 @@
           const goods = roomActive.filter(r => r.controle !== "QUANTIDADE").length;
           const stockCount = roomActive.filter(r => r.controle === "QUANTIDADE").length;
           const low = lowStock.filter(r => r.dados.ambiente === room).length;
-          const checked = checks.some(c => c.ambiente === room && c.conferido);
+
           const card = button("",()=>query({ambiente:room,situacao:"ATIVO"}),"room-summary");
           const title = el("span",undefined,"room-summary-heading");title.append(icon(ROOM_ICON[room]),el("span",room));
           const counts = el("span",undefined,"room-summary-count");
           counts.append(el("b",goods),document.createTextNode(goods === 1 ? " bem ativo" : " bens ativos"));
           if (stockCount) counts.append(el("span", `${stockCount} ${stockCount === 1 ? "estoque" : "estoques"}${low ? ` · ${low} para repor` : ""}`));
-          card.append(title,counts,el("span",checked ? "Conferência registrada" : "Conferência pendente","room-summary-state"));
-          card.setAttribute("aria-label",`${room}: ${goods} bens ativos, ${stockCount} estoques ativos. ${checked ? "Conferido" : "Conferência pendente"}. Consultar itens.`);
+          const meter = el("span",undefined,"room-summary-meter"), fill = el("i");
+          const totalGoods = active.filter(r => r.controle !== "QUANTIDADE").length;
+          fill.style.width = (totalGoods ? goods / totalGoods * 100 : 0) + "%";meter.setAttribute("aria-hidden","true");meter.append(fill);
+          card.append(title,counts,meter,el("span",totalGoods ? Math.round(goods / totalGoods * 100) + "% dos bens ativos" : "Nenhum bem individual ativo","room-summary-state"));
+          card.setAttribute("aria-label",`${room}: ${goods} bens ativos, ${stockCount} estoques ativos. Consultar itens.`);
           return card;
         }));
+      }
+      function renderOverviewCharts() {
+        const percent = (n,total) => total ? Math.round(n / total * 100) + "%" : "0%";
+        const goods = rows.filter(r => r.controle !== "QUANTIDADE" && ["ATIVO","EMPRESTADO","BAIXADO"].includes(r.situacao));
+        const groups = [
+          ["Ativos","ATIVO","#1376c5"],
+          ["Emprestados","EMPRESTADO","#b17b2e"],
+          ["Descartados","BAIXADO","#bb4561"],
+        ].map(([label,state,color]) => ({label,state,color,n:goods.filter(r => r.situacao === state).length}));
+        const visual = el("div",undefined,"status-visual"), ring = el("div",undefined,"status-ring"), center = el("div",undefined,"status-ring-center"), legend = el("div",undefined,"visual-legend");
+        let offset = 0;
+        const stops = groups.map(g => { const start = offset; offset += goods.length ? g.n / goods.length * 360 : 0; return `${g.color} ${start}deg ${offset}deg`; });
+        if (goods.length) ring.style.background = `conic-gradient(${stops.join(",")})`;
+        ring.setAttribute("aria-hidden","true");
+        center.append(el("b",goods.length),el("span","bens no gráfico"));ring.append(center);
+        groups.forEach(g => {
+          const b = button("",()=>query({controle:"INDIVIDUAL",situacao:g.state}));
+          b.style.setProperty("--segment",g.color);
+          b.append(el("i",undefined,"legend-dot"),el("span",g.label),el("b",g.n),el("small",percent(g.n,goods.length)));
+          b.setAttribute("aria-label",`${g.label}: ${g.n} bens individuais, ${percent(g.n,goods.length)}. Consultar.`);legend.append(b);
+        });
+        visual.append(ring,legend);
+        $("goodsStatusChart").replaceChildren(visual,el("p",goods.length ? "Clique na legenda para consultar. Estoques e registros arquivados ficam fora deste gráfico." : "Nenhum bem individual cadastrado para este gráfico.","visual-footnote"));
+        const stocks = rows.filter(r => r.controle === "QUANTIDADE" && r.situacao === "ATIVO");
+        const health = [
+          {label:"Acima do mínimo",color:"#1376c5",n:stocks.filter(r => Number(r.saldo) > 0 && Number(r.saldo) > Number(r.minimo)).length},
+          {label:"No mínimo ou abaixo",color:"#b17b2e",n:stocks.filter(r => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo)).length},
+          {label:"Sem saldo",color:"#bb4561",n:stocks.filter(r => Number(r.saldo) <= 0).length},
+        ];
+        const heading = el("div",undefined,"stock-health-total"), track = el("div",undefined,"stock-health-track"), list = el("div");
+        heading.append(el("b",stocks.length),el("span",stocks.length === 1 ? "material acompanhado" : "materiais acompanhados"));
+        track.setAttribute("aria-hidden","true");
+        health.forEach(g => {
+          if (g.n) { const segment = el("span");segment.style.width = (g.n / stocks.length * 100) + "%";segment.style.setProperty("--segment",g.color);track.append(segment); }
+          const line = el("div",undefined,"stock-health-row");line.style.setProperty("--segment",g.color);
+          line.append(el("i",undefined,"legend-dot"),el("span",g.label),el("b",g.n),el("small",percent(g.n,stocks.length)));list.append(line);
+        });
+        $("stockHealthChart").replaceChildren(heading,track,list,el("p",stocks.length ? "Contagem de materiais cadastrados, sem somar unidades diferentes." : "Cadastre materiais por quantidade para acompanhar os estoques.","visual-footnote"));
       }
       function renderMetrics() {
         const individual = rows.filter(
@@ -6996,13 +7065,8 @@
           const b = metricButton(metric);b.append(el("small",metric[4]));return b;
         }));
         renderExecutiveSummary(active,loans,lowStock);
+        renderOverviewCharts();
         $("secondaryStats").replaceChildren(...metrics.slice(2).filter(m => m[0] !== "Arquivados" || m[1] > 0).map(metricButton));
-        chart(
-          "roomChart",
-          ROOMS.map((v) => [v, count("ambiente", v)]),
-          inUse.length,
-          (v) => query({ ambiente: v, situacao: "EM_USO" }),
-        );
         chart(
           "categoryChart",
           CATEGORIES.map((v) => [v, count("categoria", v)]),
@@ -7077,56 +7141,6 @@
             return b;
           }),
         );
-        $("rackMap").replaceChildren(
-          ...[..."ABCDE"].map((s) => {
-            const col = el("div", undefined, "rack");
-            col.append(el("strong", "Estante " + s));
-            for (let l = 1; l <= 6; l++) {
-              const n = active.filter(
-                (r) =>
-                  r.dados.ambiente === "Almoxarifado" &&
-                  r.dados.estante === s &&
-                  String(r.dados.prateleira) === String(l),
-              ).length;
-              const b = button("", () =>
-                query({
-                  ambiente: "Almoxarifado",
-                  estante: s,
-                  prateleira: String(l),
-                  situacao: "ATIVO",
-                }),
-              );
-              b.append(el("span", String(l).padStart(2, "0")), el("b", n));
-              const low = active.some(
-                (r) =>
-                  r.controle === "QUANTIDADE" &&
-                  r.dados.estante === s &&
-                  String(r.dados.prateleira) === String(l) &&
-                  Number(r.saldo) <= Number(r.minimo),
-              );
-              if (low) {
-                b.append(el("span", "!"));
-                b.title = "Material no saldo mínimo nesta posição";
-                b.style.outline = "2px solid #ad7750";
-              }
-              b.style.setProperty("--heat", Math.min(85, n * 12) + "%");
-              b.setAttribute(
-                "aria-label",
-                "Estante " + s + ", prateleira " + l + ": " + n + " itens",
-              );
-              col.append(b);
-            }
-            return col;
-          }),
-        );
-        const missing = active.filter(
-          (r) =>
-            r.dados.ambiente === "Almoxarifado" &&
-            (!r.dados.estante || !r.dados.prateleira),
-        ).length;
-        $("unplaced").textContent = missing
-          ? missing + " registros ativos ainda sem posição definida."
-          : "Todas as posições cadastradas estão representadas.";
         $("stockAlertCount").textContent = lowStock.length +
           (lowStock.length === 1 ? " material" : " materiais");
         const numberBR = (n) => Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 3 });
@@ -7147,51 +7161,6 @@
           return card;
         }) : [el("p",active.some(r => r.controle === "QUANTIDADE") ? "Nenhum material precisa de reposição pelo mínimo definido." : "Os materiais com saldo baixo aparecerão aqui após o cadastro do estoque.","dashboard-empty")]));
         syncDashboardList("stockAlerts", "toggleStockAlerts", 3, "materiais");
-        const done = ROOMS.filter((room) =>
-          checks.some((c) => c.ambiente === room && c.conferido),
-        ).length;
-        $("conferenceSummary").textContent =
-          done + " de 3 ambientes conferidos";
-        $("checks").replaceChildren(
-          ...ROOMS.map((room) => {
-            const c = checks.find((c) => c.ambiente === room) || {},
-              line = el("div", undefined, "checkrow");
-            line.append(
-              el("strong", room),
-              el(
-                "p",
-                c.conferido
-                  ? "Conferido em " +
-                      dateBR(c.momento) +
-                      " · " +
-                      shortEmail(c.email)
-                  : "A conferir",
-                "hint",
-              ),
-            );
-            if (role !== "leitor")
-              line.append(
-                button(
-                  c.conferido ? "Reabrir" : "Marcar conferido",
-                  () => {
-                    if (
-                      confirm(
-                        "Confirmar alteração da conferência de " + room + "?",
-                      )
-                    )
-                      commit({
-                        acao: "conferir",
-                        ambiente: room,
-                        conferido: !c.conferido,
-                      });
-                  },
-                  "",
-                  c.conferido ? "reopen" : "audit",
-                ),
-              );
-            return line;
-          }),
-        );
         $("recent").replaceChildren(
           ...[...rows]
             .sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em))
@@ -7225,7 +7194,7 @@
       // Primeiro acesso: regras no formulário e confirmação pelo servidor.
       const IS_DEMO = document.body.dataset.demo === "true";
       const PASSWORD_SYMBOLS = "!@#$%^&*()_+-=[]{};'\":\\|<>?,./`~";
-      let passwordChanging = false, accessSaving = false;
+      let passwordChanging = false, accessSaving = false, firstAccessSaved = false;
       function passwordRequirements(password) {
         return {
           length: Array.from(password).length >= 8,
@@ -7264,6 +7233,8 @@
       }
       function resetFirstAccess() {
         $("firstAccessForm").reset();
+        firstAccessSaved = false;
+        $("newPassword").disabled = $("confirmPassword").disabled = false;
         $("login").classList.remove("first-access-active");
         resetPasswordVisibility();
         $("firstAccess").hidden = true;
@@ -7359,24 +7330,37 @@
         labelButton($("saveFirstPassword"), "Salvando…", "clock");
         const owner = user?.id;
         try {
-          await accessService({ acao: "trocar_senha", senha: password });
+          if (!firstAccessSaved) {
+            await accessService({ acao: "trocar_senha", senha: password });
+            firstAccessSaved = true;
+            $("newPassword").disabled = $("confirmPassword").disabled = true;
+          }
           if (user?.id !== owner) return;
+          toast("Senha salva. Entrando no Acervo…");
           let session;
           if (IS_DEMO) session = { user };
           else {
-            const { data, error } = await db.auth.refreshSession();
-            if (error || !data.session) throw Error("Senha salva. Entre novamente com a nova senha.");
+            // A alteração pelo administrador pode revogar o refresh token anterior.
+            // A própria senha recém-salva cria uma sessão nova sem outro formulário.
+            const { data, error } = await db.auth.signInWithPassword({
+              email: user.email,
+              password,
+            });
+            if (error || !data?.session)
+              throw Error("Sua senha foi salva, mas a conexão não permitiu entrar automaticamente. Tente entrar novamente.");
             session = data.session;
+            if (session.user?.id !== owner) throw Error("Não foi possível confirmar a conta após salvar a senha.");
           }
+          if (user?.id !== owner) return;
           resetFirstAccess();
           await loginReady(session);
-          toast("Sua senha foi atualizada.");
+          if (!$("app").hidden) toast("Senha salva. Bem-vindo ao Acervo!");
         } catch (error) {
           $("firstAccessMessage").textContent = error.message;
         } finally {
           passwordChanging = false;
           $("leaveFirstAccess").disabled = false;
-          labelButton($("saveFirstPassword"), "Salvar senha e continuar", "lock");
+          labelButton($("saveFirstPassword"), firstAccessSaved ? "Entrar no Acervo" : "Salvar senha e continuar", "lock");
           updatePasswordRules();
         }
       };
@@ -7474,13 +7458,26 @@
         $("peoplePrevious").disabled = peoplePage <= 1;
         $("peopleNext").disabled = peoplePage >= pages;
       }
+      function showPeopleLoading() {
+        const loading = el("div",undefined,"people-loading"), status = el("p",undefined,"people-loading-status"), spinner = el("span",undefined,"people-spinner");
+        spinner.setAttribute("aria-hidden","true");status.setAttribute("role","status");
+        status.append(spinner,el("span","Carregando pessoas…"));loading.append(status);
+        for (let i = 0; i < 3; i++) {
+          const row = el("div",undefined,"people-skeleton"), copy = el("div",undefined,"people-skeleton-copy");
+          row.setAttribute("aria-hidden","true");
+          copy.append(el("span",undefined,"people-skeleton-line"),el("span",undefined,"people-skeleton-line"));
+          row.append(el("span",undefined,"people-skeleton-avatar"),copy);loading.append(row);
+        }
+        $("peopleCount").textContent = "";
+        $("peopleList").replaceChildren(loading);
+      }
       async function loadPeople(page = peoplePage) {
         if (role !== "admin" || !$('userAccessDialog').open) return;
         clearTimeout(peopleSearchTimer);
         const request = ++peopleRequest, owner = user?.id;
         $("newUserMessage").textContent = "";
         $("peopleList").setAttribute("aria-busy", "true");
-        $("peopleList").replaceChildren(el("p", "Carregando pessoas…", "people-empty"));
+        showPeopleLoading();
         $("peoplePagination").hidden = true;
         try {
           const result = await accessService({ acao: "listar_usuarios", busca: $("peopleSearch").value.trim(), pagina: page });
@@ -7882,7 +7879,7 @@
         $("toast").hidden = true;
         if ($("userAccessDialog").open) $("userAccessDialog").close();
         resetPeopleManagement(); demoPeople = null;
-        $("inventoryDetails").open = $("warehouseDetails").open = false;
+        $("inventoryDetails").open = false;
         for (const id of ["stockAlerts", "movementTimeline"]) $(id).classList.remove("expanded");
         $("toggleStockAlerts").hidden = $("toggleMovementTimeline").hidden = true;
         $("newUserForm").reset();

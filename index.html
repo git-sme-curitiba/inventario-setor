@@ -5,7 +5,7 @@
     <meta name="referrer" content="no-referrer" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-3GPZa8YjPRCBHGXGkj9RNtDxcdakE/wwSLSCV+pg2YA=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
+      content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'none'; script-src  'sha256-K8EpOo0EvgVpl4Sw40SQyvIcZoE9OuGhOCdj9WaitBU=' 'self'  https://cdn.jsdelivr.net blob: 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; connect-src 'self' https://yipfkwxhpahpuiizkcny.supabase.co wss://yipfkwxhpahpuiizkcny.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; manifest-src 'self'"
     />
     <meta
       name="viewport"
@@ -4031,6 +4031,73 @@
       @keyframes people-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
       @media (prefers-reduced-motion: reduce) { .people-spinner, .people-skeleton-avatar, .people-skeleton-line { animation: none; } }
       #register #identityBlock:has(#codeWrap[hidden]) #types, #editIdentityGroup:has(#editCodeWrap[hidden]) #editTypes { margin-bottom: 12px; }
+
+      /* ACERVO 3.5.25 · Livros, estantes e fichas como assinatura. */
+      .acervo-books { display: block; width: 68px; height: 50px; flex: 0 0 auto; color: var(--blue-strong); overflow: visible; }
+      .acervo-books .acervo-book { transform-box: fill-box; transform-origin: center bottom; animation: acervo-books-rise 1.25s cubic-bezier(.45,0,.35,1) infinite; }
+      .acervo-books .acervo-book:nth-child(2) { animation-delay: -.85s; }
+      .acervo-books .acervo-book:nth-child(3) { animation-delay: -.45s; }
+      .acervo-books.is-settled .acervo-book { animation: none; }
+      .acervo-loader { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 82px; padding: 15px; color: var(--blue-deep); font-size: 12px; line-height: 1.5; }
+      .acervo-loader > span { max-width: 270px; }
+      .acervo-loader.compact { justify-content: flex-start; min-height: 54px; padding: 8px 0; font-size: 11px; gap: 10px; }
+      .acervo-loader.compact .acervo-books { width: 43px; height: 34px; }
+      button.has-books-loader .acervo-books { width: 28px; height: 23px; color: currentColor; }
+      button.has-books-loader { cursor: progress; }
+      #loginButton.loading::before { display: none; }
+      #acervoOpening { margin: 18px 0; border: 1px solid #a4c6e1; border-radius: 14px; background: linear-gradient(115deg,#f8fcff,#eaf4fc); }
+      #acervoOpening .acervo-loader { justify-content: flex-start; }
+      #acervoOpening strong { display: block; color: var(--blue-deep); font-size: 14px; }
+      #refresh.is-syncing > .icon { display: none; }
+      #refresh.is-syncing > .acervo-books { width: 27px; height: 23px; }
+      #refresh.is-syncing { cursor: progress; }
+      #register input[data-acervo-filled="true"]:not([readonly]), #register textarea[data-acervo-filled="true"],
+      #editFields input[data-acervo-filled="true"]:not([readonly]), #editFields textarea[data-acervo-filled="true"],
+      #userAccessDialog input[data-acervo-filled="true"]:not([type="radio"]) { border-color: #82b4da; background-color: #fbfdff; box-shadow: inset 3px 0 0 #2186ca38; }
+      #register input:focus, #register textarea:focus, #editFields input:focus, #editFields textarea:focus { box-shadow: 0 0 0 3px #1385d41f,inset 3px 0 0 #1385d45c; }
+      #itemForm.quantity-layout #code { box-shadow: none; }
+      .summary-facts dd.location-ticket { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 5px; padding: 4px 8px; border: 1px solid #a5c6df; border-radius: 6px; color: var(--blue-deep); background: #f8fcff; font-size: 11px; }
+      .location-ticket > .icon { width: 13px; height: 13px; flex-basis: 13px; }
+      .location-ticket > small { flex-basis: 100%; }
+      #saved { padding: 0; overflow: hidden; border: 1px solid #8ab8db; border-radius: 13px; background: #f8fcff; }
+      .acervo-receipt { display: flex; align-items: center; gap: 14px; padding: 16px; }
+      .receipt-place { position: relative; flex: 0 0 58px; height: 64px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px; }
+      .receipt-place::after { content: ''; position: absolute; bottom: 2px; left: 0; right: 0; height: 3px; border-radius: 3px; background: linear-gradient(90deg,#3e99d5,#0d62b2); box-shadow: 0 3px 0 #0e6eb512; }
+      .receipt-card { width: 43px; height: 54px; border: 1px solid #277fbf; border-radius: 6px 6px 3px 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(140deg,#fff,#ddecfa); color: #0968b3; box-shadow: 0 3px 9px #1b659b24; animation: acervo-file-away .65s cubic-bezier(.2,.8,.2,1) both; }
+      .receipt-card > .icon { width: 23px; height: 23px; }
+      .receipt-card > i { width: 20px; height: 2px; border-radius: 2px; background: #8bb8da; }
+      .receipt-copy { min-width: 0; flex: 1; }
+      .receipt-copy > strong { display: block; font-size: 14px; color: var(--blue-deep); }
+      .receipt-copy > p { margin: 4px 0 0; font-size: 12px; overflow-wrap: anywhere; }
+      .receipt-copy > small { display: block; margin-top: 5px; font-size: 11px; color: var(--muted); }
+      #saved > button { margin: 0 16px 14px; min-height: 34px; font-size: 11px; }
+      #saved.is-discarded { border-color: #d4a3af; background: #fff8fa; }
+      #saved.is-discarded .receipt-card { animation: none; color: #ab2948; border-color: #c48b9a; background: #fff0f4; }
+      #saved.is-discarded .receipt-place::after { background: #b24b65; }
+      .toast { display: flex; align-items: center; gap: 11px; text-align: left; }
+      .toast > .acervo-books { width: 33px; height: 27px; color: currentColor; }
+      .toast > .icon { width: 23px; height: 23px; flex: 0 0 23px; }
+      .toast > span { min-width: 0; }
+      .acervo-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px; text-align: center; }
+      .acervo-empty > .acervo-books { width: 48px; height: 38px; color: #4d91c5; margin-bottom: 3px; }
+      .acervo-empty strong { color: var(--blue-deep); font-size: 12px; }
+      .acervo-empty p { max-width: 330px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+      .people-loading-status { display: flex; align-items: center; justify-content: center; gap: 13px; padding: 4px 0 8px; }
+      .people-loading-status .acervo-books { width: 61px; height: 46px; }
+      .people-skeleton-avatar { border-radius: 8px 8px 3px 3px; box-shadow: inset 0 -3px 0 #96bedb66; }
+      .primary, #discardRegistration, #editFields > .actions > button { transition: transform .18s ease,box-shadow .18s ease,border-color .18s ease; }
+      .primary .icon, #discardRegistration .icon, #editFields > .actions > button .icon { transition: transform .18s ease; }
+      @media (hover: hover) {
+        .primary:hover:not(:disabled) { box-shadow: 0 8px 17px -10px #044782ad,inset 0 1px 0 #ffffff70; transform: translateY(-1px); }
+        .primary:hover:not(:disabled) > .icon { transform: translateY(-1px); }
+        #discardRegistration:hover:not(:disabled), #editFields > .actions > button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 12px -9px #164d8066; }
+      }
+      .primary:active:not(:disabled), #discardRegistration:active:not(:disabled), #editFields > .actions > button:active:not(:disabled) { transform: translateY(1px); box-shadow: inset 0 2px 5px #05365c24; }
+      @keyframes acervo-books-rise { 0%,100% { transform: translateY(0) scaleY(.85); } 45% { transform: translateY(-5px) scaleY(1.1); } 70% { transform: translateY(-1px) scaleY(.95); } }
+      @keyframes acervo-file-away { 0% { opacity: 0; transform: translateY(-18px) rotate(-7deg); } 65% { opacity: 1; transform: translateY(1px) rotate(2deg); } 100% { opacity: 1; transform: translateY(0) rotate(0); } }
+      @media (max-width: 640px) { .acervo-receipt { padding: 13px; gap: 10px; } .receipt-copy > strong { font-size: 13px; } .receipt-copy > p { font-size: 11px; } .toast { gap: 8px; } .acervo-loader { padding: 12px; gap: 10px; } }
+      @media (prefers-reduced-motion: reduce) { .acervo-books .acervo-book, .receipt-card { animation: none; } .primary:hover:not(:disabled), #discardRegistration:hover:not(:disabled), #editFields > .actions > button:hover:not(:disabled), .primary:hover:not(:disabled) > .icon { transform: none; } }
+      button.has-books-loader:disabled, #refresh.is-syncing:disabled { opacity: 1; }
     </style>
   </head>
   <body class="auth-screen">
@@ -4559,7 +4626,7 @@
             </div>
             <div id="moveResults" class="spaced" aria-live="polite"></div>
             <div id="moveMissing" class="notice" hidden>
-              <strong>Nenhum item encontrado.</strong><span>Confira o nome ou o código.</span>
+              <strong>Ainda não encontramos por aqui.</strong><span>Tente outro nome ou confira o código.</span>
               <button id="createDown" type="button">Cadastrar para descarte</button>
             </div>
           </div>
@@ -5204,9 +5271,58 @@
         n.append(u);
         return n;
       }
+      function acervoBooks(settled = false) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+        svg.setAttribute("class","acervo-books" + (settled ? " is-settled" : ""));
+        svg.setAttribute("viewBox","0 0 72 54");svg.setAttribute("aria-hidden","true");
+        svg.innerHTML = '<g fill="currentColor" fill-opacity=".09" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><g class="acervo-book"><rect x="10" y="23" width="13" height="24" rx="2.8"/><path d="M14 29h5M14 33h5"/></g><g class="acervo-book"><rect x="29" y="13" width="13" height="34" rx="2.8"/><path d="M33 19h5M33 23h5M33 27h5"/></g><g class="acervo-book"><rect x="48" y="18" width="13" height="29" rx="2.8"/><path d="M52 24h5M52 28h5"/></g><path d="M7 50h57" fill="none"/></g>';
+        return svg;
+      }
+      function acervoLoader(message, compact = false) {
+        const loader = el("div",undefined,"acervo-loader" + (compact ? " compact" : ""));
+        loader.setAttribute("role","status");loader.append(acervoBooks(),el("span",message));return loader;
+      }
+      function acervoEmpty(title, description) {
+        const state = el("div",undefined,"acervo-empty");
+        state.append(acervoBooks(true),el("strong",title),el("p",description));return state;
+      }
+      function syncFieldIdentity(root = document) {
+        root.querySelectorAll('#register input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]), #register textarea, #editFields input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]), #editFields textarea, #userAccessDialog input:not([type="radio"]):not([type="hidden"])').forEach(n => {
+          n.dataset.acervoFilled = String(!!String(n.value).trim());
+        });
+      }
+      let acervoSyncGeneration = 0;
+      function setAcervoSync(active, message = "Vamos ver o que mudou por aqui.", opening = false, token = null) {
+        if (!active && token !== null && token !== acervoSyncGeneration) return;
+        const generation = ++acervoSyncGeneration;
+        const b = $("refresh");b.classList.toggle("is-syncing",active);
+        b.setAttribute("aria-busy",String(active));b.disabled = active || busy;
+        b.querySelector(":scope > .acervo-books")?.remove();
+        if (active) b.prepend(acervoBooks());
+        $("acervoOpening").hidden = !active;
+        if (active) {
+          const loader = acervoLoader(message);
+          if (opening) { const text = loader.lastElementChild;const title = el("strong","Seu acervo está chegando.");text.prepend(title); }
+          $("acervoOpening").replaceChildren(loader);
+        } else $("acervoOpening").replaceChildren();
+        return generation;
+      }
+      function showAcervoReceipt(record, template) {
+        const discarded = record.situacao === "BAIXADO", saved = $("saved");
+        const row = el("div",undefined,"acervo-receipt"), place = el("div",undefined,"receipt-place"), card = el("div",undefined,"receipt-card"), copy = el("div",undefined,"receipt-copy");
+        place.setAttribute("aria-hidden","true");card.append(icon(discarded ? "discard" : "record-add"),el("i"));place.append(card);
+        copy.append(el("strong",discarded ? "Descarte registrado." : "Pronto. Mais um bem no seu lugar."),el("p",internal(record.id) + " · " + record.dados.item),el("small",[record.dados.ambiente,locationText(record)].filter(Boolean).join(" · ")));
+        row.append(place,copy);saved.classList.toggle("is-discarded",discarded);
+        saved.replaceChildren(row,button("Cadastrar outro igual",()=>repeatRegistration(template),"","copy"));
+        saved.hidden = false;
+      }
       function labelButton(n, text, name) {
         n.replaceChildren();
-        if (name) n.append(icon(name));
+        const loading = /[…]|\.\.\.$/.test(text) && ["clock","lock"].includes(name);
+        n.classList.toggle("has-books-loader",loading);
+        n.setAttribute("aria-busy",String(loading));
+        if (loading) n.append(acervoBooks());
+        else if (name) n.append(icon(name));
         n.append(document.createTextNode(text));
       }
       function setHelpHint(n, text, name) {
@@ -5223,7 +5339,7 @@
         return n;
       }
       function toast(text, error = false) {
-        $("toast").textContent = text;
+        $("toast").replaceChildren(error ? icon("warning") : acervoBooks(true),el("span",text));
         $("toast").className = "toast" + (error ? " error" : "");
         $("toast").hidden = false;
         clearTimeout(toastTimer);
@@ -5322,7 +5438,7 @@
         });
         updateNavIndicator();
       }
-      function setBusy(v) {
+      function setBusy(v, message = "Salvando…") {
         busy = v;
         $("fields").disabled = v || role === "leitor" || !!pending;
         document
@@ -5336,7 +5452,7 @@
         $("manageAccess").disabled = v;
         $("pendingBox").hidden = !pending;
         $("retry").disabled = v;
-        labelButton($("save"), v ? "Salvando…" : "Cadastrar", v ? "clock" : "save");
+        labelButton($("save"), v ? message : "Cadastrar", v ? "clock" : "save");
         $("discardRegistration").disabled = v || role === "leitor" || !!pending;
         $("directReason").disabled = v;
         $("previous").disabled = v || page <= 1;
@@ -5706,6 +5822,7 @@
         syncLocation();
         syncControl();
         updateRegistrationSummary();
+        syncFieldIdentity();
       }
       function winner(list, field) {
         const count = new Map();
@@ -5841,6 +5958,7 @@
         function fact(label, text, detail) {
           const wrap = el("div");
           const val = el("dd", text);
+          if (label === "Localização") { val.classList.add("location-ticket");val.prepend(icon("pin")); }
           if (detail) val.append(el("small", detail));
           wrap.append(el("dt", label), val);
           facts.append(wrap);
@@ -5979,10 +6097,16 @@
         );
       }
       // Atualização automática usa as mesmas RPCs autorizadas do sistema.
-      async function refresh() {
+      async function refresh(visual = false) {
         if (!user || mustChangePassword(user)) return;
-        if (refreshTask) return refreshTask;
+        if (refreshTask) {
+          if (!visual) return refreshTask;
+          const owner = user.id, token = setAcervoSync(true,"Vamos ver o que mudou por aqui.");
+          try { return await refreshTask; }
+          finally { if (!user || user.id === owner) setAcervoSync(false,undefined,false,token); }
+        }
         const owner = user?.id;
+        const visualToken = visual ? setAcervoSync(true,lastSuccess ? "Vamos ver o que mudou por aqui." : "Só um instante. Estamos colocando tudo no lugar.",!lastSuccess) : null;
         refreshTask = (async () => {
           try {
             const data = await rpc("acervo_ler_v3");
@@ -6032,7 +6156,10 @@
               : "Não foi possível atualizar";
             throw e;
           }
-        })().finally(() => (refreshTask = null));
+        })().finally(() => {
+          refreshTask = null;
+          if (visual && (!user || user.id === owner)) setAcervoSync(false,undefined,false,visualToken);
+        });
         return refreshTask;
       }
       function updateRoomCounts() {
@@ -6282,7 +6409,8 @@
         }
         if (!found.length) {
           const tr = el("tr"),
-            td = el("td", "Nenhum registro encontrado.", "empty");
+            td = el("td", undefined, "empty");
+          td.append(acervoEmpty("Ainda não encontramos por aqui.","Vamos tentar outro nome ou ajustar os filtros?"));
           td.colSpan = 7;
           tr.append(td);
           $("results").append(tr);
@@ -6381,7 +6509,7 @@
         panel.append(actions);
         const history = el("div", undefined, "history");
         history.append(el("h3", "Histórico"));
-        const content = el("div", "Carregando…", "muted");
+        const content = el("div");content.append(acervoLoader("Puxando a ficha desta história…",true));
         history.append(content);
         panel.append(history);
         loadHistory(r.id, content);
@@ -6606,6 +6734,7 @@
             return;
           saveRecord("edit");
         };
+        syncFieldIdentity();
         editBaseline = JSON.stringify(formData("edit"));
         $("editDialog").showModal();
         $(innerWidth <= 640 ? "editDialogClose" : "editItem").focus();
@@ -6714,19 +6843,7 @@
           ) {
             const template = { ...op.body.dados };
             resetForm();
-            $("saved").replaceChildren(
-              el(
-                "p",
-                internal(result.id) + " · " + result.dados.item + " salvo.",
-              ),
-              button(
-                "Cadastrar outro igual",
-                () => repeatRegistration(template),
-                "",
-                "copy",
-              ),
-            );
-            $("saved").hidden = false;
+            showAcervoReceipt(result,template);
             storage("draft", {
               dados: formData(),
               editing: null,
@@ -6742,7 +6859,7 @@
           $("save").classList.remove("saved-flash");
           requestAnimationFrame(() => $("save").classList.add("saved-flash"));
           setTimeout(() => $("save").classList.remove("saved-flash"), 700);
-          toast("Operação salva.");
+          toast(op.origin === "create" && result.situacao !== "BAIXADO" ? "Pronto. Mais um bem no seu lugar." : "Operação salva.");
           try {
             await refresh();
           } catch {
@@ -6798,7 +6915,7 @@
           )
           .slice(0, 12);
         $("toggleMovementTimeline").hidden = true;
-        $("movementTimeline").textContent = "Carregando movimentações…";
+        $("movementTimeline").replaceChildren(acervoLoader("Cada movimento tem uma história. Vamos buscar a sua.",true));
         try {
           const histories = await Promise.all(
             candidates.map(async (r) => {
@@ -6852,7 +6969,7 @@
           syncDashboardList("movementTimeline", "toggleMovementTimeline", 4, "movimentações");
           if (!events.length)
             $("movementTimeline").textContent =
-              "As movimentações aparecerão aqui.";
+              "Cada movimento tem uma história. A primeira vai aparecer aqui.";
         } catch {
           if (generation === timelineGeneration)
             $("movementTimeline").replaceChildren(
@@ -7450,7 +7567,7 @@
           remove.onclick = () => confirmPersonRemoval(person);
           actions.append(profile, remove); row.append(avatar, info, actions); return row;
         });
-        $("peopleList").replaceChildren(...(nodes.length ? nodes : [el("p", "Nenhuma pessoa encontrada.", "people-empty")]));
+        $("peopleList").replaceChildren(...(nodes.length ? nodes : [acervoEmpty("Ainda não encontramos por aqui.","Tente outro nome ou e-mail. Para um novo acesso, use Adicionar pessoa.")]));
         $("peopleCount").textContent = peopleTotal + (peopleTotal === 1 ? " pessoa" : " pessoas");
         const pages = Math.max(1, Math.ceil(peopleTotal / peopleLimit));
         $("peoplePagination").hidden = pages <= 1;
@@ -7459,9 +7576,9 @@
         $("peopleNext").disabled = peoplePage >= pages;
       }
       function showPeopleLoading() {
-        const loading = el("div",undefined,"people-loading"), status = el("p",undefined,"people-loading-status"), spinner = el("span",undefined,"people-spinner");
+        const loading = el("div",undefined,"people-loading"), status = el("p",undefined,"people-loading-status"), spinner = acervoBooks();
         spinner.setAttribute("aria-hidden","true");status.setAttribute("role","status");
-        status.append(spinner,el("span","Carregando pessoas…"));loading.append(status);
+        status.append(spinner,el("span","Quem cuida do acervo está chegando."));loading.append(status);
         for (let i = 0; i < 3; i++) {
           const row = el("div",undefined,"people-skeleton"), copy = el("div",undefined,"people-skeleton-copy");
           row.setAttribute("aria-hidden","true");
@@ -7606,8 +7723,9 @@
         $("app").hidden = false;
         $("logout").hidden = false;
         try {
-          await refresh();
+          await refresh(true);
           restoreDraft();
+          syncFieldIdentity();
           setBusy(false);
           if (role === "leitor") showTab("browse");
           startPolling();
@@ -7835,7 +7953,7 @@
       $("refresh").onclick = async () => {
         if (busy) return;
         try {
-          await refresh();
+          await refresh(true);
           toast("Dados atualizados.");
         } catch (e) {
           toast(e.message, true);
@@ -7880,6 +7998,7 @@
         if ($("userAccessDialog").open) $("userAccessDialog").close();
         resetPeopleManagement(); demoPeople = null;
         $("inventoryDetails").open = false;
+        setAcervoSync(false);
         for (const id of ["stockAlerts", "movementTimeline"]) $(id).classList.remove("expanded");
         $("toggleStockAlerts").hidden = $("toggleMovementTimeline").hidden = true;
         $("newUserForm").reset();
@@ -7995,7 +8114,8 @@
       }
       async function exportExcel(all) {
         if (busy) return;
-        setBusy(true);
+        setBusy(true,"Aguarde…");
+        const exportVisual = setAcervoSync(true,"Montando seu acervo em planilha…");
         try {
           await refresh();
           if (!window.ExcelJS)
@@ -8516,6 +8636,7 @@
         } catch (e) {
           toast(e.message, true);
         } finally {
+          setAcervoSync(false,undefined,false,exportVisual);
           setBusy(false);
         }
       }
@@ -9103,6 +9224,11 @@
 
       // Camada visual: dicas, entrada da marca e respostas ao toque.
       function initVisualExperience() {
+        const opening = el("div");opening.id = "acervoOpening";opening.hidden = true;
+        $("app").querySelector(".nav").after(opening);
+        document.addEventListener("input",event => { if (event.target.matches("input,textarea")) syncFieldIdentity(); });
+        document.addEventListener("change",() => syncFieldIdentity());
+        syncFieldIdentity();
         const reduced = matchMedia("(prefers-reduced-motion: reduce)");
         const tip = $("contextTip");
         let activeHelp = null;

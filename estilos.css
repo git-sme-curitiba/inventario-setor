@@ -9064,17 +9064,160 @@ dialog:not(#camera), #camera {
   max-height: calc(var(--app-visible-height, 100dvh) - 24px - var(--app-safe-top) - var(--app-safe-bottom));
   overflow: auto;
 }
-
-body {
-  position: relative;
-  isolation: isolate;
-  --app-background: radial-gradient(ellipse at 90% 6%, #75b9ed4d, transparent 48%), radial-gradient(ellipse at 4% 65%, #9ac5e847, transparent 46%), linear-gradient(140deg, #e8f1fa, #d4e4f3 54%, #e7f0f9);
-}
-body.auth-screen {
-  --app-background: radial-gradient(ellipse at 78% 12%, #65c1ff45, transparent 55%), radial-gradient(ellipse at 5% 88%, #219ce03d, transparent 52%), linear-gradient(135deg, #0d61b0, #1580d1 52%, #0b64b5);
-}
-body.auth-screen, body:not(.auth-screen) { background: transparent; }
-body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: var(--app-background); pointer-events: none; }
 #loginForm .remember-session { display: flex; align-items: center; gap: 9px; margin: 16px 0 0; font-size: 12px; line-height: 1.45; font-weight: 500; color: #466583; cursor: pointer; }
 #loginForm .remember-session input { width: 18px; height: 18px; min-height: 18px; margin: 0; padding: 0; flex: 0 0 18px; accent-color: #0873c4; border-radius: 5px; }
 #loginForm .remember-session input:focus-visible { outline: 2px solid #0873c4; outline-offset: 3px; }
+
+:root {
+  --app-login-background: radial-gradient(ellipse at 78% 12%, #65c1ff45, transparent 55%), radial-gradient(ellipse at 5% 88%, #219ce03d, transparent 52%), linear-gradient(135deg, #0d61b0, #1580d1 52%, #0b64b5);
+  --app-content-background: radial-gradient(ellipse at 90% 6%, #75b9ed4d, transparent 48%), radial-gradient(ellipse at 4% 65%, #9ac5e847, transparent 46%), linear-gradient(140deg, #e8f1fa, #d4e4f3 54%, #e7f0f9);
+}
+html { background-color: #e8f1fa; background-image: var(--app-content-background); background-size: 100vw 100lvh; background-attachment: fixed; }
+html.auth-viewport { background-color: #0d61b0; background-image: var(--app-login-background); }
+body:not(.auth-screen) { background-color: #e8f1fa; background-image: var(--app-content-background); }
+body.auth-screen { background-color: #0d61b0; background-image: var(--app-login-background); background-size: 100vw 100lvh; background-attachment: fixed; }
+body::before { content: none; }
+.brand-intro:not(.departing) { background: var(--app-login-background); }
+@media(max-width: 640px) {
+  :root {
+    --app-login-background: linear-gradient(180deg, #0d61b0 0px, #0d61b0 90px, #0d61b000 260px), radial-gradient(ellipse at 78% 30%, #65c1ff45, transparent 55%), radial-gradient(ellipse at 5% 88%, #219ce03d, transparent 52%), linear-gradient(135deg, #0d61b0, #1580d1 52%, #0b64b5);
+    --app-content-background: linear-gradient(180deg, #e8f1fa 0px, #e8f1fa 60px, #e8f1fa00 190px), radial-gradient(ellipse at 90% 6%, #75b9ed4d, transparent 48%), linear-gradient(140deg, #e8f1fa, #d4e4f3 54%, #e7f0f9);
+  }
+  body .shell { padding-left: max(12px,var(--app-safe-left)); padding-right: max(12px,var(--app-safe-right)); padding-top: calc(12px + var(--app-safe-top)); }
+  .shell > header.bar { gap: 10px; margin-bottom: 10px; }
+  .shell > header .brand { gap: 8px; }
+  .shell > header .brand .acervo-mark { width: 38px; height: 38px; }
+  .shell > header .brand b { font-size: 25px; }
+  .header-meta .account-toolbar { gap: 7px; padding: 0; }
+  .header-meta .header-person { gap: 7px; }
+  .header-meta .toolbar-actions { margin: 0; padding: 2px; border-radius: 11px; }
+  .header-meta #manageAccess, .header-meta #refresh, .header-meta #logout { padding: 6px; min-height: 44px; font-size: 11px; }
+  #app > .nav { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 3px; padding: 4px; margin-bottom: 14px; border-radius: 14px; }
+  #app > .nav button { min-width: 0; min-height: 54px; padding: 7px 3px; gap: 5px; flex-direction: column; font-size: 10px; line-height: 1.2; white-space: normal; border-radius: 10px; }
+  #app > .nav button .icon { width: 18px; height: 18px; flex-basis: 18px; }
+  #register > .workspace > .card, #browse > .card { padding: 14px; border-radius: 17px; }
+  #registrationHeader { gap: 10px; margin-bottom: 12px; }
+  #registrationHeader .workspace-title, #browse .workspace-title { font-size: 22px; line-height: 1.2; gap: 8px; }
+  #registrationHeader .title-mark, #browse .title-mark { width: 34px; height: 34px; flex-basis: 34px; border-radius: 11px; }
+  #registrationRooms { width: 100%; }
+  #registrationRooms #rooms { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  #registrationRooms #rooms .choice span { padding: 7px 4px; min-height: 58px; gap: 4px; font-size: 10px; line-height: 1.25; }
+  #registrationRooms #rooms .choice .icon { width: 15px; height: 15px; flex-basis: 15px; }
+  #registrationRooms #rooms .choice small { font-size: 10px; }
+  #registrationBody { gap: 12px; }
+  #location { padding: 11px; margin: 0 0 12px; border-radius: 12px; }
+  #location fieldset { margin: 0; }
+  #location fieldset + fieldset { margin-top: 10px; }
+  #location legend { font-size: 11px; margin-bottom: 7px; }
+  #shelves { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 5px; }
+  #levels { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+  #location .choice span { min-height: 44px; padding: 8px 5px; font-size: 12px; }
+  #location .position { margin-top: 10px; padding-top: 8px; font-size: 11px; }
+  #registrationMain, #formRest { gap: 11px; }
+  #registrationItem, #registrationCategory, #register #identityBlock, #register #controlHost { padding: 11px; margin-top: 0; border-radius: 12px; }
+  #registrationItem > label, #registrationCategory > legend { font-size: 12px; margin-bottom: 9px; }
+  #registrationItem input { min-height: 44px; padding: 10px; font-size: 16px; }
+  #learningHint { font-size: 10px; margin: 7px 0 0; }
+  #registrationCategory #categories, #register #types { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+  #registrationCategory #categories .choice span, #register #types .choice span { min-height: 56px; padding: 7px 4px; gap: 5px; font-size: 10px; line-height: 1.25; }
+  #registrationCategory .choice .icon, #register #types .choice .icon { width: 17px; height: 17px; flex-basis: 17px; }
+  #register .registration-group-heading { padding: 9px 11px; margin: -11px -11px 10px; gap: 8px; border-radius: 11px 11px 0 0; }
+  #register .registration-group-heading strong { font-size: 13px; }
+  #register .registration-group-heading small { font-size: 10px; line-height: 1.3; }
+  #register #controlHost .choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+  #register #controlHost .choices .choice span { min-height: 44px; padding: 7px 5px; flex-direction: row; gap: 5px; font-size: 11px; }
+  #register #stockFields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  #register #stockFields label { font-size: 11px; line-height: 1.3; margin-bottom: 6px; }
+  #register #stockFields input { min-height: 44px; font-size: 16px; padding: 9px; }
+  #itemForm.quantity-layout #identityBlock { padding: 0; margin-top: 8px; }
+  #itemForm.quantity-layout #codeWrap { flex-wrap: wrap; }
+  #register #notesBlock { margin-top: 12px; padding: 0; }
+  #register #notesBlock label { font-size: 12px; margin-bottom: 6px; }
+  #register #note { min-height: 74px; font-size: 16px; padding: 10px; }
+  #registrationSave { padding-top: 12px; margin-top: 12px; }
+  #registrationSummary { padding: 10px; font-size: 11px; }
+  #registrationSave .registration-actions { gap: 8px; margin-top: 10px; }
+  #registrationSave .registration-actions > button { min-height: 46px; padding: 9px; font-size: 12px; }
+  #browse > .card > .bar:first-child { gap: 10px; margin-bottom: 12px; }
+  #browse .query-tools { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: 100%; gap: 7px; }
+  #browse .query-tools button, #browse .export-menu summary { min-height: 44px; padding: 8px; font-size: 11px; justify-content: center; }
+  #browse .export-menu { min-width: 0; }
+  #browse .export-options { right: 0; max-width: min(280px,calc(100vw - 52px)); }
+  #browse .toolbar { gap: 6px; margin: 10px 0; }
+  #browse .toolbar input { min-height: 44px; font-size: 16px; padding: 10px; }
+  #browse .toolbar button, #quickRooms button { min-height: 44px; font-size: 11px; padding: 7px; }
+  #quickRooms { gap: 6px; }
+  #browse .record-row { position: relative; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px 12px; padding: 12px; margin-bottom: 9px; border-radius: 13px; background: linear-gradient(135deg,#ffffff,#f1f6fc); }
+  #browse .record-row > td:first-child { grid-column: 1/-1; grid-row: 1; padding-right: 83px; font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+  #browse .record-row > td:first-child .hint { font-size: 10px; margin-top: 4px; line-height: 1.35; }
+  #browse .record-row > td:nth-child(4) { position: absolute; top: 12px; right: 12px; width: auto; max-width: 82px; font-size: 9px; }
+  #browse .record-row .badge { font-size: 9px; padding: 4px 6px; white-space: normal; }
+  #browse .record-row > td:nth-child(2) { grid-column: 1; grid-row: 2; font-size: 11px; line-height: 1.4; }
+  #browse .record-row > td:nth-child(3) { grid-column: 2; grid-row: 2; font-size: 11px; line-height: 1.4; }
+  #browse .record-row > td:nth-child(5) { grid-column: 1/-1; grid-row: 3; font-size: 11px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  #browse .record-row > td:nth-child(6) { grid-column: 1; grid-row: 4; font-size: 10px; line-height: 1.45; align-self: center; }
+  #browse .record-row > td:nth-child(6)::before { content: none; }
+  #browse .record-row > td:last-child { grid-column: 2; grid-row: 4; border: 0; padding-top: 0; align-self: center; }
+  #browse .record-row > td:last-child button { min-height: 44px; width: 100%; padding: 7px 8px; font-size: 11px; }
+  #browse .record-row > td:nth-child(2)::before, #browse .record-row > td:nth-child(3)::before, #browse .record-row > td:nth-child(5)::before { font-size: 8px; letter-spacing: .4px; margin-bottom: 3px; }
+  #browse .detail-panel { padding: 13px; border-radius: 13px; margin-top: -4px; }
+  #browse .detail-panel dl { grid-template-columns: 90px minmax(0,1fr); gap: 8px 10px; font-size: 11px; }
+  #browse .detail-panel dd { margin: 0; }
+  #browse .detail-panel .actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #browse .detail-panel .actions > button { min-height: 44px; padding: 8px; font-size: 11px; white-space: normal; }
+  #browse .pager { gap: 8px; }
+  #browse .pager button { min-height: 44px; padding: 8px; font-size: 11px; }
+  .institution-footer { padding-top: 15px; margin-top: 22px; font-size: 11px; }
+}
+@media(max-width:360px) {
+  #app > .nav button { font-size: 9px; }
+  #registrationHeader .workspace-title, #browse .workspace-title { font-size: 20px; }
+}
+
+@media(max-width:640px) {
+  #app > .intro { padding: 12px 0; margin: 8px 0 13px; }
+  #app > .intro h1 { font-size: 25px; line-height: 1.15; margin: 5px 0 0; }
+  #app > .intro .eyebrow { font-size: 9px; letter-spacing: 1.3px; }
+  .header-meta .account-toolbar { display: grid; grid-template-columns: minmax(0,95px) minmax(0,1fr); align-items: center; gap: 7px; }
+  .header-meta .toolbar-actions { width: 100%; border-top: 1px solid var(--surface-line); }
+  .header-meta .account { max-width: 65px; font-size: 10px; }
+  .header-meta .account-role { font-size: 9px; }
+  .header-meta .account-avatar { width: 23px; height: 23px; flex-basis: 23px; font-size: 9px; }
+  .header-meta #refresh .live { font-size: 7px; }
+  .header-meta #manageAccess, .header-meta #refresh, .header-meta #logout { gap: 4px; padding: 5px 3px; font-size: 10px; }
+  .header-meta .toolbar-actions .icon { width: 14px; height: 14px; flex-basis: 14px; }
+  #registrationRooms #rooms .choice b { display: none; }
+  #register #controlHost { padding: 0; }
+  #register #controlHeading { margin: 0; padding: 9px 11px; }
+  #register #controlHost > .stock-control { padding: 10px; }
+  #register .registration-group-heading p { font-size: 9px; margin-top: 2px; line-height: 1.3; }
+  #register .registration-group-heading > .icon { width: 18px; height: 18px; flex-basis: 18px; }
+  #controlHint { margin: 7px 0 0; font-size: 10px; }
+  #stockFields:not([hidden]) { margin-top: 10px; }
+  #registrationSummary .summary-facts { gap: 8px; margin-top: 8px; }
+  #registrationSummary .summary-facts dt { font-size: 9px; margin-bottom: 3px; }
+  #registrationSummary .summary-facts dd { font-size: 10px; line-height: 1.4; }
+  #registrationSummary .location-ticket { padding: 6px 8px; }
+  #registrationSummary .location-ticket small { font-size: 9px; margin-top: 3px; }
+}
+
+@media(max-width:640px) {
+  #register input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]), #register textarea,
+  #editFields input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]), #editFields textarea { font-size: 16px; }
+  #itemForm.quantity-layout #code { font-size: 16px; min-height: 44px; height: 44px; }
+}
+
+@media(max-width:640px) {
+  #browse .tablewrap { overflow: visible; border: 0; background: none; border-radius: 0; }
+  #browse table, #browse tbody { display: block; width: 100%; min-width: 0; }
+  #browse thead { display: none; }
+  #browse .record-row { display: grid; }
+  #browse .record-row > td { display: block; min-width: 0; max-width: none; border: 0; padding: 0; white-space: normal; overflow-wrap: anywhere; }
+  #browse .record-row > td:first-child { padding-right: 83px; }
+  #browse .record-row > td:nth-child(5) { display: -webkit-box; }
+  #browse .detail-row, #browse .detail-row > td { display: block; width: 100%; padding: 0; border: 0; }
+}
+
+@media(max-width:640px) {
+  #browse .record-row > td:nth-child(2)::before, #browse .record-row > td:nth-child(3)::before, #browse .record-row > td:nth-child(5)::before { content: attr(data-label); display: block; color: var(--muted); text-transform: uppercase; }
+}

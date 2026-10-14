@@ -3519,49 +3519,147 @@ async function exportExcel(all) {
       });
       return lines;
     }
-    let logoId = null;
     const logo = document.querySelector('img[src*="favicon.svg"]');
-    if (logo?.complete && logo.naturalWidth) {
-      try {
-        const image = document.createElement("canvas");
-        image.width = image.height = 128;
-        image.getContext("2d").drawImage(logo, 0, 0, 128, 128);
-        logoId = wb.addImage({
-          base64: image.toDataURL("image/png"),
-          extension: "png"
-        });
-      } catch {}
-    }
     const municipalityMark = document.querySelector(".institution-logo");
-    const municipalityLogoId = municipalityMark
-      ? wb.addImage({
-        base64: municipalityMark.src,
-        extension: "png"
-      }) : null;
-    function addLogo(ws, start, col = 0, colOff = 7200, rowOff = 18000) {
-      if (logoId === null) return;
-      let endRow = start - 1,
-        endOff = rowOff + 31 * 9525;
-      while (endOff >= (ws.getRow(endRow + 1).height || 15) * 12700) {
-        endOff -= (ws.getRow(endRow + 1).height || 15) * 12700;
-        endRow++;
-      }
-      ws.addImage(logoId, {
-        tl: {
-          nativeCol: col,
-          nativeColOff: colOff,
-          nativeRow: start - 1,
-          nativeRowOff: rowOff
-        },
-        br: {
-          nativeCol: col,
-          nativeColOff: colOff + 31 * 9525,
-          nativeRow: endRow,
-          nativeRowOff: Math.round(endOff)
-        },
-        editAs: "oneCell",
-      });
+    const imageCache = new Map();
+    async function graphicIcon(name, tone = "#155bb9") {
+      const key = name + tone;
+      if (imageCache.has(key)) return imageCache.get(key);
+      const symbol = document.getElementById("i-" + name);
+      if (!symbol) return null;
+      const image = new Image();
+      const loaded = new Promise(resolve => { image.onload = () => resolve(image); image.onerror = () => resolve(null); });
+      image.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="' + tone + '" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + symbol.innerHTML + '</svg>');
+      const result = await loaded;
+      imageCache.set(key, result);
+      return result;
     }
+    function graphic(width, height) {
+      const canvas = document.createElement("canvas");
+      canvas.width = width * 2; canvas.height = height * 2;
+      const context = canvas.getContext("2d");
+      context.scale(2, 2);
+      return { canvas, context };
+    }
+    function rounded(context, x, y, width, height, radius, bg, shadow = false) {
+      context.save();
+      if (shadow) { context.shadowColor = "#174c8720"; context.shadowBlur = 22; context.shadowOffsetY = 7; }
+      context.beginPath(); context.roundRect(x, y, width, height, radius); context.fillStyle = bg; context.fill(); context.restore();
+    }
+    function label(context, value, x, y, size = 18, tone = "#173659", weight = 400, max = Infinity) {
+      context.save(); context.font = weight + " " + size + "px Arial"; context.fillStyle = tone;
+      let text = String(value ?? "");
+      if (context.measureText(text).width > max) {
+        while (text.length && context.measureText(text + "…").width > max) text = text.slice(0, -1);
+        text += "…";
+      }
+      context.fillText(text, x, y); context.restore();
+    }
+    function contain(context, image, x, y, width, height, white = false) {
+      if (!image?.complete || !image.naturalWidth) return;
+      const ratio = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+      const w = image.naturalWidth * ratio, h = image.naturalHeight * ratio;
+      context.save(); if (white) context.filter = "brightness(0) invert(1)";
+      context.drawImage(image, x + (width - w) / 2, y + (height - h) / 2, w, h); context.restore();
+    }
+    function mountGraphic(ws, canvas, firstRow, width, height) {
+      const imageId = wb.addImage({ base64: canvas.toDataURL("image/jpeg", .96), extension: "jpeg" });
+      ws.addImage(imageId, { tl: { col: 0, row: firstRow - 1 }, ext: { width, height }, editAs: "oneCell" });
+    }
+    async function drawExportPanel() {
+      const ws = wb.addWorksheet("Resumo", {
+        properties: { tabColor: { argb: color.green } },
+        views: [{ showGridLines: false, zoomScale: 90 }],
+        pageSetup: { paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 1, printArea: "A1:A40", margins: { left: .2, right: .2, top: .2, bottom: .2, header: .08, footer: .08 } }
+      });
+      ws.columns = [{width:160}];
+      for (let row=1; row<=40; row++) ws.getRow(row).height=13.93;
+      paint(ws,1,40,1,1,"FFEAF1FC");
+      const {canvas, context:c} = graphic(1600,1100);
+      c.fillStyle="#eaf1fc";c.fillRect(0,0,1600,1100);
+      const glow=c.createRadialGradient(1240,70,0,1240,70,970);glow.addColorStop(0,"#cce4ff");glow.addColorStop(1,"#eaf1fc00");c.fillStyle=glow;c.fillRect(0,0,1600,1100);
+      const blue=c.createLinearGradient(40,40,1520,230);blue.addColorStop(0,"#093b84");blue.addColorStop(.55,"#155fc1");blue.addColorStop(1,"#1994d6");
+      rounded(c,40,36,1520,180,28,blue,true);
+      contain(c,logo,64,59,72,72);
+      c.font="700 38px Georgia";c.fillStyle="white";c.fillText("ACERVO",153,103);
+      label(c,"GESTÃO DE BENS E MATERIAIS",155,128,12,"#d7edff",700);
+      label(c,"Visão geral do acervo",66,174,26,"white",700);
+      label(c,scope,66,199,13,"#d7edff",400,1020);
+      contain(c,municipalityMark,1260,60,240,80,true);
+      label(c,issued+" · Curitiba",1200,179,14,"#e3f3ff",400,330);
+      const goods=list.filter(r=>r.controle!=="QUANTIDADE"), stocks=list.filter(r=>r.controle==="QUANTIDADE"&&r.situacao==="ATIVO");
+      const available=goods.filter(r=>r.situacao==="ATIVO").length;
+      const borrowed=list.filter(r=>r.situacao==="EMPRESTADO").length;
+      const disposed=list.filter(r=>r.situacao==="BAIXADO").length;
+      const low=stocks.filter(r=>Number(r.saldo)<=Number(r.minimo)).length;
+      const cards=[ ["Bens em uso",available,"Controle individual","available","#155fc1"], ["Materiais em estoque",stocks.length,"Cadastros por quantidade","stock","#216aba"], ["Bens emprestados",borrowed,"Empréstimos em aberto","loan","#3479c2"], ["Materiais para repor",low,"Saldo no mínimo ou abaixo","stock-alert","#a96718"] ];
+      for (let i=0;i<cards.length;i++) {
+        const [title,value,note,mark,tone]=cards[i],x=40+i*386,w=362;
+        rounded(c,x,240,w,145,20,i===0?blue:"white",true);
+        rounded(c,x+20,261,43,43,13,i===0?"#ffffff20":"#edf4ff");
+        const image=await graphicIcon(mark,i===0?"white":tone);if(image)c.drawImage(image,x+30,271,23,23);
+        label(c,title,x+76,287,17,i===0?"white":"#21466e",700,266);
+        label(c,value.toLocaleString("pt-BR"),x+22,348,49,i===0?"white":tone,700,320);
+        label(c,note,x+22,369,13,i===0?"#d3e9ff":"#74859c",400,320);
+      }
+      rounded(c,40,410,745,302,22,"white",true);
+      rounded(c,809,410,751,302,22,"white",true);
+      label(c,"Situação dos bens",66,450,23,"#164478",700);
+      label(c,"Controle individual · exclui registros arquivados",66,475,13,"#75879d");
+      const states=[ ["Em uso",available,"#216bcc"], ["Emprestados",goods.filter(r=>r.situacao==="EMPRESTADO").length,"#82baf2"], ["Descartados",goods.filter(r=>r.situacao==="BAIXADO").length,"#cc6a82"] ];
+      const total=states.reduce((n,s)=>n+s[1],0);let start=-Math.PI/2;
+      c.lineWidth=28;c.strokeStyle="#edf3fa";c.beginPath();c.arc(204,588,82,0,Math.PI*2);c.stroke();
+      for(const [,n,tone] of states){if(!n)continue;const end=start+n/Math.max(1,total)*Math.PI*2;c.strokeStyle=tone;c.beginPath();c.arc(204,588,82,start,end);c.stroke();start=end;}
+      c.textAlign="center";label(c,total,204,594,45,"#164478",700);label(c,"bens",204,618,14,"#74859c");c.textAlign="left";
+      states.forEach(([title,n,tone],i)=>{const y=534+i*53;rounded(c,346,y-13,12,12,4,tone);label(c,title,374,y,17,"#3d5572");label(c,n,686,y,21,"#1f4779",700);});
+      label(c,"Saúde do estoque",835,450,23,"#164478",700);
+      label(c,"Materiais ativos · sem somar unidades diferentes",835,475,13,"#75879d");
+      const health=[ ["Acima do mínimo",stocks.filter(r=>Number(r.saldo)>Number(r.minimo)).length,"#286dce"], ["No mínimo ou abaixo",stocks.filter(r=>Number(r.saldo)>0&&Number(r.saldo)<=Number(r.minimo)).length,"#e8b254"], ["Sem saldo",stocks.filter(r=>Number(r.saldo)<=0).length,"#d27387"] ];
+      rounded(c,835,500,695,22,11,"#edf3fa");let offset=835;
+      for(const [,n,tone]of health){const width=695*n/Math.max(1,stocks.length);if(width){c.fillStyle=tone;c.fillRect(offset,500,width,22);offset+=width;}}
+      health.forEach(([title,n,tone],i)=>{const y=563+i*47;rounded(c,838,y-13,12,12,4,tone);label(c,title,865,y,17,"#3d5572");label(c,n,1440,y,22,"#21466e",700);label(c,(stocks.length?Math.round(n/stocks.length*100):0)+"%",1482,y,14,"#74859c");});
+      label(c,"Onde está o acervo",42,756,24,"#164478",700);
+      label(c,"Bens individuais em uso por ambiente",42,779,13,"#75879d");
+      const roomMarks=ROOMS.map(room=>ROOM_ICON[room]);
+      for(let i=0;i<ROOMS.length;i++) {
+        const room=ROOMS[i],x=40+i*515,n=goods.filter(r=>r.situacao==="ATIVO"&&r.dados.ambiente===room).length;
+        rounded(c,x,799,490,130,20,"white",true);
+        rounded(c,x+19,818,40,40,12,"#edf4ff");const image=await graphicIcon(roomMarks[i]);if(image)c.drawImage(image,x+29,828,20,20);
+        label(c,room,x+73,844,17,"#21466e",700,380);
+        label(c,n,x+21,895,33,"#155fc1",700);
+        label(c,"bens em uso",x+80,894,14,"#74859c");
+        rounded(c,x+238,881,225,8,4,"#e8f0fb");const bar=225*n/Math.max(1,available);if(bar)rounded(c,x+238,881,bar,8,4,"#3d85d9");
+      }
+      rounded(c,40,952,1520,83,18,"#dbe8fa");
+      const untagged=goods.filter(r=>r.situacao==="ATIVO"&&r.dados.tipo==="SEM_IDENTIFICACAO").length;
+      label(c,"Para acompanhar",63,980,16,"#164478",700);
+      label(c,low+(low===1?" material para repor":" materiais para repor"),63,1010,17,"#7c561e",700);
+      label(c,untagged+(untagged===1?" bem em uso sem etiqueta externa":" bens em uso sem etiqueta externa"),502,1010,17,"#31577f",700);
+      label(c,disposed+(disposed===1?" registro descartado":" registros descartados"),1120,1010,17,"#9c425e",700);
+      label(c,list.length+" registros no arquivo · "+(all?"Inventário completo":"Recorte filtrado"),42,1065,13,"#5d7797",700);
+      label(c,"Painel da emissão. Fórmulas e valores editáveis na aba Indicadores.",700,1065,13,"#5d7797");
+      mountGraphic(ws,canvas,1,1080,742.5);
+      return ws;
+    }
+    async function drawTableHeading(ws,title,lastCol) {
+      const width=ws.columns.slice(0,lastCol).reduce((sum,col)=>sum+col.width*7+5,0);
+      const {canvas,context:c}=graphic(1600,180);
+      c.fillStyle="white";c.fillRect(0,0,1600,180);
+      paint(ws,1,3,1,lastCol,color.white);
+      for (let row=1;row<=3;row++) for(let col=1;col<=lastCol;col++) ws.getCell(row,col).value=null;
+      const blue=c.createLinearGradient(0,0,1600,160);blue.addColorStop(0,"#0b3e88");blue.addColorStop(.65,"#1764c1");blue.addColorStop(1,"#1b93d4");
+      rounded(c,0,0,1600,180,22,blue);
+      contain(c,logo,28,24,61,61);
+      label(c,"ACERVO",110,54,23,"white",700);
+      label(c,"GESTÃO DE BENS E MATERIAIS",112,77,10,"#d5ebff",700);
+      label(c,title,30,137,35,"white",700,1130);
+      label(c,"Emitido em "+issued,30,160,12,"#d5ebff");
+      contain(c,municipalityMark,1255,28,290,86,true);
+      const height=width*180/1600;
+      for(let row=1;row<=3;row++)ws.getRow(row).height=height*.75/3;
+      mountGraphic(ws,canvas,1,width,height);
+    }
+
     function brand(ws, start, lastCol) {
       const edge = ws.getColumn(lastCol).letter;
       const left = Math.min(2, lastCol - 2);
@@ -3780,6 +3878,11 @@ async function exportExcel(all) {
               }
             }
           };
+          if (options.details && j === 8) {
+            const tones = { "Ativo": ["FFEAF2FE", "FF1859A9"], "Emprestado": ["FFE7F2FC", "FF286FA7"], "Descartado": ["FFFBEAF0", "FFA5405D"], "Arquivado": ["FFF0F2F5", "FF6F7D8D"] };
+            const tone = tones[String(cell.value)];
+            if (tone) { cell.fill = fill(tone[0]); cell.font = { ...cell.font, bold: true, color: { argb: tone[1] } }; }
+          }
           if ((options.dates || []).includes(j)) cell.numFmt = options.dateOnly ? "dd/mm/yyyy" : "dd/mm/yyyy hh:mm:ss";
           else if (typeof cell.value === "string") cell.numFmt = "@";
         }
@@ -3794,7 +3897,8 @@ async function exportExcel(all) {
       ws.pageSetup.printArea = "A1:" + ws.getColumn(shown).letter + Math.max(8, data.length + 7);
       return ws;
     }
-    const summary = wb.addWorksheet("Resumo", {
+    await drawExportPanel();
+    const summary = wb.addWorksheet("Indicadores", {
       properties: {
         tabColor: {
           argb: color.green
@@ -3834,12 +3938,11 @@ async function exportExcel(all) {
     paint(summary, 3, 4, 2, 24, "FF133C78");
     summary.getRow(1).height = 8;
     summary.getRow(2).height = 36;
-    text(summary, logoId === null ? "B2:L2" : "D2:L2", "ACERVO  /  RELATÓRIO DE GESTÃO", {
+    text(summary, "B2:L2", "ACERVO  /  RELATÓRIO DE GESTÃO", {
       size: 10,
       bold: true,
       fg: color.green
     });
-    addLogo(summary, 2, 1, 0, 0);
     text(summary, "N2:X2", "Prefeitura de Curitiba", {
       size: 9,
       fg: color.muted,
@@ -4138,7 +4241,7 @@ async function exportExcel(all) {
         fitToPage: true,
         fitToWidth: 1,
         fitToHeight: 0,
-        printTitlesRow: "1:5",
+        printTitlesRow: "5:5",
         margins: {
           left: .3,
           right: .3,
@@ -4234,9 +4337,12 @@ async function exportExcel(all) {
       nextRow = 7;
     }
     report.pageSetup.printArea = "A1:E" + (nextRow - 1);
-    ["Resumo", "Inventário", "Estoque", "Empréstimos", "Descartados", "Sem identificação externa", "Relatório A4"].forEach((name, index) => {
+    ["Resumo", "Indicadores", "Inventário", "Estoque", "Empréstimos", "Descartados", "Sem identificação externa", "Relatório A4"].forEach((name, index) => {
       wb.getWorksheet(name).orderNo = index;
     });
+    for (const sheet of wb.worksheets) {
+      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name === "Indicadores" ? "Indicadores · valores e fórmulas" : sheet.name, sheet.name === "Indicadores" ? 25 : sheet.name === "Relatório A4" ? 5 : sheet.name === "Inventário" || sheet.name === "Sem identificação externa" ? 8 : sheet.columnCount);
+    }
     const buffer = await wb.xlsx.writeBuffer();
     const url = URL.createObjectURL(new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

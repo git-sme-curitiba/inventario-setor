@@ -4054,16 +4054,21 @@ async function exportExcel(all) {
       report.getRow(nextRow-1).addPageBreak();
       pageHeight=28;
     }
-    function roomHeading(room,count,continued=false){
+    function roomHeading(room,count,tone,shade){
       const row=nextRow++;
-      text(report,"A"+row+":E"+row,room+(continued?" · continuação":""),{size:11,bold:true,fg:color.green,bg:"FFE1EDFA",indent:1});
-      text(report,"F"+row,count+(count===1?" item":" itens"),{size:10,bold:true,fg:color.green,bg:"FFE1EDFA",align:"right",indent:1});
+      text(report,"A"+row+":E"+row,room,{size:11,bold:true,fg:tone,bg:shade,indent:1});
+      text(report,"F"+row,count+(count===1?" item":" itens"),{size:10,bold:true,fg:tone,bg:shade,align:"right",indent:1});
       report.getRow(row).height=22;
       report.getRow(row).eachCell(cell=>{cell.border={bottom:{style:"thin",color:{argb:"FFBED3E9"}}};});
       pageHeight+=22;
     }
     let groupIndex=0;
     for(const room of groupOrder){
+      const knownRoomIndex=ROOMS.indexOf(room);
+      const roomIndex=knownRoomIndex>=0?knownRoomIndex:ROOMS.length+groupOrder.indexOf(room);
+      const roomTone=["FF286CAB","FF1988A5","FF5C779B"][roomIndex%3];
+      const roomShade=["FFE1EDFA","FFDFF1F7","FFE5EBF3"][roomIndex%3];
+      const roomStripe=["FFF0F6FC","FFEDF8FC","FFF1F4F9"][roomIndex%3];
       const records=groups.get(room).sort((a,b)=>a.dados.item.localeCompare(b.dados.item,"pt-BR")||a.id-b.id);
       let headingPending=true, itemIndex=0;
       for(const r of records){
@@ -4082,17 +4087,17 @@ async function exportExcel(all) {
             const gap=groupIndex?7:0;
             if(pageHeight+gap+22+height>pageLimit)startReportPage();
             else if(gap){report.getRow(nextRow++).height=gap;pageHeight+=gap;}
-            roomHeading(room,records.length);
+            roomHeading(room,records.length,roomTone,roomShade);
             headingPending=false;groupIndex++;
           }else if(pageHeight+height>pageLimit){
-            startReportPage();roomHeading(room,records.length,true);
+            startReportPage();
           }
           const row=report.getRow(nextRow++);row.values=part;row.height=height;
           row.eachCell((cell,column)=>{
             cell.font={name:"Aptos",size:column===1?10:11,bold:column===2,color:{argb:color.ink}};
-            cell.numFmt="@";cell.fill=fill(itemIndex%2?"FFF3F7FC":color.white);
+            cell.numFmt="@";cell.fill=fill(itemIndex%2?roomStripe:color.white);
             cell.alignment={vertical:"top",wrapText:true,indent:1};
-            cell.border={bottom:{style:"hair",color:{argb:color.line}}};
+            cell.border={bottom:{style:"hair",color:{argb:color.line}},...(column===1?{left:{style:"medium",color:{argb:roomTone}}}:{})};
           });
           if(offset===0){
             const positionStart=part[1].indexOf("\nPosição:");
@@ -4127,7 +4132,7 @@ async function exportExcel(all) {
     }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "ACERVO_" + (all ? "completo" : "filtrado") + "_" + dayKey(emitted) + ".xlsx";
+    a.download = "Acervo - " + (all ? "Inventário Completo" : "Consulta Filtrada") + " - " + shortDate(emitted).replaceAll("/", "-") + ".xlsx";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 60000);
     toast("Excel gerado com " + list.length + " registros.");

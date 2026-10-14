@@ -724,54 +724,15 @@
             <div id="roomSummary"></div>
           </section>
           <details id="inventoryDetails" class="dashboard-details">
-            <summary><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg><span><strong>Histórico e detalhes do acervo</strong><small>Movimentações, descartes, identificação e gráficos</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
-            <div class="dashboard-details-body">            <section class="card timeline-card" aria-labelledby="movementTimelineTitle">
-              <div class="card-heading"><h3 id="movementTimelineTitle">Últimas movimentações</h3><svg class="icon" aria-hidden="true"><use href="#i-history" /></svg></div>
-              <div id="movementTimeline"></div>
-              <button id="toggleMovementTimeline" class="dashboard-more" type="button" hidden aria-controls="movementTimeline" aria-expanded="false"></button>
-            </section><div id="secondaryStats" class="stats secondary-stats"></div><div id="availability" class="availability"></div><div class="dash-grid"><div class="card">
-              <h3>Composição do acervo</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Ativos e emprestados por categoria."
-                aria-label="Ajuda sobre a composição do acervo"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-composition" />
-                </svg>
-              </button>
-              <div id="categoryChart"></div>
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-history" /></svg><span><strong>Movimentações e identificação</strong><small>O que mudou e como os bens estão identificados</small></span><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg></summary>
+            <div class="dashboard-details-body history-layout">
+              <section class="card timeline-card" aria-labelledby="movementTimelineTitle">
+                <div class="card-heading"><h3 id="movementTimelineTitle">Últimas movimentações</h3><svg class="icon" aria-hidden="true"><use href="#i-history" /></svg></div>
+                <div id="movementTimeline"></div>
+                <button id="toggleMovementTimeline" class="dashboard-more" type="button" hidden aria-controls="movementTimeline" aria-expanded="false"></button>
+              </section>
+              <section class="card identification-overview"><div class="card-heading"><h3>Identificação dos bens</h3><svg class="icon" aria-hidden="true"><use href="#i-draft" /></svg></div><p class="hint">Bens em uso, agrupados pela etiqueta externa.</p><div id="typeChart"></div></section>
             </div>
-<div class="card">
-              <h3>Como estão identificados</h3>
-              <div id="typeChart"></div>
-            </div>
-<div class="card">
-              <h3>Itens mais frequentes</h3>
-              <button
-                type="button"
-                class="help-dot"
-                data-help="Até seis tipos, entre os bens ativos."
-                aria-label="Ajuda sobre os itens mais frequentes"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-ranking" />
-                </svg>
-              </button>
-              <div id="topChart"></div>
-            </div>
-<div class="card wide">
-              <div class="bar">
-                <h3>Ritmo de cadastro</h3>
-                <span class="muted">Últimos 14 dias · todos os registros</span>
-              </div>
-              <div id="activity" class="activity"></div>
-            </div>
-<div class="card">
-              <h3>Cadastros recentes</h3>
-              <div id="recent"></div>
-            </div></div></div>
           </details>
 
         </section>
@@ -840,10 +801,7 @@
     </dialog>
 
     <dialog id="registrationDiscardDialog" aria-labelledby="registrationDiscardTitle" aria-describedby="registrationDiscardDescription">
-      <div class="registration-discard-heading">
-        <div class="eyebrow">Cadastro · Descarte</div>
-        <h2 id="registrationDiscardTitle"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Registrar como descartado?</h2>
-      </div>
+      <div class="operation-hero registration-discard-heading"><div class="operation-heading"><span class="operation-mark"><svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg></span><div><div class="eyebrow">Acervo · Cadastro e descarte</div><h2 id="registrationDiscardTitle">Registrar como descartado</h2></div></div><button type="button" data-close="registrationDiscardDialog" aria-label="Fechar descarte"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg></button></div>
       <form id="registrationDiscardForm">
         <div id="registrationDiscardItem"></div>
         <p id="registrationDiscardDescription">O registro ficará no acervo como <strong>Descartado</strong>, com seu histórico preservado. Não entrará no estoque disponível.</p>
@@ -858,16 +816,12 @@
       </form>
     </dialog>
 
-    <dialog id="operation">
-      <div class="bar">
-        <h2 id="operationTitle"></h2>
-        <button data-close="operation">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <use href="#i-close" />
-          </svg>
-          Fechar
-        </button>
-      </div>
+    <dialog id="deleteItemDialog" aria-labelledby="deleteItemTitle">
+      <div class="operation-hero"><div class="operation-heading"><span class="operation-mark"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg></span><div><div class="eyebrow">Acervo · Administrador</div><h2 id="deleteItemTitle">Excluir definitivamente</h2></div></div><button type="button" id="deleteItemClose" aria-label="Fechar exclusão"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg></button></div>
+      <form id="deleteItemForm"><div class="deletion-record"><strong id="deleteItemName"></strong><span id="deleteItemCode"></span></div><p>O registro será removido do acervo. Esta ação não pode ser desfeita. A trilha de auditoria ficará preservada no banco.</p><label for="deleteItemConfirmation">Digite o código interno para confirmar</label><input id="deleteItemConfirmation" required autocomplete="off" spellcheck="false" maxlength="24" /><p id="deleteItemError" role="alert" class="hint"></p><button id="deleteItemSave" class="danger spaced" type="submit">Excluir definitivamente</button></form>
+    </dialog>
+    <dialog id="operation" aria-labelledby="operationTitle">
+      <div class="operation-hero"><div class="operation-heading"><span class="operation-mark" id="operationMark"></span><div><div class="eyebrow">Acervo · Movimentação</div><h2 id="operationTitle"></h2></div></div><button type="button" data-close="operation" aria-label="Fechar movimentação"><svg class="icon" aria-hidden="true"><use href="#i-close" /></svg></button><div id="operationRecord" class="operation-record"></div></div>
       <form id="operationForm">
         <p class="hint" id="operationHint"></p>
         <div id="moveFields">

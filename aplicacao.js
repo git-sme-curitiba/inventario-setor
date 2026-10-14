@@ -4841,6 +4841,35 @@ function initVisualExperience() {
   $("refresh").dataset.help = "Atualizar inventário";
 }
 
+
+function initAppViewport() {
+  const root = document.documentElement;
+  const installed = matchMedia("(display-mode: standalone)");
+  const viewport = window.visualViewport;
+  let scheduled = 0;
+  function update() {
+    scheduled = 0;
+    root.classList.toggle("app-installed", installed.matches || navigator.standalone === true);
+    const height = viewport?.height || window.innerHeight;
+    const focused = document.activeElement?.matches("input, textarea, select, [contenteditable='true']");
+    const keyboard = !!focused && !!viewport && viewport.scale === 1 && window.innerHeight - height > 140;
+    root.classList.toggle("keyboard-open", keyboard);
+    if (!viewport || viewport.scale === 1) root.style.setProperty("--app-visible-height", Math.round(height) + "px");
+  }
+  function schedule() {
+    if (!scheduled) scheduled = requestAnimationFrame(update);
+  }
+  installed.addEventListener?.("change", schedule);
+  window.addEventListener("resize", schedule, { passive: true });
+  window.addEventListener("pageshow", schedule);
+  viewport?.addEventListener("resize", schedule, { passive: true });
+  document.addEventListener("focusin", schedule);
+  document.addEventListener("focusout", schedule);
+  update();
+}
+
+initAppViewport();
+
 initVisualExperience();
 
 (async() => {

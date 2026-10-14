@@ -25,7 +25,7 @@
       sizes="180x180"
       href="./icone-apple.png?v=5"
     />
-    <link rel="manifest" href="./site.webmanifest?v=3.5.33" />
+    <link rel="manifest" href="./site.webmanifest?v=3.5.34" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"
       integrity="sha384-WgXwGL6fUsYJWNaKJgVbrJKGRQwc1vieh2oy4kw9nXqpNDz3tdSsqEYUgeHD/NuF"
@@ -43,7 +43,7 @@
       integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="./estilos.css?v=3.5.33" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.34" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
@@ -309,15 +309,16 @@
         </div>
         <div class="eyebrow">Prefeitura de Curitiba</div>
         <h1 id="loginHeading">Bem-vindo.</h1>
-        <form id="loginForm">
+        <form id="loginForm" name="acervo-login" autocomplete="on" method="post">
           <label for="email">E-mail</label>
-          <input id="email" type="email" autocomplete="username" required />
+          <input id="email" name="username" type="email" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" required />
           <label for="password">Senha</label>
           <div class="password-field">
-            <input id="password" type="password" autocomplete="current-password" required />
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
             <button type="button" id="togglePassword" class="password-toggle" data-password-target="password" data-password-label="senha" aria-controls="password" aria-label="Mostrar senha" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-eye" /></svg></button>
           </div>
-          <button class="primary" id="loginButton"><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Entrar</button>
+          <label class="remember-session" for="rememberSession"><input id="rememberSession" name="remember-session" type="checkbox" /><span>Manter conectado neste dispositivo</span></label>
+          <button type="submit" class="primary" id="loginButton"><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Entrar</button>
         </form>
         <div id="firstAccess" hidden>
           <p class="access-description">Escolha uma senha pessoal para concluir seu primeiro acesso.</p>
@@ -995,6 +996,6 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.33"></script>
+    <script src="./aplicacao.js?v=3.5.34"></script>
   </body>
 </html>

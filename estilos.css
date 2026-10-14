@@ -9014,10 +9014,6 @@ button.has-books-loader:disabled, #refresh.is-syncing:disabled {
   --app-status-color: #0d61b0;
 }
 html { min-height: 100%; background-color: var(--app-status-color); -webkit-text-size-adjust: 100%; }
-html::before {
-  content: ""; position: fixed; inset: 0 0 auto; height: var(--app-safe-top);
-  background: var(--app-status-color); z-index: 100; pointer-events: none;
-}
 body { min-height: 100vh; min-height: 100dvh; }
 body .shell {
   min-width: 0; min-height: 100vh; min-height: 100dvh;
@@ -9068,3 +9064,17 @@ dialog:not(#camera), #camera {
   max-height: calc(var(--app-visible-height, 100dvh) - 24px - var(--app-safe-top) - var(--app-safe-bottom));
   overflow: auto;
 }
+
+body {
+  position: relative;
+  isolation: isolate;
+  --app-background: radial-gradient(ellipse at 90% 6%, #75b9ed4d, transparent 48%), radial-gradient(ellipse at 4% 65%, #9ac5e847, transparent 46%), linear-gradient(140deg, #e8f1fa, #d4e4f3 54%, #e7f0f9);
+}
+body.auth-screen {
+  --app-background: radial-gradient(ellipse at 78% 12%, #65c1ff45, transparent 55%), radial-gradient(ellipse at 5% 88%, #219ce03d, transparent 52%), linear-gradient(135deg, #0d61b0, #1580d1 52%, #0b64b5);
+}
+body.auth-screen, body:not(.auth-screen) { background: transparent; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; background: var(--app-background); pointer-events: none; }
+#loginForm .remember-session { display: flex; align-items: center; gap: 9px; margin: 16px 0 0; font-size: 12px; line-height: 1.45; font-weight: 500; color: #466583; cursor: pointer; }
+#loginForm .remember-session input { width: 18px; height: 18px; min-height: 18px; margin: 0; padding: 0; flex: 0 0 18px; accent-color: #0873c4; border-radius: 5px; }
+#loginForm .remember-session input:focus-visible { outline: 2px solid #0873c4; outline-offset: 3px; }

@@ -3409,9 +3409,6 @@ async function exportExcel(all) {
     throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
     const emitted = new Date();
     const list = all ? [...rows] : filtered();
-    const active = list.filter((r) => r.situacao === "ATIVO");
-    const withoutId = active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO");
-    const checked = ROOMS.filter((room) => checks.some((c) => c.ambiente === room && c.conferido)).length;
     const wb = new ExcelJS.Workbook();
     wb.creator = "ACERVO";
     wb.created = emitted;
@@ -3519,7 +3516,9 @@ async function exportExcel(all) {
       });
       return lines;
     }
-    const logo = document.querySelector('img[src*="favicon.svg"]');
+    const logo = new Image();
+    logo.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYWNlcnZvLWJsdWUiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMjdiMWYzIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC40OCIgc3RvcC1jb2xvcj0iIzA4N2NkZCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwNTQ4OWMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE2IiBmaWxsPSJ1cmwoI2FjZXJ2by1ibHVlKSIvPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cmVjdCB4PSIxNiIgeT0iMjEiIHdpZHRoPSIxNSIgaGVpZ2h0PSIyOSIgcng9IjMiLz4KICAgIDxyZWN0IHg9IjM0IiB5PSIxNCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjM2IiByeD0iMyIvPgogICAgPHBhdGggZD0iTTIxIDI3aDVNMjEgMzJoNU0zOSAyMGg1TTM5IDI1aDVNMzkgMzBoNU0xNCA1MWgzOCIvPgogIDwvZz4KPC9zdmc+Cg==";
+    await logo.decode().catch(() => {});
     const municipalityMark = document.querySelector(".institution-logo");
     const imageCache = new Map();
     async function graphicIcon(name, tone = "#155bb9") {
@@ -3562,22 +3561,22 @@ async function exportExcel(all) {
       context.save(); if (white) context.filter = "brightness(0) invert(1)";
       context.drawImage(image, x + (width - w) / 2, y + (height - h) / 2, w, h); context.restore();
     }
-    function mountGraphic(ws, canvas, firstRow, width, height) {
+    function mountGraphic(ws, canvas, firstRow, width, height, destination = null) {
       const imageId = wb.addImage({ base64: canvas.toDataURL("image/jpeg", .96), extension: "jpeg" });
-      ws.addImage(imageId, { tl: { col: 0, row: firstRow - 1 }, ext: { width, height }, editAs: "oneCell" });
+      ws.addImage(imageId, { tl: { col: 0, row: firstRow - 1 }, ext: { width, height }, editAs: "oneCell", ...(destination ? { hyperlinks: { hyperlink: "#'" + destination + "'!A1", tooltip: "Voltar ao resumo" } } : {}) });
     }
     async function drawExportPanel() {
       const ws = wb.addWorksheet("Resumo", {
         properties: { tabColor: { argb: color.green } },
         views: [{ showGridLines: false, zoomScale: 90 }],
-        pageSetup: { paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 1, printArea: "A1:A40", margins: { left: .2, right: .2, top: .2, bottom: .2, header: .08, footer: .08 } }
+        pageSetup: { paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 1, printArea: "A1:D40", margins: { left: .2, right: .2, top: .2, bottom: .2, header: .08, footer: .08 } }
       });
-      ws.columns = [{width:160}];
-      for (let row=1; row<=40; row++) ws.getRow(row).height=13.93;
-      paint(ws,1,40,1,1,"FFEAF1FC");
-      const {canvas, context:c} = graphic(1600,1100);
-      c.fillStyle="#eaf1fc";c.fillRect(0,0,1600,1100);
-      const glow=c.createRadialGradient(1240,70,0,1240,70,970);glow.addColorStop(0,"#cce4ff");glow.addColorStop(1,"#eaf1fc00");c.fillStyle=glow;c.fillRect(0,0,1600,1100);
+      ws.columns = Array.from({length:4},()=>({width:40}));
+      for (let row=1; row<=40; row++) ws.getRow(row).height=14.69;
+      paint(ws,1,40,1,4,"FFEAF1FC");
+      const {canvas, context:c} = graphic(1600,1160);
+      c.fillStyle="#eaf1fc";c.fillRect(0,0,1600,1160);
+      const glow=c.createRadialGradient(1240,70,0,1240,70,970);glow.addColorStop(0,"#cce4ff");glow.addColorStop(1,"#eaf1fc00");c.fillStyle=glow;c.fillRect(0,0,1600,1160);
       const blue=c.createLinearGradient(40,40,1520,230);blue.addColorStop(0,"#093b84");blue.addColorStop(.55,"#155fc1");blue.addColorStop(1,"#1994d6");
       rounded(c,40,36,1520,180,28,blue,true);
       contain(c,logo,64,59,72,72);
@@ -3585,7 +3584,8 @@ async function exportExcel(all) {
       label(c,"GESTÃO DE BENS E MATERIAIS",155,128,12,"#d7edff",700);
       label(c,"Visão geral do acervo",66,174,26,"white",700);
       label(c,scope,66,199,13,"#d7edff",400,1020);
-      contain(c,municipalityMark,1260,60,240,80,true);
+      rounded(c,1238,54,292,94,15,"white");
+      contain(c,municipalityMark,1250,64,268,74);
       label(c,issued+" · Curitiba",1200,179,14,"#e3f3ff",400,330);
       const goods=list.filter(r=>r.controle!=="QUANTIDADE"), stocks=list.filter(r=>r.controle==="QUANTIDADE"&&r.situacao==="ATIVO");
       const available=goods.filter(r=>r.situacao==="ATIVO").length;
@@ -3636,9 +3636,37 @@ async function exportExcel(all) {
       label(c,low+(low===1?" material para repor":" materiais para repor"),63,1010,17,"#7c561e",700);
       label(c,untagged+(untagged===1?" bem em uso sem etiqueta externa":" bens em uso sem etiqueta externa"),502,1010,17,"#31577f",700);
       label(c,disposed+(disposed===1?" registro descartado":" registros descartados"),1120,1010,17,"#9c425e",700);
-      label(c,list.length+" registros no arquivo · "+(all?"Inventário completo":"Recorte filtrado"),42,1065,13,"#5d7797",700);
-      label(c,"Painel da emissão. Fórmulas e valores editáveis na aba Indicadores.",700,1065,13,"#5d7797");
-      mountGraphic(ws,canvas,1,1080,742.5);
+      const destinations = ["Inventário", "Empréstimos", "Descartados", "Relatório A4"];
+      destinations.forEach((name,index) => {
+        const x=40+index*386;
+        rounded(c,x,1052,362,53,14,"#155fc1");
+        label(c,name+"  →",x+20,1085,17,"white",700,260);
+      });
+      label(c,list.length+" registros no arquivo · "+(all?"Inventário completo":"Recorte filtrado"),42,1138,13,"#5d7797",700);
+      label(c,"Clique nos cards ou nos botões para abrir as abas. Painel da emissão.",700,1138,13,"#5d7797");
+      mountGraphic(ws,canvas,1,1080,783);
+      function linkArea(x,y,width,height,destination,tooltip) {
+        const hit=document.createElement("canvas");hit.width=hit.height=1;
+        const imageId=wb.addImage({base64:hit.toDataURL("image/png"),extension:"png"});
+        const scale=1080/1600, top=y*scale, left=x*scale, rowHeight=14.69*4/3, colWidth=285;
+        const row=Math.floor(top/rowHeight), col=Math.floor(left/colWidth);
+        ws.addImage(imageId,{
+          tl:{nativeCol:col,nativeColOff:Math.round((left-col*colWidth)*9525),nativeRow:row,nativeRowOff:Math.round((top-row*rowHeight)*9525)},
+          ext:{width:width*scale,height:height*scale},editAs:"oneCell",
+          hyperlinks:{hyperlink:"#'"+destination+"'!A1",tooltip}
+        });
+      }
+      ["Inventário","Inventário","Empréstimos","Inventário"].forEach((name,index)=>linkArea(40+index*386,240,362,145,name,"Abrir "+name));
+      linkArea(40,410,745,302,"Inventário","Consultar os bens no inventário");
+      linkArea(809,410,751,302,"Inventário","Consultar saldo, unidade e mínimo no inventário");
+      destinations.forEach((name,index)=>linkArea(40+index*386,1052,362,53,name,"Abrir "+name));
+      destinations.forEach((name,index)=>{
+        const cell=ws.getCell(42,index+1);
+        cell.value={formula:'HYPERLINK("#\''+name+'\'!A1","'+name+' →")',result:name+" →"};
+        cell.font={name:"Aptos",size:12,bold:true,color:{argb:color.green}};
+        cell.fill=fill(color.soft);cell.alignment={vertical:"middle",horizontal:"center"};
+      });
+      ws.getRow(42).height=29;
       return ws;
     }
     async function drawTableHeading(ws,title,lastCol) {
@@ -3654,10 +3682,12 @@ async function exportExcel(all) {
       label(c,"GESTÃO DE BENS E MATERIAIS",112,77,10,"#d5ebff",700);
       label(c,title,30,137,35,"white",700,1130);
       label(c,"Emitido em "+issued,30,160,12,"#d5ebff");
-      contain(c,municipalityMark,1255,28,290,86,true);
+      rounded(c,1230,22,340,102,15,"white");
+      contain(c,municipalityMark,1243,33,314,80);
       const height=width*180/1600;
       for(let row=1;row<=3;row++)ws.getRow(row).height=height*.75/3;
-      mountGraphic(ws,canvas,1,width,height);
+      label(c,"← Voltar ao resumo",1280,159,14,"#e2f1ff",700);
+      mountGraphic(ws,canvas,1,width,height,"Resumo");
     }
 
     function brand(ws, start, lastCol) {
@@ -3898,279 +3928,11 @@ async function exportExcel(all) {
       return ws;
     }
     await drawExportPanel();
-    const summary = wb.addWorksheet("Indicadores", {
-      properties: {
-        tabColor: {
-          argb: color.green
-        }
-      },
-      views: [{
-        showGridLines: false,
-        zoomScale: 90
-      }],
-      pageSetup: {
-        paperSize: 9,
-        orientation: "portrait",
-        fitToPage: true,
-        fitToWidth: 1,
-        fitToHeight: 1,
-        printArea: "A1:Y35",
-        margins: {
-          left: .3,
-          right: .3,
-          top: .3,
-          bottom: .3,
-          header: .12,
-          footer: .12
-        }
-      },
-      headerFooter: {
-        oddFooter: "&LACERVO&C" + shortDate(emitted) + "&RPágina &P de &N"
-      },
-    });
-    summary.columns = Array.from({
-      length: 25
-    }, (_, i) => ({
-      width: i === 0 || i === 24 ? 2 : 3.8
-    }));
-    for (let r = 1; r <= 35; r++) summary.getRow(r).height = 18;
-    paint(summary, 1, 35, 1, 25, color.white);
-    paint(summary, 3, 4, 2, 24, "FF133C78");
-    summary.getRow(1).height = 8;
-    summary.getRow(2).height = 36;
-    text(summary, "B2:L2", "ACERVO  /  RELATÓRIO DE GESTÃO", {
-      size: 10,
-      bold: true,
-      fg: color.green
-    });
-    text(summary, "N2:X2", "Prefeitura de Curitiba", {
-      size: 9,
-      fg: color.muted,
-      align: "right"
-    });
-    text(summary, "B3:L3", "Bens e materiais", {
-      size: 25,
-      bold: true,
-      fg: color.white,
-      indent: 1
-    });
-    summary.getRow(3).height = 46;
-    text(summary, "N3:X3", issued + " · Curitiba", {
-      size: 9,
-      fg: "FFD2E3FA",
-      align: "right"
-    });
-    text(summary, "B4:X4", scope, {
-      size: 9,
-      indent: 2,
-      fg: "FFD2E3FA",
-      border: {
-        bottom: {
-          style: "thin",
-          color: {
-            argb: color.line
-          }
-        }
-      }
-    });
-    summary.getRow(4).height = Math.max(24, wrap(scope, 760).length * 12 + 8);
-    summary.getRow(5).height = 18;
-    const end = Math.max(8, list.length + 7);
-    const ref = col => "'Inventário'!$" + col + "$8:$" + col + "$" + end;
-    const formula = (value, result) => ({
-      formula: value,
-      result
-    });
-    const statusName = s => STATUS[s] || s;
-    const count = (...criteria) => "COUNTIFS(" + criteria.map(([col, value]) => ref(col) + ',"' + String(value).replaceAll('"', '""') + '"').join(',') + ")";
-    const individuals = list.filter(r => r.controle !== "QUANTIDADE");
-    const stocks = list.filter(r => r.controle === "QUANTIDADE");
-    const liveStocks = stocks.filter(r => r.situacao === "ATIVO");
-    const stockEnd = Math.max(8, stocks.length + 7);
-    const healthCount = label => 'COUNTIFS(\'Estoque\'!$H$8:$H$' + stockEnd + ',"' + label + '")';
-    const lowStocks = liveStocks.filter(r => Number(r.saldo) <= Number(r.minimo));
-    const cards = [
-      ["B", "F", "Bens em uso", count(["M", "Individual"], ["H", statusName("ATIVO")]), individuals.filter(r => r.situacao === "ATIVO").length, "Controle individual", color.green, color.white],
-      ["H", "L", "Materiais para repor", healthCount("Repor") + "+" + healthCount("Sem saldo"), lowStocks.length, "No mínimo ou abaixo", "FFFFF5E7", "FF9A641F"],
-      ["N", "R", "Empréstimos", count(["H", statusName("EMPRESTADO")]), list.filter(r => r.situacao === "EMPRESTADO").length, "Bens com responsáveis", "FFEBF2FD", color.green],
-      ["T", "X", "Descartados", count(["H", statusName("BAIXADO")]), list.filter(r => r.situacao === "BAIXADO").length, "Histórico preservado", "FFFBEFF2", "FFA34059"],
-    ];
-    cards.forEach(([a, b, label, f, n, note, bg, fg]) => {
-      paint(summary, 6, 10, summary.getColumn(a).number, summary.getColumn(b).number, bg);
-      for (let r = 6; r <= 10; r++) summary.getCell(a + r).border = { left: { style: "medium", color: { argb: fg === color.white ? "FF72BAF9" : fg } } };
-      text(summary, a + "6:" + b + "6", label, {
-        size: 10,
-        bold: true,
-        fg,
-        bg,
-        indent: 1
-      });
-      const value = text(summary, a + "7:" + b + "8", formula(f, n), {
-        size: 34,
-        bold: true,
-        fg,
-        bg,
-        indent: 1
-      }); value.numFmt = "#,##0";
-      text(summary, a + "9:" + b + "10", note, {
-        size: 9,
-        fg,
-        bg,
-        indent: 1
-      });
-    });
-    summary.getRow(6).height = 28;
-    summary.getRow(11).height = 22;
-    function section(range, title) {
-      text(summary, range, title, {
-        size: 13,
-        bold: true,
-        fg: color.ink,
-        border: {
-          bottom: {
-            style: "thin",
-            color: {
-              argb: color.line
-            }
-          }
-        }
-      });
-    }
-    section("B12:L12", "01  /  Bens por ambiente");
-    text(summary, "B13:L13", "Somente bens individuais em uso", {
-      size: 9,
-      fg: color.muted
-    });
-    section("N12:X12", "02  /  Situação dos registros");
-    text(summary, "N13:X13", "Bens e cadastros de material neste arquivo", {
-      size: 9,
-      fg: color.muted
-    });
-    const rule = {
-      bottom: {
-        style: "hair",
-        color: {
-          argb: color.line
-        }
-      }
-    };
-    function barRow(row, a, label, b, c, f, n, max, barColor) {
-      const endLabel = summary.getColumn(summary.getColumn(b).number - 1).letter;
-      text(summary, a + row + ":" + endLabel + row, label, {
-        size: 10,
-        border: rule
-      });
-      text(summary, b + row + ":" + c + row, formula(f, n), {
-        size: 11,
-        bold: true,
-        align: "right",
-        border: rule
-      });
-      summary.getRow(row).height = 32;
-      summary.addConditionalFormatting({
-        ref: b + row + ":" + c + row,
-        rules: [{
-          type: "dataBar",
-          cfvo: [{
-            type: "num",
-            value: 0
-          }, {
-            type: "num",
-            value: Math.max(1, max)
-          }],
-          color: {
-            argb: barColor || "FFB7D8F5"
-          },
-          showValue: true,
-          gradient: false,
-        }]
-      });
-    }
-    ROOMS.forEach((room, i) => barRow(14 + i, "B", room, "H", "L",
-      count(["M", "Individual"], ["H", statusName("ATIVO")], ["F", room]),
-      individuals.filter(r => r.situacao === "ATIVO" && r.dados.ambiente === room).length,
-      Math.max(1, ...ROOMS.map(room => individuals.filter(r => r.situacao === "ATIVO" && r.dados.ambiente === room).length))));
-    ["ATIVO", "EMPRESTADO", "BAIXADO", "ARQUIVADO"].forEach((s, i) => barRow(14 + i, "N", statusName(s), "U", "X",
-      count(["H", statusName(s)]), list.filter(r => r.situacao === s).length, list.length,
-      s === "BAIXADO" ? "FFF0BDCA" : "FFB7D8F5"));
-    section("B19:L19", "03  /  Categorias em uso");
-    text(summary, "B20:L20", "Bens individuais ativos por categoria", {
-      size: 9,
-      fg: color.muted
-    });
-    CATEGORIES.forEach((cat, i) => barRow(21 + i, "B", cat, "H", "L",
-      count(["M", "Individual"], ["H", statusName("ATIVO")], ["C", cat]),
-      individuals.filter(r => r.situacao === "ATIVO" && r.dados.categoria === cat).length,
-      individuals.filter(r => r.situacao === "ATIVO").length));
-    section("N19:X19", "04  /  Saúde do estoque");
-    text(summary, "N20:X20", "Número de materiais ativos, sem somar unidades diferentes", {
-      size: 9,
-      fg: color.muted
-    });
-    summary.getRow(20).height = 29;
-    [["Acima do mínimo", liveStocks.filter(r => Number(r.saldo) > Number(r.minimo)).length, "FFB7D8F5"],
-      ["Repor", liveStocks.filter(r => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo)).length, "FFF3D5A2"],
-      ["Sem saldo", liveStocks.filter(r => Number(r.saldo) <= 0).length, "FFF0BDCA"]].forEach(([label, n, tone], i) =>
-        barRow(21 + i, "N", label, "U", "X", healthCount(label), n, liveStocks.length, tone));
-    paint(summary, 25, 28, 2, 24, color.soft);
-    text(summary, "B25:X25", "ATENÇÃO  /  Pendências para acompanhar", { size: 11, bold: true, fg: color.white, bg: "FF133C78", indent: 1 });
-    summary.getRow(25).height = 28;
-    const untagged = individuals.filter(r => r.situacao === "ATIVO" && r.dados.tipo === "SEM_IDENTIFICACAO").length;
-    text(summary, "B26:R26", "Bens em uso sem etiqueta externa PMC ou ICI", {
-      size: 10
-    });
-    text(summary, "T26:X26", formula(count(["M", "Individual"], ["H", statusName("ATIVO")], ["D", TYPE.SEM_IDENTIFICACAO]), untagged), {
-      size: 12,
-      bold: true,
-      align: "right"
-    });
-    text(summary, "B27:R27", "Materiais ativos que chegaram ao mínimo ou ficaram sem saldo", {
-      size: 10
-    });
-    text(summary, "T27:X27", formula("H7", lowStocks.length), {
-      size: 12,
-      bold: true,
-      align: "right",
-      fg: color.amber
-    });
-    text(summary, "B28:X28", "Abra Estoque para ver saldos e mínimos; Empréstimos para localizar os responsáveis.", {
-      size: 9,
-      fg: color.muted
-    });
-    [26, 27, 28].forEach(r => summary.getRow(r).height = 22);
-    [["B30:F31", "Inventário"], ["H30:L31", "Estoque"], ["N30:R31", "Empréstimos"], ["T30:X31", "Relatório A4"]].forEach(([range, name]) =>
-      text(summary, range, {
-        text: name,
-        hyperlink: "#'" + name + "'!A1"
-      }, {
-        size: 10,
-        bold: true,
-        fg: color.green,
-        bg: "FFEAF1FC",
-        align: "center"
-      }));
-    summary.getRow(29).height = 16;
-    summary.getRow(32).height = 14;
-    text(summary, "B33:X33", formula((list.length ? 'COUNTA(' + ref("A") + ')' : '0') + '&" registros neste arquivo"', list.length + " registros neste arquivo"), {
-      size: 9,
-      fg: color.muted
-    });
-    text(summary, "B34:X35", "Dados da emissão. Os indicadores usam as abas deste arquivo; novas movimentações do Acervo exigem outra exportação.", {
-      size: 9,
-      fg: color.muted
-    });
     const widths = [18, 35, 18, 26, 19, 26, 15, 17, 48, 25, 24, 30, 20, 12, 16, 12];
     table("Inventário", "ACERVO_Inventario", inventoryHeaders, list.map(inventoryRow), widths, {
       details: true,
       dates: [10]
     });
-    table("Sem identificação externa", "ACERVO_SemIdentificacao", inventoryHeaders,
-      list.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").map(inventoryRow), widths,
-      {
-        details: true,
-        dates: [10],
-        tabColor: "FF92B7D6"
-      });
     table("Descartados", "ACERVO_Baixas", [
       "Código interno", "Item", "Identificação", "Data do descarte", "Motivo",
       "Documento/processo", "Responsável", "Ambiente anterior",
@@ -4181,37 +3943,6 @@ async function exportExcel(all) {
       dates: [4],
       dateOnly: true,
       tabColor: "FFB65871"
-    });
-    const stockSheet = table("Estoque", "ACERVO_Estoque", [
-      "Código interno", "Material", "Ambiente", "Posição", "Saldo", "Unidade", "Mínimo", "Reposição", "Situação", "Categoria", "Observação",
-    ], stocks.map((r, i) => {
-      const row = i + 8,
-        label = r.situacao !== "ATIVO" ? "Fora de uso" : Number(r.saldo) <= 0 ? "Sem saldo" : Number(r.saldo) <= Number(r.minimo) ? "Repor" : "Acima do mínimo";
-      return [internal(r.id), r.dados.item, r.dados.ambiente, locationText(r), Number(r.saldo), r.unidade, Number(r.minimo),
-        formula('IF(I' + row + '<>"' + STATUS.ATIVO + '","Fora de uso",IF(E' + row + '<=0,"Sem saldo",IF(E' + row + '<=G' + row + ',"Repor","Acima do mínimo")))', label),
-        STATUS[r.situacao], r.dados.categoria, r.dados.observacao || ""];
-    }), [18, 30, 23, 14, 10, 14, 10, 23, 18, 18, 44], {
-      tabColor: "FF398DC8",
-      printCols: 9
-    });
-    if (stocks.length)[["Sem saldo", "FFFCE9EF", "FFA32143"], ["Repor", "FFFFF3DE", "FF875212"]].forEach(([label, bg, fg]) => {
-      stockSheet.addConditionalFormatting({
-        ref: "H8:H" + (stocks.length + 7),
-        rules: [{
-          type: "containsText",
-          operator: "containsText",
-          text: label,
-          style: {
-            fill: fill(bg),
-            font: {
-              bold: true,
-              color: {
-                argb: fg
-              }
-            }
-          }
-        }]
-      });
     });
     table("Empréstimos", "ACERVO_Emprestimos", [
       "Código interno", "Item", "Etiqueta", "Responsável", "Local atual",
@@ -4337,11 +4068,11 @@ async function exportExcel(all) {
       nextRow = 7;
     }
     report.pageSetup.printArea = "A1:E" + (nextRow - 1);
-    ["Resumo", "Indicadores", "Inventário", "Estoque", "Empréstimos", "Descartados", "Sem identificação externa", "Relatório A4"].forEach((name, index) => {
+    ["Resumo", "Inventário", "Empréstimos", "Descartados", "Relatório A4"].forEach((name, index) => {
       wb.getWorksheet(name).orderNo = index;
     });
     for (const sheet of wb.worksheets) {
-      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name === "Indicadores" ? "Indicadores · valores e fórmulas" : sheet.name, sheet.name === "Indicadores" ? 25 : sheet.name === "Relatório A4" ? 5 : sheet.name === "Inventário" || sheet.name === "Sem identificação externa" ? 8 : sheet.columnCount);
+      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.name === "Relatório A4" ? 5 : sheet.name === "Inventário" ? 8 : sheet.columnCount);
     }
     const buffer = await wb.xlsx.writeBuffer();
     const url = URL.createObjectURL(new Blob([buffer], {

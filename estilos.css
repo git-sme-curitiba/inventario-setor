@@ -9221,3 +9221,320 @@ body::before { content: none; }
 @media(max-width:640px) {
   #browse .record-row > td:nth-child(2)::before, #browse .record-row > td:nth-child(3)::before, #browse .record-row > td:nth-child(5)::before { content: attr(data-label); display: block; color: var(--muted); text-transform: uppercase; }
 }
+
+.mobile-registration,
+.mobile-registration-actions,
+.mobile-item-detail {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  #app > .intro {
+    display: none;
+  }
+  #app > .nav {
+    position: fixed;
+    z-index: 40;
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    margin: 0;
+    padding: 5px;
+    background: linear-gradient(130deg, rgba(250,253,255,.98), rgba(220,235,249,.98));
+    border: 1px solid #aacbec;
+    box-shadow: 0 8px 28px #164f8433, inset 0 1px 0 #fff;
+    backdrop-filter: blur(16px);
+  }
+  #app > section {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+    scroll-margin-top: 12px;
+  }
+  .keyboard-open #app > .nav {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #app > .nav .nav-lens {
+    background: linear-gradient(140deg,#fff,#e5f2ff);
+    border: 1px solid #a6cbed;
+    box-shadow: 0 3px 8px #15568b22;
+  }
+  #register .workspace > .card {
+    padding: 16px;
+    background: linear-gradient(125deg,#ffffff,#f1f7fe);
+    border-color: #82b7e9;
+    box-shadow: 0 12px 30px #144a781a, inset 0 1px 0 white;
+  }
+  .mobile-registration {
+    display: block;
+    margin-bottom: 18px;
+  }
+  #mobileRegistrationProgress {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 4px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #b6d3ee;
+    margin-bottom: 20px;
+  }
+  #mobileRegistrationProgress button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    min-height: 58px;
+    padding: 4px 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    font-size: 11px;
+    color: #587390;
+    opacity: 1;
+  }
+  #mobileRegistrationProgress button span {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1px solid #a5c6e7;
+    border-radius: 50%;
+    background: #f5faff;
+    color: #32658e;
+    font-size: 13px;
+  }
+  #mobileRegistrationProgress button[aria-current],
+  #mobileRegistrationProgress button.complete {
+    color: #0e487f;
+    font-weight: 700;
+  }
+  #mobileRegistrationProgress button[aria-current] span,
+  #mobileRegistrationProgress button.complete span {
+    background: linear-gradient(135deg,#129ee8,#0753a5);
+    color: white;
+    border-color: #0864b8;
+    box-shadow: 0 3px 7px #125b9633;
+  }
+  #mobileRegistrationTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-family: Georgia,serif;
+    font-size: clamp(22px,6vw,28px);
+    line-height: 1.15;
+    color: #123f6c;
+    outline: none;
+  }
+  #mobileRegistrationTitle > .icon {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    color: white;
+    border: 1px solid #1475c5;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#1aabee,#0753a2);
+    box-shadow: 0 4px 9px #16578d26,inset 0 1px 0 #ffffff44;
+  }
+  #registrationHeader,
+  #registrationBody,
+  #registrationMain,
+  #formRest {
+    display: block;
+    margin: 0;
+  }
+  #registrationHeader > h2 {
+    display: none;
+  }
+  #registrationRooms,
+  #location,
+  #registrationItem,
+  #registrationCategory,
+  #identityBlock,
+  #controlHost {
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 16px;
+  }
+  #registrationRooms {
+    padding: 12px;
+    border: 1px solid #aed0ee;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#f8fcff,#e6f1fc);
+  }
+  #registrationRooms legend {
+    display: block;
+    padding: 0 4px;
+  }
+  #rooms {
+    gap: 6px;
+  }
+  #rooms label {
+    min-height: 80px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    font-size: 11px;
+    padding: 9px 5px;
+  }
+  #rooms label .icon {
+    width: 22px;
+    height: 22px;
+  }
+  #location {
+    padding: 14px;
+    border-radius: 14px;
+    background: #eaf3fc;
+    border: 1px solid #aacded;
+  }
+  #levels {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+  }
+  #registrationCategory {
+    padding: 12px;
+    background: #e9f3fd;
+  }
+  #registrationItem {
+    padding: 12px;
+    background: #f9fcff;
+  }
+  #itemForm[data-mobile-stage="1"] #registrationBody > #registrationMain,
+  #itemForm[data-mobile-stage="1"] #registrationSave,
+  #itemForm:not([data-mobile-stage="1"]) #registrationHeader,
+  #itemForm:not([data-mobile-stage="1"]) #location,
+  #itemForm:not([data-mobile-stage="2"]) #registrationItem,
+  #itemForm:not([data-mobile-stage="2"]) #registrationCategory,
+  #itemForm:not([data-mobile-stage="3"]) #formRest,
+  #itemForm:not([data-mobile-stage="4"]) #notesBlock,
+  #itemForm:not([data-mobile-stage="4"]) #registrationSave {
+    display: none;
+  }
+  #itemForm[data-mobile-stage="4"] #registrationBody {
+    display: flex;
+    flex-direction: column;
+  }
+  #itemForm[data-mobile-stage="4"] #registrationSave {
+    display: flex;
+    flex-direction: column;
+    margin-top: 14px;
+  }
+  #notesBlock {
+    margin: 0;
+  }
+  #registrationSummary {
+    padding: 14px;
+    border-color: #8db9e0;
+    background: linear-gradient(130deg,#edf6ff,#dcebf9);
+  }
+  #registrationSummary dl {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #registrationSummary dl > div {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #b7cfe5;
+  }
+  .mobile-registration-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .mobile-registration-actions button {
+    min-height: 48px;
+    flex: 1;
+  }
+  #mobileRegistrationNext {
+    flex: 2;
+  }
+  #draftInfo {
+    font-size: 11px;
+    margin-top: 12px;
+  }
+  #itemForm[data-mobile-stage] #registrationHeader,
+  #itemForm[data-mobile-stage] #registrationMain > :not([hidden]),
+  #itemForm[data-mobile-stage] #registrationSave:not([hidden]) {
+    animation: mobile-step-in .22s ease-out;
+  }
+  #saved:not([hidden]) {
+    margin-top: 18px;
+    padding: 16px;
+    background: linear-gradient(130deg,#f8fcff,#e3f0fc);
+    border: 1px solid #83b5e2;
+    border-radius: 15px;
+  }
+  #saved > button {
+    width: 100%;
+    min-height: 46px;
+    margin: 8px 0 0;
+  }
+  #saved > button:first-of-type {
+    display: none;
+  }
+  .mobile-detail-open > :not(#mobileDetail) {
+    display: none;
+  }
+  .mobile-item-detail {
+    display: block;
+  }
+  .mobile-item-detail > button {
+    margin-bottom: 14px;
+    min-height: 46px;
+    width: 100%;
+  }
+  .mobile-item-detail .detail-panel {
+    margin: 0;
+    padding: 16px;
+    border: 1px solid #8fb8df;
+    border-radius: 16px;
+    background: linear-gradient(135deg,#eef6ff,#dfeaf8);
+    box-shadow: 0 8px 20px #174c7d19;
+  }
+  #results .record-row {
+    border-color: #a7c8e7;
+    background: linear-gradient(120deg,#ffffff,#f0f7fe);
+  }
+  @keyframes mobile-step-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #itemForm[data-mobile-stage] * {
+    animation: none !important;
+  }
+}
+
+.mobile-review-back { display: none; }
+@media (max-width: 640px) {
+  #notesBlock,
+  #notesBlock textarea {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+  #registrationSave > #notesBlock {
+    margin: 16px 0 12px;
+  }
+  #itemForm[data-mobile-stage="4"] .mobile-review-back {
+    display: inline-flex;
+    min-height: 44px;
+    align-self: flex-start;
+    margin: 0 0 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  #register .workspace > .card:has(> #saved:not([hidden])) #itemForm,
+  #register .workspace > .card:has(> #saved:not([hidden])) #draftInfo {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  #registrationSave > .spaced { order: 0; }
+  #registrationSave > #notesBlock { order: 1; }
+  #registrationSave > .mobile-review-back { order: 2; }
+  #registrationSave > .registration-actions { order: 3; width: 100%; }
+}

@@ -273,7 +273,33 @@ function showAcervoReceipt(record, template) {
   row.append(place, copy);
   saved.classList.toggle("is-discarded", discarded);
   saved.replaceChildren(row, button("Cadastrar outro igual", () => repeatRegistration(template), "", "copy"));
+  if (mobileAcervo()) {
+    saved.append(button("Cadastrar outro neste local", () => {
+      resetForm();
+      for (const [name, field] of [["room", "ambiente"], ["shelf", "estante"], ["level", "prateleira"]]) setChoice(name, template[field]);
+      syncForm();
+      saved.hidden = true;
+      saveDraft();
+      registrationStage(2);
+    }, "primary", "record-add"));
+    saved.append(button("Ver item", () => {
+      query({ situacao: "TODOS" });
+      expanded = record.id;
+      const position = filtered().findIndex(item => item.id === record.id);
+      if (position >= 0) page = Math.floor(position / 25) + 1;
+      renderList();
+    }, "", "search"));
+    saved.append(button("Novo local", () => {
+      saved.hidden = true;
+      setChoice("shelf", "");
+      setChoice("level", "");
+      syncLocation();
+      registrationStage(1);
+    }, "", "pin"));
+
+  }
   saved.hidden = false;
+  if (mobileAcervo()) saved.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
 function labelButton(n, text, name) {
@@ -642,7 +668,7 @@ function syncDirectDown() {
 function openRegistrationDiscard() {
   if (busy || role === "leitor") return;
   if (pending) return toast("Conclua a operação pendente primeiro.", true);
-  if (!$("itemForm").reportValidity()) return;
+  if (!mobileRegistrationValidity()) return;
   const d = formData();
   if (!validateRecord(d)) return;
   const place = d.ambiente === "Almoxarifado"
@@ -1101,6 +1127,7 @@ function restoreDraft() {
 }
 
 function resetForm() {
+  registrationStage(1, false);
   const keep = false;
   $("code").value = "";
   $("note").value = "";
@@ -1391,6 +1418,7 @@ function renderList() {
   $("pageLabel").textContent = page + " / " + pages;
   $("previous").disabled = busy || page === 1;
   $("next").disabled = busy || page === pages;
+  closeMobileDetail();
   $("results").replaceChildren();
   for (const r of found.slice((page - 1) * 25, page * 25)) {
     const tr = el("tr", undefined, "record-row");
@@ -1470,6 +1498,21 @@ function renderList() {
       row.append(cell);
       $("results").append(row);
       renderDetails(r, panel);
+      if (mobileAcervo()) {
+        row.remove();
+        const detail = el("div", undefined, "mobile-item-detail");
+        detail.id = "mobileDetail";
+        const back = button("Voltar aos resultados", () => {
+          const id = expanded;
+          expanded = null;
+          renderList();
+          $("results").querySelector(`[data-id="${id}"] button`)?.focus();
+        }, "", "left");
+        detail.append(back, panel);
+        $("browse").append(detail);
+        $("browse").classList.add("mobile-detail-open");
+        back.focus({ preventScroll: true });
+      }
     }
   }
   if (!found.length) {
@@ -1981,7 +2024,7 @@ async function transmit() {
         true,
       );
     }
-    if (op.origin === "create") $("item").focus();
+    if (op.origin === "create" && !mobileAcervo()) $("item").focus();
   } catch (e) {
     if (e.code) {
       pending = null;
@@ -3074,7 +3117,7 @@ function initForm() {
   });
   $("registrationDiscardForm").onsubmit = event => {
     event.preventDefault();
-    if (!busy && $("registrationDiscardForm").reportValidity() && $("itemForm").reportValidity() && saveRecord("", true))
+    if (!busy && $("registrationDiscardForm").reportValidity() && mobileRegistrationValidity() && saveRecord("", true))
     $("registrationDiscardDialog").close();
   };
   $("moveSearch").oninput = renderMovementResults;
@@ -3180,7 +3223,7 @@ $("itemForm").addEventListener("input", saveDraft);
 $("itemForm").addEventListener("change", saveDraft);
 $("itemForm").onsubmit = (e) => {
   e.preventDefault();
-  if (!busy && role !== "leitor" && $("itemForm").reportValidity())
+  if (!busy && role !== "leitor" && mobileRegistrationValidity())
   saveRecord();
 };
 $("operationForm").onsubmit = (e) => {
@@ -3491,6 +3534,24 @@ async function exportExcel(all) {
         argb
       }
     });
+    function cellBorders(tone="FFBCCDE1") {
+      const edge=()=>({style:"thin",color:{argb:tone}});
+      return {top:edge(),right:edge(),bottom:edge(),left:edge()};
+    }
+    function formatStatusCell(cell) {
+      const tones={
+        Ativo:["FFDCEBFF","FF0D438A","FF7FA7D6"],
+        Emprestado:["FFDEF1F8","FF125C7A","FF86B7CD"],
+        Descartado:["FFF9E1E7","FF8E2340","FFD895A8"],
+        Arquivado:["FFE8EDF4","FF465B71","FFB2BDC9"]
+      };
+      const tone=tones[String(cell.value)];
+      if(!tone)return;
+      cell.fill=fill(tone[0]);
+      cell.font={name:"Aptos",size:10,bold:true,color:{argb:tone[1]}};
+      cell.border=cellBorders(tone[2]);
+      cell.alignment={vertical:"middle",horizontal:"center",wrapText:true,indent:0};
+    }
     function text(ws, range, value, options = {}) {
       if (range.includes(":")) ws.mergeCells(range);
       const cell = ws.getCell(range.split(":")[0]);
@@ -3888,6 +3949,7 @@ async function exportExcel(all) {
           indent: 1,
         });
         ws.getRow(8).height = 40;
+        for(let column=1;column<=shown;column++)ws.getCell(8,column).border=cellBorders();
       }
       ws.getRow(7).height = 38;
       for (let j = 1; j <= headers.length; j++) {
@@ -3906,14 +3968,7 @@ async function exportExcel(all) {
           wrapText: true,
           indent: 1
         };
-        cell.border = {
-          right: {
-            style: "hair",
-            color: {
-              argb: "FF2865B4"
-            }
-          }
-        };
+        cell.border = cellBorders("FF5982B3");
       }
       data.forEach((values, i) => {
         const row = ws.getRow(i + 8);
@@ -3939,19 +3994,8 @@ async function exportExcel(all) {
             indent: 1
           };
           if (typeof cell.value === "number") cell.numFmt = Number.isInteger(cell.value) ? "#,##0" : "#,##0.###";
-          cell.border = {
-            bottom: {
-              style: "hair",
-              color: {
-                argb: color.line
-              }
-            }
-          };
-          if (options.details && j === 8) {
-            const tones = { "Ativo": ["FFEAF2FE", "FF1859A9"], "Emprestado": ["FFE7F2FC", "FF286FA7"], "Descartado": ["FFFBEAF0", "FFA5405D"], "Arquivado": ["FFF0F2F5", "FF6F7D8D"] };
-            const tone = tones[String(cell.value)];
-            if (tone) { cell.fill = fill(tone[0]); cell.font = { ...cell.font, bold: true, color: { argb: tone[1] } }; }
-          }
+          cell.border = cellBorders();
+          if (options.details && j === 8) formatStatusCell(cell);
           if ((options.dates || []).includes(j)) cell.numFmt = options.dateOnly ? "dd/mm/yyyy" : "dd/mm/yyyy hh:mm:ss";
           else if (typeof cell.value === "string") cell.numFmt = "@";
         }
@@ -4036,6 +4080,7 @@ async function exportExcel(all) {
       cell.fill=fill(color.green);
       cell.font={name:"Aptos",size:10,bold:true,color:{argb:color.white}};
       cell.alignment={vertical:"middle",wrapText:true,indent:1};
+      cell.border=cellBorders("FF5982B3");
     });
     const groups=new Map();
     for(const record of list){
@@ -4059,7 +4104,10 @@ async function exportExcel(all) {
       text(report,"A"+row+":E"+row,room,{size:11,bold:true,fg:tone,bg:shade,indent:1});
       text(report,"F"+row,count+(count===1?" item":" itens"),{size:10,bold:true,fg:tone,bg:shade,align:"right",indent:1});
       report.getRow(row).height=22;
-      report.getRow(row).eachCell(cell=>{cell.border={bottom:{style:"thin",color:{argb:"FFBED3E9"}}};});
+      report.getRow(row).eachCell((cell,column)=>{
+        const edges=cellBorders("FF9FBBD8");
+        cell.style={...cell.style,border:column===6?edges:{top:edges.top,bottom:edges.bottom,...(column===1?{left:edges.left}:{}),...(column===5?{right:edges.right}:{})},alignment:{...cell.alignment,vertical:"middle"}};
+      });
       pageHeight+=22;
     }
     let groupIndex=0;
@@ -4096,8 +4144,8 @@ async function exportExcel(all) {
           row.eachCell((cell,column)=>{
             cell.font={name:"Aptos",size:column===1?10:11,bold:column===2,color:{argb:color.ink}};
             cell.numFmt="@";cell.fill=fill(itemIndex%2?roomStripe:color.white);
-            cell.alignment={vertical:"top",wrapText:true,indent:1};
-            cell.border={bottom:{style:"hair",color:{argb:color.line}},...(column===1?{left:{style:"medium",color:{argb:roomTone}}}:{})};
+            cell.alignment={vertical:"middle",horizontal:"left",wrapText:true,indent:1};
+            cell.border={...cellBorders(),...(column===1?{left:{style:"medium",color:{argb:roomTone}}}:{})};
           });
           if(offset===0){
             const positionStart=part[1].indexOf("\nPosição:");
@@ -4105,9 +4153,7 @@ async function exportExcel(all) {
               {text:part[1].slice(0,positionStart),font:{name:"Aptos",size:11,bold:true,color:{argb:color.ink}}},
               {text:part[1].slice(positionStart),font:{name:"Aptos",size:10,color:{argb:color.muted}}}
             ]};
-            const status=row.getCell(4);
-            status.font={name:"Aptos",size:10,bold:true,color:{argb:r.situacao==="BAIXADO"?"FFA4324C":color.green}};
-            status.fill=fill(r.situacao==="BAIXADO"?"FFFCEEF1":r.situacao==="EMPRESTADO"?"FFE9EFFB":"FFEDF4FC");
+            formatStatusCell(row.getCell(4));
             if(stock&&r.situacao==="ATIVO"&&Number(r.saldo)<=Number(r.minimo))row.getCell(5).font={name:"Aptos",size:11,bold:true,color:{argb:"FF98631D"}};
           }
           pageHeight+=height;
@@ -4117,7 +4163,9 @@ async function exportExcel(all) {
     }
     if(!list.length){
       text(report,"A6:F6","Nenhum registro neste recorte.",{fg:color.muted});
-      report.getRow(6).height=35;nextRow=7;
+      report.getRow(6).height=35;
+      for(let column=1;column<=6;column++)report.getCell(6,column).border=cellBorders();
+      nextRow=7;
     }
     report.pageSetup.printArea="A1:F"+(nextRow-1);
     ["Resumo", "Inventário", "Empréstimos", "Descartados", "Relatório A4"].forEach((name, index) => {
@@ -4939,3 +4987,133 @@ initVisualExperience();
   if (error) $("loginMessage").textContent = error.message;
   else if (data.session) await loginReady(data.session);
 })();
+
+function mobileAcervo() {
+  return matchMedia("(max-width: 640px)").matches;
+}
+
+function registrationStage(step, focus = true) {
+  const form = $("itemForm");
+  if (!$("mobileRegistration")) return;
+  form.dataset.mobileStage = String(step);
+  if (mobileAcervo() && step === 4) $("registrationSave").querySelector(".registration-actions").before($("notesBlock"));
+  else $("registrationMain").append($("notesBlock"));
+  const titles = ["Onde fica o item?", "Qual é o item?", "Identificação e controle", "Tudo certo para salvar?"];
+  const symbols = ["pin", "draft", "stock", "save"];
+  const heading = $("mobileRegistrationTitle");
+  heading.replaceChildren(icon(symbols[step - 1]), document.createTextNode(titles[step - 1]));
+  $("mobileRegistrationProgress").querySelectorAll("button").forEach((node, i) => {
+    node.classList.toggle("complete", i + 1 < step);
+    node.disabled = i + 1 > step;
+    if (i + 1 === step) node.setAttribute("aria-current", "step");
+    else node.removeAttribute("aria-current");
+  });
+  $("mobileRegistrationBack").hidden = step === 1;
+  $("mobileRegistrationNext").hidden = step === 4;
+  $("mobileRegistrationActions").hidden = step === 4;
+  if (focus && mobileAcervo() && !$("register").hidden) {
+    heading.focus({ preventScroll: true });
+    $("register").scrollIntoView({ block: "start", behavior: "auto" });
+  }
+}
+
+function validateRegistrationStage(step) {
+  const d = formData();
+  if (step === 1 && (!d.ambiente || d.ambiente === "Almoxarifado" && (!d.estante || !d.prateleira))) {
+    toast("Selecione o ambiente e a posição do item.", true);
+    return false;
+  }
+  if (step === 2 && (d.item.length < 2 || !d.categoria)) {
+    toast("Informe o nome do item e escolha a categoria.", true);
+    return false;
+  }
+  if (step === 3) {
+    if (!d.tipo || d.tipo !== "SEM_IDENTIFICACAO" && !/^\d{6}$/.test(d.codigo)) {
+      toast("Escolha a identificação e informe os seis números da etiqueta.", true);
+      return false;
+    }
+    for (const id of ["code", "quantity", "minimum"]) {
+      const node = $(id);
+      if (!node.disabled && !node.checkValidity()) {
+        node.reportValidity();
+        return false;
+      }
+    }
+    if (!validateRecord(d)) return false;
+  }
+  return true;
+}
+
+function mobileRegistrationValidity() {
+  if (!mobileAcervo()) return $("itemForm").reportValidity();
+  for (let stage = 1; stage <= 3; stage++) {
+    registrationStage(stage, false);
+    if (!validateRegistrationStage(stage)) {
+      registrationStage(stage);
+      return false;
+    }
+  }
+  registrationStage(4, false);
+  if (!$("note").checkValidity()) return $("note").reportValidity();
+  return true;
+}
+
+function closeMobileDetail() {
+  $("mobileDetail")?.remove();
+  $("browse").classList.remove("mobile-detail-open");
+}
+
+function initMobileAcervo() {
+  const form = $("itemForm");
+  const top = el("div", undefined, "mobile-registration");
+  top.id = "mobileRegistration";
+  const progress = el("nav");
+  progress.id = "mobileRegistrationProgress";
+  progress.setAttribute("aria-label", "Etapas do cadastro");
+  ["Local", "Item", "Controle", "Revisão"].forEach((label, i) => {
+    const choice = button(label, () => {
+      if (i + 1 <= Number(form.dataset.mobileStage)) registrationStage(i + 1);
+    });
+    choice.prepend(el("span", String(i + 1)));
+    progress.append(choice);
+  });
+  const title = el("h2");
+  title.id = "mobileRegistrationTitle";
+  title.tabIndex = -1;
+  top.append(progress, title);
+  $("fields").prepend(top);
+  const actions = el("div", undefined, "mobile-registration-actions");
+  actions.id = "mobileRegistrationActions";
+  const back = button("Voltar", () => registrationStage(Number(form.dataset.mobileStage) - 1), "", "left");
+  back.id = "mobileRegistrationBack";
+  const next = button("Continuar", () => {
+    const step = Number(form.dataset.mobileStage);
+    if (validateRegistrationStage(step)) registrationStage(step + 1);
+  }, "primary", "right");
+  next.id = "mobileRegistrationNext";
+  actions.append(back, next);
+  $("fields").append(actions);
+  const reviewBack = button("Voltar", () => registrationStage(3), "mobile-review-back", "left");
+  $("registrationSave").querySelector(".registration-actions").before(reviewBack);
+  form.addEventListener("keydown", event => {
+    if (mobileAcervo() && event.key === "Enter" && event.target.tagName === "INPUT" && Number(form.dataset.mobileStage) < 4) {
+      event.preventDefault();
+      next.click();
+    }
+  });
+  const query = matchMedia("(max-width: 640px)");
+  const resize = () => {
+    form.noValidate = query.matches;
+    if (!query.matches) {
+      closeMobileDetail();
+      $("registrationMain").append($("notesBlock"));
+    } else registrationStage(Number(form.dataset.mobileStage), false);
+    renderList();
+    updateNavIndicator(false);
+  };
+  query.addEventListener("change", resize);
+  registrationStage(1, false);
+  resize();
+}
+
+initMobileAcervo();

@@ -3608,12 +3608,14 @@ async function exportExcel(all) {
       contain(c,logo,64,59,72,72);
       c.font="700 38px Georgia";c.fillStyle="white";c.fillText("ACERVO",153,103);
       label(c,"GESTÃO DE BENS E MATERIAIS",155,128,12,"#d7edff",700);
-      label(c,"Visão geral do acervo",66,174,29,"white",700);
+      label(c,"Visão geral do acervo",66,177,38,"white",700);
       label(c,scope,66,199,13,"#d7edff",400,1020);
       rounded(c,1210,62,318,92,16,"#ffffff");
       contain(c,municipalityMark,1228,73,282,70);
-      label(c,"EMITIDO EM CURITIBA",1210,179,11,"#cbe7ff",700);
-      label(c,issued,1210,199,14,"#ffffff",400,318);
+      c.textAlign="right";
+      label(c,"EMITIDO EM CURITIBA",1528,179,11,"#cbe7ff",700);
+      label(c,issued,1528,199,14,"#ffffff",400,318);
+      c.textAlign="left";
       const goods=list.filter(r=>r.controle!=="QUANTIDADE"), stocks=list.filter(r=>r.controle==="QUANTIDADE"&&r.situacao==="ATIVO");
       const available=goods.filter(r=>r.situacao==="ATIVO").length;
       const borrowed=list.filter(r=>r.situacao==="EMPRESTADO").length;
@@ -3714,12 +3716,14 @@ async function exportExcel(all) {
       contain(c,logo,22,22,51,51);
       label(c,"ACERVO",86,43,22,"white",700);
       label(c,"GESTÃO DE BENS E MATERIAIS",87,61,9,"#d5ebff",700);
-      const markX=Math.min(width-252,860);
-      rounded(c,markX,20,230,77,13,"white");
-      contain(c,municipalityMark,markX+13,29,204,59);
-      label(c,title,23,105,29,"white",700,markX-46);
-      label(c,"Emitido em "+issued,24,127,11,"#d5ebff");
-      label(c,"← Voltar ao resumo",markX+29,124,12,"#e2f1ff",700);
+      const markX=width-252;
+      rounded(c,markX,18,230,70,13,"white");
+      contain(c,municipalityMark,markX+13,25,204,56);
+      label(c,title,23,113,36,"white",700,markX-46);
+      c.textAlign="right";
+      label(c,"Emitido em "+issued,width-22,106,11,"#d5ebff");
+      label(c,"← Voltar ao resumo",width-22,128,12,"#e2f1ff",700);
+      c.textAlign="left";
       for(let row=1;row<=3;row++)ws.getRow(row).height=height*.75/3;
       const imageId=wb.addImage({base64:canvas.toDataURL("image/jpeg",.96),extension:"jpeg"});
       ws.addImage(imageId,{tl:{col:0,row:0},br:{col:lastCol,row:3},editAs:"absolute",hyperlinks:{hyperlink:"#'Resumo'!A1",tooltip:"Voltar ao resumo"}});
@@ -4021,93 +4025,51 @@ async function exportExcel(all) {
         oddFooter: "&LACERVO&C" + shortDate(emitted) + "&RPágina &P de &N"
       },
     });
-    const reportWidths = [17, 30, 23, 29, 48];
-    report.columns = reportWidths.map(width => ({
-      width
-    }));
-    brand(report, 1, 5);
-    text(report, "A3:E3", "Relação de bens e materiais", {
-      size: 20,
-      bold: true,
-      fg: color.green
+    measure.font="13.33px Arial";
+    const reportWidths = [15, 28, 21, 23, 17, 20, 34];
+    report.columns = reportWidths.map(width => ({width}));
+    text(report,"A4:G4",scope+" · "+list.length+" registros",{size:10,fg:color.muted});
+    report.getRow(4).height=27;
+    report.getRow(5).values=["Código interno","Item","Identificação","Localização","Situação","Estoque","Observação"];
+    report.getRow(5).height=28;
+    report.getRow(5).eachCell(cell=>{
+      cell.fill=fill(color.green);
+      cell.font={name:"Aptos",size:10,bold:true,color:{argb:color.white}};
+      cell.alignment={vertical:"middle",wrapText:true,indent:1};
     });
-    report.getRow(3).height = 34;
-    text(report, "A4:E4", scope, {
-      size: 9,
-      fg: color.muted
-    });
-    report.getRow(4).height = Math.max(24, wrap(scope, 1000).length * 12 + 8);
-    report.getRow(5).values = ["Código interno", "Item", "Identificação", "Localização", "Situação e observação"];
-    report.getRow(5).height = 29;
-    report.getRow(5).eachCell(cell => {
-      cell.fill = fill(color.green); cell.font = {
-        name: "Aptos",
-        size: 10,
-        bold: true,
-        color: {
-          argb: color.white
-        }
-      };
-      cell.alignment = {
-        vertical: "middle",
-        wrapText: true,
-        indent: 1
-      };
-    });
-    const ordered = [...list].sort((a, b) => (a.dados.ambiente || "").localeCompare(b.dados.ambiente || "", "pt-BR") || a.dados.item.localeCompare(b.dados.item, "pt-BR"));
-    let nextRow = 6;
-    ordered.forEach((r, index) => {
-      const stock = r.controle === "QUANTIDADE";
-      const label = stock ? "Por quantidade" : r.dados.tipo === "SEM_IDENTIFICACAO" ? "Sem etiqueta externa" : (TYPE[r.dados.tipo] || r.dados.tipo) + " " + String(r.dados.codigo || "");
-      const where = [r.dados.ambiente, locationText(r)].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join("\n");
-      const info = [STATUS[r.situacao] || r.situacao,
-        stock ? "Saldo: " + Number(r.saldo) + " " + (r.unidade || "unidades") + " · Mínimo: " + Number(r.minimo) : "",
-        r.situacao === "BAIXADO" && r.baixa?.motivo ? "Descarte: " + r.baixa.motivo : "", r.dados.observacao || ""].filter(Boolean).join("\n");
-      const values = [internal(r.id), r.dados.item, label, where, info];
-      const lines = values.map((v, i) => wrap(v, reportWidths[i] * 7 - 18));
-      const longest = Math.max(...lines.map(v => v.length));
-      for (let offset = 0; offset < longest; offset += 12) {
-        const part = lines.map((v, j) => j === 0 ? values[0] : offset >= v.length ? (j === 1 ? "Continuação" : "") : v.slice(offset, offset + 12).join("\n"));
-        const row = report.getRow(nextRow++); row.values = part;
-        row.height = Math.max(36, ...part.map((v, j) => wrap(v, reportWidths[j] * 7 - 18).length * 14 + 10));
-        row.eachCell(cell => {
-          cell.font = {
-            name: "Aptos",
-            size: 11,
-            color: {
-              argb: color.ink
-            }
-          }; cell.numFmt = "@";
-          cell.fill = fill(index % 2 ? color.soft : color.white);
-          cell.alignment = {
-            vertical: "middle",
-            wrapText: true,
-            indent: 1
-          };
-          cell.border = {
-            bottom: {
-              style: "hair",
-              color: {
-                argb: color.line
-              }
-            }
-          };
+    const ordered=[...list].sort((a,b)=>(a.dados.ambiente||"").localeCompare(b.dados.ambiente||"","pt-BR")||a.dados.item.localeCompare(b.dados.item,"pt-BR"));
+    let nextRow=6;
+    ordered.forEach((r,index)=>{
+      const stock=r.controle==="QUANTIDADE";
+      const identity=r.dados.tipo==="SEM_IDENTIFICACAO"?"Sem etiqueta externa":(TYPE[r.dados.tipo]||r.dados.tipo)+"\n"+String(r.dados.codigo||"");
+      const where=[r.dados.ambiente,locationText(r)].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join("\n");
+      const balance=stock?quantityText(r.saldo,r.unidade)+"\nMínimo: "+Number(r.minimo):"—";
+      const notes=[r.dados.observacao||"",r.situacao==="BAIXADO"&&r.baixa?.motivo?"Motivo do descarte: "+r.baixa.motivo:"",r.situacao==="EMPRESTADO"?[r.emprestimo?.responsavel?"Emprestado a: "+r.emprestimo.responsavel:"",r.emprestimo?.destino?"Destino: "+r.emprestimo.destino:""].filter(Boolean).join("\n"):""].filter(Boolean).join("\n");
+      const values=[internal(r.id),r.dados.item,identity,where,STATUS[r.situacao]||r.situacao,balance,notes];
+      const lines=values.map((v,i)=>wrap(v,reportWidths[i]*7-18));
+      const longest=Math.max(...lines.map(v=>v.length));
+      for(let offset=0;offset<longest;offset+=8){
+        const part=lines.map((v,j)=>j===0?values[0]:offset===0?v.slice(0,8).join("\n"):j===1?(offset<v.length?v.slice(offset,offset+8).join("\n")+" (continuação)":"Continuação do item"):offset>=v.length?"":v.slice(offset,offset+8).join("\n"));
+        const row=report.getRow(nextRow++);row.values=part;
+        row.height=Math.max(35,...part.map((v,j)=>wrap(v,reportWidths[j]*7-18).length*13+12));
+        row.eachCell((cell,column)=>{
+          cell.font={name:"Aptos",size:10,bold:column===1,color:{argb:color.ink}};
+          cell.numFmt="@";cell.fill=fill(index%2?color.soft:color.white);
+          cell.alignment={vertical:"top",wrapText:true,indent:1};
+          cell.border={bottom:{style:"hair",color:{argb:color.line}}};
         });
       }
     });
-    if (!list.length) {
-      text(report, "A6:E6", "Nenhum registro neste recorte.", {
-        fg: color.muted
-      });
-      report.getRow(6).height = 34;
-      nextRow = 7;
+    if(!list.length){
+      text(report,"A6:G6","Nenhum registro neste recorte.",{fg:color.muted});
+      report.getRow(6).height=35;nextRow=7;
     }
-    report.pageSetup.printArea = "A1:E" + (nextRow - 1);
+    report.pageSetup.printArea="A1:G"+(nextRow-1);
     ["Resumo", "Inventário", "Empréstimos", "Descartados", "Relatório A4"].forEach((name, index) => {
       wb.getWorksheet(name).orderNo = index;
     });
     for (const sheet of wb.worksheets) {
-      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.name === "Relatório A4" ? 5 : sheet.columnCount);
+      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.columnCount);
     }
     const buffer = await wb.xlsx.writeBuffer();
     const url = URL.createObjectURL(new Blob([buffer], {
@@ -4784,6 +4746,8 @@ function initVisualExperience() {
   function syncScreen() {
     const authScreen = !$("login").hidden;
     document.body.classList.toggle("auth-screen", authScreen);
+    document.documentElement.classList.toggle("auth-viewport", authScreen);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", authScreen ? "#0d61b0" : "#e8f1fa");
     if (previousAuthScreen !== null && previousAuthScreen !== authScreen && !$("brandIntro")) revealFooter();
     previousAuthScreen = authScreen;
     $("syncTools").hidden = !$("login").hidden;

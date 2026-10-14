@@ -8933,3 +8933,75 @@ button.has-books-loader:disabled, #refresh.is-syncing:disabled {
     padding: 12px;
   }
 }
+
+#userAccessDialog .access-dialog-hero {
+  padding: 28px 32px 25px;
+  background: radial-gradient(ellipse at 90% 0%, #368ae0a8, transparent 62%), linear-gradient(125deg, #093b85, #155abc 74%, #1f6bc8);
+  border-bottom: 4px solid #9cd6ff;
+  overflow: hidden;
+}
+#userAccessDialog .access-dialog-hero::after {
+  width: 100px; height: 130px; right: 35px; top: 24px;
+  border: 1px solid #ffffff26; border-radius: 10px;
+  box-shadow: 19px -8px 0 -1px #ffffff0c, 19px -8px 0 0 #ffffff20, 38px -16px 0 -1px #ffffff08, 38px -16px 0 0 #ffffff15;
+  transform: rotate(12deg); pointer-events: none;
+  background: linear-gradient(90deg, #ffffff0c 0 12%, transparent 12%);
+}
+#userAccessDialog .access-dialog-kicker { font-size: 10px; letter-spacing: .16em; opacity: .8; margin-bottom: 19px; }
+#userAccessDialog .access-dialog-title { align-items: center; gap: 17px; position: relative; z-index: 1; }
+#userAccessDialog .access-dialog-mark { width: 56px; height: 56px; flex: 0 0 56px; border-radius: 17px; border: 1px solid #ffffff52; background: linear-gradient(145deg, #ffffff24, #ffffff0b); box-shadow: 0 8px 24px #032f7330; }
+#userAccessDialog .access-dialog-mark .icon { width: 29px; height: 29px; }
+#userAccessDialog #userAccessTitle { font-size: 29px; letter-spacing: -.035em; margin: 0; }
+#userAccessDialog #userAccessDescription { margin: 15px 0 0; max-width: 440px; font-size: 13px; line-height: 1.6; position: relative; z-index: 1; }
+#userAccessDialog #accessBack { margin: 0 0 15px; padding: 5px 9px; font-size: 11px; border: 1px solid #ffffff33; background: #ffffff0b; border-radius: 8px; }
+#operation { padding: 0; overflow: auto; }
+.operation-hero { position: relative; padding: 25px 28px 23px; color: white; background: radial-gradient(ellipse at 95% 0%, #4194e280, transparent 65%), linear-gradient(125deg,#093c86,#185ebe); border-bottom: 4px solid #9bd6ff; }
+.operation-heading { display: flex; align-items: center; gap: 15px; padding-right: 34px; }
+.operation-heading h2 { margin: 4px 0 0; color: white; font-size: 26px; letter-spacing: -.035em; }
+.operation-heading .eyebrow { color: #d4e9ff; font-size: 10px; letter-spacing: .12em; }
+.operation-mark { display: grid; place-items: center; width: 52px; height: 52px; flex: 0 0 52px; border: 1px solid #ffffff50; border-radius: 16px; background: #ffffff14; }
+.operation-mark .icon { width: 26px; height: 26px; }
+.operation-hero > button { position: absolute; right: 15px; top: 15px; width: 32px; height: 32px; padding: 6px; background: #ffffff10; border: 1px solid #ffffff40; color: white; border-radius: 10px; }
+.operation-record { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 20px; padding: 13px 15px; border: 1px solid #ffffff30; border-radius: 12px; background: #00276325; }
+.operation-record strong { display: block; font-size: 14px; }
+.operation-record small { display: block; margin-top: 4px; font-size: 11px; color: #d1e5ff; }
+.operation-code { flex-shrink: 0; font-size: 11px; letter-spacing: .04em; color: #d8edff; }
+#operationForm, #deleteItemForm { padding: 20px 28px 26px; background: #f2f6fc; }
+#operationForm label, #deleteItemForm label { font-size: 12px; color: #28496d; font-weight: 650; }
+#operationForm input, #operationForm textarea, #deleteItemForm input { background: #fff; border: 1px solid #c4d4e8; border-radius: 11px; box-shadow: 0 2px 4px #16478105; }
+#operationHint { margin: 0 0 20px; font-size: 12px; line-height: 1.6; }
+#confirmOperation { width: 100%; justify-content: center; min-height: 45px; margin-top: 18px; border-radius: 12px; }
+#operation.destructive .operation-hero, #deleteItemDialog .operation-hero { background: radial-gradient(ellipse at 95% 0%, #e1788480, transparent 65%),linear-gradient(125deg,#772734,#b43b4f); border-bottom-color: #f2a8b4; }
+#operation.destructive .operation-record { background: #5b122124; }
+#operation.destructive .operation-record small, #operation.destructive .operation-code { color: #ffe2e8; }
+#operation.destructive #confirmOperation, #deleteItemSave { color: white; background: #a83248; border-color: #94233a; }
+#deleteItemDialog { padding: 0; max-width: 530px; }
+.deletion-record { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid #d5dfec; }
+.deletion-record span { font-size: 12px; }
+#deleteItemForm > p { font-size: 13px; line-height: 1.65; }
+.item-delete-action { margin-left: auto; font-size: 11px; opacity: .85; }
+.history-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.identification-overview { background: #f0f5fc; }
+@media(max-width: 650px) {
+  .history-layout { grid-template-columns: 1fr; }
+  #userAccessDialog .access-dialog-hero, .operation-hero { padding: 22px 20px; }
+  #userAccessDialog #userAccessTitle, .operation-heading h2 { font-size: 24px; }
+  #operationForm, #deleteItemForm { padding: 20px; }
+  .operation-record { flex-wrap: wrap; }
+  .item-delete-action { margin-left: 0; }
+}
+
+#registrationDiscardDialog { padding: 0; overflow: auto; }
+#registrationDiscardDialog .registration-discard-heading { padding: 25px 28px 23px; background: radial-gradient(ellipse at 95% 0%, #e1788480, transparent 65%),linear-gradient(125deg,#772734,#b43b4f); border-bottom: 4px solid #f2a8b4; }
+#registrationDiscardDialog #registrationDiscardTitle { display: block; margin: 4px 0 0; color: white; font-size: 24px; }
+#registrationDiscardForm { padding: 20px 28px 26px; background: #f2f6fc; }
+#registrationDiscardItem { padding: 13px 15px; border: 1px solid #d2ddec; border-radius: 12px; background: white; }
+#registrationDiscardDescription { font-size: 13px; line-height: 1.65; }
+#registrationDiscardForm textarea { background: white; border: 1px solid #c4d4e8; border-radius: 11px; }
+#registrationDiscardForm .actions { gap: 12px; margin-top: 20px; }
+#registrationDiscardForm .actions > button { flex: 1; justify-content: center; min-height: 43px; }
+#registrationDiscardForm #confirmRegistrationDiscard { color: white; background: #a83248; border: 1px solid #94233a; }
+@media(max-width: 650px) {
+  #registrationDiscardDialog .registration-discard-heading, #registrationDiscardForm { padding: 20px; }
+  #registrationDiscardDialog #registrationDiscardTitle { font-size: 22px; }
+}

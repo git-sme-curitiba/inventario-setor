@@ -445,6 +445,10 @@ function showTab(id) {
     else b.removeAttribute("aria-current");
   });
   updateNavIndicator();
+  if (mobileAcervo()) {
+    $("mobileAccountMenu")?.removeAttribute("open");
+    document.querySelector(".shell > header")?.scrollIntoView({ block: "start", behavior: "auto" });
+  }
 }
 
 function setBusy(v, message = "Salvando…") {
@@ -800,7 +804,7 @@ function configureMovement(a, r) {
 }
 
 function validScanValue(v) {
-  return scanTarget === "moveSearch"
+  return ["moveSearch", "search"].includes(scanTarget)
     ? /^\d{6}$/.test(v) || /^ACV-\d+$/i.test(v)
     : /^\d{6}$/.test(v);
 }
@@ -823,6 +827,7 @@ function syncLocation(prefix = "") {
     shelf && level
     ? shelf + " · " + level.padStart(2, "0")
     : "Escolha a posição";
+  if (!edit) updateMobileLocation();
 }
 
 function syncCode(prefix = "") {
@@ -1019,6 +1024,7 @@ function updateRegistrationSummary() {
       val.prepend(icon("pin"));
     }
     if (detail) val.append(el("small", detail));
+    wrap.dataset.fact = label;
     wrap.append(el("dt", label), val);
     facts.append(wrap);
   }
@@ -1035,6 +1041,14 @@ function updateRegistrationSummary() {
     d.ambiente === "Almoxarifado"
     ? `Estante ${d.estante || "a selecionar"} · Prateleira ${d.prateleira || "a selecionar"}`
     : "");
+  const category = el("div", undefined, "mobile-summary-fact");
+  category.append(el("dt", "Categoria"), el("dd", d.categoria || "A selecionar"));
+  facts.prepend(category);
+  if (!automatic) {
+    const code = el("div", undefined, "mobile-summary-fact");
+    code.append(el("dt", "Código interno"), el("dd", nextInternalPreview() || "Gerado ao salvar"));
+    facts.append(code);
+  }
   summary.replaceChildren(heading, facts);
 }
 
@@ -1476,6 +1490,12 @@ function renderList() {
       expanded === r.id ? "close" : "right",
     );
     open.setAttribute("aria-expanded", String(expanded === r.id));
+    const recordIcon = icon(CATEGORY_ICON[d.categoria] || "draft");
+    recordIcon.classList.add("mobile-record-icon");
+    tr.firstChild.prepend(recordIcon);
+    tr.addEventListener("click", event => {
+      if (mobileAcervo() && !event.target.closest("button")) open.click();
+    });
     actionCell.append(open);
     tr.append(actionCell);
     $("results").append(tr);
@@ -4443,6 +4463,12 @@ function acceptCode(s, value) {
     renderMovementResults();
     return;
   }
+  if (scanTarget === "search") {
+    page = 1;
+    expanded = null;
+    renderList();
+    return;
+  }
   if (scanTarget === "code") saveDraft();
   duplicateHint();
   toast("Código " + value + " preenchido.");
@@ -4541,7 +4567,7 @@ async function openScanner(target = "code") {
     scene ||
     busy ||
     pending ||
-    (target !== "moveSearch" &&
+    (!["moveSearch", "search"].includes(target) &&
       value(target === "editCode" ? "editType" : "type") ===
       "SEM_IDENTIFICACAO")
   )
@@ -4554,7 +4580,8 @@ async function openScanner(target = "code") {
   scanTarget = target;
   scene = s;
   $("cameraTitle").textContent =
-    target === "moveSearch"
+    target === "search" ? "Buscar item no inventário"
+    : target === "moveSearch"
     ? "Buscar item para movimentar"
     : "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
   $("cameraStatus").textContent = "Procurando códigos…";
@@ -4996,7 +5023,7 @@ function registrationStage(step, focus = true) {
   const form = $("itemForm");
   if (!$("mobileRegistration")) return;
   form.dataset.mobileStage = String(step);
-  if (mobileAcervo() && step === 4) $("registrationSave").querySelector(".registration-actions").before($("notesBlock"));
+  if (mobileAcervo() && step === 4) $("registrationSave").append($("notesBlock"));
   else $("registrationMain").append($("notesBlock"));
   const titles = ["Onde fica o item?", "Qual é o item?", "Identificação e controle", "Tudo certo para salvar?"];
   const symbols = ["pin", "draft", "stock", "save"];
@@ -5117,3 +5144,121 @@ function initMobileAcervo() {
 }
 
 initMobileAcervo();
+
+
+function updateMobileLocation() {
+  const target = $("mobileLocationSummary");
+  if (!target) return;
+  const d = formData();
+  const line = [d.ambiente];
+  if (d.ambiente === "Almoxarifado" && d.estante && d.prateleira) line.push(`Estante ${d.estante}`, `Prateleira ${d.prateleira.padStart(2, "0")}`);
+  const copy = el("div");
+  copy.append(el("small", "Local selecionado"), el("span", line.filter(Boolean).join(" · ")));
+  target.replaceChildren(icon("pin"), copy);
+}
+
+function initMobileIdentity() {
+  const header = document.querySelector(".shell > header"),
+    accountHost = header.querySelector(".header-meta"),
+    accountToolbar = accountHost.querySelector(".account-toolbar"),
+    footer = document.querySelector(".institution-footer");
+  const accountMenu = el("details", undefined, "mobile-account-menu");
+  accountMenu.id = "mobileAccountMenu";
+  const accountButton = el("summary");
+  accountButton.setAttribute("aria-label", "Abrir perfil e ações da conta");
+  const avatar = el("span", "A", "mobile-account-avatar");
+  accountButton.append(avatar, icon("right"));
+  const accountPanel = el("div", undefined, "mobile-account-panel");
+  const credit = footer.cloneNode(true);
+  credit.className = "mobile-institution-credit";
+  accountPanel.append(credit);
+  accountMenu.append(accountButton, accountPanel);
+  header.append(accountMenu);
+  const avatarObserver = new MutationObserver(() => avatar.textContent = $("accountAvatar").textContent);
+  avatarObserver.observe($("accountAvatar"), { childList: true, characterData: true, subtree: true });
+  avatar.textContent = $("accountAvatar").textContent;
+  accountPanel.addEventListener("click", event => {
+    if (event.target.closest("button")) accountMenu.open = false;
+  });
+  const queryMenu = el("details", undefined, "mobile-query-menu");
+  queryMenu.id = "mobileQueryMenu";
+  const queryButton = el("summary", "•••");
+  queryButton.setAttribute("aria-label", "Exportação e itens descartados");
+  queryMenu.append(queryButton);
+  const queryBar = $("browse").querySelector(".card > .bar"),
+    queryTools = queryBar.querySelector(".query-tools");
+  queryBar.append(queryMenu);
+  const camera = button("", () => openScanner("search"), "primary mobile-browse-scan", "scan");
+  camera.id = "mobileBrowseScan";
+  camera.setAttribute("aria-label", "Ler código para consultar");
+  $("search").after(camera);
+  const formContent = el("div", undefined, "mobile-registration-content");
+  formContent.id = "mobileRegistrationContent";
+  $("mobileRegistration").after(formContent);
+  formContent.append($("registrationHeader"), $("registrationBody"), $("registrationSave"));
+  const reviewActions = $("registrationSave").querySelector(".registration-actions");
+  const reviewBack = $("registrationSave").querySelector(".mobile-review-back");
+  const descriptions = ["Selecione o local e a posição no acervo.", "Informe o item e sua categoria.", "Identifique e escolha como acompanhar.", "Revise as informações do registro."];
+  const description = el("p", descriptions[0], "mobile-stage-description");
+  description.id = "mobileRegistrationDescription";
+  $("mobileRegistrationTitle").after(description);
+  const title = (text, name) => {
+    const bar = el("div", undefined, "mobile-card-heading");
+    bar.append(icon(name), el("strong", text));
+    return bar;
+  };
+  $("registrationRooms").prepend(title("Localização", "pin"));
+  $("location").prepend(title("Posição no almoxarifado", "shelf"));
+  $("registrationCategory").prepend(title("Categoria", "composition"));
+  const fieldLabel = el("span", "Nome do item", "mobile-field-label");
+  $("item").before(fieldLabel);
+  const local = el("div", undefined, "mobile-location-summary");
+  local.id = "mobileLocationSummary";
+  $("registrationBody").append(local);
+  updateMobileLocation();
+  const observer = new MutationObserver(() => {
+    const stage = Number($("itemForm").dataset.mobileStage);
+    description.textContent = descriptions[stage - 1];
+    $("mobileRegistrationProgress").querySelectorAll("button").forEach((node, i) => {
+      const badge = node.querySelector("span");
+      if (i + 1 < stage) badge.replaceChildren(icon("check"));
+      else badge.textContent = String(i + 1);
+    });
+  });
+  observer.observe($("itemForm"), { attributes: true, attributeFilter: ["data-mobile-stage"] });
+  document.addEventListener("click", event => {
+    if (!accountMenu.contains(event.target)) accountMenu.open = false;
+    if (!queryMenu.contains(event.target)) queryMenu.open = false;
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") { accountMenu.open = false; queryMenu.open = false; }
+  });
+  const media = matchMedia("(max-width: 640px)");
+  const layout = () => {
+    if (media.matches) {
+      reviewActions.id = "mobileReviewActions";
+      reviewActions.prepend(reviewBack);
+      $("fields").append(reviewActions);
+      accountPanel.prepend(accountToolbar);
+      credit.before($("draftInfo"));
+      queryMenu.append(queryTools);
+    } else {
+      reviewActions.removeAttribute("id");
+      $("registrationSave").append(reviewBack, reviewActions);
+      accountHost.append(accountToolbar);
+      $("itemForm").after($("draftInfo"));
+      queryBar.append(queryTools);
+      accountMenu.open = false;
+      queryMenu.open = false;
+    }
+    camera.hidden = !media.matches || !mobileCamera();
+    labelButton($("discardRegistration"), media.matches ? "Registrar descarte" : "Descartar", "discard");
+    const mark = document.querySelector('[data-tab="register"] use');
+    mark.setAttribute("href", media.matches ? "#i-record-add" : "#i-plus");
+    requestAnimationFrame(() => updateNavIndicator(false));
+  };
+  media.addEventListener("change", layout);
+  layout();
+}
+
+initMobileIdentity();

@@ -3589,10 +3589,6 @@ async function exportExcel(all) {
       context.save(); if (white) context.filter = "brightness(0) invert(1)";
       context.drawImage(image, x + (width - w) / 2, y + (height - h) / 2, w, h); context.restore();
     }
-    function mountGraphic(ws, canvas, firstRow, width, height, destination = null) {
-      const imageId = wb.addImage({ base64: canvas.toDataURL("image/jpeg", .96), extension: "jpeg" });
-      ws.addImage(imageId, { tl: { col: 0, row: firstRow - 1 }, ext: { width, height }, editAs: "oneCell", ...(destination ? { hyperlinks: { hyperlink: "#'" + destination + "'!A1", tooltip: "Voltar ao resumo" } } : {}) });
-    }
     async function drawExportPanel() {
       const ws = wb.addWorksheet("Resumo", {
         properties: { tabColor: { argb: color.green } },
@@ -3600,7 +3596,9 @@ async function exportExcel(all) {
         pageSetup: { paperSize: 9, orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 1, printArea: "A1:D40", margins: { left: .2, right: .2, top: .2, bottom: .2, header: .08, footer: .08 } }
       });
       ws.columns = Array.from({length:4},()=>({width:40}));
-      for (let row=1; row<=40; row++) ws.getRow(row).height=14.69;
+      const panelWidth = 4 * (40 * 7 + 5), panelHeight = panelWidth * 1160 / 1600;
+      const panelRowHeight = panelHeight * .75 / 40;
+      for (let row=1; row<=40; row++) ws.getRow(row).height=panelRowHeight;
       paint(ws,1,40,1,4,"FFEAF1FC");
       const {canvas, context:c} = graphic(1600,1160);
       c.fillStyle="#eaf1fc";c.fillRect(0,0,1600,1160);
@@ -3610,11 +3608,12 @@ async function exportExcel(all) {
       contain(c,logo,64,59,72,72);
       c.font="700 38px Georgia";c.fillStyle="white";c.fillText("ACERVO",153,103);
       label(c,"GESTÃO DE BENS E MATERIAIS",155,128,12,"#d7edff",700);
-      label(c,"Visão geral do acervo",66,174,26,"white",700);
+      label(c,"Visão geral do acervo",66,174,29,"white",700);
       label(c,scope,66,199,13,"#d7edff",400,1020);
-      rounded(c,1238,54,292,94,15,"white");
-      contain(c,municipalityMark,1250,64,268,74);
-      label(c,issued+" · Curitiba",1200,179,14,"#e3f3ff",400,330);
+      rounded(c,1210,62,318,92,16,"#ffffff");
+      contain(c,municipalityMark,1228,73,282,70);
+      label(c,"EMITIDO EM CURITIBA",1210,179,11,"#cbe7ff",700);
+      label(c,issued,1210,199,14,"#ffffff",400,318);
       const goods=list.filter(r=>r.controle!=="QUANTIDADE"), stocks=list.filter(r=>r.controle==="QUANTIDADE"&&r.situacao==="ATIVO");
       const available=goods.filter(r=>r.situacao==="ATIVO").length;
       const borrowed=list.filter(r=>r.situacao==="EMPRESTADO").length;
@@ -3627,7 +3626,7 @@ async function exportExcel(all) {
         rounded(c,x+20,261,43,43,13,i===0?"#ffffff20":"#edf4ff");
         const image=await graphicIcon(mark,i===0?"white":tone);if(image)c.drawImage(image,x+30,271,23,23);
         label(c,title,x+76,287,17,i===0?"white":"#21466e",700,266);
-        label(c,value.toLocaleString("pt-BR"),x+22,348,49,i===0?"white":tone,700,320);
+        label(c,value.toLocaleString("pt-BR"),x+22,342,46,i===0?"white":tone,700,320);
         label(c,note,x+22,369,13,i===0?"#d3e9ff":"#74859c",400,320);
       }
       rounded(c,40,410,745,302,22,"white",true);
@@ -3638,14 +3637,16 @@ async function exportExcel(all) {
       const total=states.reduce((n,s)=>n+s[1],0);let start=-Math.PI/2;
       c.lineWidth=28;c.strokeStyle="#edf3fa";c.beginPath();c.arc(204,588,82,0,Math.PI*2);c.stroke();
       for(const [,n,tone] of states){if(!n)continue;const end=start+n/Math.max(1,total)*Math.PI*2;c.strokeStyle=tone;c.beginPath();c.arc(204,588,82,start,end);c.stroke();start=end;}
-      c.textAlign="center";label(c,total,204,594,45,"#164478",700);label(c,"bens",204,618,14,"#74859c");c.textAlign="left";
-      states.forEach(([title,n,tone],i)=>{const y=534+i*53;rounded(c,346,y-13,12,12,4,tone);label(c,title,374,y,17,"#3d5572");label(c,n,686,y,21,"#1f4779",700);});
+      c.textAlign="center";label(c,total.toLocaleString("pt-BR"),204,594,total>9999?30:total>999?37:45,"#164478",700);label(c,"bens",204,620,14,"#74859c");c.textAlign="left";
+      states.forEach(([title,n,tone],i)=>{const y=534+i*53;rounded(c,346,y-13,12,12,4,tone);label(c,title,374,y,17,"#3d5572");c.textAlign="right";label(c,n.toLocaleString("pt-BR"),749,y,21,"#1f4779",700,130);c.textAlign="left";});
       label(c,"Saúde do estoque",835,450,23,"#164478",700);
       label(c,"Materiais ativos · sem somar unidades diferentes",835,475,13,"#75879d");
       const health=[ ["Acima do mínimo",stocks.filter(r=>Number(r.saldo)>Number(r.minimo)).length,"#286dce"], ["No mínimo ou abaixo",stocks.filter(r=>Number(r.saldo)>0&&Number(r.saldo)<=Number(r.minimo)).length,"#e8b254"], ["Sem saldo",stocks.filter(r=>Number(r.saldo)<=0).length,"#d27387"] ];
       rounded(c,835,500,695,22,11,"#edf3fa");let offset=835;
+      c.save();c.beginPath();c.roundRect(835,500,695,22,11);c.clip();
       for(const [,n,tone]of health){const width=695*n/Math.max(1,stocks.length);if(width){c.fillStyle=tone;c.fillRect(offset,500,width,22);offset+=width;}}
-      health.forEach(([title,n,tone],i)=>{const y=563+i*47;rounded(c,838,y-13,12,12,4,tone);label(c,title,865,y,17,"#3d5572");label(c,n,1440,y,22,"#21466e",700);label(c,(stocks.length?Math.round(n/stocks.length*100):0)+"%",1482,y,14,"#74859c");});
+      c.restore();
+      health.forEach(([title,n,tone],i)=>{const y=563+i*47;rounded(c,838,y-13,12,12,4,tone);label(c,title,865,y,17,"#3d5572");c.textAlign="right";label(c,n.toLocaleString("pt-BR"),1430,y,22,"#21466e",700,130);label(c,(stocks.length?Math.round(n/stocks.length*100):0)+"%",1528,y,14,"#74859c");c.textAlign="left";});
       label(c,"Onde está o acervo",42,756,24,"#164478",700);
       label(c,"Bens individuais em uso por ambiente",42,779,13,"#75879d");
       const roomMarks=ROOMS.map(room=>ROOM_ICON[room]);
@@ -3654,9 +3655,11 @@ async function exportExcel(all) {
         rounded(c,x,799,490,130,20,"white",true);
         rounded(c,x+19,818,40,40,12,"#edf4ff");const image=await graphicIcon(roomMarks[i]);if(image)c.drawImage(image,x+29,828,20,20);
         label(c,room,x+73,844,17,"#21466e",700,380);
-        label(c,n,x+21,895,33,"#155fc1",700);
-        label(c,"bens em uso",x+80,894,14,"#74859c");
-        rounded(c,x+238,881,225,8,4,"#e8f0fb");const bar=225*n/Math.max(1,available);if(bar)rounded(c,x+238,881,bar,8,4,"#3d85d9");
+        const roomNumber=n.toLocaleString("pt-BR"), roomSize=n>=1000000?25:33;
+        label(c,roomNumber,x+21,892,roomSize,"#155fc1",700,150);
+        c.save();c.font="700 "+roomSize+"px Arial";const roomNumberWidth=c.measureText(roomNumber).width;c.restore();
+        label(c,"bens em uso",x+37+Math.min(150,roomNumberWidth),892,14,"#74859c");
+        rounded(c,x+21,910,448,5,2.5,"#e8f0fb");const bar=448*n/Math.max(1,available);if(bar)rounded(c,x+21,910,bar,5,2.5,"#3d85d9");
       }
       rounded(c,40,952,1520,83,18,"#dbe8fa");
       const untagged=goods.filter(r=>r.situacao==="ATIVO"&&r.dados.tipo==="SEM_IDENTIFICACAO").length;
@@ -3671,12 +3674,13 @@ async function exportExcel(all) {
         label(c,name+"  →",x+20,1085,17,"white",700,260);
       });
       label(c,list.length+" registros no arquivo · "+(all?"Inventário completo":"Recorte filtrado"),42,1138,13,"#5d7797",700);
-      label(c,"Clique nos cards ou nos botões para abrir as abas. Painel da emissão.",700,1138,13,"#5d7797");
-      mountGraphic(ws,canvas,1,1080,783);
+      c.textAlign="right";label(c,"Abra os detalhes pelos cards e botões.",1558,1138,13,"#5d7797");c.textAlign="left";
+      const panelImage = wb.addImage({base64:canvas.toDataURL("image/jpeg",.96),extension:"jpeg"});
+      ws.addImage(panelImage,{tl:{col:0,row:0},br:{col:4,row:40},editAs:"absolute"});
       function linkArea(x,y,width,height,destination,tooltip) {
         const hit=document.createElement("canvas");hit.width=hit.height=1;
         const imageId=wb.addImage({base64:hit.toDataURL("image/png"),extension:"png"});
-        const scale=1080/1600, top=y*scale, left=x*scale, rowHeight=14.69*4/3, colWidth=285;
+        const scale=panelWidth/1600, top=y*scale, left=x*scale, rowHeight=panelRowHeight*4/3, colWidth=285;
         const row=Math.floor(top/rowHeight), col=Math.floor(left/colWidth);
         ws.addImage(imageId,{
           tl:{nativeCol:col,nativeColOff:Math.round((left-col*colWidth)*9525),nativeRow:row,nativeRowOff:Math.round((top-row*rowHeight)*9525)},
@@ -3689,33 +3693,36 @@ async function exportExcel(all) {
       linkArea(809,410,751,302,"Inventário","Consultar saldo, unidade e mínimo no inventário");
       destinations.forEach((name,index)=>linkArea(40+index*386,1052,362,53,name,"Abrir "+name));
       destinations.forEach((name,index)=>{
-        const cell=ws.getCell(42,index+1);
+        ws.mergeCells(37,index+1,39,index+1);
+        const cell=ws.getCell(37,index+1);
         cell.value={formula:'HYPERLINK("#\''+name+'\'!A1","'+name+' →")',result:name+" →"};
         cell.font={name:"Aptos",size:12,bold:true,color:{argb:color.green}};
         cell.fill=fill(color.soft);cell.alignment={vertical:"middle",horizontal:"center"};
       });
-      ws.getRow(42).height=29;
+
       return ws;
     }
     async function drawTableHeading(ws,title,lastCol) {
-      const width=ws.columns.slice(0,lastCol).reduce((sum,col)=>sum+col.width*7+5,0);
-      const {canvas,context:c}=graphic(1600,180);
-      c.fillStyle="white";c.fillRect(0,0,1600,180);
+      const width=ws.columns.slice(0,lastCol).reduce((sum,col)=>sum+(col.hidden?0:col.width*7+5),0);
+      const height=144;
+      const {canvas,context:c}=graphic(width,height);
+      c.fillStyle="white";c.fillRect(0,0,width,height);
       paint(ws,1,3,1,lastCol,color.white);
       for (let row=1;row<=3;row++) for(let col=1;col<=lastCol;col++) ws.getCell(row,col).value=null;
-      const blue=c.createLinearGradient(0,0,1600,160);blue.addColorStop(0,"#0b3e88");blue.addColorStop(.65,"#1764c1");blue.addColorStop(1,"#1b93d4");
-      rounded(c,0,0,1600,180,22,blue);
-      contain(c,logo,28,24,61,61);
-      label(c,"ACERVO",110,54,23,"white",700);
-      label(c,"GESTÃO DE BENS E MATERIAIS",112,77,10,"#d5ebff",700);
-      label(c,title,30,137,35,"white",700,1130);
-      label(c,"Emitido em "+issued,30,160,12,"#d5ebff");
-      rounded(c,1230,22,340,102,15,"white");
-      contain(c,municipalityMark,1243,33,314,80);
-      const height=width*180/1600;
+      const blue=c.createLinearGradient(0,0,Math.min(width,1300),height);blue.addColorStop(0,"#093b84");blue.addColorStop(.62,"#155fc1");blue.addColorStop(1,"#1688cf");
+      rounded(c,0,0,width,height,18,blue);
+      contain(c,logo,22,22,51,51);
+      label(c,"ACERVO",86,43,22,"white",700);
+      label(c,"GESTÃO DE BENS E MATERIAIS",87,61,9,"#d5ebff",700);
+      const markX=Math.min(width-252,860);
+      rounded(c,markX,20,230,77,13,"white");
+      contain(c,municipalityMark,markX+13,29,204,59);
+      label(c,title,23,105,29,"white",700,markX-46);
+      label(c,"Emitido em "+issued,24,127,11,"#d5ebff");
+      label(c,"← Voltar ao resumo",markX+29,124,12,"#e2f1ff",700);
       for(let row=1;row<=3;row++)ws.getRow(row).height=height*.75/3;
-      label(c,"← Voltar ao resumo",1280,159,14,"#e2f1ff",700);
-      mountGraphic(ws,canvas,1,width,height,"Resumo");
+      const imageId=wb.addImage({base64:canvas.toDataURL("image/jpeg",.96),extension:"jpeg"});
+      ws.addImage(imageId,{tl:{col:0,row:0},br:{col:lastCol,row:3},editAs:"absolute",hyperlinks:{hyperlink:"#'Resumo'!A1",tooltip:"Voltar ao resumo"}});
     }
 
     function brand(ws, start, lastCol) {
@@ -3804,8 +3811,8 @@ async function exportExcel(all) {
         views: [{
           state: "frozen",
           ySplit: 7,
-          xSplit: 2,
-          topLeftCell: "C8",
+          xSplit: 0,
+          topLeftCell: "A8",
           showGridLines: false,
           zoomScale: 90
         }],
@@ -4100,7 +4107,7 @@ async function exportExcel(all) {
       wb.getWorksheet(name).orderNo = index;
     });
     for (const sheet of wb.worksheets) {
-      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.name === "Relatório A4" ? 5 : sheet.name === "Inventário" ? 8 : sheet.columnCount);
+      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.name === "Relatório A4" ? 5 : sheet.columnCount);
     }
     const buffer = await wb.xlsx.writeBuffer();
     const url = URL.createObjectURL(new Blob([buffer], {

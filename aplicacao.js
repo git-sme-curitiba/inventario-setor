@@ -54,19 +54,45 @@ const ACTION_ICON = {
 };
 const ZONE = "America/Sao_Paulo";
 
-try {
-  localStorage.removeItem("sb-yipfkwxhpahpuiizkcny-auth-token");
-  localStorage.removeItem(
-    "sb-yipfkwxhpahpuiizkcny-auth-token-code-verifier",
-  );
-} catch {}
-
+const AUTH_KEY = "sb-yipfkwxhpahpuiizkcny-auth-token";
+const REMEMBER_KEY = "acervo:manter-conectado";
+const authMemory = new Map();
+function authRead(store, key) {
+  try { return window[store].getItem(key); } catch { return null; }
+}
+function authRemove(store, key) {
+  try { window[store].removeItem(key); } catch {}
+}
+let rememberSession = !authRead("sessionStorage", AUTH_KEY) && authRead("localStorage", REMEMBER_KEY) === "sim";
+const authStorage = {
+  getItem(key) {
+    try { return window[rememberSession ? "localStorage" : "sessionStorage"].getItem(key); }
+    catch { return authMemory.get(key) ?? null; }
+  },
+  setItem(key, value) {
+    authMemory.set(key, value);
+    try { window[rememberSession ? "localStorage" : "sessionStorage"].setItem(key, value); } catch {}
+    authRemove(rememberSession ? "sessionStorage" : "localStorage", key);
+  },
+  removeItem(key) {
+    authMemory.delete(key);
+    authRemove("localStorage", key);
+    authRemove("sessionStorage", key);
+  }
+};
+function chooseSessionStorage(remember) {
+  const saved = authStorage.getItem(AUTH_KEY);
+  rememberSession = remember;
+  try { localStorage.setItem(REMEMBER_KEY, remember ? "sim" : "nao"); } catch {}
+  if (saved) authStorage.setItem(AUTH_KEY, saved);
+}
 const db = window.supabase?.createClient(
   "https://yipfkwxhpahpuiizkcny.supabase.co",
   "sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI",
   {
     auth: {
-      storage: sessionStorage,
+      storage: authStorage,
+      storageKey: AUTH_KEY,
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: false,
@@ -303,6 +329,7 @@ async function rpc(name, args = {}) {
     throw Error("Crie sua senha pessoal para continuar.");
   }
   if (!db) throw Error("Conexão indisponível. Atualize a página.");
+    chooseSessionStorage($("rememberSession").checked);
   const {
     data,
     error
@@ -3237,6 +3264,7 @@ $("refresh").onclick = async() => {
 $("retry").onclick = transmit;
 $("exportAll").onclick = () => exportExcel(true);
 $("exportFiltered").onclick = () => exportExcel(false);
+$("rememberSession").checked = rememberSession || authRead("localStorage", REMEMBER_KEY) === "sim";
 $("loginForm").onsubmit = async(e) => {
   e.preventDefault();
   if ($("loginButton").disabled) return;

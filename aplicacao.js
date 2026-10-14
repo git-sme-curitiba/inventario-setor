@@ -1022,6 +1022,8 @@ function repeatRegistration(d) {
 
 function saveDraft() {
   if (!user || busy) return;
+  $("saved").hidden = true;
+  $("saved").replaceChildren();
   const ok = storage("draft", {
     dados: formData(),
     editing: null,
@@ -1546,6 +1548,7 @@ function renderDetails(r, panel) {
     actions.append(button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]));
     if (a === "restaurar") panel.append(el("p", "Registro arquivado em uma versão anterior. Seus dados e histórico foram preservados. Restaurar devolve o registro à consulta corrente.", "hint"));
   }
+  if (role === "admin") actions.append(button("Excluir definitivamente", () => openItemDeletion(r), "danger item-delete-action", "close"));
   panel.append(actions);
   const history = el("div", undefined, "history");
   history.append(el("h3", "Histórico"));
@@ -1861,11 +1864,17 @@ function openOperation(a, r) {
   selected = r;
   action = a;
   $("operation").classList.toggle("destructive", ["baixar", "descarte_estoque"].includes(a));
-  $("operationTitle").textContent = ACTION[a] + " · " + internal(r.id);
+  $("operationTitle").textContent = ACTION[a];
+  $("operationMark").replaceChildren(icon(ACTION_ICON[a] || "history"));
+  const context = el("div"), code = el("span", internal(r.id), "operation-code");
+  context.append(el("strong", r.dados.item), el("small", [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · ")));
+  $("operationRecord").replaceChildren(context, code);
+  $("confirmOperation").replaceChildren(icon(ACTION_ICON[a] || "history"), document.createTextNode(ACTION[a]));
+  $("confirmOperation").classList.toggle("danger", ["baixar", "descarte_estoque"].includes(a));
   $("operationHint").textContent =
     a === "baixar"
     ? "Controle interno do acervo. Não executa a baixa patrimonial oficial."
-    : "A justificativa ficará registrada no histórico.";
+    : a === "emprestar" ? "Informe quem ficará com o bem e onde ele será utilizado." : "Esta movimentação ficará registrada no histórico.";
   $("downFields").hidden = a !== "baixar";
   $("downDate").required = a === "baixar";
   $("downDate").value = today();
@@ -2211,52 +2220,8 @@ function renderOverviewCharts() {
 }
 
 function renderMetrics() {
-  const individual = rows.filter(
-    (r) =>
-    r.controle !== "QUANTIDADE" &&
-    ["ATIVO", "EMPRESTADO"].includes(r.situacao),
-  );
-  const available = individual.filter(
-    (r) => r.situacao === "ATIVO",
-  ).length;
-  const borrowed = individual.length - available;
-  const track = el("div", undefined, "availability-track");
-  for (const [label, n, state] of[
-    ["Disponíveis", available, "ATIVO"],
-    ["Emprestados", borrowed, "EMPRESTADO"],
-  ]) {
-    if (!n) continue;
-    const b = button("", () =>
-      query({
-        controle: "INDIVIDUAL",
-        situacao: state
-      }),
-    );
-    b.style.width = (n / individual.length) * 100 + "%";
-    b.setAttribute("aria-label", `${label}: ${n}`);
-    b.title = `${label}: ${n}`;
-    track.append(b);
-  }
-  $("availability").replaceChildren(
-    el("strong", `${individual.length} bens individuais ativos ou emprestados`),
-    track,
-    button(
-      `${available} disponíveis`,
-      () => query({
-        controle: "INDIVIDUAL",
-        situacao: "ATIVO"
-      }),
-      "chip",
-    ),
-    button(
-      `${borrowed} emprestados`,
-      () => query({
-        controle: "INDIVIDUAL",
-        situacao: "EMPRESTADO"
-      }),
-      "chip",
-    ),
-  );
+  const individual = rows.filter(r => r.controle !== "QUANTIDADE" && ["ATIVO", "EMPRESTADO"].includes(r.situacao));
+  const available = individual.filter(r => r.situacao === "ATIVO").length, borrowed = individual.length - available;
   const active = rows.filter((r) => r.situacao === "ATIVO"),
     inUse = rows.filter((r) =>
       ["ATIVO", "EMPRESTADO"].includes(r.situacao),
@@ -2269,53 +2234,6 @@ function renderMetrics() {
       Number(b.saldo) / Math.max(1, Number(b.minimo)) ||
       String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR")
     );
-  const metrics = [
-    ["Registros ativos", active.length, "available", {
-      situacao: "ATIVO"
-    }],
-    [
-      "Emprestados",
-      rows.filter((r) => r.situacao === "EMPRESTADO").length,
-      "loan",
-      {
-        situacao: "EMPRESTADO"
-      },
-    ],
-    [
-      "Estoques ativos",
-      active.filter((r) => r.controle === "QUANTIDADE").length,
-      "stock",
-      {
-        situacao: "ATIVO",
-        controle: "QUANTIDADE"
-      },
-    ],
-    [
-      "Descartados",
-      rows.filter((r) => r.situacao === "BAIXADO").length,
-      "writeoff",
-      {
-        situacao: "BAIXADO"
-      },
-    ],
-    [
-      "Sem etiqueta · ativos",
-      active.filter((r) => r.dados.tipo === "SEM_IDENTIFICACAO").length,
-      "none",
-      {
-        situacao: "ATIVO",
-        tipo: "SEM_IDENTIFICACAO"
-      },
-    ],
-    [
-      "Arquivados",
-      rows.filter((r) => r.situacao === "ARQUIVADO").length,
-      "archive",
-      {
-        situacao: "ARQUIVADO"
-      },
-    ],
-  ];
   const metricButton = ([title, total, mark, filter]) => {
     const b = button("", () => filter ? query(filter) : $("stockWatch").scrollIntoView({
       block: "start",
@@ -2346,50 +2264,16 @@ function renderMetrics() {
   }));
   renderExecutiveSummary(active, loans, lowStock);
   renderOverviewCharts();
-  $("secondaryStats").replaceChildren(...metrics.slice(2).filter(m => m[0] !== "Arquivados" || m[1] > 0).map(metricButton));
-  chart(
-    "categoryChart",
-    CATEGORIES.map((v) => [v, count("categoria", v)]),
-    inUse.length,
-    (v) => query({
-      categoria: v,
-      situacao: "EM_USO"
-    }),
-  );
   chart(
     "typeChart",
-    Object.entries(TYPE).map(([v, n]) => [n, count("tipo", v), v]),
-    inUse.length,
+    Object.entries(TYPE).map(([v, n]) => [n, individual.filter(r => r.dados.tipo === v).length, v]),
+    individual.length,
     (v) => query({
       tipo: v,
+      controle: "INDIVIDUAL",
       situacao: "EM_USO"
     }),
   );
-  const items = new Map();
-  inUse.forEach((r) => {
-    const k = key(r.dados.item),
-      o = items.get(k) || {
-        name: r.dados.item,
-        n: 0
-      };
-    o.n++;
-    items.set(k, o);
-  });
-  chart(
-    "topChart",
-    [...items.values()]
-    .sort((a, b) => b.n - a.n)
-    .slice(0, 6)
-    .map((o) => [o.name, o.n]),
-    inUse.length,
-    (v) => query({
-      item: v,
-      situacao: "EM_USO"
-    }),
-  );
-  if (!items.size)
-  $("topChart").textContent =
-    "Os itens aparecerão conforme você cadastrar.";
   $("sideTotal").textContent = active.length;
   const a = active.length
     ? (count("ambiente", ROOMS[0]) / active.length) * 360
@@ -2412,30 +2296,6 @@ function renderMetrics() {
       );
       n.append(el("b", count("ambiente", room)));
       return n;
-    }),
-  );
-  const days = [];
-  for (let i = 13; i >= 0; i--) {
-    const d = new Date(today() + "T12:00:00Z");
-    d.setUTCDate(d.getUTCDate() - i);
-    const k = dayKey(d);
-    days.push([k, rows.filter((r) => dayKey(r.criado_em) === k).length]);
-  }
-  const max = Math.max(1, ...days.map((d) => d[1]));
-  $("activity").replaceChildren(
-    ...days.map(([d, n]) => {
-      const b = button("", () => query({
-        dia: d
-      }), "day"),
-      bar = el("i");
-      bar.style.height = Math.max(3, (n / max) * 125) + "px";
-      b.append(
-        el("b", n),
-        bar,
-        el("span", d.slice(8) + "/" + d.slice(5, 7)),
-      );
-      b.setAttribute("aria-label", n + " registros em " + d);
-      return b;
     }),
   );
   $("stockAlertCount").textContent = lowStock.length +
@@ -2467,36 +2327,62 @@ function renderMetrics() {
     return card;
   }) : [el("p", active.some(r => r.controle === "QUANTIDADE") ? "Nenhum material precisa de reposição pelo mínimo definido." : "Os materiais com saldo baixo aparecerão aqui após o cadastro do estoque.", "dashboard-empty")]));
   syncDashboardList("stockAlerts", "toggleStockAlerts", 3, "materiais");
-  $("recent").replaceChildren(
-    ...[...rows]
-    .sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em))
-    .slice(0, 5)
-    .map((r) => {
-      const n = el("div", undefined, "recent-row"),
-      text = el("div");
-      text.append(
-        el("strong", r.dados.item),
-        el("small", dateBR(r.criado_em)),
-      );
-      n.append(
-        text,
-        button(
-          "Abrir",
-          () => {
-            if (!leaveEditor()) return;
-            query({});
-            $("search").value = internal(r.id);
-            expanded = r.id;
-            renderList();
-          },
-          "",
-          "right",
-        ),
-      );
-      return n;
-    }),
-  );
+
 }
+
+
+let deletionTarget = null, deletionKey = null, deletionSaving = false;
+
+function openItemDeletion(record) {
+  if (role !== "admin" || busy || pending) return;
+  deletionTarget = record;
+  deletionKey = crypto.randomUUID();
+  $("deleteItemName").textContent = record.dados.item;
+  $("deleteItemCode").textContent = internal(record.id);
+  $("deleteItemConfirmation").value = "";
+  $("deleteItemConfirmation").setCustomValidity("");
+  $("deleteItemError").textContent = "";
+  $("deleteItemDialog").showModal();
+}
+
+$("deleteItemConfirmation").addEventListener("input", () => $("deleteItemConfirmation").setCustomValidity(""));
+$("deleteItemClose").onclick = () => { if (!deletionSaving) $("deleteItemDialog").close(); };
+$("deleteItemDialog").addEventListener("cancel", event => { if (deletionSaving) event.preventDefault(); });
+$("deleteItemForm").onsubmit = async event => {
+  event.preventDefault();
+  if (role !== "admin" || busy || pending || deletionSaving || !deletionTarget) return;
+  if ($("deleteItemConfirmation").value.trim() !== internal(deletionTarget.id)) {
+    $("deleteItemConfirmation").setCustomValidity("Digite exatamente " + internal(deletionTarget.id) + ".");
+    $("deleteItemConfirmation").reportValidity();
+    return;
+  }
+  const owner = user?.id, record = deletionTarget, key = deletionKey;
+  deletionSaving = true;
+  setBusy(true);
+  $("deleteItemSave").disabled = true;
+  $("deleteItemError").textContent = "";
+  try {
+    if (refreshTask) await refreshTask;
+    await rpc("acervo_excluir_item", { p_chave: key, p_id: record.id, p_versao: record.versao });
+    if (user?.id !== owner) return;
+    rows = rows.filter(item => item.id !== record.id);
+    timelineCache.clear();
+    expanded = null;
+    renderList();
+    renderMetrics();
+    renderMovementTimeline();
+    renderMovementResults();
+    $("deleteItemDialog").close();
+    deletionTarget = null;
+    toast("Registro excluído. Auditoria preservada.");
+  } catch (error) {
+    if (user?.id === owner) $("deleteItemError").textContent = error.message;
+  } finally {
+    deletionSaving = false;
+    $("deleteItemSave").disabled = false;
+    setBusy(false);
+  }
+};
 
 const IS_DEMO = document.body.dataset.demo === "true";
 const PASSWORD_SYMBOLS = "!@#$%^&*()_+-=[]{};'\":\\|<>?,./`~";
@@ -3384,6 +3270,8 @@ $("loginForm").onsubmit = async(e) => {
 
 function endSession() {
   resetFirstAccess();
+  if ($("deleteItemDialog").open) $("deleteItemDialog").close();
+  deletionTarget = deletionKey = null;
   if ($("registrationDiscardDialog").open) $("registrationDiscardDialog").close();
   finishEdit();
   clearTimeout(toastTimer);
@@ -3531,14 +3419,14 @@ async function exportExcel(all) {
     wb.subject = "Gestão de bens e materiais · Curitiba";
     wb.calcProperties.fullCalcOnLoad = true;
     const color = {
-      green: "FF075099",
+      green: "FF124FA3",
       lime: "FFB6E4FF",
-      ink: "FF153957",
+      ink: "FF19304D",
       muted: "FF607489",
-      soft: "FFF4F8FC",
+      soft: "FFF1F5FC",
       paper: "FFF3F5F7",
       white: "FFFFFFFF",
-      line: "FFD3E1ED",
+      line: "FFDCE5F1",
       amber: "FF99642C",
       warning: "FFFCF5E8",
       chart: "FF357CAF",
@@ -3583,7 +3471,7 @@ async function exportExcel(all) {
       const cell = ws.getCell(range.split(":")[0]);
       cell.value = value;
       cell.font = {
-        name: options.serif ? "Georgia" : "Arial",
+        name: options.serif ? "Georgia" : "Aptos",
         size: options.size || 11,
         color: {
           argb: options.fg || color.ink
@@ -3693,10 +3581,7 @@ async function exportExcel(all) {
         fg: color.muted,
         align: "right"
       });
-      text(ws, right + (start + 1) + ":" + edge + (start + 1), {
-        text: "Voltar ao resumo",
-        hyperlink: "#'Resumo'!A1"
-      }, {
+      text(ws, right + (start + 1) + ":" + edge + (start + 1), "Gestão de bens e materiais", {
         size: 9,
         fg: color.green,
         align: "right"
@@ -3727,7 +3612,15 @@ async function exportExcel(all) {
       });
       const width = ws.columns.slice(0, lastCol).reduce((n, c) => n + c.width * 7, 0);
       ws.getRow(4).height = Math.max(25, wrap(scope, width - 20).length * 12 + 10);
-      ws.getRow(6).height = 10;
+      ws.getRow(6).height = 14;
+      paint(ws, 1, 3, 1, lastCol, "FF133C78");
+      for (const address of ["A1", "A2", "A3", ws.getColumn(Math.min(2, lastCol - 2) + 1).letter + "1", ws.getColumn(Math.min(2, lastCol - 2) + 1).letter + "2"]) {
+        const cell = ws.getCell(address);
+        cell.font = { ...cell.font, color: { argb: address === "A2" ? "FFD2E3FA" : color.white } };
+        cell.alignment = { ...cell.alignment, indent: 1 };
+      }
+      ws.getRow(1).height = 28;
+      ws.getRow(2).height = 22;
     }
     const inventoryHeaders = [
       "Código interno", "Item", "Categoria", "Identificação", "Código externo",
@@ -3829,12 +3722,12 @@ async function exportExcel(all) {
         });
         ws.getRow(8).height = 40;
       }
-      ws.getRow(7).height = 33;
+      ws.getRow(7).height = 38;
       for (let j = 1; j <= headers.length; j++) {
         const cell = ws.getCell(7, j);
         cell.fill = fill(color.green);
         cell.font = {
-          name: "Arial",
+          name: "Aptos",
           size: 10,
           bold: true,
           color: {
@@ -3850,14 +3743,14 @@ async function exportExcel(all) {
           right: {
             style: "hair",
             color: {
-              argb: "FF667581"
+              argb: "FF2865B4"
             }
           }
         };
       }
       data.forEach((values, i) => {
         const row = ws.getRow(i + 8);
-        row.height = Math.min(409, Math.max(31, ...values.map((v, j) =>
+        row.height = Math.min(409, Math.max(35, ...values.map((v, j) =>
           v instanceof Date ? 31 : wrap(v && typeof v === "object" ? (v.result ?? v.text ?? "") : v, widths[j] * 7 - 18).length * 14 + 10
         )));
         for (let j = 1; j <= headers.length; j++) {
@@ -3865,7 +3758,7 @@ async function exportExcel(all) {
           const missing = options.details && j === 4 && values[3] === TYPE.SEM_IDENTIFICACAO;
           cell.fill = fill(missing ? color.warning : i % 2 ? color.soft : color.white);
           cell.font = {
-            name: "Arial",
+            name: "Aptos",
             size: 11,
             bold: j === 1,
             color: {
@@ -3938,10 +3831,11 @@ async function exportExcel(all) {
     }));
     for (let r = 1; r <= 35; r++) summary.getRow(r).height = 18;
     paint(summary, 1, 35, 1, 25, color.white);
+    paint(summary, 3, 4, 2, 24, "FF133C78");
     summary.getRow(1).height = 8;
-    summary.getRow(2).height = 28;
-    text(summary, logoId === null ? "B2:L2" : "D2:L2", "ACERVO", {
-      size: 12,
+    summary.getRow(2).height = 36;
+    text(summary, logoId === null ? "B2:L2" : "D2:L2", "ACERVO  /  RELATÓRIO DE GESTÃO", {
+      size: 10,
       bold: true,
       fg: color.green
     });
@@ -3952,19 +3846,21 @@ async function exportExcel(all) {
       align: "right"
     });
     text(summary, "B3:L3", "Bens e materiais", {
-      size: 24,
+      size: 25,
       bold: true,
-      fg: color.green
+      fg: color.white,
+      indent: 1
     });
-    summary.getRow(3).height = 34;
+    summary.getRow(3).height = 46;
     text(summary, "N3:X3", issued + " · Curitiba", {
       size: 9,
-      fg: color.muted,
+      fg: "FFD2E3FA",
       align: "right"
     });
     text(summary, "B4:X4", scope, {
       size: 9,
-      fg: color.muted,
+      indent: 2,
+      fg: "FFD2E3FA",
       border: {
         bottom: {
           style: "thin",
@@ -3975,7 +3871,7 @@ async function exportExcel(all) {
       }
     });
     summary.getRow(4).height = Math.max(24, wrap(scope, 760).length * 12 + 8);
-    summary.getRow(5).height = 9;
+    summary.getRow(5).height = 18;
     const end = Math.max(8, list.length + 7);
     const ref = col => "'Inventário'!$" + col + "$8:$" + col + "$" + end;
     const formula = (value, result) => ({
@@ -3992,12 +3888,13 @@ async function exportExcel(all) {
     const lowStocks = liveStocks.filter(r => Number(r.saldo) <= Number(r.minimo));
     const cards = [
       ["B", "F", "Bens em uso", count(["M", "Individual"], ["H", statusName("ATIVO")]), individuals.filter(r => r.situacao === "ATIVO").length, "Controle individual", color.green, color.white],
-      ["H", "L", "Materiais para repor", healthCount("Repor") + "+" + healthCount("Sem saldo"), lowStocks.length, "Saldo no mínimo ou abaixo", color.soft, color.green],
-      ["N", "R", "Empréstimos", count(["H", statusName("EMPRESTADO")]), list.filter(r => r.situacao === "EMPRESTADO").length, "Consulte responsáveis na aba", color.soft, color.green],
-      ["T", "X", "Descartados", count(["H", statusName("BAIXADO")]), list.filter(r => r.situacao === "BAIXADO").length, "Histórico preservado", color.soft, color.green],
+      ["H", "L", "Materiais para repor", healthCount("Repor") + "+" + healthCount("Sem saldo"), lowStocks.length, "No mínimo ou abaixo", "FFFFF5E7", "FF9A641F"],
+      ["N", "R", "Empréstimos", count(["H", statusName("EMPRESTADO")]), list.filter(r => r.situacao === "EMPRESTADO").length, "Bens com responsáveis", "FFEBF2FD", color.green],
+      ["T", "X", "Descartados", count(["H", statusName("BAIXADO")]), list.filter(r => r.situacao === "BAIXADO").length, "Histórico preservado", "FFFBEFF2", "FFA34059"],
     ];
     cards.forEach(([a, b, label, f, n, note, bg, fg]) => {
       paint(summary, 6, 10, summary.getColumn(a).number, summary.getColumn(b).number, bg);
+      for (let r = 6; r <= 10; r++) summary.getCell(a + r).border = { left: { style: "medium", color: { argb: fg === color.white ? "FF72BAF9" : fg } } };
       text(summary, a + "6:" + b + "6", label, {
         size: 10,
         bold: true,
@@ -4006,7 +3903,8 @@ async function exportExcel(all) {
         indent: 1
       });
       const value = text(summary, a + "7:" + b + "8", formula(f, n), {
-        size: 30,
+        size: 34,
+        bold: true,
         fg,
         bg,
         indent: 1
@@ -4018,13 +3916,13 @@ async function exportExcel(all) {
         indent: 1
       });
     });
-    summary.getRow(6).height = 25;
-    summary.getRow(11).height = 12;
+    summary.getRow(6).height = 28;
+    summary.getRow(11).height = 22;
     function section(range, title) {
       text(summary, range, title, {
         size: 13,
         bold: true,
-        fg: color.green,
+        fg: color.ink,
         border: {
           bottom: {
             style: "thin",
@@ -4035,12 +3933,12 @@ async function exportExcel(all) {
         }
       });
     }
-    section("B12:L12", "Bens por ambiente");
+    section("B12:L12", "01  /  Bens por ambiente");
     text(summary, "B13:L13", "Somente bens individuais em uso", {
       size: 9,
       fg: color.muted
     });
-    section("N12:X12", "Situação dos registros");
+    section("N12:X12", "02  /  Situação dos registros");
     text(summary, "N13:X13", "Bens e cadastros de material neste arquivo", {
       size: 9,
       fg: color.muted
@@ -4065,7 +3963,7 @@ async function exportExcel(all) {
         align: "right",
         border: rule
       });
-      summary.getRow(row).height = 29;
+      summary.getRow(row).height = 32;
       summary.addConditionalFormatting({
         ref: b + row + ":" + c + row,
         rules: [{
@@ -4092,7 +3990,7 @@ async function exportExcel(all) {
     ["ATIVO", "EMPRESTADO", "BAIXADO", "ARQUIVADO"].forEach((s, i) => barRow(14 + i, "N", statusName(s), "U", "X",
       count(["H", statusName(s)]), list.filter(r => r.situacao === s).length, list.length,
       s === "BAIXADO" ? "FFF0BDCA" : "FFB7D8F5"));
-    section("B19:L19", "Categorias em uso");
+    section("B19:L19", "03  /  Categorias em uso");
     text(summary, "B20:L20", "Bens individuais ativos por categoria", {
       size: 9,
       fg: color.muted
@@ -4101,7 +3999,7 @@ async function exportExcel(all) {
       count(["M", "Individual"], ["H", statusName("ATIVO")], ["C", cat]),
       individuals.filter(r => r.situacao === "ATIVO" && r.dados.categoria === cat).length,
       individuals.filter(r => r.situacao === "ATIVO").length));
-    section("N19:X19", "Saúde do estoque");
+    section("N19:X19", "04  /  Saúde do estoque");
     text(summary, "N20:X20", "Número de materiais ativos, sem somar unidades diferentes", {
       size: 9,
       fg: color.muted
@@ -4111,7 +4009,9 @@ async function exportExcel(all) {
       ["Repor", liveStocks.filter(r => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo)).length, "FFF3D5A2"],
       ["Sem saldo", liveStocks.filter(r => Number(r.saldo) <= 0).length, "FFF0BDCA"]].forEach(([label, n, tone], i) =>
         barRow(21 + i, "N", label, "U", "X", healthCount(label), n, liveStocks.length, tone));
-    section("B25:X25", "O que merece atenção");
+    paint(summary, 25, 28, 2, 24, color.soft);
+    text(summary, "B25:X25", "ATENÇÃO  /  Pendências para acompanhar", { size: 11, bold: true, fg: color.white, bg: "FF133C78", indent: 1 });
+    summary.getRow(25).height = 28;
     const untagged = individuals.filter(r => r.situacao === "ATIVO" && r.dados.tipo === "SEM_IDENTIFICACAO").length;
     text(summary, "B26:R26", "Bens em uso sem etiqueta externa PMC ou ICI", {
       size: 10
@@ -4143,9 +4043,11 @@ async function exportExcel(all) {
         size: 10,
         bold: true,
         fg: color.green,
-        bg: color.soft,
+        bg: "FFEAF1FC",
         align: "center"
       }));
+    summary.getRow(29).height = 16;
+    summary.getRow(32).height = 14;
     text(summary, "B33:X33", formula((list.length ? 'COUNTA(' + ref("A") + ')' : '0') + '&" registros neste arquivo"', list.length + " registros neste arquivo"), {
       size: 9,
       fg: color.muted
@@ -4270,7 +4172,7 @@ async function exportExcel(all) {
     report.getRow(5).height = 29;
     report.getRow(5).eachCell(cell => {
       cell.fill = fill(color.green); cell.font = {
-        name: "Arial",
+        name: "Aptos",
         size: 10,
         bold: true,
         color: {
@@ -4301,7 +4203,7 @@ async function exportExcel(all) {
         row.height = Math.max(36, ...part.map((v, j) => wrap(v, reportWidths[j] * 7 - 18).length * 14 + 10));
         row.eachCell(cell => {
           cell.font = {
-            name: "Arial",
+            name: "Aptos",
             size: 11,
             color: {
               argb: color.ink

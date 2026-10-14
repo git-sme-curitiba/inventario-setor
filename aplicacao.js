@@ -4025,46 +4025,96 @@ async function exportExcel(all) {
         oddFooter: "&LACERVO&C" + shortDate(emitted) + "&RPágina &P de &N"
       },
     });
-    measure.font="13.33px Arial";
-    const reportWidths = [15, 28, 21, 23, 17, 20, 34];
-    report.columns = reportWidths.map(width => ({width}));
-    text(report,"A4:G4",scope+" · "+list.length+" registros",{size:10,fg:color.muted});
+    measure.font="14.67px Arial";
+    const reportWidths=[15,34,25,17,21,46];
+    report.columns=reportWidths.map(width=>({width}));
+    text(report,"A4:F4",scope+" · "+list.length+" registros",{size:10,fg:color.muted});
     report.getRow(4).height=27;
-    report.getRow(5).values=["Código interno","Item","Identificação","Localização","Situação","Estoque","Observação"];
+    report.getRow(5).values=["Código interno","Item","Identificação","Situação","Estoque","Observação"];
     report.getRow(5).height=28;
     report.getRow(5).eachCell(cell=>{
       cell.fill=fill(color.green);
       cell.font={name:"Aptos",size:10,bold:true,color:{argb:color.white}};
       cell.alignment={vertical:"middle",wrapText:true,indent:1};
     });
-    const ordered=[...list].sort((a,b)=>(a.dados.ambiente||"").localeCompare(b.dados.ambiente||"","pt-BR")||a.dados.item.localeCompare(b.dados.item,"pt-BR"));
-    let nextRow=6;
-    ordered.forEach((r,index)=>{
-      const stock=r.controle==="QUANTIDADE";
-      const identity=r.dados.tipo==="SEM_IDENTIFICACAO"?"Sem etiqueta externa":(TYPE[r.dados.tipo]||r.dados.tipo)+"\n"+String(r.dados.codigo||"");
-      const where=[r.dados.ambiente,locationText(r)].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join("\n");
-      const balance=stock?quantityText(r.saldo,r.unidade)+"\nMínimo: "+Number(r.minimo):"—";
-      const notes=[r.dados.observacao||"",r.situacao==="BAIXADO"&&r.baixa?.motivo?"Motivo do descarte: "+r.baixa.motivo:"",r.situacao==="EMPRESTADO"?[r.emprestimo?.responsavel?"Emprestado a: "+r.emprestimo.responsavel:"",r.emprestimo?.destino?"Destino: "+r.emprestimo.destino:""].filter(Boolean).join("\n"):""].filter(Boolean).join("\n");
-      const values=[internal(r.id),r.dados.item,identity,where,STATUS[r.situacao]||r.situacao,balance,notes];
-      const lines=values.map((v,i)=>wrap(v,reportWidths[i]*7-18));
-      const longest=Math.max(...lines.map(v=>v.length));
-      for(let offset=0;offset<longest;offset+=8){
-        const part=lines.map((v,j)=>j===0?values[0]:offset===0?v.slice(0,8).join("\n"):j===1?(offset<v.length?v.slice(offset,offset+8).join("\n")+" (continuação)":"Continuação do item"):offset>=v.length?"":v.slice(offset,offset+8).join("\n"));
-        const row=report.getRow(nextRow++);row.values=part;
-        row.height=Math.max(35,...part.map((v,j)=>wrap(v,reportWidths[j]*7-18).length*13+12));
-        row.eachCell((cell,column)=>{
-          cell.font={name:"Aptos",size:10,bold:column===1,color:{argb:color.ink}};
-          cell.numFmt="@";cell.fill=fill(index%2?color.soft:color.white);
-          cell.alignment={vertical:"top",wrapText:true,indent:1};
-          cell.border={bottom:{style:"hair",color:{argb:color.line}}};
-        });
-      }
+    const groups=new Map();
+    for(const record of list){
+      const room=record.dados.ambiente||"Localização não informada";
+      if(!groups.has(room))groups.set(room,[]);
+      groups.get(room).push(record);
+    }
+    const groupOrder=[...groups.keys()].sort((a,b)=>{
+      const x=ROOMS.indexOf(a),y=ROOMS.indexOf(b);
+      return (x<0?ROOMS.length:x)-(y<0?ROOMS.length:y)||a.localeCompare(b,"pt-BR");
     });
+    let nextRow=6, pageHeight=163;
+    const printScale=Math.min(1,(841.89-43.2)/(reportWidths.reduce((sum,width)=>sum+width*7+5,0)*.75));
+    const pageLimit=(595.28-50.4)/printScale-2;
+    function startReportPage(){
+      report.getRow(nextRow-1).addPageBreak();
+      pageHeight=28;
+    }
+    function roomHeading(room,count,continued=false){
+      const row=nextRow++;
+      text(report,"A"+row+":E"+row,room+(continued?" · continuação":""),{size:11,bold:true,fg:color.green,bg:"FFE1EDFA",indent:1});
+      text(report,"F"+row,count+(count===1?" item":" itens"),{size:10,bold:true,fg:color.green,bg:"FFE1EDFA",align:"right",indent:1});
+      report.getRow(row).height=22;
+      report.getRow(row).eachCell(cell=>{cell.border={bottom:{style:"thin",color:{argb:"FFBED3E9"}}};});
+      pageHeight+=22;
+    }
+    let groupIndex=0;
+    for(const room of groupOrder){
+      const records=groups.get(room).sort((a,b)=>a.dados.item.localeCompare(b.dados.item,"pt-BR")||a.id-b.id);
+      let headingPending=true, itemIndex=0;
+      for(const r of records){
+        const stock=r.controle==="QUANTIDADE",position=locationText(r);
+        const item=r.dados.item+(position?"\nPosição: "+position:"");
+        const identity=r.dados.tipo==="SEM_IDENTIFICACAO"?"Sem etiqueta externa":(TYPE[r.dados.tipo]||r.dados.tipo)+"\n"+String(r.dados.codigo||"");
+        const balance=stock?quantityText(r.saldo,r.unidade)+"\nMínimo: "+Number(r.minimo):"—";
+        const notes=[r.dados.observacao||"",r.situacao==="BAIXADO"&&r.baixa?.motivo?"Motivo do descarte: "+r.baixa.motivo:"",r.situacao==="EMPRESTADO"?[r.emprestimo?.responsavel?"Emprestado a: "+r.emprestimo.responsavel:"",r.emprestimo?.destino?"Destino: "+r.emprestimo.destino:""].filter(Boolean).join("\n"):""].filter(Boolean).join("\n");
+        const values=[internal(r.id),item,identity,STATUS[r.situacao]||r.situacao,balance,notes];
+        const lines=values.map((v,i)=>wrap(v,reportWidths[i]*7-18));
+        const longest=Math.max(...lines.map(v=>v.length));
+        for(let offset=0;offset<longest;offset+=8){
+          const part=lines.map((v,j)=>j===0?values[0]:offset===0?v.slice(0,8).join("\n"):j===1?(offset<v.length?v.slice(offset,offset+8).join("\n")+" (continuação)":"Continuação do item"):offset>=v.length?"":v.slice(offset,offset+8).join("\n"));
+          const height=Math.max(32,...part.map((v,j)=>wrap(v,reportWidths[j]*7-18).length*14+10));
+          if(headingPending){
+            const gap=groupIndex?7:0;
+            if(pageHeight+gap+22+height>pageLimit)startReportPage();
+            else if(gap){report.getRow(nextRow++).height=gap;pageHeight+=gap;}
+            roomHeading(room,records.length);
+            headingPending=false;groupIndex++;
+          }else if(pageHeight+height>pageLimit){
+            startReportPage();roomHeading(room,records.length,true);
+          }
+          const row=report.getRow(nextRow++);row.values=part;row.height=height;
+          row.eachCell((cell,column)=>{
+            cell.font={name:"Aptos",size:column===1?10:11,bold:column===2,color:{argb:color.ink}};
+            cell.numFmt="@";cell.fill=fill(itemIndex%2?"FFF3F7FC":color.white);
+            cell.alignment={vertical:"top",wrapText:true,indent:1};
+            cell.border={bottom:{style:"hair",color:{argb:color.line}}};
+          });
+          if(offset===0){
+            const positionStart=part[1].indexOf("\nPosição:");
+            if(positionStart>=0)row.getCell(2).value={richText:[
+              {text:part[1].slice(0,positionStart),font:{name:"Aptos",size:11,bold:true,color:{argb:color.ink}}},
+              {text:part[1].slice(positionStart),font:{name:"Aptos",size:10,color:{argb:color.muted}}}
+            ]};
+            const status=row.getCell(4);
+            status.font={name:"Aptos",size:10,bold:true,color:{argb:r.situacao==="BAIXADO"?"FFA4324C":color.green}};
+            status.fill=fill(r.situacao==="BAIXADO"?"FFFCEEF1":r.situacao==="EMPRESTADO"?"FFE9EFFB":"FFEDF4FC");
+            if(stock&&r.situacao==="ATIVO"&&Number(r.saldo)<=Number(r.minimo))row.getCell(5).font={name:"Aptos",size:11,bold:true,color:{argb:"FF98631D"}};
+          }
+          pageHeight+=height;
+        }
+        itemIndex++;
+      }
+    }
     if(!list.length){
-      text(report,"A6:G6","Nenhum registro neste recorte.",{fg:color.muted});
+      text(report,"A6:F6","Nenhum registro neste recorte.",{fg:color.muted});
       report.getRow(6).height=35;nextRow=7;
     }
-    report.pageSetup.printArea="A1:G"+(nextRow-1);
+    report.pageSetup.printArea="A1:F"+(nextRow-1);
     ["Resumo", "Inventário", "Empréstimos", "Descartados", "Relatório A4"].forEach((name, index) => {
       wb.getWorksheet(name).orderNo = index;
     });

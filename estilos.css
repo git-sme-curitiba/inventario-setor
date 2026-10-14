@@ -9222,120 +9222,354 @@ body::before { content: none; }
   #browse .record-row > td:nth-child(2)::before, #browse .record-row > td:nth-child(3)::before, #browse .record-row > td:nth-child(5)::before { content: attr(data-label); display: block; color: var(--muted); text-transform: uppercase; }
 }
 
+.mobile-registration-content { display: contents; }
+
 .mobile-registration,
 .mobile-registration-actions,
-.mobile-item-detail {
+.mobile-item-detail,
+.mobile-review-back,
+.mobile-account-menu,
+.mobile-query-menu,
+.mobile-card-heading,
+.mobile-field-label,
+.mobile-location-summary,
+.mobile-browse-scan,
+.mobile-record-icon,
+.mobile-summary-fact {
   display: none;
 }
 
 @media (max-width: 640px) {
-  #app > .intro {
+  body:not(.auth-screen) {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body:not(.auth-screen) .shell {
+    padding: calc(10px + var(--app-safe-top)) max(10px,var(--app-safe-right)) calc(86px + var(--app-safe-bottom)) max(10px,var(--app-safe-left));
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  body:not(.auth-screen) .shell > header.bar {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 66px;
+    margin: 0;
+    padding: 13px 14px;
+    border: 1px solid #b9d8f2;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: linear-gradient(135deg,#f7fbff,#f0f7fd);
+    box-shadow: none;
+  }
+  body:not(.auth-screen) .shell > header .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
+  body:not(.auth-screen) .shell > header .brand-logo,
+  body:not(.auth-screen) .shell > header .brand .acervo-mark {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    margin: 0;
+    filter: none;
+    animation: none;
+  }
+  body:not(.auth-screen) .shell > header .brand b {
+    font-size: 21px;
+    line-height: 1.1;
+    letter-spacing: -.5px;
+  }
+  body:not(.auth-screen) .shell > header .brand small {
+    display: block;
+    margin-top: 4px;
+    font-size: 9px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: #577b9e;
+  }
+  body:not(.auth-screen) .shell > header > .header-meta {
     display: none;
   }
-  #app > .nav {
-    position: fixed;
-    z-index: 40;
-    left: max(12px, env(safe-area-inset-left));
-    right: max(12px, env(safe-area-inset-right));
-    bottom: max(10px, env(safe-area-inset-bottom));
-    width: auto;
-    margin: 0;
-    padding: 5px;
-    background: linear-gradient(130deg, rgba(250,253,255,.98), rgba(220,235,249,.98));
-    border: 1px solid #aacbec;
-    box-shadow: 0 8px 28px #164f8433, inset 0 1px 0 #fff;
-    backdrop-filter: blur(16px);
-  }
-  #app > section {
-    padding-bottom: calc(88px + env(safe-area-inset-bottom));
-    scroll-margin-top: 12px;
-  }
-  .keyboard-open #app > .nav {
-    visibility: hidden;
-    pointer-events: none;
-  }
-  #app > .nav .nav-lens {
-    background: linear-gradient(140deg,#fff,#e5f2ff);
-    border: 1px solid #a6cbed;
-    box-shadow: 0 3px 8px #15568b22;
-  }
-  #register .workspace > .card {
-    padding: 16px;
-    background: linear-gradient(125deg,#ffffff,#f1f7fe);
-    border-color: #82b7e9;
-    box-shadow: 0 12px 30px #144a781a, inset 0 1px 0 white;
-  }
-  .mobile-registration {
+  .mobile-account-menu {
     display: block;
-    margin-bottom: 18px;
+    position: static;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    flex: 0 0 auto;
   }
-  #mobileRegistrationProgress {
+  .mobile-account-menu > summary {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    list-style: none;
+    cursor: pointer;
+  }
+  .mobile-account-menu > summary::-webkit-details-marker,
+  .mobile-query-menu > summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-account-avatar {
     display: grid;
-    grid-template-columns: repeat(4,minmax(0,1fr));
-    gap: 4px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #b6d3ee;
-    margin-bottom: 20px;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #b8d8f6;
+    color: #075898;
+    background: linear-gradient(135deg,#edf7ff,#dceeff);
+    font-size: 12px;
+    font-weight: 700;
   }
-  #mobileRegistrationProgress button {
+  .mobile-account-menu > summary > .icon {
+    width: 12px;
+    height: 12px;
+    transform: rotate(90deg);
+    color: #3975aa;
+  }
+  .mobile-account-panel {
+    position: absolute;
+    z-index: 65;
+    top: calc(100% - 3px);
+    right: 8px;
+    width: min(292px,calc(100vw - 36px));
+    padding: 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#fcfdff,#e9f3fd);
+    border: 1px solid #96bfe2;
+    box-shadow: 0 16px 40px #0a3d7040;
+  }
+  .mobile-account-panel .account-toolbar {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .mobile-account-panel .header-person {
+    display: flex;
+    gap: 9px;
+    padding: 0 0 12px;
+  }
+  .mobile-account-panel .account {
+    display: block;
+    max-width: 210px;
+    font-size: 13px;
+    text-align: left;
+  }
+  .mobile-account-panel .account-role {
+    font-size: 11px;
+  }
+  .mobile-account-panel .toolbar-actions {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 7px;
+    padding: 10px 0;
+    border: 0;
+    border-top: 1px solid #bed6ec;
+    background: none;
+    box-shadow: none;
+  }
+  .mobile-account-panel .toolbar-actions > button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+    padding: 9px 11px;
+    border: 1px solid #bfd6ec;
+    border-radius: 10px;
+    background: #f7fbff;
+    color: #20537e;
+    font-size: 12px;
+    gap: 9px;
+  }
+  .mobile-account-panel .toolbar-actions > button .icon { width: 18px; height: 18px; }
+  .mobile-account-panel #refresh .live { font-size: 9px; }
+  .mobile-institution-credit {
+    border-top: 1px solid #c1d7ea;
+    margin-top: 4px;
+    padding-top: 12px;
+    color: #567590;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .mobile-institution-credit .institution-signature {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+  }
+  .mobile-institution-credit .institution-logo { width: 90px; height: auto; filter: none; }
+  .mobile-institution-credit .institution-copy { font-size: 9px; }
+  .mobile-institution-credit .development-credit { margin-top: 10px; font-size: 9px; text-align: left; }
+  body:not(.auth-screen) .shell > .institution-footer { display: none; }
+  #app > .intro { display: none; }
+  #app > .nav {
+    position: fixed;
+    z-index: 50;
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    bottom: max(8px,var(--app-safe-bottom));
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 3px;
+    width: auto;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #b6d4ee;
+    border-radius: 15px;
+    background: linear-gradient(135deg,#f9fcffed,#e6f1fdeb);
+    box-shadow: 0 5px 22px #15558720,inset 0 1px 0 #fff;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  #app > .nav button {
+    min-height: 56px;
     min-width: 0;
-    min-height: 58px;
-    padding: 4px 0;
-    background: transparent;
+    padding: 7px 2px;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 11px;
+    gap: 5px;
+    flex-direction: column;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: #3b6e9b;
+  }
+  #app > .nav button[data-tab="register"] { order: 0; }
+  #app > .nav button[data-tab="browse"] { order: 1; }
+  #app > .nav button[data-tab="movements"] { order: 2; }
+  #app > .nav button[data-tab="dashboard"] { order: 3; }
+  #app > .nav button[aria-current] { color: #0359b3; font-weight: 600; }
+  #app > .nav button > .icon { width: 20px; height: 20px; flex-basis: 20px; }
+  #app > .nav .nav-lens {
+    background: linear-gradient(135deg,#e5f4ff,#dbeafa);
+    border: 1px solid #b8d8f6;
+    border-radius: 11px;
+    box-shadow: inset 0 1px 0 #ffffffb0;
+  }
+  .keyboard-open #app > .nav { visibility: hidden; pointer-events: none; }
+  #app > section { padding-bottom: 0; scroll-margin-top: 8px; }
+  #register > .workspace,
+  #register > .workspace > .card,
+  #browse > .card,
+  #movements > .card,
+  #dashboard {
+    margin: 0;
+    border-radius: 0 0 16px 16px;
+    border: 1px solid #b9d8f2;
+    border-top: 0;
+    padding: 14px;
+    background: linear-gradient(135deg,#f7fbff,#f4f9ff 60%,#eef6fe);
+    box-shadow: 0 8px 22px #15578b0c;
+  }
+  #register > .workspace { padding: 0; background: none; border: 0; box-shadow: none; }
+  #register > .workspace > .card { padding: 0 14px 14px; }
+  #register #itemForm { margin: 0; }
+  #register #fields {
+    display: flex;
+    flex-direction: column;
+    min-height: max(520px,calc(100dvh - var(--app-safe-top) - var(--app-safe-bottom) - 168px));
+    padding: 0;
+    border: 0;
+  }
+  #register .mobile-registration {
+    display: block;
+    margin: 0 0 18px;
+  }
+  #mobileRegistrationProgress {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 0;
+    padding: 4px 0 16px;
+    margin: 0 0 18px;
+    border-bottom: 1px solid #b6d4ee;
+  }
+  #mobileRegistrationProgress::before {
+    content: "";
+    position: absolute;
+    left: 12.5%; right: 12.5%; top: 20px;
+    height: 1px;
+    background: #b7d7f1;
+  }
+  #mobileRegistrationProgress button {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 56px;
+    min-width: 0;
+    padding: 2px 0;
     border: 0;
     box-shadow: none;
-    font-size: 11px;
-    color: #587390;
+    background: none;
+    font-size: 10px;
+    font-weight: 400;
+    color: #5d7e9d;
     opacity: 1;
   }
   #mobileRegistrationProgress button span {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
-    border: 1px solid #a5c6e7;
+    width: 26px; height: 26px;
+    border: 1px solid #abd0ef;
     border-radius: 50%;
-    background: #f5faff;
-    color: #32658e;
-    font-size: 13px;
+    background: #f7fbff;
+    color: #5583af;
+    font-size: 12px;
   }
+  #mobileRegistrationProgress button span .icon { width: 14px; height: 14px; }
   #mobileRegistrationProgress button[aria-current],
-  #mobileRegistrationProgress button.complete {
-    color: #0e487f;
-    font-weight: 700;
-  }
+  #mobileRegistrationProgress button.complete { color: #164b7d; font-weight: 600; }
   #mobileRegistrationProgress button[aria-current] span,
   #mobileRegistrationProgress button.complete span {
-    background: linear-gradient(135deg,#129ee8,#0753a5);
+    background: linear-gradient(135deg,#149ee6,#0754a4);
     color: white;
-    border-color: #0864b8;
-    box-shadow: 0 3px 7px #125b9633;
+    border-color: #0879ca;
+    box-shadow: 0 2px 7px #0d579926;
   }
   #mobileRegistrationTitle {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 11px;
     margin: 0;
+    color: #123f6b;
     font-family: Georgia,serif;
-    font-size: clamp(22px,6vw,28px);
-    line-height: 1.15;
-    color: #123f6c;
+    font-size: clamp(22px,6.2vw,27px);
+    line-height: 1.12;
+    letter-spacing: -.7px;
     outline: none;
   }
   #mobileRegistrationTitle > .icon {
-    flex: 0 0 44px;
-    width: 44px;
-    height: 44px;
+    width: 42px; height: 42px; flex: 0 0 42px;
     padding: 10px;
     color: white;
-    border: 1px solid #1475c5;
-    border-radius: 13px;
-    background: linear-gradient(135deg,#1aabee,#0753a2);
-    box-shadow: 0 4px 9px #16578d26,inset 0 1px 0 #ffffff44;
+    border: 1px solid #0c87d3;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#11a7ed,#0757a6);
+    box-shadow: 0 4px 9px #15558b22,inset 0 1px 0 #ffffff60;
+  }
+  .mobile-stage-description {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #456e95;
+    margin: 5px 0 0 53px;
   }
   #registrationHeader,
   #registrationBody,
@@ -9344,197 +9578,481 @@ body::before { content: none; }
     display: block;
     margin: 0;
   }
-  #registrationHeader > h2 {
-    display: none;
-  }
+  #registrationHeader > h2 { display: none; }
   #registrationRooms,
   #location,
   #registrationItem,
   #registrationCategory,
-  #identityBlock,
-  #controlHost {
+  #register #identityBlock,
+  #register #controlHost {
     width: 100%;
     min-width: 0;
-    margin: 0 0 16px;
-  }
-  #registrationRooms {
+    box-sizing: border-box;
+    margin: 0 0 15px;
     padding: 12px;
-    border: 1px solid #aed0ee;
-    border-radius: 14px;
-    background: linear-gradient(135deg,#f8fcff,#e6f1fc);
+    border: 1px solid #abd1f3;
+    border-radius: 12px;
+    box-shadow: none;
+    background: linear-gradient(135deg,#fcfeff,#eef7ff);
   }
-  #registrationRooms legend {
-    display: block;
-    padding: 0 4px;
+  #registrationRooms { background: linear-gradient(135deg,#f3faff,#e7f2fd); }
+  #registrationRooms > legend,
+  #registrationCategory > legend { display: none; }
+  .mobile-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -12px -12px 11px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #c4dff6;
+    border-radius: 11px 11px 0 0;
+    background: linear-gradient(110deg,#eaf5ff,#f1f8ff);
+    color: #104e87;
+    font-size: 12px;
   }
-  #rooms {
+  .mobile-card-heading > .icon { width: 17px; height: 17px; }
+  #registrationRooms #rooms,
+  #registrationCategory #categories,
+  #register #types {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
     gap: 6px;
   }
-  #rooms label {
-    min-height: 80px;
+  #registrationRooms #rooms .choice,
+  #registrationCategory #categories .choice,
+  #register #types .choice { min-width: 0; }
+  #registrationRooms #rooms .choice > span,
+  #registrationCategory #categories .choice > span,
+  #register #types .choice > span {
+    display: flex;
     flex-direction: column;
-    text-align: center;
     justify-content: center;
-    font-size: 11px;
+    align-items: center;
+    min-height: 78px;
     padding: 9px 5px;
+    gap: 7px;
+    border: 1px solid #bdd9f0;
+    border-radius: 9px;
+    background: linear-gradient(135deg,#fff,#f7fbff);
+    box-shadow: 0 2px 4px #16528a0b,inset 0 1px 0 #fff;
+    text-align: center;
+    color: #244d70;
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 400;
   }
-  #rooms label .icon {
-    width: 22px;
-    height: 22px;
+  #registrationRooms #rooms .choice .icon,
+  #registrationCategory #categories .choice .icon,
+  #register #types .choice .icon { width: 21px; height: 21px; flex-basis: 21px; }
+  #registrationRooms #rooms .choice b { display: none; }
+  #registrationRooms #rooms .choice input:checked + span,
+  #registrationCategory #categories .choice input:checked + span,
+  #register #types .choice input:checked + span,
+  #register #controlHost .choice input:checked + span,
+  #location .choice input:checked + span {
+    color: #fff;
+    border-color: #0c7cc6;
+    background: linear-gradient(130deg,#0d94e3,#0657a8);
+    box-shadow: 0 3px 7px #065c9c24,inset 0 1px 0 #ffffff45;
   }
-  #location {
-    padding: 14px;
-    border-radius: 14px;
-    background: #eaf3fc;
-    border: 1px solid #aacded;
+  #location { background: #f3f9ff; margin-bottom: 12px; }
+  #location fieldset { margin: 0; }
+  #location fieldset + fieldset { margin-top: 11px; }
+  #location legend { margin-bottom: 6px; font-size: 12px; font-weight: 500; }
+  #shelves { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 5px; }
+  #levels { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+  #location .choice > span {
+    min-height: 38px;
+    padding: 8px 3px;
+    border-radius: 7px;
+    border-color: #b8d8f2;
+    background: #fcfeff;
+    font-size: 12px;
   }
-  #levels {
-    grid-template-columns: repeat(3,minmax(0,1fr));
-  }
-  #registrationCategory {
+  #location .position { display: none; }
+  .mobile-location-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 12px;
-    background: #e9f3fd;
+    margin: 0 0 12px;
+    border: 1px solid #c7e1f7;
+    border-radius: 10px;
+    background: #e3f0fd;
+    color: #204f7a;
   }
-  #registrationItem {
-    padding: 12px;
-    background: #f9fcff;
+  .mobile-location-summary > .icon { width: 20px; height: 20px; flex: 0 0 20px; }
+  .mobile-location-summary small { display: block; font-size: 10px; margin-bottom: 4px; }
+  .mobile-location-summary span { display: block; font-size: 11px; line-height: 1.5; }
+  #registrationItem { background: #fbfdff; }
+  #registrationItem > label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -12px -12px 12px;
+    padding: 10px 12px;
+    border-radius: 11px 11px 0 0;
+    border-bottom: 1px solid #c4dcf1;
+    color: #164f85;
+    font-size: 12px;
   }
-  #itemForm[data-mobile-stage="1"] #registrationBody > #registrationMain,
-  #itemForm[data-mobile-stage="1"] #registrationSave,
+  #registrationItem > label > .icon { width: 18px; height: 18px; }
+  .mobile-field-label { display: block; color: #29537e; font-size: 11px; margin: 0 0 7px; }
+  #registrationItem #item { min-height: 44px; height: 44px; padding: 10px; font-size: 16px; background: #fff; border-color: #a5ccef; }
+  #registrationItem #learningHint { font-size: 10px; line-height: 1.3; }
+  #registrationCategory { background: #edf6ff; }
+  #register .registration-group-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    margin: -12px -12px 11px;
+    border-radius: 11px 11px 0 0;
+    border-bottom: 1px solid #c1daf2;
+    background: #edf6ff;
+  }
+  #register .registration-group-heading > .icon {
+    width: 30px; height: 30px; flex: 0 0 30px;
+    padding: 6px;
+    border-radius: 8px;
+    color: #0077d6;
+    background: #fff;
+    border: 1px solid #aad0f1;
+  }
+  #register .registration-group-heading strong { font-size: 12px; }
+  #register .registration-group-heading p { font-size: 10px; line-height: 1.3; margin: 3px 0 0; }
+  #register #controlHost { padding: 0; background: #eaf5ff; }
+  #register #controlHeading { margin: 0; padding: 10px 12px; background: linear-gradient(110deg,#e0effe,#edf7ff); }
+  #register #controlHeading > .icon { color: #fff; background: linear-gradient(135deg,#168fde,#0755a5); border-color: #1374be; }
+  #register #controlHost > .stock-control { padding: 11px 12px; }
+  #register #controlHost .choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #register #controlHost .choice > span { flex-direction: column; min-height: 67px; gap: 6px; padding: 9px; border-radius: 9px; background: #fbfdff; font-size: 11px; }
+  #register #controlHost .choice .icon { width: 21px; height: 21px; }
+  #register #controlHint { font-size: 10px; line-height: 1.4; margin: 7px 0 0; }
+  #register #codeWrap { margin-top: 10px; }
+  #register #codeLabel { font-size: 11px; margin-bottom: 6px; }
+  #register #code { height: 42px; min-height: 42px; padding: 9px; background: white; font-size: 16px; }
+  #register #scan { width: 42px; height: 42px; min-height: 42px; padding: 10px; color: #0674c6; border: 1px solid #a9ccec; background: #f6fbff; box-shadow: none; }
+  #register #scan .icon { width: 19px; height: 19px; }
+  #register #codeHint { font-size: 9px; margin: 5px 0 0; }
+  #register #stockFields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin-top: 11px; }
+  #register #stockFields label { font-size: 11px; }
+  #register #stockFields input { height: 43px; min-height: 43px; font-size: 16px; }
+  #itemForm.quantity-layout #identityBlock { padding: 0; margin: 9px 0 0; border: 0; background: none; }
+  #itemForm.quantity-layout #identityHeading { display: none; }
   #itemForm:not([data-mobile-stage="1"]) #registrationHeader,
   #itemForm:not([data-mobile-stage="1"]) #location,
+  #itemForm:not([data-mobile-stage="1"]) #mobileLocationSummary,
   #itemForm:not([data-mobile-stage="2"]) #registrationItem,
   #itemForm:not([data-mobile-stage="2"]) #registrationCategory,
   #itemForm:not([data-mobile-stage="3"]) #formRest,
   #itemForm:not([data-mobile-stage="4"]) #notesBlock,
-  #itemForm:not([data-mobile-stage="4"]) #registrationSave {
-    display: none;
-  }
-  #itemForm[data-mobile-stage="4"] #registrationBody {
-    display: flex;
-    flex-direction: column;
-  }
-  #itemForm[data-mobile-stage="4"] #registrationSave {
-    display: flex;
-    flex-direction: column;
-    margin-top: 14px;
-  }
-  #notesBlock {
-    margin: 0;
-  }
-  #registrationSummary {
-    padding: 14px;
-    border-color: #8db9e0;
-    background: linear-gradient(130deg,#edf6ff,#dcebf9);
-  }
-  #registrationSummary dl {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  #registrationSummary dl > div {
-    padding-bottom: 10px;
-    border-bottom: 1px solid #b7cfe5;
-  }
+  #itemForm:not([data-mobile-stage="4"]) #registrationSave,
+  #itemForm[data-mobile-stage="1"] #registrationMain { display: none; }
   .mobile-registration-actions {
     display: flex;
     gap: 10px;
-    margin-top: 22px;
+    padding-top: 10px;
+    margin-top: auto;
   }
-  .mobile-registration-actions button {
-    min-height: 48px;
-    flex: 1;
+  .mobile-registration-actions button,
+  #registrationSave .registration-actions button,
+  #registrationSave .mobile-review-back {
+    min-height: 45px;
+    padding: 10px 13px;
+    font-size: 12px;
+    border-radius: 9px;
+    gap: 7px;
   }
-  #mobileRegistrationNext {
-    flex: 2;
-  }
-  #draftInfo {
-    font-size: 11px;
-    margin-top: 12px;
-  }
-  #itemForm[data-mobile-stage] #registrationHeader,
-  #itemForm[data-mobile-stage] #registrationMain > :not([hidden]),
-  #itemForm[data-mobile-stage] #registrationSave:not([hidden]) {
-    animation: mobile-step-in .22s ease-out;
-  }
-  #saved:not([hidden]) {
-    margin-top: 18px;
-    padding: 16px;
-    background: linear-gradient(130deg,#f8fcff,#e3f0fc);
-    border: 1px solid #83b5e2;
-    border-radius: 15px;
-  }
-  #saved > button {
-    width: 100%;
-    min-height: 46px;
-    margin: 8px 0 0;
-  }
-  #saved > button:first-of-type {
-    display: none;
-  }
-  .mobile-detail-open > :not(#mobileDetail) {
-    display: none;
-  }
-  .mobile-item-detail {
-    display: block;
-  }
-  .mobile-item-detail > button {
-    margin-bottom: 14px;
-    min-height: 46px;
-    width: 100%;
-  }
-  .mobile-item-detail .detail-panel {
+  .mobile-registration-actions button { flex: 1; }
+  #mobileRegistrationNext { flex: 2; }
+  #mobileRegistrationNext .icon { order: 1; margin-left: 4px; }
+  .mobile-registration-actions button .icon { width: 16px; height: 16px; }
+  #register #registrationSave {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
     margin: 0;
-    padding: 16px;
-    border: 1px solid #8fb8df;
-    border-radius: 16px;
-    background: linear-gradient(135deg,#eef6ff,#dfeaf8);
-    box-shadow: 0 8px 20px #174c7d19;
+    border: 0;
+    gap: 0;
   }
-  #results .record-row {
-    border-color: #a7c8e7;
-    background: linear-gradient(120deg,#ffffff,#f0f7fe);
+  #itemForm:not([data-mobile-stage="4"]) #registrationSave { display: none; }
+  #registrationSave > .spaced { order: 0; margin: 0; }
+  #registrationSummary {
+    padding: 0;
+    border: 1px solid #abd0ed;
+    border-radius: 11px;
+    background: #fafdff;
+    box-shadow: none;
+    overflow: hidden;
   }
+  #registrationSummary .summary-heading {
+    padding: 11px 12px;
+    border-bottom: 1px solid #c8deef;
+    background: linear-gradient(110deg,#e8f3fe,#f3f9ff);
+  }
+  #registrationSummary .summary-heading strong { font-size: 13px; }
+  #registrationSummary .summary-status { font-size: 9px; padding: 4px 6px; }
+  #registrationSummary .summary-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0 12px;
+  }
+  #registrationSummary .summary-facts > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 9px 0;
+    border-bottom: 1px solid #d7e7f4;
+  }
+  #registrationSummary .summary-facts > div:last-child { border-bottom: 0; }
+  #registrationSummary .summary-facts dt { flex: 0 0 92px; margin: 0; font-size: 10px; color: #6081a0; }
+  #registrationSummary .summary-facts dd { flex: 1; min-width: 0; margin: 0; font-size: 11px; line-height: 1.4; color: #1a4a75; }
+  #registrationSummary .location-ticket { padding: 0; border: 0; background: none; border-radius: 0; }
+  #registrationSummary .location-ticket small { font-size: 10px; margin-top: 3px; }
+  #registrationSummary .location-ticket .icon { display: none; }
+  #register #notesBlock,
+  #register #note { width: 100%; max-width: none; box-sizing: border-box; }
+  #register #notesBlock { order: 1; margin: 14px 0 12px; padding: 0; }
+  #register #notesBlock label { font-size: 11px; margin-bottom: 6px; }
+  #register #note { min-height: 68px; padding: 10px; font-size: 16px; border: 1px solid #aecde8; background: #fff; }
+  #registrationSave > .mobile-review-back { order: 2; display: flex; width: 100%; margin: 0 0 9px; }
+  #registrationSave > .registration-actions { order: 3; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; width: 100%; margin: 0; }
+  #draftInfo { font-size: 9px; margin: 9px 0 0; color: #6985a0; }
+  #saved:not([hidden]) { padding: 16px 12px; margin: 12px 0 0; border: 1px solid #a8ceee; border-radius: 12px; background: #edf7ff; }
+  #saved > button { width: 100%; min-height: 45px; margin: 9px 0 0; font-size: 12px; }
+  #saved > button:first-of-type { display: none; }
+  #register .workspace > .card:has(> #saved:not([hidden])) #itemForm,
+  #register .workspace > .card:has(> #saved:not([hidden])) #draftInfo { display: none; }
+  #register .workspace > .card:has(> #saved:not([hidden])) { min-height: max(420px,calc(100dvh - var(--app-safe-top) - var(--app-safe-bottom) - 165px)); }
+  #browse > .card > .bar:first-child,
+  #movements > .card > .workspace-title,
+  #dashboard .dashboard-title { margin: 0 0 16px; }
+  #browse > .card > .bar:first-child { display: flex; flex-flow: row nowrap; align-items: center; gap: 8px; }
+  #browse > .card > .bar:first-child > div { min-width: 0; }
+  #browse .eyebrow,
+  #dashboard .eyebrow { display: none; }
+  #browse .workspace-title,
+  #movements .workspace-title,
+  #dashboard .workspace-title { font-size: clamp(23px,6vw,27px); line-height: 1.1; gap: 10px; margin: 0; letter-spacing: -.6px; }
+  #browse .title-mark,
+  #movements .title-mark,
+  #dashboard .title-mark { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 12px; }
+  #browse .title-mark .icon,
+  #movements .title-mark .icon,
+  #dashboard .title-mark .icon { width: 20px; height: 20px; }
+  .mobile-query-menu { display: block; position: relative; margin-left: auto; padding: 0; border: 0; flex: 0 0 36px; background: none; }
+  .mobile-query-menu > summary { display: grid; place-items: center; width: 36px; height: 44px; padding: 0; font-size: 16px; letter-spacing: 1px; color: #36689a; border: 0; border-radius: 9px; background: #e8f2fc; list-style: none; cursor: pointer; }
+  #browse .mobile-query-menu .query-tools { position: absolute; z-index: 30; top: calc(100% + 7px); right: 0; display: flex; flex-direction: column; width: min(250px,calc(100vw - 70px)); padding: 10px; gap: 7px; border: 1px solid #9dc4e5; border-radius: 12px; background: #f5faff; box-shadow: 0 10px 24px #10487b30; }
+  #browse .query-tools > button,
+  #browse .query-tools .export-menu summary { min-height: 44px; width: 100%; font-size: 12px; justify-content: flex-start; }
+  #browse .export-options { position: static; width: 100%; max-width: none; box-shadow: none; padding: 6px 0 0; }
+  #browse .toolbar { display: grid; grid-template-columns: minmax(0,1fr) 44px; gap: 7px; margin: 0 0 12px; }
+  #browse #search { grid-column: 1; grid-row: 1; width: 100%; min-height: 44px; font-size: 16px; padding: 10px; border: 1px solid #a8c9e6; background: #fff; }
+  #browse .mobile-browse-scan { display: flex; grid-column: 2; grid-row: 1; width: 44px; height: 44px; min-height: 44px; padding: 11px; }
+  #browse #moreFilters { grid-column: 2; grid-row: 2; min-height: 36px; height: 36px; width: 44px; font-size: 0; padding: 9px; border: 1px solid #b3d3ed; background: #edf6ff; }
+  #browse #moreFilters .icon { width: 18px; height: 18px; }
+  #browse #clearFilters { display: none; grid-column: 1; grid-row: 2; min-height: 36px; padding: 7px 9px; width: auto; justify-self: start; font-size: 10px; }
+  #browse:has(#applied:not(:empty)) #clearFilters,
+  #browse:has(#moreFilters[aria-expanded="true"]) #clearFilters { display: inline-flex; }
+  #browse .toolbar:has(#mobileBrowseScan[hidden]) #search { grid-column: 1 / -1; }
+  #browse #quickRooms { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 6px; margin: -48px 51px 15px 0; padding: 0 0 2px; position: relative; }
+  #browse #quickRooms::-webkit-scrollbar { display: none; }
+  #browse #quickRooms button { flex: 0 0 auto; min-height: 34px; height: 34px; padding: 6px 10px; border-radius: 18px; font-size: 10px; border-color: #aacbe7; background: #f8fcff; }
+  #browse #quickRooms button[aria-pressed="true"] { color: #0757a5; background: #ddebfa; border-color: #82b4de; }
+  #browse:has(#clearFilters:not([hidden])) #applied { font-size: 10px; }
+  #browse:has(#moreFilters[aria-expanded="true"]) #quickRooms,
+  #browse:has(#applied:not(:empty)) #quickRooms { margin-top: 0; }
+  #browse #filterPanel { padding: 12px; margin: 8px 0; border-radius: 11px; background: #e6f2fe; }
+  #browse #filterPanel .choices { gap: 6px; }
+  #browse #filterPanel legend { font-size: 12px; }
+  #browse #filterPanel .choice span { min-height: 38px; font-size: 11px; padding: 7px 9px; }
+  #browse .bar:has(#resultCount) { margin: 12px 0 10px; font-size: 10px; }
+  #browse .bar:has(#resultCount) > span:last-child { display: none; }
+  #browse .record-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    grid-template-rows: auto auto auto;
+    gap: 5px;
+    padding: 12px 45px 12px 49px;
+    margin: 0 0 9px;
+    min-height: 86px;
+    border: 1px solid #b8d4ed;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#fff,#f1f8ff);
+    box-shadow: 0 2px 5px #17548307;
+    cursor: pointer;
+  }
+  #browse .record-row > td:first-child { grid-column: 1; grid-row: 1; padding: 0 52px 0 0; font-size: 13px; line-height: 1.4; font-weight: 600; }
+  #browse .mobile-record-icon { display: block; position: absolute; left: 10px; top: 14px; width: 30px; height: 30px; padding: 6px; border: 1px solid #c6def3; border-radius: 9px; background: #e9f4ff; color: #2a75b4; }
+  #browse .record-row > td:nth-child(2) { grid-column: 1; grid-row: 2; font-size: 10px; line-height: 1.35; color: #577c9b; }
+  #browse .record-row > td:nth-child(3) { grid-column: 1; grid-row: 3; font-size: 10px; line-height: 1.35; color: #577c9b; }
+  #browse .record-row > td:nth-child(2)::before,
+  #browse .record-row > td:nth-child(3)::before { display: none; }
+  #browse .record-row > td:nth-child(4) { position: absolute; top: 11px; right: 11px; max-width: 64px; }
+  #browse .record-row .badge { padding: 3px 5px; font-size: 8px; border: 1px solid #a4c7e7; color: #285e8d; background: #e4f0fd; }
+  #browse .record-row .badge.down { color: #932e4c; border-color: #e4a9bb; background: #fff0f4; }
+  #browse .record-row > td:nth-child(5),
+  #browse .record-row > td:nth-child(6) { display: none; }
+  #browse .record-row > td:last-child { position: absolute; bottom: 8px; right: 7px; width: 32px; }
+  #browse .record-row > td:last-child button { width: 32px; min-height: 38px; padding: 7px; font-size: 0; gap: 0; color: #175994; background: none; border: 0; box-shadow: none; }
+  #browse .record-row > td:last-child button .icon { width: 18px; height: 18px; }
+  #browse .record-row > td:first-child .hint { font-size: 9px; margin: 2px 0 0; font-weight: 400; }
+  #browse .pager { font-size: 11px; }
+  #browse .pager button { min-height: 40px; font-size: 11px; }
+  .mobile-detail-open > :not(#mobileDetail) { display: none; }
+  .mobile-item-detail { display: block; margin: 0; border: 1px solid #b9d8f2; border-top: 0; padding: 14px; border-radius: 0 0 16px 16px; background: #f6faff; }
+  .mobile-item-detail > button { width: 100%; min-height: 44px; font-size: 12px; margin-bottom: 14px; }
+  #browse .mobile-item-detail .detail-panel { padding: 14px; margin: 0; border: 1px solid #a8cae8; border-radius: 12px; background: #edf6ff; }
+  #browse .detail-panel h3 { font-size: 19px; line-height: 1.3; }
+  #browse .detail-panel dl { grid-template-columns: 92px minmax(0,1fr); font-size: 11px; }
+  #browse .detail-panel .actions > button { min-height: 43px; font-size: 11px; }
+  #movements .movement-steps { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; margin: 18px 0; }
+  #movements .movement-steps li { min-width: 0; display: flex; align-items: center; gap: 5px; font-size: 9px; color: #577a9a; }
+  #movements .movement-steps b { width: 23px; height: 23px; flex: 0 0 23px; padding: 3px; font-size: 11px; border-radius: 7px; }
+  #movements > .card > label { font-size: 12px; margin-bottom: 7px; }
+  #movements .scanrow { display: flex; gap: 7px; }
+  #movements #moveSearch { min-width: 0; min-height: 44px; height: 44px; padding: 10px; font-size: 16px; }
+  #movements #moveScan { width: 44px; height: 44px; min-height: 44px; padding: 11px; flex: 0 0 44px; }
+  #movements #moveScan .icon { width: 21px; height: 21px; }
+  #movements .movement-empty { display: flex; gap: 10px; padding: 18px 3px 8px; font-size: 12px; line-height: 1.5; color: #5c7b96; }
+  #movements .movement-empty > .icon { width: 22px; height: 22px; flex: 0 0 22px; }
+  #movements .movement-result { padding: 13px; border-radius: 12px; margin-bottom: 10px; }
+  #movements .movement-result h3 { font-size: 14px; }
+  #movements .movement-result p { font-size: 11px; }
+  #movements .movement-result .actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #movements .movement-result .actions button { min-height: 43px; font-size: 11px; }
+  #dashboard .dashboard-title { display: block; }
+  #dashboard .dashboard-description { margin: 8px 0 0 50px; font-size: 11px; line-height: 1.4; }
+  #dashboard #dashboardPulse { gap: 10px; padding: 11px 12px; margin: 0 0 13px; border-radius: 11px; }
+  #dashboard #dashboardPulse .icon { width: 22px; height: 22px; flex: 0 0 22px; }
+  #dashboard #dashboardPulse strong { font-size: 12px; }
+  #dashboard #dashboardPulse p { font-size: 10px; line-height: 1.4; }
+  #dashboard #stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin: 0 0 15px; }
+  #dashboard #stats > button { min-height: 124px; padding: 13px; border-radius: 12px; }
+  #dashboard #stats b { font-size: 31px; line-height: 1.1; margin: 4px 0 8px; }
+  #dashboard #stats span { font-size: 11px; line-height: 1.4; }
+  #dashboard #stats small { font-size: 9px; line-height: 1.35; margin-top: 5px; }
+  #dashboard #stats .icon { width: 18px; height: 18px; }
+  #dashboard .dashboard-visuals,
+  #dashboard .dashboard-focus { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; margin: 0 0 12px; }
+  #dashboard .card { padding: 13px; border-radius: 12px; }
+  #dashboard .visual-heading h3,
+  #dashboard .card-heading h3 { font-size: 15px; }
+  #dashboard .visual-heading p { font-size: 10px; }
+  #dashboard .status-visual { display: flex; flex-direction: row; align-items: center; gap: 14px; margin-top: 12px; }
+  #dashboard .status-ring { width: 120px; height: 120px; min-width: 120px; }
+  #dashboard .status-ring-center b { font-size: 25px; }
+  #dashboard .visual-legend { min-width: 0; flex: 1; font-size: 10px; }
+  #dashboard .dashboard-rooms h3 { font-size: 16px; }
+  #dashboard .dashboard-rooms-heading > span { font-size: 9px; }
+  #dashboard #roomSummary { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; }
+  #dashboard .room-summary { padding: 12px; border-radius: 11px; }
+  #dashboard .room-summary-heading { font-size: 12px; }
+  #dashboard .room-summary-count b { font-size: 25px; }
+  #dashboard .dashboard-details > summary { padding: 12px; }
+  #dashboard .dashboard-details > summary strong { font-size: 12px; }
+  #dashboard .dashboard-details > summary small { font-size: 10px; }
+  #itemForm[data-mobile-stage] #registrationMain > :not([hidden]),
+  #itemForm[data-mobile-stage] #registrationHeader,
+  #itemForm[data-mobile-stage] #registrationSave:not([hidden]) { animation: mobile-step-in .22s ease-out; }
+  body:not(.auth-screen) .shell > header.bar { min-height: 62px; padding: 10px 14px; }
+  #register > .workspace > .card { border-radius: 0 0 16px 16px; }
+  #register #fields { height: calc(var(--app-visible-height,100dvh) - var(--app-safe-top) - var(--app-safe-bottom) - 159px); min-height: 440px; }
+  #register .mobile-registration { flex: 0 0 auto; margin-bottom: 13px; }
+  #mobileRegistrationProgress { padding-bottom: 12px; margin-bottom: 14px; }
+  #mobileRegistrationProgress button { min-height: 50px; }
+  #mobileRegistrationContent { display: block; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 0 3px; scrollbar-width: none; }
+  #mobileRegistrationContent::-webkit-scrollbar { display: none; }
+  #mobileRegistrationActions { flex: 0 0 auto; padding-top: 12px; margin-top: 0; }
+  #register #registrationRooms,
+  #register #location { margin-bottom: 11px; }
+  #register #registrationRooms .mobile-card-heading,
+  #register #location .mobile-card-heading { padding: 8px 12px; margin-bottom: 9px; }
+  #registrationRooms #rooms .choice > span { min-height: 62px; gap: 5px; padding: 7px 4px; }
+  #register #location .choice > span { min-height: 34px; padding: 6px 3px; }
+  #register #location legend { font-size: 11px; margin-bottom: 5px; }
+  #register #location fieldset + fieldset { margin-top: 9px; }
+  #register #mobileLocationSummary { padding: 9px 11px; margin: 0; }
+  #register #mobileLocationSummary small { margin-bottom: 3px; }
+  #register #identityBlock #codeWrap { margin: 10px 0 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
+  #register #identityBlock #codeWrap::before,
+  #register #identityBlock #codeWrap::after { display: none; }
+  #register #identityBlock #codeLabel { display: block; font-size: 10px; margin: 0 0 5px; }
+  #register #identityBlock .registration-group-heading > .icon { width: 30px; height: 30px; flex: 0 0 30px; }
+  #register #controlHost .registration-group-heading > .icon { width: 30px; height: 30px; flex: 0 0 30px; }
+  #itemForm.warehouse-layout #controlHost .choices .choice span,
+  #itemForm #controlHost .choices .choice span { flex-direction: column; min-height: 66px; padding: 8px; }
+  #register #controlHost .stock-control > fieldset { margin: 0; }
+  #register #controlHost { margin-top: 0; }
+  #register #formRest > #identityBlock { margin-bottom: 13px; }
+  #register #identityBlock > .choices { padding: 0; }
+  #register #registrationSummary .summary-facts > div { padding: 7px 0; }
+  #mobileReviewActions { display: grid; flex: 0 0 auto; grid-template-columns: minmax(0,1fr) minmax(0,1.65fr); gap: 8px; padding-top: 11px; width: 100%; margin: 0; }
+  #mobileReviewActions .mobile-review-back { display: inline-flex; grid-column: 1; grid-row: 1; }
+  #mobileReviewActions #save { grid-column: 2; grid-row: 1; min-width: 0; }
+  #mobileReviewActions #discardRegistration { grid-column: 1 / -1; grid-row: 2; min-height: 37px; color: #b72e50; background: #fff5f8; }
+  #mobileReviewActions button { min-height: 43px; padding: 9px; font-size: 12px; border-radius: 9px; gap: 6px; }
+  #mobileReviewActions button .icon { width: 16px; height: 16px; }
+  #itemForm:not([data-mobile-stage="4"]) #mobileReviewActions { display: none; }
+  #itemForm[data-mobile-stage="4"] #register #registrationSave { margin: 0; }
+  #browse .record-row > td:nth-child(4) { width: auto; max-width: 84px; white-space: nowrap; }
+  #browse .record-row .badge { white-space: nowrap; }
+  #browse .record-row > td:last-child { grid-column: auto; grid-row: auto; }
+  #mobileRegistrationProgress { padding-bottom: 10px; margin-bottom: 12px; }
+  #mobileRegistrationProgress button { min-height: 46px; }
+  #register .mobile-registration { margin-bottom: 10px; }
+  #register #identityHeading,
+  #register #controlHeading { min-height: 48px; padding: 8px 12px; }
+  #register #identityHeading > .icon,
+  #register #controlHeading > .icon { box-sizing: border-box; width: 30px; height: 30px; flex: 0 0 30px; padding: 6px; }
+  #register #types { margin: 0; }
+  #register #types .choice > span { min-height: 66px; padding: 7px 4px; gap: 5px; }
+  #register #identityBlock #codeLabel { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; }
+  #register #identityBlock #codeWrap { margin-top: 8px; }
+  #register #identityBlock { margin-bottom: 11px; }
+  #register #registrationRooms .mobile-card-heading,
+  #register #location .mobile-card-heading { padding-top: 6px; padding-bottom: 6px; }
+  #register #mobileLocationSummary { padding-top: 7px; padding-bottom: 7px; }
+  #draftInfo { font-size: 10px; }
+  #register #formRest { display: block; gap: 0; }
+  #itemForm.warehouse-layout #registrationBody { display: block; gap: 0; }
+  #itemForm.warehouse-layout:not([data-mobile-stage="1"]) #registrationMain { display: block; gap: 0; }
+  #register #mobileLocationSummary small { display: none; }
+  #register #mobileLocationSummary { padding-top: 6px; padding-bottom: 6px; }
+  #register #registrationRooms, #register #location { margin-bottom: 9px; }
+  #itemForm #controlHost .choices .choice span { min-height: 62px; }
+  #register #note { min-height: 64px; height: 64px; }
   @keyframes mobile-step-in {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  #itemForm[data-mobile-stage] * {
-    animation: none !important;
-  }
+  #itemForm[data-mobile-stage] * { animation: none !important; }
 }
 
-.mobile-review-back { display: none; }
-@media (max-width: 640px) {
-  #notesBlock,
-  #notesBlock textarea {
-    width: 100%;
-    max-width: none;
-    box-sizing: border-box;
-  }
-  #registrationSave > #notesBlock {
-    margin: 16px 0 12px;
-  }
-  #itemForm[data-mobile-stage="4"] .mobile-review-back {
-    display: inline-flex;
-    min-height: 44px;
-    align-self: flex-start;
-    margin: 0 0 12px;
-  }
+@media (max-width: 640px) and (max-height: 580px) {
+  body:not(.auth-screen) .shell > header.bar { min-height: 50px; padding: 7px 14px; }
+  body:not(.auth-screen) .shell > header .brand .acervo-mark,
+  body:not(.auth-screen) .shell > header .brand-logo { width: 34px; height: 34px; flex-basis: 34px; }
+  body:not(.auth-screen) .shell > header .brand b { font-size: 19px; }
+  #register #fields { min-height: 0; height: calc(var(--app-visible-height,100dvh) - var(--app-safe-top) - var(--app-safe-bottom) - 136px); }
+  #mobileRegistrationProgress { padding: 0 0 6px; margin-bottom: 8px; }
+  #mobileRegistrationProgress button { min-height: 38px; gap: 3px; padding: 0; font-size: 9px; }
+  #mobileRegistrationProgress button span { width: 21px; height: 21px; font-size: 10px; }
+  #mobileRegistrationProgress::before { top: 11px; }
+  #mobileRegistrationTitle { font-size: 22px; }
+  #mobileRegistrationTitle > .icon { width: 32px; height: 32px; flex-basis: 32px; padding: 7px; }
+  .mobile-stage-description { display: none; }
+  #register .mobile-registration { margin-bottom: 8px; }
+  #app > .nav button { min-height: 45px; padding-top: 5px; padding-bottom: 5px; }
 }
-
 @media (max-width: 640px) {
-  #register .workspace > .card:has(> #saved:not([hidden])) #itemForm,
-  #register .workspace > .card:has(> #saved:not([hidden])) #draftInfo {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  #registrationSave > .spaced { order: 0; }
-  #registrationSave > #notesBlock { order: 1; }
-  #registrationSave > .mobile-review-back { order: 2; }
-  #registrationSave > .registration-actions { order: 3; width: 100%; }
+  .keyboard-open #register #fields { height: auto; min-height: 0; }
+  .keyboard-open #mobileRegistrationContent { flex: none; overflow: visible; }
 }

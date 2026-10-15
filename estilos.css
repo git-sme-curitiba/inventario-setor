@@ -4487,7 +4487,7 @@ body.screen-ready #login > h1 {
   animation: access-element-in .5s var(--ease) both;
 }
 
-#app > .nav {
+:is(#app > .nav, .mobile-app-nav) {
   animation: access-element-in .55s .08s var(--ease) both;
 }
 
@@ -9042,7 +9042,7 @@ dialog {
   }
   .auth-screen .shell { padding-top: calc(22px + var(--app-safe-top)); }
   .institution-footer { overflow-wrap: anywhere; }
-  #app > .nav { scroll-padding-inline: 12px; }
+  :is(#app > .nav, .mobile-app-nav) { scroll-padding-inline: 12px; }
 }
 @media(max-width: 640px), (pointer: coarse) {
   input, textarea, select { font-size: 16px; }
@@ -9092,9 +9092,9 @@ body::before { content: none; }
   .header-meta .header-person { gap: 7px; }
   .header-meta .toolbar-actions { margin: 0; padding: 2px; border-radius: 11px; }
   .header-meta #manageAccess, .header-meta #refresh, .header-meta #logout { padding: 6px; min-height: 44px; font-size: 11px; }
-  #app > .nav { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 3px; padding: 4px; margin-bottom: 14px; border-radius: 14px; }
-  #app > .nav button { min-width: 0; min-height: 54px; padding: 7px 3px; gap: 5px; flex-direction: column; font-size: 10px; line-height: 1.2; white-space: normal; border-radius: 10px; }
-  #app > .nav button .icon { width: 18px; height: 18px; flex-basis: 18px; }
+  :is(#app > .nav, .mobile-app-nav) { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 3px; padding: 4px; margin-bottom: 14px; border-radius: 14px; }
+  :is(#app > .nav, .mobile-app-nav) button { min-width: 0; min-height: 54px; padding: 7px 3px; gap: 5px; flex-direction: column; font-size: 10px; line-height: 1.2; white-space: normal; border-radius: 10px; }
+  :is(#app > .nav, .mobile-app-nav) button .icon { width: 18px; height: 18px; flex-basis: 18px; }
   #register > .workspace > .card, #browse > .card { padding: 14px; border-radius: 17px; }
   #registrationHeader { gap: 10px; margin-bottom: 12px; }
   #registrationHeader .workspace-title, #browse .workspace-title { font-size: 22px; line-height: 1.2; gap: 8px; }
@@ -9170,7 +9170,7 @@ body::before { content: none; }
   .institution-footer { padding-top: 15px; margin-top: 22px; font-size: 11px; }
 }
 @media(max-width:360px) {
-  #app > .nav button { font-size: 9px; }
+  :is(#app > .nav, .mobile-app-nav) button { font-size: 9px; }
   #registrationHeader .workspace-title, #browse .workspace-title { font-size: 20px; }
 }
 
@@ -9239,7 +9239,7 @@ body::before { content: none; }
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
   body:not(.auth-screen) {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -9414,7 +9414,7 @@ body::before { content: none; }
   .mobile-institution-credit .development-credit { margin-top: 10px; font-size: 9px; text-align: left; }
   body:not(.auth-screen) .shell > .institution-footer { display: none; }
   #app > .intro { display: none; }
-  #app > .nav {
+  :is(#app > .nav, .mobile-app-nav) {
     position: fixed;
     z-index: 50;
     left: max(10px, env(safe-area-inset-left));
@@ -9434,7 +9434,7 @@ body::before { content: none; }
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
   }
-  #app > .nav button {
+  :is(#app > .nav, .mobile-app-nav) button {
     min-height: 56px;
     min-width: 0;
     padding: 7px 2px;
@@ -9449,19 +9449,19 @@ body::before { content: none; }
     line-height: 1.2;
     color: #3b6e9b;
   }
-  #app > .nav button[data-tab="register"] { order: 0; }
-  #app > .nav button[data-tab="browse"] { order: 1; }
-  #app > .nav button[data-tab="movements"] { order: 2; }
-  #app > .nav button[data-tab="dashboard"] { order: 3; }
-  #app > .nav button[aria-current] { color: #0359b3; font-weight: 600; }
-  #app > .nav button > .icon { width: 20px; height: 20px; flex-basis: 20px; }
-  #app > .nav .nav-lens {
+  :is(#app > .nav, .mobile-app-nav) button[data-tab="register"] { order: 0; }
+  :is(#app > .nav, .mobile-app-nav) button[data-tab="browse"] { order: 2; }
+  :is(#app > .nav, .mobile-app-nav) button[data-tab="movements"] { order: 1; }
+  :is(#app > .nav, .mobile-app-nav) button[data-tab="dashboard"] { order: 3; }
+  :is(#app > .nav, .mobile-app-nav) button[aria-current] { color: #0359b3; font-weight: 600; }
+  :is(#app > .nav, .mobile-app-nav) button > .icon { width: 20px; height: 20px; flex-basis: 20px; }
+  :is(#app > .nav, .mobile-app-nav) .nav-lens {
     background: linear-gradient(135deg,#e5f4ff,#dbeafa);
     border: 1px solid #b8d8f6;
     border-radius: 11px;
     box-shadow: inset 0 1px 0 #ffffffb0;
   }
-  .keyboard-open #app > .nav { visibility: hidden; pointer-events: none; }
+  .keyboard-open :is(#app > .nav, .mobile-app-nav) { visibility: hidden; pointer-events: none; }
   #app > section { padding-bottom: 0; scroll-margin-top: 8px; }
   #register > .workspace,
   #register > .workspace > .card,
@@ -10036,7 +10036,7 @@ body::before { content: none; }
   #itemForm[data-mobile-stage] * { animation: none !important; }
 }
 
-@media (max-width: 640px) and (max-height: 580px) {
+@media (max-width: 640px) and (max-height: 580px), (hover: none) and (pointer: coarse) and (max-width: 1024px) and (max-height: 580px) {
   body:not(.auth-screen) .shell > header.bar { min-height: 50px; padding: 7px 14px; }
   body:not(.auth-screen) .shell > header .brand .acervo-mark,
   body:not(.auth-screen) .shell > header .brand-logo { width: 34px; height: 34px; flex-basis: 34px; }
@@ -10050,9 +10050,398 @@ body::before { content: none; }
   #mobileRegistrationTitle > .icon { width: 32px; height: 32px; flex-basis: 32px; padding: 7px; }
   .mobile-stage-description { display: none; }
   #register .mobile-registration { margin-bottom: 8px; }
-  #app > .nav button { min-height: 45px; padding-top: 5px; padding-bottom: 5px; }
+  :is(#app > .nav, .mobile-app-nav) button { min-height: 45px; padding-top: 5px; padding-bottom: 5px; }
 }
-@media (max-width: 640px) {
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
   .keyboard-open #register #fields { height: auto; min-height: 0; }
   .keyboard-open #mobileRegistrationContent { flex: none; overflow: visible; }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  html:not(.auth-viewport), body:not(.auth-screen) { overflow: hidden; }
+  body:not(.auth-screen) .shell {
+    height: var(--app-visible-height,100dvh);
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-top: calc(8px + var(--app-safe-top));
+    padding-bottom: calc(82px + var(--app-safe-bottom));
+  }
+  body:not(.auth-screen) .shell > header.bar {
+    flex: 0 0 auto;
+    overflow: visible;
+    filter: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: none;
+    animation: none;
+    z-index: 1;
+  }
+  body:not(.auth-screen) .shell > #app {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    filter: none;
+    transform: none;
+    animation: none;
+  }
+  .shell > #app::-webkit-scrollbar { display: none; }
+  .auth-screen .mobile-app-nav { display: none !important; }
+  :is(#app > .nav, .mobile-app-nav) {
+    background: linear-gradient(135deg,#f9fcff,#e6f1fd);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .mobile-app-nav button[data-tab="register"] { order: 0; }
+  .mobile-app-nav button[data-tab="movements"] { order: 1; }
+  .mobile-app-nav button[data-tab="browse"] { order: 2; }
+  .mobile-app-nav button[data-tab="dashboard"] { order: 3; }
+  #mobileAccountTrigger {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 48px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    box-shadow: none;
+  }
+  #mobileAccountTrigger > .mobile-account-avatar {
+    display: grid;
+    place-items: center;
+    flex: 0 0 32px;
+    width: 32px;
+    min-width: 32px;
+    max-width: 32px;
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    aspect-ratio: 1;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 50%;
+    line-height: 1;
+    overflow: hidden;
+  }
+  #mobileAccountTrigger > .icon { width: 12px; height: 12px; flex: 0 0 12px; transform: rotate(90deg); color: #3975aa; }
+  #register #itemForm[data-mobile-stage="1"]:not(.warehouse-layout) #fields {
+    height: auto;
+    min-height: 0;
+  }
+  #register #itemForm[data-mobile-stage="1"]:not(.warehouse-layout) #mobileRegistrationContent {
+    flex: none;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+  #register #itemForm[data-mobile-stage="1"]:not(.warehouse-layout) #registrationRooms { margin-bottom: 0; }
+  #register #itemForm[data-mobile-stage="1"]:not(.warehouse-layout) #mobileRegistrationActions { margin-top: 4px; padding-top: 13px; }
+  #register #itemForm[data-mobile-stage="1"]:not(.warehouse-layout) #mobileLocationSummary { display: none; }
+  body > :is(#editDialog,#userAccessDialog,#deletePersonDialog,#registrationDiscardDialog,#deleteItemDialog,#operation,#camera,#mobileAccountDialog) {
+    position: fixed;
+    inset: calc(12px + var(--app-safe-top)) max(12px,var(--app-safe-right)) calc(12px + var(--app-safe-bottom)) max(12px,var(--app-safe-left));
+    margin: auto;
+    width: min(440px,calc(100vw - 28px - var(--app-safe-left) - var(--app-safe-right)));
+    max-width: calc(100vw - 28px - var(--app-safe-left) - var(--app-safe-right));
+    height: fit-content;
+    max-height: calc(var(--app-visible-height,100dvh) - var(--app-safe-top) - var(--app-safe-bottom) - 24px);
+    padding: 0;
+    border: 1px solid #85b3da;
+    border-radius: 17px;
+    background: linear-gradient(135deg,#fbfdff,#edf5fd);
+    box-shadow: 0 20px 60px #0c335b55;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  dialog::backdrop, #userAccessDialog::backdrop, #deletePersonDialog::backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: #1237588c;
+  }
+  body > #mobileAccountDialog { width: min(320px,calc(100vw - 32px)); padding: 15px; }
+  .mobile-account-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 14px; }
+  .mobile-account-heading h2 { margin: 0; font-family: Georgia,serif; color: #154e7e; font-size: 25px; }
+  .mobile-account-heading button { min-height: 40px; width: 40px; padding: 10px; border-radius: 10px; }
+  #mobileAccountDialog .account-toolbar { padding: 0; }
+  #mobileAccountDialog #draftInfo { font-size: 10px; margin: 8px 0; }
+  .operation-hero, #registrationDiscardDialog .operation-hero, #deleteItemDialog .operation-hero,
+  #userAccessDialog .access-dialog-hero { padding: 19px 17px; }
+  .operation-heading { gap: 10px; padding-right: 28px; align-items: center; }
+  .operation-mark, #userAccessDialog .access-dialog-mark { width: 40px; height: 40px; flex: 0 0 40px; padding: 0; border-radius: 12px; }
+  .operation-mark .icon, #userAccessDialog .access-dialog-mark .icon { width: 22px; height: 22px; }
+  .operation-heading h2, #userAccessDialog #userAccessTitle { font-size: 23px; line-height: 1.2; letter-spacing: -.5px; }
+  .operation-hero > button, #closeUserAccess { width: 36px; min-height: 36px; height: 36px; padding: 8px; top: 14px; right: 12px; }
+  .operation-heading .eyebrow, #userAccessDialog .access-dialog-kicker { font-size: 8px; letter-spacing: 1px; margin-bottom: 8px; }
+  #userAccessDialog .access-dialog-title { gap: 10px; padding-right: 25px; }
+  #userAccessDialog #userAccessDescription { margin: 11px 0 0; font-size: 11px; line-height: 1.5; }
+  #userAccessDialog .access-dialog-hero::after { opacity: .4; right: 16px; }
+  #operationForm, #registrationDiscardForm, #deleteItemForm,
+  #userAccessDialog .access-dialog-body, #deletePersonDialog .delete-person-body { padding: 16px; }
+  #operationForm label, #registrationDiscardForm label, #deleteItemForm label,
+  #userAccessDialog form label, .people-search label { font-size: 12px; margin-bottom: 7px; }
+  dialog input:not([type="radio"]):not([type="checkbox"]):not([type="range"]), dialog textarea, dialog select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #a8c8e4;
+    border-radius: 10px;
+    background: white;
+    box-sizing: border-box;
+  }
+  dialog textarea { min-height: 78px; }
+  dialog form .actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  dialog form .actions > button, #confirmOperation, #newUserSave, #deleteItemSave { width: 100%; min-width: 0; min-height: 44px; padding: 10px; font-size: 12px; border-radius: 10px; white-space: normal; }
+  #operationHint, #registrationDiscardDescription, #deleteItemForm > p, #deletePersonDescription { font-size: 12px; line-height: 1.5; margin: 0 0 14px; }
+  .operation-record { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 13px; padding: 10px; }
+  .operation-record strong { font-size: 13px; }
+  .operation-record small, .operation-record .operation-code { font-size: 10px; }
+  #registrationDiscardItem { margin-bottom: 13px; padding: 10px; }
+  #registrationDiscardItem strong { font-size: 14px; }
+  #registrationDiscardItem small, #registrationDiscardItem span { font-size: 11px; }
+  #registrationDiscardForm > .actions { margin-top: 14px; }
+  #deletePersonDialog .delete-person-heading { padding: 18px 16px; }
+  #deletePersonDialog h2 { font-size: 24px; }
+  .people-toolbar { display: grid; grid-template-columns: minmax(0,1fr); gap: 10px; }
+  #addPerson { width: 100%; min-height: 44px; font-size: 12px; }
+  .people-summary { margin: 14px 0 10px; font-size: 11px; }
+  .people-summary button { min-height: 40px; padding: 8px; font-size: 11px; }
+  .people-card { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 9px; padding: 11px; }
+  .people-avatar { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 50%; }
+  .people-card strong, .profile-person strong { font-size: 13px; }
+  .people-email, #profilePersonEmail { font-size: 11px; overflow-wrap: anywhere; }
+  .people-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  .people-actions button { min-height: 40px; width: 100%; min-width: 0; padding: 8px; font-size: 11px; }
+  #peoplePagination { justify-content: space-between; gap: 7px; }
+  #peoplePagination button { min-height: 40px; font-size: 11px; padding: 8px; }
+  .role-options { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; }
+  #userAccessDialog .role-option { display: grid; grid-template-columns: 18px minmax(0,1fr); column-gap: 8px; padding: 11px; min-height: 66px; border-radius: 10px; }
+  #userAccessDialog .role-option input { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+  #userAccessDialog .role-option strong { grid-column: 2; font-size: 12px; }
+  #userAccessDialog .role-option small { grid-column: 2; font-size: 10px; line-height: 1.4; }
+  #userAccessDialog .access-flow { display: grid; grid-template-columns: minmax(0,1fr); gap: 7px; margin-bottom: 16px; }
+  #userAccessDialog .access-flow-step { padding: 10px; }
+  #userAccessDialog .access-flow-step strong { font-size: 12px; }
+  #userAccessDialog .access-flow-step small { font-size: 10px; }
+  #newUserResult { padding: 13px; font-size: 12px; }
+  .new-user-credentials { font-size: 12px; overflow-wrap: anywhere; }
+  #editDialog > .dialog-heading { display: flex; flex-flow: row nowrap; gap: 10px; padding: 16px; }
+  #editDialogTitle { font-size: 22px; line-height: 1.2; }
+  #editDialogClose { font-size: 0; width: 40px; min-height: 40px; padding: 10px; flex: 0 0 40px; }
+  #editDialogClose .icon { width: 18px; height: 18px; }
+  #editFields { padding: 14px; }
+  #editFields .editor-main { display: grid; grid-template-columns: minmax(0,1fr); gap: 11px; }
+  #editFields .editor-location { padding: 12px; margin-bottom: 12px; }
+  #editFields .editor-name-card, #editFields .editor-category-card { padding: 12px; }
+  #editFields .editor-name-card > label, #editFields .editor-category-card > legend { font-size: 12px; }
+  #editFields #editCategories, #editFields #editTypes, #editFields #editRooms { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 5px; }
+  #editFields .choices .choice span { min-height: 58px; padding: 8px 4px; font-size: 10px; flex-direction: column; line-height: 1.3; }
+  #editFields .choices .choice .icon { width: 19px; height: 19px; }
+  #editFields .registration-group-heading { min-height: 46px; padding: 8px 11px; }
+  #editFields .registration-group-heading strong { font-size: 12px; }
+  #editFields .registration-group-heading p { font-size: 10px; }
+  #editFields .registration-group-heading > .icon { box-sizing: border-box; width: 30px; height: 30px; padding: 6px; flex-basis: 30px; }
+  #editFields #editControlHost .choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #editFields #editControlHost .choices .choice span { min-height: 48px; }
+  #editFields .editor-notes { margin-top: 12px; }
+  #editFields > .actions { margin-top: 14px; }
+  #editDialog .savebar { position: static; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  body > #camera { padding: 13px; }
+  #camera > .bar { flex-wrap: nowrap; gap: 6px; align-items: center; }
+  #cameraTitle { min-width: 0; font-size: 13px; line-height: 1.4; }
+  #camera > .bar .actions { flex-wrap: nowrap; gap: 6px; }
+  #camera > .bar button { min-height: 40px; min-width: 40px; font-size: 0; padding: 9px; }
+  #camera > .bar button .icon { width: 19px; height: 19px; }
+  #camera .preview { height: min(42dvh,280px); min-height: 140px; aspect-ratio: auto; margin-top: 12px; border-radius: 12px; }
+  #camera .preview video { width: 100%; height: 100%; object-fit: cover; }
+  #camera .camerafoot { padding-top: 10px; }
+  #camera .camerafoot p { font-size: 11px; line-height: 1.5; }
+  #cameraStatus { font-size: 12px; }
+  #zoomLabel { font-size: 12px; }
+  #candidates button { min-height: 43px; padding: 9px; font-size: 12px; }
+  .context-tip { max-width: calc(100vw - 32px); font-size: 12px; }
+  .toast { left: 16px; right: 16px; top: auto; bottom: calc(90px + var(--app-safe-bottom)); max-width: 400px; width: auto; margin: 0 auto; font-size: 12px; padding: 12px; }
+  dialog > .toast { position: sticky; left: auto; right: auto; top: auto; bottom: 0; margin: 0 12px 12px; max-width: none; border-radius: 10px; z-index: 1; }
+  #login.first-access-active { padding: 20px 17px; }
+  #firstAccess .access-description, #firstAccess .security-state span { font-size: 12px; line-height: 1.5; }
+  #firstAccess .security-state { padding: 11px; gap: 9px; }
+  #firstAccess .security-state strong { font-size: 12px; }
+  #firstAccess .password-policy { padding: 11px; }
+  #firstAccess .policy-heading { display: flex; flex-wrap: wrap; gap: 4px; }
+  #firstAccess .password-rules { display: grid; grid-template-columns: 1fr; gap: 6px; font-size: 11px; }
+  #firstAccess .password-field .password-toggle { min-width: 44px; min-height: 44px; }
+  #firstAccess .actions { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  #firstAccess .actions button { min-height: 44px; width: 100%; font-size: 12px; }
+}
+
+.mobile-chart-switcher, .mobile-dashboard-group { display: none; }
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #dashboard .dashboard-description { margin-left: 0; margin-top: 10px; font-size: 12px; }
+  #dashboard #stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+  #dashboard #stats > .stat { min-height: 108px; padding: 11px 9px; border-radius: 12px; border-top-width: 2px; }
+  #dashboard #stats > .stat:first-child {
+    grid-column: 1 / -1;
+    min-height: 122px;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr);
+    align-items: center;
+    column-gap: 17px;
+    row-gap: 5px;
+    padding: 19px;
+    text-align: left;
+    background: radial-gradient(ellipse at 100% 0%,#139de970,transparent 65%),linear-gradient(120deg,#154975,#0868b6);
+    border-color: #187abf;
+    color: white;
+  }
+  #dashboard #stats > .stat:first-child > .icon { position: absolute; right: 14px; top: 14px; width: 21px; height: 21px; opacity: .7; }
+  #dashboard #stats > .stat:first-child b { grid-column: 1; grid-row: 1 / 3; font-size: 46px; margin: 0; padding: 0; line-height: 1; }
+  #dashboard #stats > .stat:first-child span { grid-column: 2; grid-row: 1; font-size: 15px; padding-right: 10px; color: white; align-self: end; }
+  #dashboard #stats > .stat:first-child small { grid-column: 2; grid-row: 2; font-size: 11px; color: #d5eaff; align-self: start; margin: 0; }
+  #dashboard #stats > .stat:not(:first-child) { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; position: relative; text-align: left; }
+  #dashboard #stats > .stat:not(:first-child) .icon { position: absolute; right: 9px; top: 10px; width: 17px; height: 17px; }
+  #dashboard #stats > .stat:not(:first-child) b { font-size: 28px; margin: 0; line-height: 1.1; }
+  #dashboard #stats > .stat:not(:first-child) span { font-size: 11px; line-height: 1.3; }
+  #dashboard #stats > .stat:not(:first-child) small { display: none; }
+  #dashboard #dashboardPulse { padding: 11px 12px; margin: 0 0 13px; }
+  #dashboard #dashboardPulse p { font-size: 11px; }
+  #dashboard .dashboard-focus { display: flex; flex-direction: column; gap: 8px; margin: 0 0 16px; }
+  #dashboard .mobile-dashboard-group { display: block; margin: 0; padding: 0; border: 1px solid #aacbe6; border-radius: 12px; background: #fafdff; overflow: hidden; }
+  .mobile-dashboard-group > summary { display: flex; align-items: center; gap: 9px; min-height: 54px; padding: 10px 12px; list-style: none; color: #24547d; cursor: pointer; }
+  .mobile-dashboard-group > summary::-webkit-details-marker { display: none; }
+  .mobile-dashboard-group > summary > .icon:first-child { width: 20px; height: 20px; flex: 0 0 20px; color: #237bc0; }
+  .mobile-dashboard-group > summary > strong { flex: 1; min-width: 0; font-size: 12px; }
+  .mobile-dashboard-count { display: grid; place-items: center; min-width: 26px; height: 26px; padding: 3px 6px; border-radius: 8px; color: #17639b; background: #e5f2ff; font-size: 12px; font-weight: 600; }
+  .mobile-dashboard-group > summary > .icon:last-child { width: 14px; height: 14px; flex: 0 0 14px; }
+  .mobile-dashboard-group[open] > summary { border-bottom: 1px solid #c5ddf0; background: #edf6ff; }
+  .mobile-dashboard-group[open] > summary > .icon:last-child { transform: rotate(90deg); }
+  #dashboard .mobile-dashboard-group > .card { margin: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; padding: 12px; }
+  #dashboard .mobile-dashboard-group > .card > .card-heading { display: none; }
+  #dashboard .mobile-dashboard-group .dashboard-empty { margin: 0; padding: 4px; font-size: 12px; }
+  #dashboard .stock-alert-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; }
+  #dashboard .stock-alert-card, #dashboard .loan-watch-card { padding: 12px; margin: 0 0 8px; border-radius: 10px; }
+  #dashboard .stock-alert-card h4, #dashboard .loan-watch-card h4 { font-size: 14px; }
+  #dashboard .stock-alert-card p, #dashboard .loan-watch-card p { font-size: 11px; }
+  #dashboard .attention-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  #dashboard .attention-actions button { min-height: 42px; min-width: 0; padding: 8px; font-size: 11px; }
+  .mobile-chart-switcher { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; padding: 4px; margin: 0 0 10px; border: 1px solid #bdd7ed; border-radius: 11px; background: #e2eef9; }
+  .mobile-chart-switcher button { min-height: 40px; font-size: 12px; border: 0; padding: 8px; border-radius: 8px; background: transparent; color: #4b708e; box-shadow: none; gap: 7px; }
+  .mobile-chart-switcher button[aria-selected="true"] { background: white; color: #075ca9; box-shadow: 0 2px 5px #174e8120; }
+  .mobile-chart-switcher button .icon { width: 17px; height: 17px; }
+  #dashboard .dashboard-visuals { display: block; margin-bottom: 17px; }
+  #dashboard .dashboard-visuals > .card { padding: 14px; }
+  #dashboard .visual-heading { gap: 8px; margin-bottom: 12px; }
+  #dashboard .visual-heading h3 { font-size: 17px; }
+  #dashboard .visual-heading p { font-size: 11px; }
+  #dashboard .status-visual { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 12px; }
+  #dashboard .status-ring { width: 110px; height: 110px; min-width: 110px; flex: 0 0 110px; }
+  #dashboard .status-ring-center b { font-size: 26px; }
+  #dashboard .status-ring-center span { font-size: 8px; }
+  #dashboard .visual-legend { min-width: 0; }
+  #dashboard .visual-legend button { min-height: 39px; padding: 7px 0; gap: 5px; grid-template-columns: 6px minmax(0,1fr) auto; }
+  #dashboard .visual-legend button > span { font-size: 11px; }
+  #dashboard .visual-legend button > b { font-size: 15px; }
+  #dashboard .visual-legend button > small { display: none; }
+  #dashboard .visual-footnote { font-size: 10px; line-height: 1.5; }
+  #dashboard .stock-health-total b { font-size: 34px; }
+  #dashboard .stock-health-total span, #dashboard .stock-health-row { font-size: 11px; }
+  #dashboard .stock-health-row { grid-template-columns: 8px minmax(0,1fr) auto auto; gap: 7px; }
+  #dashboard .stock-health-row b { font-size: 15px; }
+  #dashboard .dashboard-rooms-heading { display: block; margin-bottom: 10px; }
+  #dashboard .dashboard-rooms-heading h3 { font-size: 18px; margin: 0; }
+  #dashboard .dashboard-rooms-heading > span { display: block; font-size: 10px; margin-top: 4px; }
+  #dashboard .room-summary { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 7px 10px; padding: 12px; align-items: center; text-align: left; }
+  #dashboard .room-summary-heading { grid-column: 1; grid-row: 1; min-width: 0; font-size: 12px; }
+  #dashboard .room-summary-count { grid-column: 2; grid-row: 1; font-size: 0; margin: 0; text-align: right; }
+  #dashboard .room-summary-count b { font-size: 23px; }
+  #dashboard .room-summary-count > span { font-size: 9px; }
+  #dashboard .room-summary-meter { grid-column: 1 / -1; grid-row: 2; margin: 0; }
+  #dashboard .room-summary-state { grid-column: 1 / -1; grid-row: 3; margin: 0; font-size: 10px; }
+  #dashboard .dashboard-details { margin-top: 15px; }
+  #dashboard .dashboard-details-body { padding: 11px; }
+  #dashboard .history-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: 9px; }
+  #dashboard .identification-overview h3, #dashboard .timeline-card h3 { font-size: 16px; }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #dashboard .mobile-dashboard-group { width: 100%; }
+  #editFields .editor-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 11px; }
+  #editFields .editor-item { display: grid; grid-template-columns: minmax(0,1fr); gap: 11px; }
+  #editFields .editor-note { margin-top: 0; }
+  #editFields #editIdentityGroup, #editFields #editControlHost { grid-column: 1; }
+  #editFields #editLocation .choices { display: grid; }
+  #editFields #editShelves { grid-template-columns: repeat(5,minmax(0,1fr)); }
+  #editFields #editLevels { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  #userAccessDialog .people-row { display: grid; grid-template-columns: 34px minmax(0,1fr); align-items: start; gap: 9px; padding: 11px; }
+  #userAccessDialog .people-name { font-size: 13px; }
+  #userAccessDialog .people-person { min-width: 0; }
+  #userAccessDialog .people-meta { gap: 5px; flex-wrap: wrap; }
+  #userAccessDialog .people-role, #userAccessDialog .people-status { font-size: 9px; }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  .keyboard-open body:not(.auth-screen) .shell { padding-bottom: calc(10px + var(--app-safe-bottom)); }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  body > :is(#editDialog,#userAccessDialog,#deletePersonDialog,#registrationDiscardDialog,#deleteItemDialog,#operation,#camera,#mobileAccountDialog) {
+    inset: auto;
+    top: calc(var(--app-viewport-top,0px) + (var(--app-visible-height,100dvh) + var(--app-safe-top) - var(--app-safe-bottom)) / 2);
+    left: calc((100vw + var(--app-safe-left) - var(--app-safe-right)) / 2);
+    margin: 0;
+    transform: translate(-50%,-50%);
+  }
+  body > dialog[open] { animation: mobile-dialog-enter .18s var(--ease); }
+  dialog > .context-tip { max-width: calc(100% - 24px); z-index: 1000; }
+  @keyframes mobile-dialog-enter {
+    from { opacity: 0; transform: translate(-50%,calc(-50% + 7px)) scale(.985); }
+    to { opacity: 1; transform: translate(-50%,-50%); }
+  }
+}
+
+.mobile-editor-content { display: contents; }
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  body > #editDialog[open] {
+    display: flex;
+    flex-direction: column;
+    height: min(760px,calc(var(--app-visible-height,100dvh) - var(--app-safe-top) - var(--app-safe-bottom) - 24px));
+    overflow: hidden;
+  }
+  #editDialog > .dialog-heading { flex: 0 0 auto; position: static; margin: 0; }
+  #editDialogContent { flex: 1; min-height: 0; max-height: none; overflow: hidden; }
+  #editForm { height: 100%; margin: 0; }
+  #editDialog #editFields { display: flex; flex-direction: column; height: 100%; margin: 0; padding: 14px; }
+  #editDialog .mobile-editor-content { display: block; flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 0 6px; }
+  #editDialog .mobile-editor-content::-webkit-scrollbar { display: none; }
+  #editDialog #editFields > .actions { position: static; flex: 0 0 auto; padding: 12px 0 0; margin: 0; width: 100%; border: 0; background: #f4f9ff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  #userAccessDialog > .access-dialog-hero,
+  #operation > .operation-hero,
+  #registrationDiscardDialog > .operation-hero,
+  #deleteItemDialog > .operation-hero,
+  #deletePersonDialog > .delete-person-heading,
+  #camera > .bar { position: sticky; top: 0; z-index: 2; }
+  #camera > .bar { background: #f2f7fc; }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  body > #camera { color: #1b4d77; }
+  #cameraStatus, #camera .camerafoot, #camera .camerafoot p { color: #365f81; }
+  #camera #candidates button { color: #155d99; background: #f5faff; border: 1px solid #a8cbea; }
+}
+
+@media (max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #mobileAccountDialog .account-avatar { width: 36px; height: 36px; min-width: 36px; max-width: 36px; flex: 0 0 36px; padding: 0; border-radius: 50%; aspect-ratio: 1; }
+  #userAccessDialog .people-avatar { min-width: 34px; max-width: 34px; min-height: 34px; max-height: 34px; padding: 0; aspect-ratio: 1; }
+  #camera > .bar button { color: #225a86; background: #eef6ff; border-color: #a8c9e5; }
 }

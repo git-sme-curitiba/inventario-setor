@@ -328,6 +328,8 @@ function button(text, fn, cls = "", name = "") {
 }
 
 function toast(text, error = false) {
+  const activeDialog = [...document.querySelectorAll("dialog[open]")].at(-1);
+  (activeDialog || document.body).append($("toast"));
   $("toast").replaceChildren(error ? icon("warning") : acervoBooks(true), el("span", text));
   $("toast").className = "toast" + (error ? " error" : "");
   $("toast").hidden = false;
@@ -446,7 +448,8 @@ function showTab(id) {
   });
   updateNavIndicator();
   if (mobileAcervo()) {
-    $("mobileAccountMenu")?.removeAttribute("open");
+    $("app").scrollTop = 0;
+    if ($("mobileAccountDialog")?.open) $("mobileAccountDialog").close();
     document.querySelector(".shell > header")?.scrollIntoView({ block: "start", behavior: "auto" });
   }
 }
@@ -455,7 +458,7 @@ function setBusy(v, message = "Salvando…") {
   busy = v;
   $("fields").disabled = v || role === "leitor" || !!pending;
   document
-    .querySelectorAll("#app button,#operation button,#registrationDiscardDialog button")
+    .querySelectorAll("#app button,.mobile-app-nav button,#operation button,#registrationDiscardDialog button")
     .forEach((b) => (b.disabled = v));
   if ($("editFields"))
   $("editFields").disabled = v || role === "leitor" || !!pending;
@@ -532,6 +535,7 @@ function organizeEditor(record) {
   grid.append(item, identity, control, notes);
   fields.prepend(location, grid);
   oldGrid.remove();
+  syncMobileEditor();
 }
 
 function mountControlFields(host, prefix = "", record = null) {
@@ -2325,10 +2329,7 @@ function renderMetrics() {
       String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR")
     );
   const metricButton = ([title, total, mark, filter]) => {
-    const b = button("", () => filter ? query(filter) : $("stockWatch").scrollIntoView({
-      block: "start",
-      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
-    }), "stat", mark);
+    const b = button("", () => filter ? query(filter) : revealStockWatch(), "stat", mark);
     b.dataset.tone = mark;
     b.append(el("b", total), el("span", title));
     return b;
@@ -4773,10 +4774,21 @@ function initVisualExperience() {
         ? r.top - t.height - 8
         : r.bottom + 8,
       ) + "px";
+    const dialog = tip.closest("dialog");
+    if (dialog) {
+      const bounds = dialog.getBoundingClientRect();
+      const left = Math.max(bounds.left + 12, Math.min(bounds.right - t.width - 12, r.left));
+      const top = Math.max(bounds.top + 12, Math.min(bounds.bottom - t.height - 12, r.bottom + t.height + 12 > bounds.bottom ? r.top - t.height - 8 : r.bottom + 8));
+      tip.style.left = left - bounds.left - dialog.clientLeft + dialog.scrollLeft + "px";
+      tip.style.top = top - bounds.top - dialog.clientTop + dialog.scrollTop + "px";
+    }
   }
   function openTip(target) {
     closeTip();
     activeHelp = target;
+    const dialog = mobileAcervo() ? target.closest("dialog") : null;
+    (dialog || document.body).append(tip);
+    tip.style.position = dialog ? "absolute" : "fixed";
     tip.textContent = target.dataset.help;
     tip.hidden = false;
     target.setAttribute("aria-describedby", "contextTip");
@@ -4983,7 +4995,10 @@ function initAppViewport() {
     const focused = document.activeElement?.matches("input, textarea, select, [contenteditable='true']");
     const keyboard = !!focused && !!viewport && viewport.scale === 1 && window.innerHeight - height > 140;
     root.classList.toggle("keyboard-open", keyboard);
-    if (!viewport || viewport.scale === 1) root.style.setProperty("--app-visible-height", Math.round(height) + "px");
+    if (!viewport || viewport.scale === 1) {
+      root.style.setProperty("--app-visible-height", Math.round(height) + "px");
+      root.style.setProperty("--app-viewport-top", Math.round(viewport?.offsetTop || 0) + "px");
+    }
   }
   function schedule() {
     if (!scheduled) scheduled = requestAnimationFrame(update);
@@ -4992,6 +5007,7 @@ function initAppViewport() {
   window.addEventListener("resize", schedule, { passive: true });
   window.addEventListener("pageshow", schedule);
   viewport?.addEventListener("resize", schedule, { passive: true });
+  viewport?.addEventListener("scroll", schedule, { passive: true });
   document.addEventListener("focusin", schedule);
   document.addEventListener("focusout", schedule);
   update();
@@ -5016,7 +5032,7 @@ initVisualExperience();
 })();
 
 function mobileAcervo() {
-  return matchMedia("(max-width: 640px)").matches;
+  return matchMedia("(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)").matches;
 }
 
 function registrationStage(step, focus = true) {
@@ -5128,7 +5144,7 @@ function initMobileAcervo() {
       next.click();
     }
   });
-  const query = matchMedia("(max-width: 640px)");
+  const query = matchMedia("(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)");
   const resize = () => {
     form.noValidate = query.matches;
     if (!query.matches) {
@@ -5152,6 +5168,7 @@ function updateMobileLocation() {
   const d = formData();
   const line = [d.ambiente];
   if (d.ambiente === "Almoxarifado" && d.estante && d.prateleira) line.push(`Estante ${d.estante}`, `Prateleira ${d.prateleira.padStart(2, "0")}`);
+  target.hidden = d.ambiente !== "Almoxarifado";
   const copy = el("div");
   copy.append(el("small", "Local selecionado"), el("span", line.filter(Boolean).join(" · ")));
   target.replaceChildren(icon("pin"), copy);
@@ -5162,24 +5179,39 @@ function initMobileIdentity() {
     accountHost = header.querySelector(".header-meta"),
     accountToolbar = accountHost.querySelector(".account-toolbar"),
     footer = document.querySelector(".institution-footer");
-  const accountMenu = el("details", undefined, "mobile-account-menu");
+  const accountMenu = el("div", undefined, "mobile-account-menu");
   accountMenu.id = "mobileAccountMenu";
-  const accountButton = el("summary");
+  const accountButton = el("button", undefined, "mobile-account-trigger");
+  accountButton.type = "button";
+  accountButton.id = "mobileAccountTrigger";
+  accountButton.setAttribute("aria-haspopup", "dialog");
+  accountButton.setAttribute("aria-controls", "mobileAccountDialog");
   accountButton.setAttribute("aria-label", "Abrir perfil e ações da conta");
   const avatar = el("span", "A", "mobile-account-avatar");
   accountButton.append(avatar, icon("right"));
-  const accountPanel = el("div", undefined, "mobile-account-panel");
+  const accountPanel = el("dialog", undefined, "mobile-account-panel");
+  accountPanel.id = "mobileAccountDialog";
+  accountPanel.setAttribute("aria-labelledby", "mobileAccountTitle");
+  const accountHeading = el("div", undefined, "mobile-account-heading");
+  const accountTitle = el("h2", "Sua conta");
+  accountTitle.id = "mobileAccountTitle";
+  const accountClose = button("", () => accountPanel.close(), "", "close");
+  accountClose.setAttribute("aria-label", "Fechar opções da conta");
+  accountHeading.append(accountTitle, accountClose);
+  accountPanel.append(accountHeading);
+  accountButton.onclick = () => accountPanel.showModal();
   const credit = footer.cloneNode(true);
   credit.className = "mobile-institution-credit";
   accountPanel.append(credit);
-  accountMenu.append(accountButton, accountPanel);
+  accountMenu.append(accountButton);
+  document.body.append(accountPanel);
   header.append(accountMenu);
   const avatarObserver = new MutationObserver(() => avatar.textContent = $("accountAvatar").textContent);
   avatarObserver.observe($("accountAvatar"), { childList: true, characterData: true, subtree: true });
   avatar.textContent = $("accountAvatar").textContent;
   accountPanel.addEventListener("click", event => {
-    if (event.target.closest("button")) accountMenu.open = false;
-  });
+    if (event.target.closest("button")) accountPanel.close();
+  }, true);
   const queryMenu = el("details", undefined, "mobile-query-menu");
   queryMenu.id = "mobileQueryMenu";
   const queryButton = el("summary", "•••");
@@ -5227,31 +5259,40 @@ function initMobileIdentity() {
   });
   observer.observe($("itemForm"), { attributes: true, attributeFilter: ["data-mobile-stage"] });
   document.addEventListener("click", event => {
-    if (!accountMenu.contains(event.target)) accountMenu.open = false;
+    if (event.target === accountPanel) {
+      const bounds = accountPanel.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) accountPanel.close();
+    }
     if (!queryMenu.contains(event.target)) queryMenu.open = false;
   });
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape") { accountMenu.open = false; queryMenu.open = false; }
+    if (event.key === "Escape") { if (accountPanel.open) accountPanel.close(); queryMenu.open = false; }
   });
-  const media = matchMedia("(max-width: 640px)");
+  const appNav = document.querySelector(".nav");
+  const media = matchMedia("(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)");
   const layout = () => {
     if (media.matches) {
       reviewActions.id = "mobileReviewActions";
       reviewActions.prepend(reviewBack);
       $("fields").append(reviewActions);
-      accountPanel.prepend(accountToolbar);
+      accountHeading.after(accountToolbar);
+      appNav.classList.add("mobile-app-nav");
+      document.querySelector(".shell").append(appNav);
       credit.before($("draftInfo"));
       queryMenu.append(queryTools);
     } else {
       reviewActions.removeAttribute("id");
       $("registrationSave").append(reviewBack, reviewActions);
       accountHost.append(accountToolbar);
+      appNav.classList.remove("mobile-app-nav");
+      $("app").insertBefore(appNav, $("acervoOpening") || $("app").querySelector("section"));
       $("itemForm").after($("draftInfo"));
       queryBar.append(queryTools);
-      accountMenu.open = false;
+      if (accountPanel.open) accountPanel.close();
       queryMenu.open = false;
     }
     camera.hidden = !media.matches || !mobileCamera();
+    syncMobileEditor();
     labelButton($("discardRegistration"), media.matches ? "Registrar descarte" : "Descartar", "discard");
     const mark = document.querySelector('[data-tab="register"] use');
     mark.setAttribute("href", media.matches ? "#i-record-add" : "#i-plus");
@@ -5262,3 +5303,106 @@ function initMobileIdentity() {
 }
 
 initMobileIdentity();
+
+function revealStockWatch() {
+  const panel = $("stockWatch");
+  const group = panel.closest("details");
+  if (group) group.open = true;
+  panel.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+
+function initMobileDashboard() {
+  const dashboard = $("dashboard"),
+    visuals = dashboard.querySelector(".dashboard-visuals"),
+    focus = dashboard.querySelector(".dashboard-focus"),
+    rooms = dashboard.querySelector(".dashboard-rooms"),
+    goods = visuals.children[0],
+    stocks = visuals.children[1];
+  const switcher = el("div", undefined, "mobile-chart-switcher");
+  switcher.setAttribute("role", "tablist");
+  switcher.setAttribute("aria-label", "Gráficos da visão geral");
+  let chart = "goods";
+  const controls = [["goods", "Bens", "composition", goods], ["stocks", "Estoques", "stock", stocks]].map(([key, label, mark, panel]) => {
+    const control = button(label, () => { chart = key; update(); }, "", mark);
+    control.id = "mobileChart" + key;
+    control.setAttribute("role", "tab");
+    panel.id = "mobileChartPanel" + key;
+    control.setAttribute("aria-controls", panel.id);
+    switcher.append(control);
+    return { key, control, panel };
+  });
+  visuals.before(switcher);
+  const groups = [["stockWatch", "Materiais para repor", "stock-alert", "stockAlertCount"], ["loanWatch", "Bens emprestados", "loan", "loanWatchCount"]].map(([id, label, mark, source]) => {
+    const section = id === "stockWatch" ? $(id) : $(id).closest("section");
+    const details = el("details", undefined, "mobile-dashboard-group");
+    const summary = el("summary");
+    const count = el("span", "0", "mobile-dashboard-count");
+    summary.append(icon(mark), el("strong", label), count, icon("right"));
+    details.append(summary);
+    focus.append(details);
+    return { section, details, count, source };
+  });
+  const media = matchMedia("(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)");
+  function update() {
+    const captions = ["Bens acompanhados", "Emprestados", "Estoques ativos", "Para repor"];
+    [...$("stats").children].forEach((metric, i) => {
+      const caption = metric.querySelector(":scope > span");
+      if (!caption) return;
+      if (!metric.dataset.desktopCaption) metric.dataset.desktopCaption = caption.textContent;
+      caption.textContent = media.matches ? captions[i] || metric.dataset.desktopCaption : metric.dataset.desktopCaption;
+    });
+    controls.forEach(({ key, control, panel }) => {
+      control.setAttribute("aria-selected", String(key === chart));
+      control.tabIndex = key === chart ? 0 : -1;
+      panel.hidden = media.matches && key !== chart;
+      if (media.matches) { panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", control.id); }
+      else { panel.removeAttribute("role"); panel.removeAttribute("aria-labelledby"); }
+    });
+    groups.forEach(group => group.count.textContent = $(group.source).textContent || "0");
+  }
+  switcher.addEventListener("keydown", event => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : chart === "goods" ? 1 : 0;
+    chart = controls[next].key;
+    update();
+    controls[next].control.focus();
+  });
+  const layout = () => {
+    if (media.matches) {
+      $("stats").after($("dashboardPulse"));
+      switcher.before(focus);
+      groups.forEach(group => group.details.append(group.section));
+    } else {
+      $("stats").before($("dashboardPulse"));
+      rooms.before(focus);
+      groups.forEach(group => focus.insertBefore(group.section, groups[0].details));
+    }
+    update();
+  };
+  new MutationObserver(update).observe($("stats"), { childList: true });
+  media.addEventListener("change", layout);
+  layout();
+}
+
+initMobileDashboard();
+
+
+function syncMobileEditor() {
+  const fields = $("editFields");
+  if (!fields) return;
+  const location = fields.querySelector(".editor-location"),
+    grid = fields.querySelector(".editor-grid");
+  if (!location || !grid) return;
+  let content = fields.querySelector(".mobile-editor-content");
+  if (mobileAcervo()) {
+    if (!content) {
+      content = el("div", undefined, "mobile-editor-content");
+      fields.prepend(content);
+    }
+    content.append(location, grid);
+  } else if (content) {
+    fields.prepend(location, grid);
+    content.remove();
+  }
+}

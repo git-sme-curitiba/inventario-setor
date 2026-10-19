@@ -1,5 +1,842 @@
 "use strict";
 
+const ITEM_SYMBOLS = [
+  {
+    icone: "acv-cadeira-giratoria",
+    termos: [
+      "cadeira giratoria",
+      "cadeira de escritorio",
+      "cadeira com rodinhas",
+      "cadeira presidente",
+      "cadeira executiva",
+    ],
+  },
+  {
+    icone: "acv-cadeira-fixa",
+    termos: [
+      "cadeira fixa",
+      "cadeira de visitante",
+      "cadeira sem rodinhas",
+      "cadeira de recepcao",
+    ],
+  },
+  {
+    icone: "lucide-armchair",
+    termos: ["poltrona", "poltrona de espera", "poltrona estofada"],
+  },
+  { icone: "acv-sofa", termos: ["sofa", "sofa de recepcao", "sofa de espera"] },
+  { icone: "acv-banco", termos: ["banco", "banqueta", "banco de madeira"] },
+  {
+    icone: "acv-longarina",
+    termos: ["longarina", "cadeira longarina", "banco de espera"],
+  },
+  {
+    icone: "acv-mesa",
+    termos: ["mesa", "mesa de trabalho", "mesa de escritorio", "escrivaninha"],
+  },
+  { icone: "acv-mesa-reuniao", termos: ["mesa de reuniao", "mesa de conferencia"] },
+  { icone: "acv-mesa-redonda", termos: ["mesa redonda", "mesa circular"] },
+  { icone: "acv-mesa-l", termos: ["mesa em l", "mesa angular", "estacao em l"] },
+  { icone: "acv-balcao", termos: ["balcao de atendimento", "balcao", "guiche"] },
+  {
+    icone: "acv-gaveteiro",
+    termos: ["gaveteiro", "gaveteiro volante", "gaveteiro com rodizio"],
+  },
+  {
+    icone: "acv-armario",
+    termos: ["armario", "armario de aco", "armario de madeira", "armario de escritorio"],
+  },
+  {
+    icone: "acv-arquivo",
+    termos: [
+      "arquivo de gavetas",
+      "arquivo de aco",
+      "arquivo com quatro gavetas",
+      "arquivo vertical",
+    ],
+  },
+  {
+    icone: "acv-estante",
+    termos: ["estante", "estante de aco", "estante de livros", "prateleira"],
+  },
+  {
+    icone: "acv-roupeiro",
+    termos: ["roupeiro", "armario vestiario", "armario com escaninhos"],
+  },
+  {
+    icone: "acv-armario-baixo",
+    termos: ["armario baixo", "armario credenza", "credenza"],
+  },
+  { icone: "acv-painel", termos: ["divisoria", "biombo", "painel divisorio"] },
+  {
+    icone: "acv-suporte-monitor",
+    termos: [
+      "suporte de monitor",
+      "braco para monitor",
+      "suporte articulado para monitor",
+    ],
+  },
+  { icone: "lucide-footprints", termos: ["apoio para pes", "descanso para os pes"] },
+  { icone: "acv-cadeira-giratoria", termos: ["cadeira", "cadeira estofada"] },
+  { icone: "acv-cabideiro", termos: ["cabideiro", "porta casacos"] },
+  {
+    icone: "acv-carteira",
+    termos: ["carteira escolar", "conjunto aluno", "mesa e cadeira escolar"],
+  },
+  {
+    icone: "acv-carteira-prancheta",
+    termos: [
+      "cadeira universitaria",
+      "cadeira com prancheta",
+      "cadeira com braco de escrever",
+    ],
+  },
+  { icone: "acv-mesa-infantil", termos: ["mesa infantil", "mesa de educacao infantil"] },
+  { icone: "acv-cadeira-infantil", termos: ["cadeira infantil", "cadeirinha escolar"] },
+  { icone: "acv-mesa-professor", termos: ["mesa do professor", "mesa de professor"] },
+  {
+    icone: "acv-banco-refeitorio",
+    termos: ["mesa de refeitorio", "conjunto de refeitorio"],
+  },
+  {
+    icone: "lucide-presentation",
+    termos: ["lousa", "quadro branco", "quadro negro", "lousa branca", "quadro de giz"],
+  },
+  {
+    icone: "acv-quadro-digital",
+    termos: ["lousa digital", "quadro interativo", "quadro digital"],
+  },
+  {
+    icone: "acv-cavalete",
+    termos: ["cavalete", "cavalete de pintura", "cavalete escolar"],
+  },
+  {
+    icone: "acv-escaninho",
+    termos: ["escaninho", "escaninho escolar", "organizador de alunos"],
+  },
+  { icone: "acv-trocador", termos: ["trocador infantil", "mesa de troca"] },
+  { icone: "acv-berco", termos: ["berco", "berco infantil"] },
+  {
+    icone: "lucide-bed-single",
+    termos: ["cama", "colchonete", "colchao", "colchonete escolar"],
+  },
+  {
+    icone: "acv-tapete",
+    termos: ["tapete", "tapete em eva", "tatame", "tapete infantil"],
+  },
+  {
+    icone: "acv-carrinho-livros",
+    termos: ["carrinho de livros", "carrinho de biblioteca"],
+  },
+  { icone: "lucide-book-open", termos: ["expositor de livros", "suporte de livros"] },
+  {
+    icone: "acv-bancada",
+    termos: ["bancada", "bancada de laboratorio", "bancada de trabalho"],
+  },
+  {
+    icone: "acv-painel",
+    termos: ["mural de avisos", "quadro de avisos", "painel de cortica"],
+  },
+  { icone: "lucide-school", termos: ["maquete escolar", "maquete"] },
+  {
+    icone: "acv-parquinho",
+    termos: ["brinquedo de playground", "escorregador", "parquinho"],
+  },
+  {
+    icone: "lucide-computer",
+    termos: [
+      "computador",
+      "computador de mesa",
+      "desktop",
+      "microcomputador",
+      "estacao de trabalho",
+    ],
+  },
+  {
+    icone: "lucide-pc-case",
+    termos: ["gabinete", "cpu", "torre de computador", "gabinete de computador"],
+  },
+  {
+    icone: "lucide-monitor",
+    termos: ["monitor", "monitor de computador", "tela de computador"],
+  },
+  { icone: "lucide-laptop", termos: ["notebook", "laptop", "computador portatil"] },
+  { icone: "acv-chromebook", termos: ["chromebook", "notebook educacional"] },
+  { icone: "lucide-tablet", termos: ["tablet", "tablet educacional"] },
+  { icone: "lucide-smartphone", termos: ["celular", "smartphone", "telefone celular"] },
+  {
+    icone: "acv-all-in-one",
+    termos: ["computador all in one", "all in one", "computador integrado"],
+  },
+  { icone: "lucide-server", termos: ["servidor", "servidor de rede", "servidor fisico"] },
+  { icone: "acv-mini-pc", termos: ["mini pc", "minicomputador", "thin client"] },
+  {
+    icone: "acv-estacao-carga",
+    termos: [
+      "carrinho de recarga",
+      "estacao de recarga",
+      "armario de recarga de tablets",
+    ],
+  },
+  {
+    icone: "acv-totem",
+    termos: ["totem de atendimento", "totem digital", "terminal de autoatendimento"],
+  },
+  {
+    icone: "acv-leitor-digital",
+    termos: ["leitor digital", "leitor de livros digitais", "e reader", "kindle"],
+  },
+  { icone: "lucide-watch", termos: ["relogio inteligente", "smartwatch"] },
+  { icone: "acv-mesa-digitalizadora", termos: ["mesa digitalizadora", "tablet grafico"] },
+  { icone: "acv-microcomputador-placa", termos: ["placa raspberry pi", "raspberry pi"] },
+  { icone: "lucide-keyboard", termos: ["teclado", "teclado usb", "teclado sem fio"] },
+  { icone: "lucide-mouse", termos: ["mouse", "mouse usb", "mouse sem fio"] },
+  { icone: "acv-mousepad", termos: ["mousepad", "tapete para mouse", "mouse pad"] },
+  { icone: "lucide-webcam", termos: ["webcam", "camera web", "camera de computador"] },
+  { icone: "lucide-headphones", termos: ["fone de ouvido", "headphone", "fone"] },
+  { icone: "lucide-headset", termos: ["headset", "fone com microfone"] },
+  { icone: "lucide-speaker", termos: ["caixa de som", "alto falante", "caixa acustica"] },
+  {
+    icone: "lucide-mic",
+    termos: ["microfone", "microfone de mesa", "microfone sem fio"],
+  },
+  {
+    icone: "lucide-printer",
+    termos: ["impressora", "impressora laser", "impressora jato de tinta"],
+  },
+  {
+    icone: "acv-multifuncional",
+    termos: ["multifuncional", "impressora multifuncional", "copiadora"],
+  },
+  {
+    icone: "lucide-scan-line",
+    termos: ["scanner", "digitalizador", "scanner de documentos"],
+  },
+  {
+    icone: "lucide-scan-barcode",
+    termos: ["leitor de codigo de barras", "leitor de codigo", "leitor barcode"],
+  },
+  {
+    icone: "lucide-contact",
+    termos: ["leitor de cartao", "leitor de cartoes", "leitor de cartao de memoria"],
+  },
+  { icone: "acv-hub-usb", termos: ["hub usb", "hub", "concentrador usb"] },
+  { icone: "acv-dock", termos: ["dock station", "docking station", "base de conexao"] },
+  {
+    icone: "acv-controle",
+    termos: ["controle remoto", "controle para apresentacao", "passador de slides"],
+  },
+  { icone: "lucide-gamepad-2", termos: ["controle de videogame", "gamepad", "joystick"] },
+  {
+    icone: "lucide-fingerprint",
+    termos: ["leitor biometrico", "leitor de impressao digital", "biometria"],
+  },
+  {
+    icone: "acv-drive-optico",
+    termos: ["drive de dvd", "gravador de dvd", "drive optico", "leitor de cd"],
+  },
+  {
+    icone: "acv-suporte-notebook",
+    termos: ["suporte de notebook", "base para notebook", "suporte de laptop"],
+  },
+  { icone: "lucide-router", termos: ["roteador", "roteador wi fi", "router"] },
+  { icone: "acv-switch", termos: ["switch", "switch de rede", "comutador de rede"] },
+  { icone: "acv-access-point", termos: ["access point", "ponto de acesso", "ap wi fi"] },
+  { icone: "acv-modem", termos: ["modem", "modem de internet", "ont", "onu"] },
+  {
+    icone: "acv-rack",
+    termos: ["rack de rede", "rack de ti", "rack de servidor", "rack"],
+  },
+  {
+    icone: "acv-patch-panel",
+    termos: ["patch panel", "painel de conexao", "patchpanel"],
+  },
+  { icone: "acv-firewall", termos: ["firewall", "appliance firewall"] },
+  {
+    icone: "lucide-wifi",
+    termos: ["repetidor de sinal", "repetidor wi fi", "extensor wi fi"],
+  },
+  {
+    icone: "lucide-satellite-dish",
+    termos: ["antena", "antena de rede", "antena wi fi"],
+  },
+  {
+    icone: "acv-placa-rede",
+    termos: ["placa de rede", "adaptador de rede", "adaptador ethernet"],
+  },
+  {
+    icone: "acv-fibra",
+    termos: ["conversor de midia", "conversor de fibra", "modulo sfp", "transceiver sfp"],
+  },
+  { icone: "acv-rj45", termos: ["conector rj45", "plug rj45", "conector de rede"] },
+  { icone: "acv-tomada-rede", termos: ["tomada de rede", "keystone", "espelho de rede"] },
+  {
+    icone: "acv-patch-cord",
+    termos: ["patch cord", "cabo de rede", "cabo ethernet", "cabo utp"],
+  },
+  {
+    icone: "acv-fibra",
+    termos: ["cabo de fibra optica", "cordao optico", "fibra optica"],
+  },
+  { icone: "acv-poe", termos: ["injetor poe", "adaptador poe", "fonte poe"] },
+  {
+    icone: "acv-organizador-rack",
+    termos: ["organizador de rack", "guia de cabos", "painel organizador"],
+  },
+  { icone: "acv-switch", termos: ["switch gerenciavel", "switch poe"] },
+  { icone: "acv-nobreak", termos: ["nobreak", "no break", "ups"] },
+  { icone: "acv-estabilizador", termos: ["estabilizador", "estabilizador de tensao"] },
+  {
+    icone: "acv-filtro-linha",
+    termos: ["filtro de linha", "regua de tomadas", "regua de energia"],
+  },
+  { icone: "acv-extensao", termos: ["extensao eletrica", "cabo extensor", "extensao"] },
+  {
+    icone: "acv-fonte",
+    termos: ["fonte de alimentacao", "fonte atx", "fonte de computador"],
+  },
+  {
+    icone: "acv-carregador",
+    termos: ["carregador", "carregador de notebook", "carregador de celular"],
+  },
+  {
+    icone: "lucide-battery",
+    termos: ["bateria", "bateria de notebook", "bateria recarregavel"],
+  },
+  {
+    icone: "lucide-battery-full",
+    termos: ["pilha", "pilha alcalina", "pilha recarregavel"],
+  },
+  { icone: "lucide-plug", termos: ["adaptador de tomada", "plugue", "plug de tomada"] },
+  { icone: "acv-tomada", termos: ["tomada eletrica", "tomada", "espelho de tomada"] },
+  {
+    icone: "acv-cabo-usb",
+    termos: ["cabo usb", "cabo usb c", "cabo micro usb", "cabo lightning"],
+  },
+  { icone: "acv-cabo-hdmi", termos: ["cabo hdmi", "cabo de video hdmi"] },
+  { icone: "acv-cabo-vga", termos: ["cabo vga", "cabo de video vga"] },
+  { icone: "acv-cabo-displayport", termos: ["cabo displayport", "cabo dp"] },
+  {
+    icone: "acv-cabo-audio",
+    termos: ["cabo de audio", "cabo p2", "cabo p10", "cabo rca"],
+  },
+  {
+    icone: "acv-cabo-forca",
+    termos: ["cabo de forca", "cabo de energia", "cabo tripolar"],
+  },
+  {
+    icone: "acv-adaptador-video",
+    termos: [
+      "adaptador de video",
+      "adaptador hdmi",
+      "adaptador vga",
+      "conversor de video",
+    ],
+  },
+  { icone: "acv-canaleta", termos: ["canaleta", "canaleta de cabos", "eletrocalha"] },
+  {
+    icone: "lucide-cable",
+    termos: ["abracadeira", "enforca gato", "organizador de cabos", "velcro para cabos"],
+  },
+  { icone: "acv-testador-cabos", termos: ["testador de cabos", "testador de rede"] },
+  { icone: "acv-memoria", termos: ["memoria ram", "pente de memoria", "ram"] },
+  {
+    icone: "lucide-cpu",
+    termos: ["processador", "cpu processador", "unidade de processamento"],
+  },
+  { icone: "acv-placa-mae", termos: ["placa mae", "motherboard", "placa principal"] },
+  { icone: "acv-placa-video", termos: ["placa de video", "gpu"] },
+  {
+    icone: "lucide-hard-drive",
+    termos: ["disco rigido", "hd", "hd interno", "disco duro"],
+  },
+  {
+    icone: "acv-ssd",
+    termos: ["ssd", "ssd sata", "ssd nvme", "unidade de estado solido"],
+  },
+  {
+    icone: "lucide-hard-drive-download",
+    termos: ["hd externo", "disco externo", "ssd externo"],
+  },
+  { icone: "lucide-usb", termos: ["pen drive", "pendrive", "memoria usb"] },
+  { icone: "acv-cartao-memoria", termos: ["cartao de memoria", "cartao sd", "micro sd"] },
+  { icone: "lucide-disc-3", termos: ["cd", "dvd", "midia optica", "disco virgem"] },
+  {
+    icone: "lucide-fan",
+    termos: ["cooler", "ventoinha de computador", "cooler de processador"],
+  },
+  { icone: "lucide-pipette", termos: ["pasta termica"] },
+  { icone: "acv-dissipador", termos: ["dissipador", "dissipador de calor"] },
+  {
+    icone: "acv-bateria-botao",
+    termos: ["bateria cmos", "bateria cr2032", "pilha botao"],
+  },
+  {
+    icone: "acv-kit-parafusos",
+    termos: ["parafuso de computador", "kit de parafusos", "parafuso"],
+  },
+  { icone: "acv-suporte-hd", termos: ["suporte de hd", "case de hd", "gaveta de hd"] },
+  { icone: "acv-placa-som", termos: ["placa de som", "interface de audio"] },
+  { icone: "acv-nas", termos: ["nas", "armazenamento em rede"] },
+  { icone: "lucide-projector", termos: ["projetor", "datashow", "projetor multimidia"] },
+  { icone: "acv-tela-projecao", termos: ["tela de projecao", "telao", "tela retratil"] },
+  { icone: "lucide-tv", termos: ["televisao", "tv", "smart tv", "televisor"] },
+  {
+    icone: "lucide-camera",
+    termos: ["camera fotografica", "maquina fotografica", "camera digital"],
+  },
+  { icone: "lucide-video", termos: ["filmadora", "camera de video"] },
+  {
+    icone: "lucide-cctv",
+    termos: ["camera de seguranca", "camera ip", "camera de vigilancia"],
+  },
+  { icone: "acv-gravador", termos: ["gravador de seguranca", "dvr", "nvr"] },
+  { icone: "lucide-phone", termos: ["telefone", "telefone fixo", "aparelho telefonico"] },
+  { icone: "acv-telefone-ip", termos: ["telefone ip", "telefone voip", "telefone sip"] },
+  {
+    icone: "lucide-radio-tower",
+    termos: ["radio comunicador", "walkie talkie", "radio ht"],
+  },
+  { icone: "lucide-radio", termos: ["radio", "radio portatil"] },
+  { icone: "acv-mesa-som", termos: ["mesa de som", "mixador de audio", "mesa de audio"] },
+  { icone: "acv-amplificador", termos: ["amplificador", "amplificador de som"] },
+  { icone: "acv-tripé", termos: ["tripe", "tripe de camera", "suporte de camera"] },
+  { icone: "acv-suporte-tv", termos: ["suporte de tv", "suporte para televisao"] },
+  { icone: "acv-microfone-lapela", termos: ["microfone de lapela", "lapela"] },
+  { icone: "acv-gravador-audio", termos: ["gravador de audio", "gravador digital"] },
+  {
+    icone: "acv-videoconferencia",
+    termos: ["equipamento de videoconferencia", "kit de videoconferencia"],
+  },
+  { icone: "acv-antena-tv", termos: ["antena de tv", "antena de televisao"] },
+  { icone: "acv-contraste", termos: ["apontador laser", "ponteira laser"] },
+  {
+    icone: "lucide-file",
+    termos: ["papel a4", "resma de papel", "papel sulfite", "papel"],
+  },
+  { icone: "lucide-files", termos: ["papel a3", "papel oficio", "papel timbrado"] },
+  {
+    icone: "lucide-notebook",
+    termos: ["caderno", "caderno escolar", "caderno de anotacoes"],
+  },
+  {
+    icone: "lucide-notepad-text",
+    termos: ["bloco de notas", "bloco de papel", "bloco adesivo", "post it"],
+  },
+  { icone: "lucide-pen", termos: ["caneta", "caneta esferografica"] },
+  { icone: "lucide-pencil", termos: ["lapis", "lapis grafite"] },
+  {
+    icone: "lucide-highlighter",
+    termos: ["marca texto", "marcador de texto", "caneta marca texto"],
+  },
+  { icone: "lucide-eraser", termos: ["borracha", "borracha escolar"] },
+  { icone: "acv-apontador", termos: ["apontador", "apontador de lapis"] },
+  { icone: "lucide-ruler", termos: ["regua", "regua escolar"] },
+  { icone: "lucide-scissors", termos: ["tesoura", "tesoura escolar"] },
+  { icone: "acv-estilete", termos: ["estilete", "lamina de estilete"] },
+  { icone: "acv-grampeador", termos: ["grampeador", "grampeador de mesa"] },
+  { icone: "acv-grampo", termos: ["grampo", "grampo para grampeador"] },
+  { icone: "lucide-paperclip", termos: ["clipe", "clipes", "clips", "clipe de papel"] },
+  { icone: "acv-perfurador", termos: ["perfurador de papel", "furador de papel"] },
+  { icone: "acv-cola", termos: ["cola", "cola branca", "cola bastao"] },
+  {
+    icone: "acv-fita",
+    termos: ["fita adesiva", "fita crepe", "fita dupla face", "durex"],
+  },
+  {
+    icone: "acv-porta-fita",
+    termos: ["suporte de fita adesiva", "porta durex", "dispensador de fita"],
+  },
+  { icone: "lucide-folder", termos: ["pasta", "pasta plastica", "pasta de documentos"] },
+  {
+    icone: "lucide-folder-open",
+    termos: ["pasta suspensa", "pasta sanfonada", "pasta catalogo"],
+  },
+  { icone: "lucide-mail", termos: ["envelope", "envelope pardo", "envelope oficio"] },
+  {
+    icone: "lucide-tag",
+    termos: ["etiqueta", "etiqueta adesiva", "etiqueta patrimonial"],
+  },
+  { icone: "acv-carimbo", termos: ["carimbo", "carimbo datador"] },
+  { icone: "acv-almofada", termos: ["almofada de carimbo", "refil de carimbo"] },
+  { icone: "lucide-calculator", termos: ["calculadora", "calculadora de mesa"] },
+  { icone: "lucide-clipboard", termos: ["prancheta", "prancheta de apoio"] },
+  { icone: "lucide-calendar", termos: ["agenda", "calendario de mesa"] },
+  { icone: "acv-porta-canetas", termos: ["porta canetas", "organizador de mesa"] },
+  {
+    icone: "acv-bandeja-papel",
+    termos: ["bandeja de documentos", "caixa de correspondencia"],
+  },
+  { icone: "acv-plastificadora", termos: ["plastificadora", "laminadora"] },
+  { icone: "acv-guilhotina", termos: ["guilhotina de papel", "cortador de papel"] },
+  { icone: "acv-fragmentadora", termos: ["fragmentadora", "triturador de papel"] },
+  { icone: "acv-encadernadora", termos: ["encadernadora", "maquina de encadernacao"] },
+  { icone: "acv-espiral", termos: ["espiral de encadernacao", "espiral"] },
+  {
+    icone: "acv-prendedor",
+    termos: ["prendedor de papel", "clipe binder", "prendedor metalico"],
+  },
+  { icone: "acv-toner", termos: ["toner", "cartucho de toner"] },
+  { icone: "acv-cartucho", termos: ["cartucho", "cartucho de tinta"] },
+  {
+    icone: "acv-tinta",
+    termos: ["tinta de impressora", "refil de tinta", "tinta para impressora"],
+  },
+  {
+    icone: "acv-cilindro",
+    termos: ["cilindro de impressora", "unidade de imagem", "fotocondutor"],
+  },
+  { icone: "acv-ribbon", termos: ["ribbon", "fita ribbon", "fita de impressora"] },
+  { icone: "acv-bobina", termos: ["bobina de papel", "bobina termica"] },
+  {
+    icone: "acv-etiquetadora",
+    termos: ["rotulador", "etiquetadora", "impressora de etiquetas"],
+  },
+  {
+    icone: "acv-filamento",
+    termos: ["filamento de impressora 3d", "filamento pla", "filamento abs"],
+  },
+  { icone: "acv-impressora-3d", termos: ["impressora 3d", "impressora tridimensional"] },
+  { icone: "lucide-book", termos: ["livro", "livro didatico", "livro paradidatico"] },
+  { icone: "lucide-book-open-text", termos: ["dicionario", "enciclopedia", "atlas"] },
+  { icone: "lucide-newspaper", termos: ["revista", "jornal", "periodico"] },
+  {
+    icone: "lucide-notebook-tabs",
+    termos: ["apostila", "material apostilado", "apostila escolar"],
+  },
+  { icone: "lucide-book-marked", termos: ["livro de literatura", "livro literario"] },
+  { icone: "acv-livro-infantil", termos: ["livro infantil", "livro de historias"] },
+  { icone: "lucide-globe", termos: ["globo terrestre", "globo escolar"] },
+  { icone: "lucide-map", termos: ["mapa", "mapa escolar", "mapa geografico"] },
+  { icone: "acv-abaco", termos: ["abaco", "abaco escolar"] },
+  { icone: "acv-material-dourado", termos: ["material dourado", "blocos de base dez"] },
+  { icone: "lucide-shapes", termos: ["blocos logicos", "formas geometricas"] },
+  { icone: "lucide-puzzle", termos: ["quebra cabeca", "puzzle"] },
+  {
+    icone: "lucide-toy-brick",
+    termos: ["blocos de montar", "pecas de montar", "brinquedo de encaixe"],
+  },
+  {
+    icone: "lucide-dices",
+    termos: ["jogo de tabuleiro", "jogo pedagogico", "dados", "domino"],
+  },
+  { icone: "acv-xadrez", termos: ["xadrez", "jogo de xadrez", "tabuleiro de xadrez"] },
+  { icone: "acv-alfabeto", termos: ["alfabeto movel", "letras moveis", "alfabeto"] },
+  { icone: "acv-numeros", termos: ["numeros moveis", "kit de numeros"] },
+  {
+    icone: "acv-regua-geometrica",
+    termos: ["kit geometrico", "esquadro", "transferidor"],
+  },
+  { icone: "lucide-compass", termos: ["compasso", "compasso escolar"] },
+  { icone: "acv-fantoche", termos: ["fantoche", "teatro de fantoches"] },
+  { icone: "acv-boneca", termos: ["boneca", "boneco", "brinquedo boneco"] },
+  { icone: "acv-carrinho", termos: ["carrinho de brinquedo", "carro de brinquedo"] },
+  { icone: "acv-pelucia", termos: ["bicho de pelucia", "pelucia"] },
+  { icone: "acv-massinha", termos: ["massa de modelar", "massinha"] },
+  { icone: "acv-tinta", termos: ["tinta guache", "guache", "tinta acrilica"] },
+  { icone: "lucide-paintbrush", termos: ["pincel", "pincel escolar"] },
+  { icone: "lucide-palette", termos: ["paleta de pintura", "kit de pintura"] },
+  {
+    icone: "acv-lapis-cor",
+    termos: ["lapis de cor", "giz de cera", "canetinha", "canetas hidrocor"],
+  },
+  {
+    icone: "acv-cartolina",
+    termos: ["cartolina", "papel cartao", "papel colorido", "papel crepom", "eva"],
+  },
+  { icone: "acv-quadro-digital", termos: ["mesa interativa", "mesa digital interativa"] },
+  {
+    icone: "lucide-bot",
+    termos: ["kit de robotica", "robo educacional", "robotica educacional"],
+  },
+  {
+    icone: "lucide-circuit-board",
+    termos: ["placa arduino", "arduino", "microcontrolador"],
+  },
+  { icone: "acv-kit-ciencias", termos: ["kit de ciencias", "kit de experimentos"] },
+  { icone: "lucide-microscope", termos: ["microscopio", "microscopio escolar"] },
+  { icone: "lucide-telescope", termos: ["telescopio", "luneta"] },
+  { icone: "lucide-test-tubes", termos: ["tubo de ensaio", "kit de tubos de ensaio"] },
+  { icone: "lucide-flask-conical", termos: ["erlenmeyer", "frasco erlenmeyer"] },
+  { icone: "lucide-beaker", termos: ["bequer", "bequer graduado"] },
+  { icone: "lucide-pipette", termos: ["pipeta", "conta gotas"] },
+  { icone: "lucide-thermometer", termos: ["termometro", "termometro de laboratorio"] },
+  {
+    icone: "lucide-weight",
+    termos: ["balanca", "balanca de precisao", "balanca digital"],
+  },
+  { icone: "acv-proveta", termos: ["proveta", "cilindro graduado"] },
+  { icone: "acv-funil", termos: ["funil", "funil de laboratorio"] },
+  { icone: "acv-placa-petri", termos: ["placa de petri", "placa petri"] },
+  { icone: "acv-lamina", termos: ["lamina de microscopio", "laminula"] },
+  { icone: "lucide-magnet", termos: ["ima", "ima escolar", "magneto"] },
+  { icone: "acv-lupa", termos: ["lupa", "lupa de bancada"] },
+  { icone: "acv-esqueleto", termos: ["modelo de esqueleto", "esqueleto anatomico"] },
+  { icone: "acv-kit-ciencias", termos: ["modelo anatomico", "kit anatomico"] },
+  { icone: "acv-oculos", termos: ["oculos de protecao", "oculos de laboratorio"] },
+  { icone: "acv-luva", termos: ["luva", "luva descartavel", "luva de procedimento"] },
+  {
+    icone: "lucide-volleyball",
+    termos: ["bola", "bola de volei", "bola de futebol", "bola de basquete"],
+  },
+  { icone: "acv-cone", termos: ["cone", "cone esportivo", "cone de sinalizacao"] },
+  { icone: "acv-bambole", termos: ["bambole", "arco de ginastica"] },
+  { icone: "acv-corda", termos: ["corda", "corda de pular"] },
+  { icone: "acv-rede", termos: ["rede esportiva", "rede de volei", "rede de futebol"] },
+  {
+    icone: "acv-raquete",
+    termos: ["raquete", "raquete de tenis", "raquete de tenis de mesa"],
+  },
+  { icone: "acv-mesa-pingpong", termos: ["mesa de ping pong", "mesa de tenis de mesa"] },
+  { icone: "lucide-dumbbell", termos: ["halter", "peso de ginastica", "halteres"] },
+  { icone: "acv-colchonete", termos: ["colchonete de ginastica", "tapete de exercicio"] },
+  { icone: "acv-trave", termos: ["trave de futebol", "gol de futebol"] },
+  { icone: "lucide-guitar", termos: ["violao", "guitarra", "instrumento de cordas"] },
+  { icone: "lucide-piano", termos: ["teclado musical", "piano digital", "piano"] },
+  { icone: "lucide-drum", termos: ["tambor", "surdo", "caixa de percussao"] },
+  { icone: "acv-flauta", termos: ["flauta", "flauta doce"] },
+  { icone: "acv-pandeiro", termos: ["pandeiro", "tamborim"] },
+  { icone: "acv-chocalho", termos: ["chocalho", "maraca", "instrumento de percussao"] },
+  {
+    icone: "lucide-music",
+    termos: ["estante de partituras", "partitura", "instrumento musical"],
+  },
+  { icone: "acv-fantasia", termos: ["fantasia", "figurino", "roupa de apresentacao"] },
+  { icone: "lucide-paintbrush", termos: ["tela de pintura", "tela artistica"] },
+  { icone: "acv-teatro", termos: ["teatro de fantoche", "palco portatil"] },
+  { icone: "acv-cadeira-rodas", termos: ["cadeira de rodas", "cadeira de rodas manual"] },
+  { icone: "acv-andador", termos: ["andador", "andador de apoio"] },
+  { icone: "acv-bengala", termos: ["bengala", "muleta"] },
+  { icone: "lucide-ear", termos: ["aparelho auditivo", "amplificador auditivo"] },
+  {
+    icone: "acv-braille",
+    termos: ["maquina braille", "reglete", "puncao braille", "linha braille"],
+  },
+  { icone: "acv-lupa", termos: ["lupa eletronica", "ampliador de texto"] },
+  {
+    icone: "acv-comunicador",
+    termos: [
+      "comunicador alternativo",
+      "prancha de comunicacao",
+      "comunicacao alternativa",
+    ],
+  },
+  { icone: "acv-cadeira-adaptada", termos: ["cadeira adaptada", "cadeira postural"] },
+  {
+    icone: "acv-mesa-regulavel",
+    termos: ["mesa regulavel", "mesa adaptada", "mesa acessivel"],
+  },
+  { icone: "acv-abafador", termos: ["abafador de ruido", "protetor auricular"] },
+  { icone: "acv-teclado-adaptado", termos: ["teclado adaptado", "teclado ampliado"] },
+  { icone: "lucide-mouse-pointer", termos: ["mouse adaptado", "acionador acessivel"] },
+  { icone: "lucide-refrigerator", termos: ["geladeira", "refrigerador"] },
+  { icone: "acv-freezer", termos: ["freezer", "congelador"] },
+  { icone: "lucide-microwave", termos: ["micro ondas", "microondas"] },
+  { icone: "acv-fogao", termos: ["fogao", "fogao industrial"] },
+  { icone: "acv-forno", termos: ["forno", "forno eletrico"] },
+  {
+    icone: "acv-liquidificador",
+    termos: ["liquidificador", "liquidificador industrial"],
+  },
+  { icone: "acv-batedeira", termos: ["batedeira", "misturador de alimentos"] },
+  { icone: "lucide-coffee", termos: ["cafeteira", "maquina de cafe"] },
+  { icone: "acv-chaleira", termos: ["chaleira", "chaleira eletrica"] },
+  {
+    icone: "acv-bebedouro",
+    termos: ["bebedouro", "purificador de agua", "filtro de agua"],
+  },
+  { icone: "acv-garrafa-termica", termos: ["garrafa termica", "garrafa de cafe"] },
+  { icone: "lucide-cooking-pot", termos: ["panela", "panela de pressao", "caldeirao"] },
+  {
+    icone: "lucide-utensils",
+    termos: ["talher", "garfo", "colher", "faca de mesa", "talheres"],
+  },
+  { icone: "acv-prato", termos: ["prato", "prato de refeicao"] },
+  { icone: "lucide-glass-water", termos: ["copo", "caneca", "copo descartavel"] },
+  { icone: "acv-garrafa", termos: ["garrafa", "squeeze", "garrafa de agua"] },
+  { icone: "acv-bandeja", termos: ["bandeja", "bandeja de alimentacao"] },
+  { icone: "acv-pote", termos: ["pote", "recipiente plastico", "caixa de alimentos"] },
+  { icone: "acv-escorredor", termos: ["escorredor de louca", "escorredor"] },
+  { icone: "acv-tabua", termos: ["tabua de corte", "tabua de alimentos"] },
+  { icone: "acv-faca", termos: ["faca de cozinha", "faca de corte"] },
+  {
+    icone: "acv-balanca-cozinha",
+    termos: ["balanca de cozinha", "balanca de alimentos"],
+  },
+  {
+    icone: "acv-carrinho-servico",
+    termos: ["carrinho de servico", "carrinho de refeicao"],
+  },
+  { icone: "lucide-milk", termos: ["leite", "leite em po"] },
+  {
+    icone: "lucide-package",
+    termos: [
+      "arroz",
+      "feijao",
+      "macarrao",
+      "acucar",
+      "sal",
+      "farinha",
+      "alimento embalado",
+    ],
+  },
+  { icone: "acv-oleo", termos: ["oleo de cozinha", "oleo alimentar"] },
+  { icone: "acv-vassoura", termos: ["vassoura", "vassourao"] },
+  { icone: "acv-rodo", termos: ["rodo", "rodo de limpeza"] },
+  { icone: "acv-pa-lixo", termos: ["pa de lixo", "pa coletora"] },
+  { icone: "acv-mop", termos: ["mop", "esfregao"] },
+  { icone: "acv-balde", termos: ["balde", "balde de limpeza"] },
+  {
+    icone: "lucide-trash-2",
+    termos: ["lixeira", "cesto de lixo", "coletor de residuos"],
+  },
+  { icone: "lucide-recycle", termos: ["lixeira seletiva", "coletor seletivo"] },
+  { icone: "acv-carrinho-limpeza", termos: ["carrinho de limpeza", "carro funcional"] },
+  { icone: "acv-pano", termos: ["pano", "pano de chao", "flanela", "microfibra"] },
+  { icone: "acv-esponja", termos: ["esponja", "esponja de limpeza"] },
+  {
+    icone: "lucide-spray-can",
+    termos: [
+      "alcool",
+      "alcool em gel",
+      "limpa telas",
+      "limpa contato",
+      "limpador em spray",
+    ],
+  },
+  {
+    icone: "acv-detergente",
+    termos: ["detergente", "desinfetante", "agua sanitaria", "produto de limpeza"],
+  },
+  { icone: "acv-sabao", termos: ["sabao", "sabonete", "sabonete liquido"] },
+  {
+    icone: "acv-papel-higienico",
+    termos: ["papel higienico", "rolo de papel higienico"],
+  },
+  { icone: "acv-papel-toalha", termos: ["papel toalha", "toalha de papel"] },
+  {
+    icone: "acv-dispensador",
+    termos: ["dispenser", "dispensador de sabonete", "dispenser de alcool"],
+  },
+  { icone: "acv-saco-lixo", termos: ["saco de lixo", "saco para residuos"] },
+  { icone: "acv-aspirador", termos: ["aspirador", "aspirador de po"] },
+  { icone: "lucide-washing-machine", termos: ["maquina de lavar", "lavadora de roupas"] },
+  { icone: "acv-enceradeira", termos: ["enceradeira", "politriz de piso"] },
+  { icone: "acv-escova", termos: ["escova", "escova de limpeza"] },
+  { icone: "acv-luva", termos: ["luva de limpeza", "luva de borracha"] },
+  { icone: "lucide-air-vent", termos: ["ar condicionado", "climatizador"] },
+  {
+    icone: "lucide-fan",
+    termos: ["ventilador", "ventilador de mesa", "ventilador de parede"],
+  },
+  { icone: "acv-exaustor", termos: ["exaustor", "exaustor de ambiente"] },
+  { icone: "lucide-heater", termos: ["aquecedor", "aquecedor eletrico"] },
+  { icone: "lucide-lamp-desk", termos: ["luminaria de mesa", "abajur"] },
+  { icone: "lucide-lightbulb", termos: ["lampada", "lampada led"] },
+  {
+    icone: "acv-luminaria",
+    termos: ["luminaria de teto", "luminaria led", "refletor led"],
+  },
+  { icone: "lucide-clock", termos: ["relogio de parede", "relogio"] },
+  { icone: "acv-cortina", termos: ["cortina", "persiana"] },
+  { icone: "acv-escada", termos: ["escada", "escada portatil"] },
+  { icone: "lucide-key-round", termos: ["chave", "chave de porta"] },
+  { icone: "lucide-lock-keyhole", termos: ["cadeado", "fechadura"] },
+  { icone: "acv-porta", termos: ["porta", "porta de madeira"] },
+  { icone: "acv-janela", termos: ["janela", "janela de vidro"] },
+  { icone: "acv-torneira", termos: ["torneira", "misturador de agua"] },
+  { icone: "acv-cano", termos: ["cano", "tubo pvc", "tubo hidraulico"] },
+  { icone: "acv-tinta-parede", termos: ["tinta de parede", "tinta de manutencao"] },
+  { icone: "lucide-paint-roller", termos: ["rolo de pintura", "rolo para parede"] },
+  {
+    icone: "acv-carrinho-carga",
+    termos: ["carrinho de carga", "carrinho de transporte"],
+  },
+  { icone: "acv-palete", termos: ["palete", "pallet", "estrado"] },
+  {
+    icone: "lucide-package",
+    termos: ["caixa", "caixa de papelao", "caixa organizadora"],
+  },
+  {
+    icone: "acv-caixa-plastica",
+    termos: ["caixa plastica", "contentor plastico", "caixa empilhavel"],
+  },
+  { icone: "lucide-drill", termos: ["furadeira", "parafusadeira"] },
+  { icone: "lucide-hammer", termos: ["martelo", "martelo de unha"] },
+  {
+    icone: "lucide-wrench",
+    termos: ["chave de boca", "chave inglesa", "chave combinada"],
+  },
+  {
+    icone: "acv-chave-fenda",
+    termos: ["chave de fenda", "chave phillips", "chave philips"],
+  },
+  { icone: "acv-alicate", termos: ["alicate", "alicate de corte", "alicate universal"] },
+  { icone: "acv-alicate-crimpar", termos: ["alicate de crimpar", "crimpador rj45"] },
+  { icone: "acv-multimetro", termos: ["multimetro", "multimetro digital"] },
+  { icone: "acv-ferro-solda", termos: ["ferro de solda", "estacao de solda"] },
+  { icone: "acv-solda", termos: ["estanho para solda", "fio de solda"] },
+  { icone: "acv-fita-metrica", termos: ["trena", "fita metrica"] },
+  { icone: "acv-nivel", termos: ["nivel de bolha", "nivel de construcao"] },
+  { icone: "acv-serra", termos: ["serra", "serrote", "arco de serra"] },
+  { icone: "acv-lixa", termos: ["lixa", "lixa de madeira"] },
+  { icone: "acv-broca", termos: ["broca", "kit de brocas"] },
+  {
+    icone: "acv-parafuso",
+    termos: ["parafuso de manutencao", "bucha de parede", "porca", "arruela"],
+  },
+  {
+    icone: "acv-caixa-ferramentas",
+    termos: ["caixa de ferramentas", "maleta de ferramentas"],
+  },
+  { icone: "acv-lanterna", termos: ["lanterna", "lanterna de inspecao"] },
+  { icone: "acv-fita-isolante", termos: ["fita isolante", "fita eletrica"] },
+  { icone: "acv-oleo", termos: ["oleo lubrificante", "lubrificante"] },
+  { icone: "lucide-fire-extinguisher", termos: ["extintor", "extintor de incendio"] },
+  { icone: "acv-mangueira", termos: ["mangueira de incendio", "mangueira"] },
+  { icone: "lucide-siren", termos: ["alarme", "alarme de incendio", "sirene"] },
+  { icone: "lucide-alarm-smoke", termos: ["detector de fumaca", "detector de incendio"] },
+  {
+    icone: "acv-luz-emergencia",
+    termos: ["luz de emergencia", "luminaria de emergencia"],
+  },
+  { icone: "acv-capacete", termos: ["capacete", "capacete de seguranca"] },
+  { icone: "acv-colete", termos: ["colete", "colete refletivo"] },
+  { icone: "acv-mascara", termos: ["mascara", "mascara pff2", "mascara descartavel"] },
+  { icone: "acv-oculos", termos: ["oculos de seguranca", "oculos epi"] },
+  { icone: "acv-bota", termos: ["bota", "calcado de seguranca"] },
+  {
+    icone: "lucide-briefcase-medical",
+    termos: ["kit de primeiros socorros", "maleta de primeiros socorros"],
+  },
+  { icone: "acv-curativo", termos: ["curativo", "esparadrapo", "bandagem"] },
+  { icone: "lucide-stethoscope", termos: ["estetoscopio", "aparelho de ausculta"] },
+  {
+    icone: "acv-medidor-pressao",
+    termos: ["medidor de pressao", "aparelho de pressao", "esfigmomanometro"],
+  },
+  {
+    icone: "lucide-thermometer",
+    termos: ["termometro clinico", "termometro infravermelho"],
+  },
+  { icone: "acv-maca", termos: ["maca", "maca de atendimento"] },
+  {
+    icone: "acv-tesoura-medica",
+    termos: ["tesoura de primeiros socorros", "tesoura medica"],
+  },
+];
+
+const journey = {
+  maxStage: 1,
+  draftStage: 1,
+  movementId: null,
+  movementReceipt: "",
+  browseScroll: 0,
+  dashboardRoom: "",
+  dashboardChart: "rooms",
+  lastFiche: null,
+};
+
 const $ = (id) => document.getElementById(id);
 
 const ROOMS = ["Sala Principal", "Sala da Gerência", "Almoxarifado"];
@@ -32,7 +869,7 @@ const ACTION = {
 };
 
 const CATEGORY_ICON = {
-  "Móvel": "furniture",
+  Móvel: "furniture",
   Tecnologia: "technology",
   Material: "materials",
 };
@@ -70,7 +907,8 @@ const REMEMBER_KEY = "acervo:manter-conectado";
 const authMemory = new Map();
 
 let rememberSession =
-  !authRead("sessionStorage", AUTH_KEY) && authRead("localStorage", REMEMBER_KEY) === "sim";
+  !authRead("sessionStorage", AUTH_KEY) &&
+  authRead("localStorage", REMEMBER_KEY) === "sim";
 
 const authStorage = {
   getItem(key) {
@@ -171,7 +1009,8 @@ const shortEmail = (s) =>
     .split("@")[0]
     .toLocaleUpperCase("pt-BR");
 
-const value = (name) => document.querySelector('[name="' + name + '"]:checked')?.value || "";
+const value = (name) =>
+  document.querySelector('[name="' + name + '"]:checked')?.value || "";
 
 const type = () => value("type");
 
@@ -356,6 +1195,7 @@ function setAcervoSync(
 }
 
 function showAcervoReceipt(record, template) {
+  if (mobileAcervo()) return mobileReceipt(record, template);
   const discarded = record.situacao === "BAIXADO",
     saved = $("saved");
   const row = el("div", undefined, "acervo-receipt"),
@@ -366,9 +1206,15 @@ function showAcervoReceipt(record, template) {
   card.append(icon(discarded ? "discard" : "record-add"), el("i"));
   place.append(card);
   copy.append(
-    el("strong", discarded ? "Descarte registrado." : "Pronto. Mais um bem no seu lugar."),
+    el(
+      "strong",
+      discarded ? "Descarte registrado." : "Pronto. Mais um bem no seu lugar.",
+    ),
     el("p", internal(record.id) + " · " + record.dados.item),
-    el("small", [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · ")),
+    el(
+      "small",
+      [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · "),
+    ),
   );
   row.append(place, copy);
   saved.classList.toggle("is-discarded", discarded);
@@ -458,7 +1304,10 @@ function button(text, fn, cls = "", name = "") {
 function toast(text, error = false) {
   const activeDialog = [...document.querySelectorAll("dialog[open]")].at(-1);
   (activeDialog || document.body).append($("toast"));
-  $("toast").replaceChildren(error ? icon("warning") : acervoBooks(true), el("span", text));
+  $("toast").replaceChildren(
+    error ? icon("warning") : acervoBooks(true),
+    el("span", text),
+  );
   $("toast").className = "toast" + (error ? " error" : "");
   $("toast").hidden = false;
   clearTimeout(toastTimer);
@@ -509,7 +1358,14 @@ function setChoice(name, v) {
     .forEach((n) => (n.checked = n.value === String(v || "")));
 }
 
-function choices(target, name, options, chosen = "", onchange = () => {}, required = true) {
+function choices(
+  target,
+  name,
+  options,
+  chosen = "",
+  onchange = () => {},
+  required = true,
+) {
   target.replaceChildren(
     ...options.map((o) => {
       const [v, text, ico] = Array.isArray(o) ? o : [o, o, ""];
@@ -544,7 +1400,9 @@ function updateNavIndicator(animate = true) {
   const current = nav?.querySelector('[aria-current="page"]');
   if (!lens || !current || !nav.offsetWidth) return;
   lens.style.transition =
-    animate && lens.dataset.ready && !matchMedia("(prefers-reduced-motion: reduce)").matches
+    animate &&
+    lens.dataset.ready &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches
       ? ""
       : "none";
   lens.style.width = current.offsetWidth + "px";
@@ -565,11 +1423,19 @@ function showTab(id) {
   if (mobileAcervo()) {
     $("app").scrollTop = 0;
     if ($("mobileAccountDialog")?.open) $("mobileAccountDialog").close();
-    document.querySelector(".shell > header")?.scrollIntoView({ block: "start", behavior: "auto" });
+    document
+      .querySelector(".shell > header")
+      ?.scrollIntoView({ block: "start", behavior: "auto" });
     if (previous && previous !== id) {
       const tabs = ["register", "movements", "browse", "dashboard"];
       animateMobileView($(id), tabs.indexOf(id) < tabs.indexOf(previous) ? -1 : 1);
     }
+  }
+  if (mobileAcervo() && $("mobileJourneyHome")) {
+    if (id !== "browse" && $("mobileDetail")?.open) closeMobileDetail();
+    if (id === "register") syncMobileJourney();
+    if (id === "movements") renderMovementResults();
+    if (id === "dashboard") renderMobileDashboard();
   }
 }
 
@@ -578,7 +1444,7 @@ function setBusy(v, message = "Salvando…") {
   $("fields").disabled = v || role === "leitor" || !!pending;
   document
     .querySelectorAll(
-      "#app button,.mobile-app-nav button,#operation button,#registrationDiscardDialog button",
+      "#app button,.mobile-app-nav button,#mobileDetail button,#operation button,#registrationDiscardDialog button",
     )
     .forEach((b) => (b.disabled = v));
   if ($("editFields")) $("editFields").disabled = v || role === "leitor" || !!pending;
@@ -593,6 +1459,7 @@ function setBusy(v, message = "Salvando…") {
   $("directReason").disabled = v;
   $("previous").disabled = v || page <= 1;
   $("next").disabled = v || page >= Math.max(1, Math.ceil(filtered().length / 25));
+  syncMobileJourney();
 }
 
 function locationText(r) {
@@ -645,7 +1512,12 @@ function organizeEditor(record) {
   const control = el("div");
   control.id = "editControlHost";
   control.append(
-    registrationGroupHeading("editControlHeading", "Controle", "Como acompanhar o item?", "stock"),
+    registrationGroupHeading(
+      "editControlHeading",
+      "Controle",
+      "Como acompanhar o item?",
+      "stock",
+    ),
   );
   const stock = record.controle === "QUANTIDADE",
     value = el("div");
@@ -674,10 +1546,16 @@ function mountControlFields(host, prefix = "", record = null) {
   const group = el("fieldset"),
     opts = el("div", undefined, "choices");
   group.append(el("legend", "Controle"), opts);
-  choices(opts, e ? "editControl" : "control", CONTROL, record?.controle || "INDIVIDUAL", () => {
-    if (!e) manual.controle = true;
-    syncControl(prefix);
-  });
+  choices(
+    opts,
+    e ? "editControl" : "control",
+    CONTROL,
+    record?.controle || "INDIVIDUAL",
+    () => {
+      if (!e) manual.controle = true;
+      syncControl(prefix);
+    },
+  );
   if (e) {
     group.disabled = true;
     box.append(el("p", "Tipo de controle definido no cadastro.", "hint"));
@@ -802,7 +1680,9 @@ function openRegistrationDiscard() {
     el("strong", d.item),
     el(
       "span",
-      (d.controle === "QUANTIDADE" ? quantityText(d.quantidade, d.unidade) : "1 bem individual") +
+      (d.controle === "QUANTIDADE"
+        ? quantityText(d.quantidade, d.unidade)
+        : "1 bem individual") +
         " · " +
         place,
     ),
@@ -840,21 +1720,29 @@ function quantityText(amount, unit = "unidade") {
 
 function renderMovementResults() {
   if (!$("moveResults")) return;
+  if (mobileAcervo()) return renderMobileMovement();
   const q = key($("moveSearch").value);
-  const exact = rows.filter((r) => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q));
+  const exact = rows.filter(
+    (r) => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q),
+  );
   const found = exact.length
     ? exact
     : rows.filter(
         (r) =>
           q &&
-          key([r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal].join(" ")).includes(q),
+          key(
+            [r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal].join(" "),
+          ).includes(q),
       );
   $("moveResults").replaceChildren();
   $("moveMissing").hidden = !q || found.length > 0;
   $("createDown").hidden = role === "leitor";
   if (!q) {
     const empty = el("div", undefined, "movement-empty");
-    empty.append(icon("search"), el("span", "Encontre o item para ver as ações disponíveis."));
+    empty.append(
+      icon("search"),
+      el("span", "Encontre o item para ver as ações disponíveis."),
+    );
     $("moveResults").append(empty);
     return;
   }
@@ -867,7 +1755,11 @@ function renderMovementResults() {
         "span",
         STATUS[r.situacao],
         "badge" +
-          (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : ""),
+          (r.situacao === "BAIXADO"
+            ? " down"
+            : r.situacao === "ARQUIVADO"
+              ? " archive"
+              : ""),
       ),
     );
     card.append(
@@ -882,12 +1774,18 @@ function renderMovementResults() {
     );
     const position = locationText(r);
     card.append(
-      el("p", [r.dados.ambiente, position].filter(Boolean).join(" · "), "hint movement-location"),
+      el(
+        "p",
+        [r.dados.ambiente, position].filter(Boolean).join(" · "),
+        "hint movement-location",
+      ),
     );
     if (r.controle === "QUANTIDADE")
       card.append(el("p", "Saldo: " + quantityText(r.saldo, r.unidade), "notice"));
     if (r.emprestimo)
-      card.append(el("p", `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`, "notice"));
+      card.append(
+        el("p", `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`, "notice"),
+      );
     const actions = el("div", undefined, "actions");
     if (role !== "leitor")
       for (const a of movementActions(r))
@@ -899,7 +1797,8 @@ function renderMovementResults() {
             ACTION_ICON[a],
           ),
         );
-    if (role === "leitor") card.append(el("p", "Seu perfil permite consultar este item.", "hint"));
+    if (role === "leitor")
+      card.append(el("p", "Seu perfil permite consultar este item.", "hint"));
     else if (!actions.children.length)
       card.append(
         el(
@@ -915,7 +1814,11 @@ function renderMovementResults() {
   }
   if (found.length > 20)
     $("moveResults").append(
-      el("p", `${found.length} itens encontrados. Digite mais detalhes para refinar.`, "hint"),
+      el(
+        "p",
+        `${found.length} itens encontrados. Digite mais detalhes para refinar.`,
+        "hint",
+      ),
     );
 }
 
@@ -933,7 +1836,9 @@ function configureMovement(a, r) {
     $(id).value = "";
   }
   $("movePersonLabel").textContent = a === "saida" ? "Solicitante" : "Responsável";
-  $("moveQuantity").step = ["unidade", "rolo", "caixa"].includes(r.unidade) ? "1" : "0.001";
+  $("moveQuantity").step = ["unidade", "rolo", "caixa"].includes(r.unidade)
+    ? "1"
+    : "0.001";
   $("moveQuantity").min = $("moveQuantity").step;
   $("moveQuantity").max = a === "entrada" ? "99999999999" : String(r.saldo);
   const updateBalance = () => {
@@ -950,7 +1855,10 @@ function configureMovement(a, r) {
     "arquivar",
     "restaurar",
   ].includes(a);
-  $("reason").previousElementSibling.textContent = ["baixar", "descarte_estoque"].includes(a)
+  $("reason").previousElementSibling.textContent = [
+    "baixar",
+    "descarte_estoque",
+  ].includes(a)
     ? "Motivo do descarte"
     : $("reason").required
       ? "Motivo / justificativa"
@@ -967,7 +1875,8 @@ function configureMovement(a, r) {
     baixar: `O registro continuará no acervo como Descartado, com motivo e histórico${r.controle === "QUANTIDADE" ? `. Todo o saldo (${quantityText(r.saldo, r.unidade)}) será descartado` : ""}.`,
     arquivar: "Ação descontinuada. Registros antigos permanecem preservados.",
     restaurar: "Devolve o registro arquivado à lista corrente.",
-    estornar: "Use para corrigir um descarte registrado por engano. O histórico será preservado.",
+    estornar:
+      "Use para corrigir um descarte registrado por engano. O histórico será preservado.",
   };
   $("operationHint").textContent = hints[a] || "Confira os dados antes de confirmar.";
   labelButton($("confirmOperation"), ACTION[a], ACTION_ICON[a]);
@@ -1048,6 +1957,7 @@ function syncForm() {
   syncControl();
   updateRegistrationSummary();
   syncFieldIdentity();
+  syncMobileJourney();
 }
 
 function winner(list, field) {
@@ -1078,7 +1988,9 @@ function learnItem() {
     setChoice("type", "");
     setChoice("control", "INDIVIDUAL");
   }
-  const matches = rows.filter((r) => r.situacao !== "ARQUIVADO" && key(r.dados.item) === current);
+  const matches = rows.filter(
+    (r) => r.situacao !== "ARQUIVADO" && key(r.dados.item) === current,
+  );
   const cat = winner(matches, "categoria"),
     ident = winner(matches, "tipo");
   if (!manual.categoria) setChoice("category", cat);
@@ -1163,6 +2075,11 @@ function formData(prefix = "") {
 
 function updateRegistrationSummary() {
   if (!$("registrationSummary")) return;
+  if (mobileAcervo()) {
+    mobileReview();
+    syncMobileJourney();
+    return;
+  }
   const d = formData();
   const stock = d.controle === "QUANTIDADE";
   const summary = $("registrationSummary");
@@ -1221,14 +2138,18 @@ function updateRegistrationSummary() {
   facts.prepend(category);
   if (!automatic) {
     const code = el("div", undefined, "mobile-summary-fact");
-    code.append(el("dt", "Código interno"), el("dd", nextInternalPreview() || "Gerado ao salvar"));
+    code.append(
+      el("dt", "Código interno"),
+      el("dd", nextInternalPreview() || "Gerado ao salvar"),
+    );
     facts.append(code);
   }
   summary.replaceChildren(heading, facts);
 }
 
 function repeatRegistration(d) {
-  if (clean($("item").value) && !confirm("Substituir o rascunho por outro item igual?")) return;
+  if (clean($("item").value) && !confirm("Substituir o rascunho por outro item igual?"))
+    return;
   resetForm();
   $("item").value = d.item;
   for (const [name, field] of [
@@ -1260,10 +2181,12 @@ function repeatRegistration(d) {
 
 function saveDraft() {
   if (!user || busy) return;
+  if (mobileAcervo() && $("register").dataset.journey === "receipt") return;
   $("saved").hidden = true;
   $("saved").replaceChildren();
   const ok = storage("draft", {
     dados: formData(),
+    etapa: Number($("itemForm").dataset.mobileStage || 1),
     editing: null,
     repeat: $("repeat").checked,
     baixaDireta: $("directDown").checked,
@@ -1280,7 +2203,9 @@ function restoreDraft() {
   const d = storage("draft");
   if (!d?.dados) return;
   if (d.editing) {
-    toast("Há um rascunho de edição da versão anterior. Abra o item na consulta para revisá-lo.");
+    toast(
+      "Há um rascunho de edição da versão anterior. Abra o item na consulta para revisá-lo.",
+    );
     return;
   }
   const r = d.dados;
@@ -1307,6 +2232,9 @@ function restoreDraft() {
   };
   $("repeat").checked = false;
   syncForm();
+  journey.draftStage = Math.max(1, Math.min(4, Number(d.etapa) || 1));
+  journey.maxStage = journey.draftStage;
+  syncMobileJourney();
 }
 
 function resetForm() {
@@ -1338,6 +2266,9 @@ function resetForm() {
   $("suggestions").hidden = true;
   $("item").setAttribute("aria-expanded", "false");
   syncForm();
+  journey.maxStage = 1;
+  journey.draftStage = 1;
+  syncMobileJourney();
 }
 
 function duplicateHint() {
@@ -1345,11 +2276,14 @@ function duplicateHint() {
     code = $(e ? "editCode" : "code").value,
     t = value(e ? "editType" : "type"),
     r = rows.find(
-      (r) => r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
+      (r) =>
+        r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
     );
   setHelpHint(
     $(e ? "editCodeHint" : "codeHint"),
-    r && code ? "Já cadastrado: " + r.dados.item + " · " + STATUS[r.situacao] : "Sobre o código",
+    r && code
+      ? "Já cadastrado: " + r.dados.item + " · " + STATUS[r.situacao]
+      : "Sobre o código",
     r && code ? "warning" : t === "SEM_IDENTIFICACAO" ? "sequence" : "code",
   );
 }
@@ -1412,6 +2346,7 @@ async function refresh(visual = false) {
       updateRoomCounts();
       if (type() === "SEM_IDENTIFICACAO") syncCode();
       updateRegistrationSummary();
+      renderMobileDashboard();
       $("fields").disabled = busy || !!pending || role === "leitor";
     } catch (e) {
       if (e.code === "42501") {
@@ -1428,7 +2363,8 @@ async function refresh(visual = false) {
     }
   })().finally(() => {
     refreshTask = null;
-    if (visual && (!user || user.id === owner)) setAcervoSync(false, undefined, false, visualToken);
+    if (visual && (!user || user.id === owner))
+      setAcervoSync(false, undefined, false, visualToken);
   });
   return refreshTask;
 }
@@ -1462,7 +2398,9 @@ function filtered() {
       return (
         (!q ||
           key(
-            [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(" "),
+            [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(
+              " ",
+            ),
           ).includes(q)) &&
         (!filters.ambiente || d.ambiente === filters.ambiente) &&
         (!filters.controle || (r.controle || "INDIVIDUAL") === filters.controle) &&
@@ -1502,15 +2440,17 @@ function changeFilter(field, v) {
 
 function filterButtons(target, field, opts) {
   $(target).replaceChildren(
-    ...[["", field === "situacao" ? "Lista corrente" : "Todos"], ...opts].map(([v, t]) => {
-      const b = button(
-        t,
-        () => changeFilter(field, v),
-        "chip" + (filters[field] === v ? " active" : ""),
-      );
-      b.setAttribute("aria-pressed", String(filters[field] === v));
-      return b;
-    }),
+    ...[["", field === "situacao" ? "Lista corrente" : "Todos"], ...opts].map(
+      ([v, t]) => {
+        const b = button(
+          t,
+          () => changeFilter(field, v),
+          "chip" + (filters[field] === v ? " active" : ""),
+        );
+        b.setAttribute("aria-pressed", String(filters[field] === v));
+        return b;
+      },
+    ),
   );
 }
 
@@ -1595,6 +2535,7 @@ function renderList() {
   $("pageLabel").textContent = page + " / " + pages;
   $("previous").disabled = busy || page === 1;
   $("next").disabled = busy || page === pages;
+  if (mobileAcervo()) return renderMobileRecords(found.slice((page - 1) * 25, page * 25));
   closeMobileDetail();
   $("results").replaceChildren();
   for (const r of found.slice((page - 1) * 25, page * 25)) {
@@ -1628,10 +2569,18 @@ function renderList() {
         "span",
         STATUS[r.situacao],
         "badge" +
-          (r.situacao === "BAIXADO" ? " down" : r.situacao === "ARQUIVADO" ? " archive" : ""),
+          (r.situacao === "BAIXADO"
+            ? " down"
+            : r.situacao === "ARQUIVADO"
+              ? " archive"
+              : ""),
       ),
     );
-    tr.append(status, el("td", d.observacao || "—", "note"), el("td", dateBR(r.criado_em), "date"));
+    tr.append(
+      status,
+      el("td", d.observacao || "—", "note"),
+      el("td", dateBR(r.criado_em), "date"),
+    );
     const actionCell = el("td");
     const open = button(
       expanded === r.id ? "Fechar" : "Abrir",
@@ -1710,12 +2659,16 @@ function renderList() {
 }
 
 function renderDetails(r, panel) {
+  if (mobileAcervo()) return renderMobileRecordDetail(r, panel);
   panel.replaceChildren();
   panel.append(el("h3", r.dados.item + " · " + internal(r.id)));
   const dl = el("dl");
   for (const [label, text] of [
     ["Categoria", r.dados.categoria],
-    ["Identificação", TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : "")],
+    [
+      "Identificação",
+      TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : ""),
+    ],
     ["Localização", r.dados.ambiente + " " + locationText(r)],
     ["Cadastro", dateBR(r.criado_em)],
     ["Observação", r.dados.observacao || "—"],
@@ -1797,7 +2750,12 @@ function renderDetails(r, panel) {
   if (role !== "leitor" && r.situacao === "ATIVO")
     actions.append(
       button("Editar", () => startEdit(r), "", "edit"),
-      button("Registrar descarte", () => openOperation("baixar", r), "danger", ACTION_ICON.baixar),
+      button(
+        "Registrar descarte",
+        () => openOperation("baixar", r),
+        "danger",
+        ACTION_ICON.baixar,
+      ),
     );
   if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(r.situacao)) {
     const a = r.situacao === "BAIXADO" ? "estornar" : "restaurar";
@@ -1853,7 +2811,8 @@ function historyAction(h) {
   };
   if (action === "salvar") return h.antes === null && h.depois ? "Registro" : "Edição";
   return (
-    names[action] || (action ? action.charAt(0).toUpperCase() + action.slice(1) : "Atualização")
+    names[action] ||
+    (action ? action.charAt(0).toUpperCase() + action.slice(1) : "Atualização")
   );
 }
 
@@ -1871,7 +2830,9 @@ function historyFacts(h) {
     if (v !== undefined && v !== null && String(v).trim()) facts.push([label, String(v)]);
   };
   const number = (v) =>
-    v !== null && v !== undefined && v !== "" && Number.isFinite(Number(v)) ? Number(v) : null;
+    v !== null && v !== undefined && v !== "" && Number.isFinite(Number(v))
+      ? Number(v)
+      : null;
   const format = (v) =>
     Number(v).toLocaleString("pt-BR", {
       maximumFractionDigits: 3,
@@ -1879,14 +2840,18 @@ function historyFacts(h) {
   const stock = (after.controle || before.controle) === "QUANTIDADE";
   const unit = after.unidade || before.unidade || "";
   const amount = (v) =>
-    unit ? `${format(v)} ${unit === "unidade" && Number(v) !== 1 ? "unidades" : unit}` : format(v);
+    unit
+      ? `${format(v)} ${unit === "unidade" && Number(v) !== 1 ? "unidades" : unit}`
+      : format(v);
   const initial = number(before.saldo),
     final = number(after.saldo);
   if (["entrada", "saida", "descarte_estoque"].includes(a)) {
     const delta = initial !== null && final !== null ? final - initial : null;
     const recorded = number(movement.quantidade);
     const derived =
-      delta !== null && (a === "entrada" ? delta > 0 : delta < 0) ? Math.abs(delta) : null;
+      delta !== null && (a === "entrada" ? delta > 0 : delta < 0)
+        ? Math.abs(delta)
+        : null;
     const quantity = recorded !== null && recorded > 0 ? recorded : derived;
     if (quantity !== null) add("Quantidade", amount(quantity));
   }
@@ -1896,7 +2861,10 @@ function historyFacts(h) {
     add("Saldo inicial", amount(final));
   const loan = a === "devolver" ? object(before.emprestimo) : object(after.emprestimo);
   if (["emprestar", "devolver", "saida"].includes(a)) {
-    add(a === "saida" ? "Solicitante" : "Responsável", movement.responsavel || loan.responsavel);
+    add(
+      a === "saida" ? "Solicitante" : "Responsável",
+      movement.responsavel || loan.responsavel,
+    );
     add("Destino", movement.destino || loan.destino);
   }
   if (before.situacao && after.situacao && before.situacao !== after.situacao)
@@ -1918,7 +2886,11 @@ function historyFacts(h) {
       ["observacao", "Observação"],
       ["ramal", "Ramal"],
     ]) {
-      if (field in bd && field in ad && String(bd[field] ?? "") !== String(ad[field] ?? "")) {
+      if (
+        field in bd &&
+        field in ad &&
+        String(bd[field] ?? "") !== String(ad[field] ?? "")
+      ) {
         const display = (v) => (field === "tipo" ? TYPE[v] || v : v);
         add(
           label,
@@ -1992,6 +2964,7 @@ function finishEdit() {
   $("editDialogContent").replaceChildren();
   $("listNotice").hidden = true;
   editBaseline = "";
+  delete $("editDialog").dataset.mode;
 }
 
 function closeEdit() {
@@ -2014,6 +2987,7 @@ function closeEdit() {
 
 function startEdit(r) {
   if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+  delete $("editDialog").dataset.mode;
   editor = {
     id: r.id,
     versao: r.versao,
@@ -2088,7 +3062,8 @@ function validateRecord(d, id = null) {
     return false;
   };
   const duplicate = rows.find(
-    (r) => d.codigo && r.dados.tipo === d.tipo && r.dados.codigo === d.codigo && r.id !== id,
+    (r) =>
+      d.codigo && r.dados.tipo === d.tipo && r.dados.codigo === d.codigo && r.id !== id,
   );
   if (duplicate) return reject("Código já cadastrado: " + internal(duplicate.id), true);
   if (d.controle === "QUANTIDADE" && d.ambiente !== "Almoxarifado")
@@ -2106,6 +3081,13 @@ function validateRecord(d, id = null) {
 
 function saveRecord(prefix = "", discard = false) {
   if (busy || role === "leitor" || pending) return false;
+  if (mobileAcervo() && !prefix) {
+    const graphic = $("registrationSummary").querySelector(".mobile-item-symbol");
+    const rect = graphic?.getBoundingClientRect();
+    journey.lastFiche = rect?.width
+      ? { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+      : null;
+  }
   const d = formData(prefix),
     id = prefix === "edit" ? editor?.id : null;
   if (!validateRecord(d, id)) return false;
@@ -2133,7 +3115,10 @@ function openOperation(a, r) {
   if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
   selected = r;
   action = a;
-  $("operation").classList.toggle("destructive", ["baixar", "descarte_estoque"].includes(a));
+  $("operation").classList.toggle(
+    "destructive",
+    ["baixar", "descarte_estoque"].includes(a),
+  );
   $("operationTitle").textContent = ACTION[a];
   $("operationMark").replaceChildren(icon(ACTION_ICON[a] || "history"));
   const context = el("div"),
@@ -2147,7 +3132,10 @@ function openOperation(a, r) {
     icon(ACTION_ICON[a] || "history"),
     document.createTextNode(ACTION[a]),
   );
-  $("confirmOperation").classList.toggle("danger", ["baixar", "descarte_estoque"].includes(a));
+  $("confirmOperation").classList.toggle(
+    "danger",
+    ["baixar", "descarte_estoque"].includes(a),
+  );
   $("operationHint").textContent =
     a === "baixar"
       ? "Controle interno do acervo. Não executa a baixa patrimonial oficial."
@@ -2162,6 +3150,10 @@ function openOperation(a, r) {
   $("document").value = "";
   configureMovement(a, r);
   $("operation").showModal();
+  if (mobileAcervo()) {
+    $("operationRecord").prepend(itemIcon(r));
+    updateMobileOperation();
+  }
 }
 
 async function commit(body, origin = "operation") {
@@ -2193,6 +3185,11 @@ async function transmit() {
     if (!user || user.id !== owner) return;
     pending = null;
     storage("pending", null);
+    if (mobileAcervo() && op.body.id)
+      journey.movementReceipt =
+        $("editDialog").dataset.mode === "transfer"
+          ? "Localização atualizada. A mudança ficou no histórico."
+          : "Movimentação registrada. A ficha foi atualizada.";
     if (op.body.acao === "salvar" && (op.origin === "create" || !op.body.id)) {
       const template = {
         ...op.body.dados,
@@ -2246,7 +3243,8 @@ function chart(target, groups, total, fn) {
       fill.style.width = (total ? (n / total) * 100 : 0) + "%";
       track.append(fill);
       b.append(el("span", label), track, el("b", n));
-      b.title = label + ": " + n + (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
+      b.title =
+        label + ": " + n + (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
       return b;
     }),
   );
@@ -2257,7 +3255,9 @@ async function renderMovementTimeline() {
   const owner = user?.id;
   const candidates = [...rows]
     .sort(
-      (a, b) => new Date(b.atualizado_em || b.criado_em) - new Date(a.atualizado_em || a.criado_em),
+      (a, b) =>
+        new Date(b.atualizado_em || b.criado_em) -
+        new Date(a.atualizado_em || a.criado_em),
     )
     .slice(0, 12);
   $("toggleMovementTimeline").hidden = true;
@@ -2350,7 +3350,11 @@ function syncDashboardList(id, controlId, limit, noun) {
           empréstimos: "empréstimo",
         }[noun] || noun
       : noun;
-  labelButton(control, expanded ? "Mostrar menos" : "Ver mais " + remaining + " " + label, "right");
+  labelButton(
+    control,
+    expanded ? "Mostrar menos" : "Ver mais " + remaining + " " + label,
+    "right",
+  );
 }
 
 function openDashboardRecord(r) {
@@ -2392,16 +3396,27 @@ function renderExecutiveSummary(active, loans, lowStock) {
             const card = el("article", undefined, "loan-watch-card");
             card.append(
               el("h4", r.dados.item),
-              el("p", r.emprestimo?.responsavel || "Responsável não informado", "loan-holder"),
+              el(
+                "p",
+                r.emprestimo?.responsavel || "Responsável não informado",
+                "loan-holder",
+              ),
             );
             if (r.emprestimo?.destino) card.append(el("p", r.emprestimo.destino));
             if (r.emprestimo?.momento)
               card.append(el("p", "Desde " + dateBR(r.emprestimo.momento), "hint"));
             const actions = el("div", undefined, "attention-actions");
-            actions.append(button("Consultar", () => openDashboardRecord(r), "", "right"));
+            actions.append(
+              button("Consultar", () => openDashboardRecord(r), "", "right"),
+            );
             if (role !== "leitor")
               actions.append(
-                button("Registrar devolução", () => openOperation("devolver", r), "", "return"),
+                button(
+                  "Registrar devolução",
+                  () => openOperation("devolver", r),
+                  "",
+                  "return",
+                ),
               );
             card.append(actions);
             return card;
@@ -2468,7 +3483,9 @@ function renderExecutiveSummary(active, loans, lowStock) {
 function renderOverviewCharts() {
   const percent = (n, total) => (total ? Math.round((n / total) * 100) + "%" : "0%");
   const goods = rows.filter(
-    (r) => r.controle !== "QUANTIDADE" && ["ATIVO", "EMPRESTADO", "BAIXADO"].includes(r.situacao),
+    (r) =>
+      r.controle !== "QUANTIDADE" &&
+      ["ATIVO", "EMPRESTADO", "BAIXADO"].includes(r.situacao),
   );
   const groups = [
     ["Ativos", "ATIVO", "#1376c5"],
@@ -2525,17 +3542,21 @@ function renderOverviewCharts() {
       "visual-footnote",
     ),
   );
-  const stocks = rows.filter((r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO");
+  const stocks = rows.filter(
+    (r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO",
+  );
   const health = [
     {
       label: "Acima do mínimo",
       color: "#1376c5",
-      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) > Number(r.minimo)).length,
+      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) > Number(r.minimo))
+        .length,
     },
     {
       label: "No mínimo ou abaixo",
       color: "#b17b2e",
-      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo)).length,
+      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo))
+        .length,
     },
     {
       label: "Sem saldo",
@@ -2601,7 +3622,12 @@ function renderMetrics() {
         String(a.dados.item).localeCompare(String(b.dados.item), "pt-BR"),
     );
   const metricButton = ([title, total, mark, filter]) => {
-    const b = button("", () => (filter ? query(filter) : revealStockWatch()), "stat", mark);
+    const b = button(
+      "",
+      () => (filter ? query(filter) : revealStockWatch()),
+      "stat",
+      mark,
+    );
     b.dataset.tone = mark;
     b.append(el("b", total), el("span", title));
     return b;
@@ -2737,7 +3763,12 @@ function renderMetrics() {
           actions.append(button("Consultar", () => openDashboardRecord(r), "", "right"));
           if (role !== "leitor")
             actions.append(
-              button("Registrar entrada", () => openOperation("entrada", r), "", "stock-in"),
+              button(
+                "Registrar entrada",
+                () => openOperation("entrada", r),
+                "",
+                "stock-in",
+              ),
             );
           card.append(
             el("h4", r.dados.item),
@@ -2763,6 +3794,7 @@ function renderMetrics() {
         ]),
   );
   syncDashboardList("stockAlerts", "toggleStockAlerts", 3, "materiais");
+  renderMobileDashboard();
 }
 
 function openItemDeletion(record) {
@@ -2891,7 +3923,9 @@ async function accessService(body) {
       ];
     if (body.acao === "listar_usuarios") {
       const search = String(body.busca || "").toLowerCase();
-      const all = demoPeople.filter((p) => (p.nome + " " + p.email).toLowerCase().includes(search));
+      const all = demoPeople.filter((p) =>
+        (p.nome + " " + p.email).toLowerCase().includes(search),
+      );
       return {
         ok: true,
         pessoas: all,
@@ -2919,7 +3953,8 @@ async function accessService(body) {
         demonstracao: true,
       };
     }
-    if (body.usuario === user.id) throw Error("Sua própria conta permanece como administradora.");
+    if (body.usuario === user.id)
+      throw Error("Sua própria conta permanece como administradora.");
     const person = demoPeople.find((p) => p.id === body.usuario);
     if (!person) throw Error("Essa conta não foi encontrada.");
     if (body.acao === "alterar_perfil") person.perfil = body.perfil;
@@ -3078,11 +4113,16 @@ function renderPeople() {
     const actions = el("div", undefined, "people-actions");
     const profile = el("button");
     profile.type = "button";
-    labelButton(profile, person.perfil ? "Alterar perfil" : "Liberar acesso", "shield-key");
+    labelButton(
+      profile,
+      person.perfil ? "Alterar perfil" : "Liberar acesso",
+      "shield-key",
+    );
     profile.disabled = self;
     profile.setAttribute(
       "aria-label",
-      (person.perfil ? "Alterar perfil de " : "Liberar acesso de ") + (person.nome || person.email),
+      (person.perfil ? "Alterar perfil de " : "Liberar acesso de ") +
+        (person.nome || person.email),
     );
     if (self) profile.title = "Sua conta permanece como administradora.";
     profile.onclick = () => editPersonRole(person);
@@ -3107,7 +4147,8 @@ function renderPeople() {
           ),
         ]),
   );
-  $("peopleCount").textContent = peopleTotal + (peopleTotal === 1 ? " pessoa" : " pessoas");
+  $("peopleCount").textContent =
+    peopleTotal + (peopleTotal === 1 ? " pessoa" : " pessoas");
   const pages = Math.max(1, Math.ceil(peopleTotal / peopleLimit));
   $("peoplePagination").hidden = pages <= 1;
   $("peoplePage").textContent = peoplePage + " de " + pages;
@@ -3153,14 +4194,16 @@ async function loadPeople(page = peoplePage) {
       busca: $("peopleSearch").value.trim(),
       pagina: page,
     });
-    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open) return;
+    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open)
+      return;
     peopleRows = result.pessoas || [];
     peoplePage = result.pagina || 1;
     peopleTotal = result.total || 0;
     peopleLimit = result.limite || 30;
     renderPeople();
   } catch (error) {
-    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open) return;
+    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open)
+      return;
     peopleRows = [];
     $("peopleCount").textContent = "";
     $("peopleList").replaceChildren(
@@ -3280,7 +4323,12 @@ function initForm() {
   main.id = "registrationMain";
   const item = el("div");
   item.id = "registrationItem";
-  item.append($("item").previousElementSibling, $("item"), $("suggestions"), $("learningHint"));
+  item.append(
+    $("item").previousElementSibling,
+    $("item"),
+    $("suggestions"),
+    $("learningHint"),
+  );
   item.querySelector("label").prepend(icon("draft"));
   const category = $("categories").closest("fieldset");
   category.id = "registrationCategory";
@@ -3301,7 +4349,12 @@ function initForm() {
       ),
     );
   control.prepend(
-    registrationGroupHeading("controlHeading", "Controle", "Como acompanhar o item?", "stock"),
+    registrationGroupHeading(
+      "controlHeading",
+      "Controle",
+      "Como acompanhar o item?",
+      "stock",
+    ),
   );
   const notes = $("notesBlock"),
     location = $("location"),
@@ -3406,7 +4459,8 @@ function endSession() {
   demoPeople = null;
   $("inventoryDetails").open = false;
   setAcervoSync(false);
-  for (const id of ["stockAlerts", "movementTimeline"]) $(id).classList.remove("expanded");
+  for (const id of ["stockAlerts", "movementTimeline"])
+    $(id).classList.remove("expanded");
   $("toggleStockAlerts").hidden = $("toggleMovementTimeline").hidden = true;
   $("newUserForm").reset();
   $("newUserResult").replaceChildren();
@@ -3458,6 +4512,13 @@ function endSession() {
   $("accountRole").textContent = "Acesso ao Acervo";
   $("results").replaceChildren();
   if ($("operation").open) $("operation").close();
+  journey.maxStage = journey.draftStage = 1;
+  journey.movementId = null;
+  journey.movementReceipt = "";
+  if ($("mobileJourneyHome")) {
+    $("register").dataset.journey = "home";
+    syncMobileJourney();
+  }
 }
 
 function excelDate(value) {
@@ -3485,7 +4546,8 @@ async function exportExcel(all) {
   const exportVisual = setAcervoSync(true, "Montando seu acervo em planilha…");
   try {
     await refresh();
-    if (!window.ExcelJS) throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
+    if (!window.ExcelJS)
+      throw Error("A biblioteca do Excel ainda não carregou. Tente novamente.");
     const emitted = new Date();
     const list = all ? [...rows] : filtered();
     const wb = new ExcelJS.Workbook();
@@ -3570,7 +4632,12 @@ async function exportExcel(all) {
       cell.fill = fill(tone[0]);
       cell.font = { name: "Aptos", size: 10, bold: true, color: { argb: tone[1] } };
       cell.border = cellBorders(tone[2]);
-      cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true, indent: 0 };
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: "center",
+        wrapText: true,
+        indent: 0,
+      };
     }
     function text(ws, range, value, options = {}) {
       if (range.includes(":")) ws.mergeCells(range);
@@ -3695,7 +4762,8 @@ async function exportExcel(all) {
       context.fillStyle = tone;
       let text = String(value ?? "");
       if (context.measureText(text).width > max) {
-        while (text.length && context.measureText(text + "…").width > max) text = text.slice(0, -1);
+        while (text.length && context.measureText(text + "…").width > max)
+          text = text.slice(0, -1);
         text += "…";
       }
       context.fillText(text, x, y);
@@ -3722,7 +4790,14 @@ async function exportExcel(all) {
           fitToWidth: 1,
           fitToHeight: 1,
           printArea: "A1:D40",
-          margins: { left: 0.2, right: 0.2, top: 0.2, bottom: 0.2, header: 0.08, footer: 0.08 },
+          margins: {
+            left: 0.2,
+            right: 0.2,
+            top: 0.2,
+            bottom: 0.2,
+            header: 0.08,
+            footer: 0.08,
+          },
         },
       });
       ws.columns = Array.from({ length: 4 }, () => ({ width: 40 }));
@@ -3758,16 +4833,30 @@ async function exportExcel(all) {
       label(c, issued, 1528, 199, 14, "#ffffff", 400, 318);
       c.textAlign = "left";
       const goods = list.filter((r) => r.controle !== "QUANTIDADE"),
-        stocks = list.filter((r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO");
+        stocks = list.filter(
+          (r) => r.controle === "QUANTIDADE" && r.situacao === "ATIVO",
+        );
       const available = goods.filter((r) => r.situacao === "ATIVO").length;
       const borrowed = list.filter((r) => r.situacao === "EMPRESTADO").length;
       const disposed = list.filter((r) => r.situacao === "BAIXADO").length;
       const low = stocks.filter((r) => Number(r.saldo) <= Number(r.minimo)).length;
       const cards = [
         ["Bens em uso", available, "Controle individual", "available", "#155fc1"],
-        ["Materiais em estoque", stocks.length, "Cadastros por quantidade", "stock", "#216aba"],
+        [
+          "Materiais em estoque",
+          stocks.length,
+          "Cadastros por quantidade",
+          "stock",
+          "#216aba",
+        ],
         ["Bens emprestados", borrowed, "Empréstimos em aberto", "loan", "#3479c2"],
-        ["Materiais para repor", low, "Saldo no mínimo ou abaixo", "stock-alert", "#a96718"],
+        [
+          "Materiais para repor",
+          low,
+          "Saldo no mínimo ou abaixo",
+          "stock-alert",
+          "#a96718",
+        ],
       ];
       for (let i = 0; i < cards.length; i++) {
         const [title, value, note, mark, tone] = cards[i],
@@ -3793,10 +4882,21 @@ async function exportExcel(all) {
       rounded(c, 40, 410, 745, 302, 22, "white", true);
       rounded(c, 809, 410, 751, 302, 22, "white", true);
       label(c, "Situação dos bens", 66, 450, 23, "#164478", 700);
-      label(c, "Controle individual · exclui registros arquivados", 66, 475, 13, "#75879d");
+      label(
+        c,
+        "Controle individual · exclui registros arquivados",
+        66,
+        475,
+        13,
+        "#75879d",
+      );
       const states = [
         ["Em uso", available, "#216bcc"],
-        ["Emprestados", goods.filter((r) => r.situacao === "EMPRESTADO").length, "#82baf2"],
+        [
+          "Emprestados",
+          goods.filter((r) => r.situacao === "EMPRESTADO").length,
+          "#82baf2",
+        ],
         ["Descartados", goods.filter((r) => r.situacao === "BAIXADO").length, "#cc6a82"],
       ];
       const total = states.reduce((n, s) => n + s[1], 0);
@@ -3836,7 +4936,14 @@ async function exportExcel(all) {
         c.textAlign = "left";
       });
       label(c, "Saúde do estoque", 835, 450, 23, "#164478", 700);
-      label(c, "Materiais ativos · sem somar unidades diferentes", 835, 475, 13, "#75879d");
+      label(
+        c,
+        "Materiais ativos · sem somar unidades diferentes",
+        835,
+        475,
+        13,
+        "#75879d",
+      );
       const health = [
         [
           "Acima do mínimo",
@@ -3845,7 +4952,8 @@ async function exportExcel(all) {
         ],
         [
           "No mínimo ou abaixo",
-          stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo)).length,
+          stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo))
+            .length,
           "#e8b254",
         ],
         ["Sem saldo", stocks.filter((r) => Number(r.saldo) <= 0).length, "#d27387"],
@@ -3887,7 +4995,9 @@ async function exportExcel(all) {
       for (let i = 0; i < ROOMS.length; i++) {
         const room = ROOMS[i],
           x = 40 + i * 515,
-          n = goods.filter((r) => r.situacao === "ATIVO" && r.dados.ambiente === room).length;
+          n = goods.filter(
+            (r) => r.situacao === "ATIVO" && r.dados.ambiente === room,
+          ).length;
         rounded(c, x, 799, 490, 130, 20, "white", true);
         rounded(c, x + 19, 818, 40, 40, 12, "#edf4ff");
         const image = await graphicIcon(roomMarks[i]);
@@ -3900,7 +5010,14 @@ async function exportExcel(all) {
         c.font = "700 " + roomSize + "px Arial";
         const roomNumberWidth = c.measureText(roomNumber).width;
         c.restore();
-        label(c, "bens em uso", x + 37 + Math.min(150, roomNumberWidth), 892, 14, "#74859c");
+        label(
+          c,
+          "bens em uso",
+          x + 37 + Math.min(150, roomNumberWidth),
+          892,
+          14,
+          "#74859c",
+        );
         rounded(c, x + 21, 910, 448, 5, 2.5, "#e8f0fb");
         const bar = (448 * n) / Math.max(1, available);
         if (bar) rounded(c, x + 21, 910, bar, 5, 2.5, "#3d85d9");
@@ -3972,7 +5089,10 @@ async function exportExcel(all) {
       function linkArea(x, y, width, height, destination, tooltip) {
         const hit = document.createElement("canvas");
         hit.width = hit.height = 1;
-        const imageId = wb.addImage({ base64: hit.toDataURL("image/png"), extension: "png" });
+        const imageId = wb.addImage({
+          base64: hit.toDataURL("image/png"),
+          extension: "png",
+        });
         const scale = panelWidth / 1600,
           top = y * scale,
           left = x * scale,
@@ -3996,7 +5116,14 @@ async function exportExcel(all) {
         linkArea(40 + index * 386, 240, 362, 145, name, "Abrir " + name),
       );
       linkArea(40, 410, 745, 302, "Inventário", "Consultar os bens no inventário");
-      linkArea(809, 410, 751, 302, "Inventário", "Consultar saldo, unidade e mínimo no inventário");
+      linkArea(
+        809,
+        410,
+        751,
+        302,
+        "Inventário",
+        "Consultar saldo, unidade e mínimo no inventário",
+      );
       destinations.forEach((name, index) =>
         linkArea(40 + index * 386, 1052, 362, 53, name, "Abrir " + name),
       );
@@ -4078,11 +5205,16 @@ async function exportExcel(all) {
         fg: color.muted,
         align: "right",
       });
-      text(ws, right + (start + 1) + ":" + edge + (start + 1), "Gestão de bens e materiais", {
-        size: 9,
-        fg: color.green,
-        align: "right",
-      });
+      text(
+        ws,
+        right + (start + 1) + ":" + edge + (start + 1),
+        "Gestão de bens e materiais",
+        {
+          size: 9,
+          fg: color.green,
+          align: "right",
+        },
+      );
       ws.getRow(start).height = 23;
       ws.getRow(start + 1).height = 16;
     }
@@ -4119,7 +5251,10 @@ async function exportExcel(all) {
         ws.getColumn(Math.min(2, lastCol - 2) + 1).letter + "2",
       ]) {
         const cell = ws.getCell(address);
-        cell.font = { ...cell.font, color: { argb: address === "A2" ? "FFD2E3FA" : color.white } };
+        cell.font = {
+          ...cell.font,
+          color: { argb: address === "A2" ? "FFD2E3FA" : color.white },
+        };
         cell.alignment = { ...cell.alignment, indent: 1 };
       }
       ws.getRow(1).height = 28;
@@ -4208,7 +5343,8 @@ async function exportExcel(all) {
         "A5:B5",
         data.length
           ? {
-              formula: "SUBTOTAL(103,A8:A" + (data.length + 7) + ')&" registros visíveis"',
+              formula:
+                "SUBTOTAL(103,A8:A" + (data.length + 7) + ')&" registros visíveis"',
               result: data.length + " registros visíveis",
             }
           : "0 registros",
@@ -4253,12 +5389,17 @@ async function exportExcel(all) {
           from: "A7",
           to: ws.getColumn(headers.length).letter + "7",
         };
-        text(ws, "A8:" + ws.getColumn(shown).letter + "8", "Nenhum registro neste recorte.", {
-          size: 11,
-          fg: color.muted,
-          bg: color.soft,
-          indent: 1,
-        });
+        text(
+          ws,
+          "A8:" + ws.getColumn(shown).letter + "8",
+          "Nenhum registro neste recorte.",
+          {
+            size: 11,
+            fg: color.muted,
+            bg: color.soft,
+            indent: 1,
+          },
+        );
         ws.getRow(8).height = 40;
         for (let column = 1; column <= shown; column++)
           ws.getCell(8, column).border = cellBorders();
@@ -4302,7 +5443,8 @@ async function exportExcel(all) {
         );
         for (let j = 1; j <= headers.length; j++) {
           const cell = row.getCell(j);
-          const missing = options.details && j === 4 && values[3] === TYPE.SEM_IDENTIFICACAO;
+          const missing =
+            options.details && j === 4 && values[3] === TYPE.SEM_IDENTIFICACAO;
           cell.fill = fill(missing ? color.warning : i % 2 ? color.soft : color.white);
           cell.font = {
             name: "Aptos",
@@ -4334,15 +5476,23 @@ async function exportExcel(all) {
           ws.getColumn(c).hidden = true;
         }
       }
-      ws.pageSetup.printArea = "A1:" + ws.getColumn(shown).letter + Math.max(8, data.length + 7);
+      ws.pageSetup.printArea =
+        "A1:" + ws.getColumn(shown).letter + Math.max(8, data.length + 7);
       return ws;
     }
     await drawExportPanel();
     const widths = [18, 35, 18, 26, 19, 26, 15, 17, 48, 25, 24, 30, 20, 12, 16, 12];
-    table("Inventário", "ACERVO_Inventario", inventoryHeaders, list.map(inventoryRow), widths, {
-      details: true,
-      dates: [10],
-    });
+    table(
+      "Inventário",
+      "ACERVO_Inventario",
+      inventoryHeaders,
+      list.map(inventoryRow),
+      widths,
+      {
+        details: true,
+        dates: [10],
+      },
+    );
     table(
       "Descartados",
       "ACERVO_Baixas",
@@ -4364,7 +5514,9 @@ async function exportExcel(all) {
           String(r.dados.codigo || internal(r.id)),
           r.baixa?.data
             ? excelDate(
-                r.baixa.data.length === 10 ? r.baixa.data + "T12:00:00-03:00" : r.baixa.data,
+                r.baixa.data.length === 10
+                  ? r.baixa.data + "T12:00:00-03:00"
+                  : r.baixa.data,
               )
             : null,
           r.baixa?.motivo || "",
@@ -4474,13 +5626,17 @@ async function exportExcel(all) {
     const groupOrder = [...groups.keys()].sort((a, b) => {
       const x = ROOMS.indexOf(a),
         y = ROOMS.indexOf(b);
-      return (x < 0 ? ROOMS.length : x) - (y < 0 ? ROOMS.length : y) || a.localeCompare(b, "pt-BR");
+      return (
+        (x < 0 ? ROOMS.length : x) - (y < 0 ? ROOMS.length : y) ||
+        a.localeCompare(b, "pt-BR")
+      );
     });
     let nextRow = 6,
       pageHeight = 163;
     const printScale = Math.min(
       1,
-      (841.89 - 43.2) / (reportWidths.reduce((sum, width) => sum + width * 7 + 5, 0) * 0.75),
+      (841.89 - 43.2) /
+        (reportWidths.reduce((sum, width) => sum + width * 7 + 5, 0) * 0.75),
     );
     const pageLimit = (595.28 - 50.4) / printScale - 2;
     function startReportPage() {
@@ -4554,7 +5710,9 @@ async function exportExcel(all) {
             : "",
           r.situacao === "EMPRESTADO"
             ? [
-                r.emprestimo?.responsavel ? "Emprestado a: " + r.emprestimo.responsavel : "",
+                r.emprestimo?.responsavel
+                  ? "Emprestado a: " + r.emprestimo.responsavel
+                  : "",
                 r.emprestimo?.destino ? "Destino: " + r.emprestimo.destino : "",
               ]
                 .filter(Boolean)
@@ -4616,10 +5774,17 @@ async function exportExcel(all) {
             };
             cell.numFmt = "@";
             cell.fill = fill(itemIndex % 2 ? roomStripe : color.white);
-            cell.alignment = { vertical: "middle", horizontal: "left", wrapText: true, indent: 1 };
+            cell.alignment = {
+              vertical: "middle",
+              horizontal: "left",
+              wrapText: true,
+              indent: 1,
+            };
             cell.border = {
               ...cellBorders(),
-              ...(column === 1 ? { left: { style: "medium", color: { argb: roomTone } } } : {}),
+              ...(column === 1
+                ? { left: { style: "medium", color: { argb: roomTone } } }
+                : {}),
             };
           });
           if (offset === 0) {
@@ -4629,7 +5794,12 @@ async function exportExcel(all) {
                 richText: [
                   {
                     text: part[1].slice(0, positionStart),
-                    font: { name: "Aptos", size: 11, bold: true, color: { argb: color.ink } },
+                    font: {
+                      name: "Aptos",
+                      size: 11,
+                      bold: true,
+                      color: { argb: color.ink },
+                    },
                   },
                   {
                     text: part[1].slice(positionStart),
@@ -4654,7 +5824,8 @@ async function exportExcel(all) {
     if (!list.length) {
       text(report, "A6:F6", "Nenhum registro neste recorte.", { fg: color.muted });
       report.getRow(6).height = 35;
-      for (let column = 1; column <= 6; column++) report.getCell(6, column).border = cellBorders();
+      for (let column = 1; column <= 6; column++)
+        report.getCell(6, column).border = cellBorders();
       nextRow = 7;
     }
     report.pageSetup.printArea = "A1:F" + (nextRow - 1);
@@ -4664,7 +5835,8 @@ async function exportExcel(all) {
       },
     );
     for (const sheet of wb.worksheets) {
-      if (sheet.name !== "Resumo") await drawTableHeading(sheet, sheet.name, sheet.columnCount);
+      if (sheet.name !== "Resumo")
+        await drawTableHeading(sheet, sheet.name, sheet.columnCount);
     }
     const buffer = await wb.xlsx.writeBuffer();
     const url = URL.createObjectURL(
@@ -4845,7 +6017,9 @@ function crop(guide, contrast = false, angle = 0) {
   if (contrast) {
     for (let i = 0; i < img.data.length; i += 4) {
       let g =
-        (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) * 1.5 + 128;
+        (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) *
+          1.5 +
+        128;
       img.data[i] = img.data[i + 1] = img.data[i + 2] = g;
     }
     ctx.putImageData(img, 0, 0);
@@ -4853,8 +6027,12 @@ function crop(guide, contrast = false, angle = 0) {
   if (angle) {
     const rotated = document.createElement("canvas");
     const a = (angle * Math.PI) / 180;
-    rotated.width = Math.ceil(Math.abs(c.width * Math.cos(a)) + Math.abs(c.height * Math.sin(a)));
-    rotated.height = Math.ceil(Math.abs(c.height * Math.cos(a)) + Math.abs(c.width * Math.sin(a)));
+    rotated.width = Math.ceil(
+      Math.abs(c.width * Math.cos(a)) + Math.abs(c.height * Math.sin(a)),
+    );
+    rotated.height = Math.ceil(
+      Math.abs(c.height * Math.cos(a)) + Math.abs(c.width * Math.sin(a)),
+    );
     const rc = rotated.getContext("2d");
     rc.fillStyle = "white";
     rc.fillRect(0, 0, rotated.width, rotated.height);
@@ -4943,7 +6121,11 @@ async function barcodeLoop(s) {
     barcodeBusy = true;
     try {
       n++;
-      const frame = crop("barcodeGuide", n % 5 === 0, n % 4 === 2 ? 8 : n % 4 === 3 ? -8 : 0);
+      const frame = crop(
+        "barcodeGuide",
+        n % 5 === 0,
+        n % 4 === 2 ? 8 : n % 4 === 3 ? -8 : 0,
+      );
       if (frame) {
         const results = await decode(frame.image);
         if (scene !== s) break;
@@ -4954,7 +6136,8 @@ async function barcodeLoop(s) {
       }
     } catch (e) {
       if (scene === s) {
-        $("cameraStatus").textContent = "Barras: " + e.message + ". OCR continua disponível.";
+        $("cameraStatus").textContent =
+          "Barras: " + e.message + ". OCR continua disponível.";
       }
       if (++errors >= 3) break;
     } finally {
@@ -4976,7 +6159,8 @@ async function ocrLoop(s) {
       const w = await warmOCR();
       if (scene !== s) break;
       if (!w) {
-        $("cameraStatus").textContent = "OCR indisponível; a leitura de códigos continua.";
+        $("cameraStatus").textContent =
+          "OCR indisponível; a leitura de códigos continua.";
         break;
       }
       const frame = crop("numberGuide", ++n % 2 === 0);
@@ -5080,7 +6264,10 @@ async function openScanner(target = "code") {
       $("zoom").min = min;
       $("zoom").max = max;
       $("zoom").step = step;
-      const middle = Math.min(max, Math.max(min, min + Math.round((max - min) / 2 / step) * step));
+      const middle = Math.min(
+        max,
+        Math.max(min, min + Math.round((max - min) / 2 / step) * step),
+      );
       try {
         await cameraSettings(s, {
           zoom: middle,
@@ -5122,7 +6309,8 @@ function zoomLabel() {
   const min = Number($("zoom").min),
     max = Number($("zoom").max),
     v = Number($("zoom").value);
-  $("zoomValue").textContent = (max > min ? Math.round(((v - min) / (max - min)) * 100) : 0) + "%";
+  $("zoomValue").textContent =
+    (max > min ? Math.round(((v - min) / (max - min)) * 100) : 0) + "%";
 }
 
 async function cameraSettings(s, change) {
@@ -5163,12 +6351,17 @@ function initVisualExperience() {
       t = tip.getBoundingClientRect();
     tip.style.left = Math.max(12, Math.min(innerWidth - t.width - 12, r.left)) + "px";
     tip.style.top =
-      Math.max(12, r.bottom + t.height + 12 > innerHeight ? r.top - t.height - 8 : r.bottom + 8) +
-      "px";
+      Math.max(
+        12,
+        r.bottom + t.height + 12 > innerHeight ? r.top - t.height - 8 : r.bottom + 8,
+      ) + "px";
     const dialog = tip.closest("dialog");
     if (dialog) {
       const bounds = dialog.getBoundingClientRect();
-      const left = Math.max(bounds.left + 12, Math.min(bounds.right - t.width - 12, r.left));
+      const left = Math.max(
+        bounds.left + 12,
+        Math.min(bounds.right - t.width - 12, r.left),
+      );
       const top = Math.max(
         bounds.top + 12,
         Math.min(
@@ -5209,7 +6402,11 @@ function initVisualExperience() {
     if (t && t !== activeHelp && e.pointerType !== "touch") openTip(t);
   });
   document.addEventListener("pointerout", (e) => {
-    if (activeHelp && !activeHelp.contains(e.relatedTarget) && activeHelp.contains(e.target))
+    if (
+      activeHelp &&
+      !activeHelp.contains(e.relatedTarget) &&
+      activeHelp.contains(e.target)
+    )
       closeTip();
   });
   document.addEventListener("focusin", (e) => {
@@ -5294,10 +6491,14 @@ function initVisualExperience() {
       .forEach((meta) =>
         meta.setAttribute(
           "content",
-          mobileAcervo() ? "#07182f" : authScreen ? "#0d61b0" : "#e8f1fa",
+          mobileAcervo() ? "#0852b8" : authScreen ? "#0d61b0" : "#e8f1fa",
         ),
       );
-    if (previousAuthScreen !== null && previousAuthScreen !== authScreen && !$("brandIntro"))
+    if (
+      previousAuthScreen !== null &&
+      previousAuthScreen !== authScreen &&
+      !$("brandIntro")
+    )
       revealFooter();
     previousAuthScreen = authScreen;
     $("syncTools").hidden = !$("login").hidden;
@@ -5396,14 +6597,17 @@ function initAppViewport() {
   let scheduled = 0;
   function update() {
     scheduled = 0;
-    root.classList.toggle("app-installed", installed.matches || navigator.standalone === true);
+    root.classList.toggle(
+      "app-installed",
+      installed.matches || navigator.standalone === true,
+    );
     const authScreen = !$("login").hidden;
     document
       .querySelectorAll('meta[name="theme-color"]')
       .forEach((meta) =>
         meta.setAttribute(
           "content",
-          mobileAcervo() ? "#07182f" : authScreen ? "#0d61b0" : "#e8f1fa",
+          mobileAcervo() ? "#0852b8" : authScreen ? "#0d61b0" : "#e8f1fa",
         ),
       );
     const height = viewport?.height || window.innerHeight;
@@ -5411,11 +6615,17 @@ function initAppViewport() {
       "input, textarea, select, [contenteditable='true']",
     );
     const keyboard =
-      !!focused && !!viewport && viewport.scale === 1 && window.innerHeight - height > 140;
+      !!focused &&
+      !!viewport &&
+      viewport.scale === 1 &&
+      window.innerHeight - height > 140;
     root.classList.toggle("keyboard-open", keyboard);
     if (!viewport || viewport.scale === 1) {
       root.style.setProperty("--app-visible-height", Math.round(height) + "px");
-      root.style.setProperty("--app-viewport-top", Math.round(viewport?.offsetTop || 0) + "px");
+      root.style.setProperty(
+        "--app-viewport-top",
+        Math.round(viewport?.offsetTop || 0) + "px",
+      );
     }
   }
   function schedule() {
@@ -5457,7 +6667,8 @@ function animateMobileView(node, direction = 1) {
   animateMobileView.active.set(node, animation);
   animation.finished
     .then(() => {
-      if (animateMobileView.active.get(node) === animation) animateMobileView.active.delete(node);
+      if (animateMobileView.active.get(node) === animation)
+        animateMobileView.active.delete(node);
     })
     .catch(() => {});
 }
@@ -5471,13 +6682,16 @@ function registrationStage(step, focus = true) {
   else $("registrationMain").append($("notesBlock"));
   const titles = [
     "Onde fica o item?",
-    "Qual é o item?",
-    "Identificação e controle",
-    "Tudo certo para salvar?",
+    "Qual item chegou?",
+    "Como acompanhar?",
+    "Está tudo no lugar?",
   ];
   const symbols = ["pin", "draft", "stock", "save"];
   const heading = $("mobileRegistrationTitle");
-  heading.replaceChildren(icon(symbols[step - 1]), document.createTextNode(titles[step - 1]));
+  heading.replaceChildren(
+    icon(symbols[step - 1]),
+    document.createTextNode(titles[step - 1]),
+  );
   $("mobileRegistrationProgress")
     .querySelectorAll("button")
     .forEach((node, i) => {
@@ -5494,6 +6708,13 @@ function registrationStage(step, focus = true) {
     $("register").scrollIntoView({ block: "start", behavior: "auto" });
     if (previous !== step)
       animateMobileView($("mobileRegistrationContent"), step < previous ? -1 : 1);
+  }
+  if (mobileAcervo() && $("mobileJourneyHome")) {
+    journey.draftStage = step;
+    syncMobileJourney();
+    updateRegistrationSummary();
+    $("mobileRegistrationContent").scrollTop = 0;
+    if (focus && user && !busy) saveDraft();
   }
 }
 
@@ -5542,8 +6763,22 @@ function mobileRegistrationValidity() {
 }
 
 function closeMobileDetail() {
-  $("mobileDetail")?.remove();
+  if (!mobileAcervo()) {
+    $("mobileDetail")?.remove();
+    $("browse").classList.remove("mobile-detail-open");
+    return;
+  }
+  const dialog = $("mobileDetail");
+  const id = expanded;
+  expanded = null;
+  if (dialog?.open) dialog.close();
   $("browse").classList.remove("mobile-detail-open");
+  if (mobileAcervo() && !$("browse").hidden) {
+    $("app").scrollTop = journey.browseScroll;
+    $("results")
+      .querySelector(`[data-id="${id}"] button`)
+      ?.focus({ preventScroll: true });
+  }
 }
 
 function initMobileAcervo() {
@@ -5586,7 +6821,12 @@ function initMobileAcervo() {
   next.id = "mobileRegistrationNext";
   actions.append(back, next);
   $("fields").append(actions);
-  const reviewBack = button("Voltar", () => registrationStage(3), "mobile-review-back", "left");
+  const reviewBack = button(
+    "Voltar",
+    () => registrationStage(3),
+    "mobile-review-back",
+    "left",
+  );
   $("registrationSave").querySelector(".registration-actions").before(reviewBack);
   form.addEventListener("keydown", (event) => {
     if (
@@ -5625,7 +6865,10 @@ function updateMobileLocation() {
     line.push(`Estante ${d.estante}`, `Prateleira ${d.prateleira.padStart(2, "0")}`);
   target.hidden = d.ambiente !== "Almoxarifado";
   const copy = el("div");
-  copy.append(el("small", "Local selecionado"), el("span", line.filter(Boolean).join(" · ")));
+  copy.append(
+    el("small", "Local selecionado"),
+    el("span", line.filter(Boolean).join(" · ")),
+  );
   target.replaceChildren(icon("pin"), copy);
 }
 
@@ -5685,14 +6928,23 @@ function initMobileIdentity() {
   const queryBar = $("browse").querySelector(".card > .bar"),
     queryTools = queryBar.querySelector(".query-tools");
   queryBar.append(queryMenu);
-  const camera = button("", () => openScanner("search"), "primary mobile-browse-scan", "scan");
+  const camera = button(
+    "",
+    () => openScanner("search"),
+    "primary mobile-browse-scan",
+    "scan",
+  );
   camera.id = "mobileBrowseScan";
   camera.setAttribute("aria-label", "Ler código para consultar");
   $("search").after(camera);
   const formContent = el("div", undefined, "mobile-registration-content");
   formContent.id = "mobileRegistrationContent";
   $("mobileRegistration").after(formContent);
-  formContent.append($("registrationHeader"), $("registrationBody"), $("registrationSave"));
+  formContent.append(
+    $("registrationHeader"),
+    $("registrationBody"),
+    $("registrationSave"),
+  );
   const reviewActions = $("registrationSave").querySelector(".registration-actions");
   const reviewBack = $("registrationSave").querySelector(".mobile-review-back");
   const descriptions = [
@@ -5729,7 +6981,10 @@ function initMobileIdentity() {
         else badge.textContent = String(i + 1);
       });
   });
-  observer.observe($("itemForm"), { attributes: true, attributeFilter: ["data-mobile-stage"] });
+  observer.observe($("itemForm"), {
+    attributes: true,
+    attributeFilter: ["data-mobile-stage"],
+  });
   document.addEventListener("click", (event) => {
     if (event.target === accountPanel) {
       const bounds = accountPanel.getBoundingClientRect();
@@ -5768,7 +7023,10 @@ function initMobileIdentity() {
       $("registrationSave").append(reviewBack, reviewActions);
       accountHost.append(accountToolbar);
       appNav.classList.remove("mobile-app-nav");
-      $("app").insertBefore(appNav, $("acervoOpening") || $("app").querySelector("section"));
+      $("app").insertBefore(
+        appNav,
+        $("acervoOpening") || $("app").querySelector("section"),
+      );
       $("itemForm").after($("draftInfo"));
       queryBar.append(queryTools);
       if (accountPanel.open) accountPanel.close();
@@ -5850,11 +7108,17 @@ function initMobileDashboard() {
     "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
   );
   function update() {
-    const captions = ["Bens acompanhados", "Emprestados", "Estoques ativos", "Para repor"];
+    const captions = [
+      "Bens acompanhados",
+      "Emprestados",
+      "Estoques ativos",
+      "Para repor",
+    ];
     [...$("stats").children].forEach((metric, i) => {
       const caption = metric.querySelector(":scope > span");
       if (!caption) return;
-      if (!metric.dataset.desktopCaption) metric.dataset.desktopCaption = caption.textContent;
+      if (!metric.dataset.desktopCaption)
+        metric.dataset.desktopCaption = caption.textContent;
       caption.textContent = media.matches
         ? captions[i] || metric.dataset.desktopCaption
         : metric.dataset.desktopCaption;
@@ -5871,12 +7135,15 @@ function initMobileDashboard() {
         panel.removeAttribute("aria-labelledby");
       }
     });
-    groups.forEach((group) => (group.count.textContent = $(group.source).textContent || "0"));
+    groups.forEach(
+      (group) => (group.count.textContent = $(group.source).textContent || "0"),
+    );
   }
   switcher.addEventListener("keydown", (event) => {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
-    const next = event.key === "Home" ? 0 : event.key === "End" ? 1 : chart === "goods" ? 1 : 0;
+    const next =
+      event.key === "Home" ? 0 : event.key === "End" ? 1 : chart === "goods" ? 1 : 0;
     chart = controls[next].key;
     update();
     controls[next].control.focus();
@@ -5915,6 +7182,1146 @@ function syncMobileEditor() {
     fields.prepend(location, grid);
     content.remove();
   }
+}
+
+function itemIcon(item, category = "") {
+  const description = typeof item === "object" ? item.dados?.item : item;
+  const group = typeof item === "object" ? item.dados?.categoria : category;
+  const normalized = key(description)
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  let symbol = "";
+  let score = 0;
+  for (const entry of ITEM_SYMBOLS) {
+    for (const term of entry.termos) {
+      const exact = normalized === term;
+      if (normalized && (exact || ` ${normalized} `.includes(` ${term} `))) {
+        const weight =
+          (exact ? 10000 : 5000) + term.split(" ").length * 100 + term.length;
+        if (weight > score) {
+          score = weight;
+          symbol = entry.icone;
+        }
+      }
+    }
+  }
+  if (!symbol) return icon(CATEGORY_ICON[group] || "draft");
+  const svg = icon("draft");
+  svg.firstChild.setAttribute("href", "#" + symbol);
+  svg.dataset.itemSymbol = symbol;
+  return svg;
+}
+
+function mobileItemAnchor(record, className = "") {
+  const root = el("div", undefined, "mobile-item-anchor " + className);
+  const graphic = el("span", undefined, "mobile-item-symbol");
+  graphic.append(itemIcon(record));
+  const copy = el("div");
+  const data = record.dados || record;
+  copy.append(el("strong", data.item || "Seu próximo item"));
+  copy.append(
+    el(
+      "small",
+      record.id ? internal(record.id) : data.categoria || "Ficha em construção",
+    ),
+  );
+  root.append(graphic, copy);
+  if (record.situacao) root.append(mobileStatus(record));
+  return root;
+}
+
+function mobileStatus(record) {
+  return el(
+    "span",
+    STATUS[record.situacao] || record.situacao,
+    "badge mobile-status " + record.situacao.toLowerCase(),
+  );
+}
+
+function openMobileJourney(step = null) {
+  if (busy || pending || role === "leitor") return;
+  $("register").dataset.journey = "form";
+  $("saved").hidden = true;
+  journey.maxStage = Math.max(journey.maxStage, step || 1);
+  registrationStage(step || journey.draftStage || 1);
+  syncMobileJourney();
+}
+
+function syncMobileJourney() {
+  if (!$("mobileJourneyHome")) return;
+  const d = formData();
+  const stage = Number($("itemForm").dataset.mobileStage || 1);
+  if (mobileAcervo() && stage === 3 && !d.tipo) {
+    setChoice("type", "SEM_IDENTIFICACAO");
+    syncCode();
+  }
+  const hasDraft = !!clean(d.item);
+  labelButton(
+    $("mobileJourneyStart"),
+    hasDraft ? "Continuar cadastro" : "Começar cadastro",
+    "right",
+  );
+  $("mobileJourneyStart").disabled = busy || !!pending || role === "leitor";
+  $("mobileJourneyRestart").hidden = !hasDraft;
+  $("mobileJourneyDraft").textContent = hasDraft
+    ? `${d.item} · ${d.ambiente || "Local a escolher"}`
+    : "Escolha o local. O Acervo guia o restante.";
+  $("mobileJourneyLocation").hidden = stage === 1;
+  $("mobileJourneyLocationText").textContent = [
+    d.ambiente || "Escolher local",
+    d.ambiente === "Almoxarifado"
+      ? [d.estante, d.prateleira].filter(Boolean).join("")
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const live = $("mobileLiveFiche");
+  live.hidden = !hasDraft || stage === 1 || stage === 4;
+  const fingerprint = [
+    d.item,
+    d.categoria,
+    d.ambiente,
+    d.estante,
+    d.prateleira,
+    d.controle,
+    d.quantidade,
+  ].join("|");
+  if (live.dataset.fingerprint !== fingerprint) {
+    const copy = el("div");
+    copy.append(el("strong", d.item || "Seu próximo item"));
+    copy.append(el("small", [d.ambiente, d.categoria].filter(Boolean).join(" · ")));
+    const symbol = el("span", undefined, "mobile-item-symbol");
+    symbol.append(itemIcon(d.item, d.categoria));
+    live.replaceChildren(symbol, copy);
+    live.dataset.fingerprint = fingerprint;
+  }
+  $("mobileJourneyExit").hidden = stage !== 1;
+  $("mobileRegistrationDescription").textContent = [
+    "A posição aparece quando o ambiente precisa dela.",
+    "O nome ajuda o Acervo a representar este item.",
+    "Escolha a identificação e a forma de acompanhar.",
+    "Toque em Alterar para corrigir qualquer parte.",
+  ][stage - 1];
+  if (stage === 3) {
+    const automatic = value("type") === "SEM_IDENTIFICACAO";
+    $("itemForm").classList.toggle("mobile-automatic-code", automatic);
+    if (automatic)
+      $("codeHint").setAttribute(
+        "aria-label",
+        "O banco gera o código interno ao salvar.",
+      );
+  }
+  if (mobileAcervo()) {
+    journey.maxStage = Math.max(journey.maxStage, stage);
+    $("mobileRegistrationProgress")
+      .querySelectorAll("button")
+      .forEach((node, i) => {
+        node.disabled = busy || i + 1 > journey.maxStage;
+      });
+  }
+}
+
+function mobileReview() {
+  const d = formData();
+  const summary = $("registrationSummary");
+  const anchor = mobileItemAnchor({ dados: d });
+  const facts = el("div", undefined, "mobile-review-facts");
+  const stock = d.controle === "QUANTIDADE";
+  const location = [
+    d.ambiente,
+    d.ambiente === "Almoxarifado"
+      ? `Estante ${d.estante || "—"} · Nível ${d.prateleira || "—"}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  for (const [label, text, stage] of [
+    ["Local", location, 1],
+    ["Categoria", d.categoria || "Escolher categoria", 2],
+    [
+      "Controle",
+      stock
+        ? `${quantityText(d.quantidade, d.unidade)} · mínimo ${d.minimo}`
+        : "Individual",
+      3,
+    ],
+    [
+      "Identificação",
+      d.tipo === "SEM_IDENTIFICACAO"
+        ? "Código gerado ao cadastrar"
+        : [d.tipo, d.codigo].filter(Boolean).join(" ") || "Escolher identificação",
+      3,
+    ],
+  ]) {
+    const row = el("div");
+    const copy = el("div");
+    copy.append(el("small", label), el("strong", text));
+    const edit = button("Alterar", () => registrationStage(stage), "", "edit");
+    edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
+    row.append(copy, edit);
+    facts.append(row);
+  }
+  const sentence = el(
+    "p",
+    stock
+      ? `${quantityText(d.quantidade, d.unidade)} de ${d.item} no ${d.ambiente}.`
+      : `${d.item} será cadastrado em ${d.ambiente}.`,
+    "mobile-review-sentence",
+  );
+  summary.replaceChildren(anchor, facts, sentence);
+}
+
+function mobileReceipt(record, template) {
+  const discarded = record.situacao === "BAIXADO";
+  const saved = $("saved");
+  $("register").dataset.journey = "receipt";
+  const visual = el("div", undefined, "mobile-receipt-visual");
+  const check = el("span", undefined, "mobile-receipt-check");
+  check.append(icon(discarded ? "discard" : "check"));
+  visual.append(check, mobileItemAnchor(record));
+  visual.append(
+    el("p", [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · ")),
+  );
+  const heading = el(
+    "h2",
+    discarded ? "Descarte registrado." : "Mais um bem no seu lugar.",
+  );
+  const samePlace = button(
+    "Cadastrar outro neste local",
+    () => {
+      resetForm();
+      for (const [name, field] of [
+        ["room", "ambiente"],
+        ["shelf", "estante"],
+        ["level", "prateleira"],
+      ])
+        setChoice(name, template[field]);
+      syncForm();
+      openMobileJourney(2);
+      saveDraft();
+    },
+    "mobile-primary",
+    "record-add",
+  );
+  const view = button(
+    "Ver item",
+    () => {
+      query({ situacao: "TODOS" });
+      $("search").value = internal(record.id);
+      expanded = record.id;
+      renderList();
+    },
+    "mobile-outline",
+    "search",
+  );
+  const anotherPlace = button(
+    "Escolher outro local",
+    () => {
+      resetForm();
+      setChoice("shelf", "");
+      setChoice("level", "");
+      syncForm();
+      openMobileJourney(1);
+      saveDraft();
+    },
+    "mobile-text-action",
+    "pin",
+  );
+  const repeat = button(
+    "Cadastrar outro igual",
+    () => {
+      repeatRegistration(template);
+      openMobileJourney(3);
+    },
+    "mobile-text-action",
+    "copy",
+  );
+  saved.className = "notice mobile-receipt" + (discarded ? " is-discarded" : "");
+  saved.replaceChildren(
+    visual,
+    heading,
+    el("p", "Registro salvo. Você pode seguir com o próximo item."),
+    samePlace,
+    view,
+    anotherPlace,
+    repeat,
+  );
+  saved.hidden = false;
+  $("app").scrollTop = 0;
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const origin = journey.lastFiche;
+    const target = visual.querySelector(".mobile-item-symbol");
+    requestAnimationFrame(() => {
+      const destination = target.getBoundingClientRect();
+      if (!origin || !destination.width || origin.top < 0 || origin.top > innerHeight) {
+        animateMobileView(visual);
+        return;
+      }
+      const token = target.cloneNode(true);
+      token.classList.add("mobile-fiche-flight");
+      token.setAttribute("aria-hidden", "true");
+      Object.assign(token.style, {
+        left: origin.left + "px",
+        top: origin.top + "px",
+        width: origin.width + "px",
+        height: origin.height + "px",
+      });
+      document.body.append(token);
+      target.style.visibility = "hidden";
+      const cleanup = () => {
+        token.remove();
+        target.style.visibility = "";
+      };
+      const animation = token.animate(
+        [
+          { transform: "translate(0,0) scale(1)", opacity: 1 },
+          {
+            transform: `translate(${destination.left - origin.left}px,${destination.top - origin.top}px) scale(${destination.width / origin.width})`,
+            opacity: 1,
+          },
+        ],
+        { duration: 440, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
+      );
+      animation.finished.then(cleanup).catch(cleanup);
+    });
+  }
+}
+
+function renderMobileRecords(found) {
+  const host = $("results");
+  const currentScroll = $("app").scrollTop;
+  host.replaceChildren();
+  let room = null;
+  const ordered = [...found].sort(
+    (a, b) => ROOMS.indexOf(a.dados.ambiente) - ROOMS.indexOf(b.dados.ambiente),
+  );
+  for (const record of ordered) {
+    if (!filters.ambiente && room !== record.dados.ambiente) {
+      room = record.dados.ambiente;
+      const group = el("tr", undefined, "mobile-room-heading");
+      const cell = el("td", room);
+      cell.colSpan = 7;
+      group.append(cell);
+      host.append(group);
+    }
+    const row = el("tr", undefined, "record-row mobile-record-row");
+    row.dataset.id = record.id;
+    const cell = el("td");
+    cell.colSpan = 7;
+    const open = button(
+      "",
+      () => {
+        if (busy || !leaveEditor()) return;
+        journey.browseScroll = $("app").scrollTop;
+        expanded = record.id;
+        openMobileRecord(record);
+      },
+      "mobile-record-button",
+    );
+    open.setAttribute(
+      "aria-label",
+      `Abrir ${record.dados.item}, ${internal(record.id)}, ${record.dados.ambiente}`,
+    );
+    open.setAttribute("aria-haspopup", "dialog");
+    open.setAttribute("aria-expanded", String(expanded === record.id));
+    const symbol = el("span", undefined, "mobile-item-symbol");
+    symbol.append(itemIcon(record));
+    const copy = el("div", undefined, "mobile-record-copy");
+    copy.append(el("strong", record.dados.item));
+    copy.append(
+      el(
+        "small",
+        [
+          record.dados.codigo
+            ? `${record.dados.tipo} ${record.dados.codigo}`
+            : internal(record.id),
+          record.dados.ambiente,
+        ].join(" · "),
+      ),
+    );
+    if (record.controle === "QUANTIDADE")
+      copy.append(
+        el("span", quantityText(record.saldo, record.unidade), "mobile-stock-caption"),
+      );
+    open.append(symbol, copy, mobileStatus(record), icon("right"));
+    cell.append(open);
+    row.append(cell);
+    host.append(row);
+  }
+  if (!found.length) {
+    const row = el("tr");
+    const cell = el("td");
+    cell.colSpan = 7;
+    cell.append(
+      acervoEmpty("Nenhum item por aqui.", "Tente outro nome ou ajuste os filtros."),
+      button(
+        "Limpar filtros",
+        () => $("clearFilters").click(),
+        "mobile-empty-clear",
+        "filter",
+      ),
+    );
+    row.append(cell);
+    host.append(row);
+  }
+  $("resultCount").textContent =
+    filtered().length + (filtered().length === 1 ? " item" : " itens");
+  if ($("browse").hidden) expanded = null;
+  if (expanded !== null) {
+    const record = rows.find((item) => item.id === expanded);
+    if (record) openMobileRecord(record, false);
+    else closeMobileDetail();
+  } else if ($("mobileDetail")?.open) closeMobileDetail();
+  $("app").scrollTop = currentScroll;
+}
+
+function openMobileRecord(record, focus = true) {
+  let dialog = $("mobileDetail");
+  if (!dialog) {
+    dialog = el("dialog", undefined, "mobile-detail-sheet");
+    dialog.id = "mobileDetail";
+    dialog.setAttribute("aria-labelledby", "mobileDetailTitle");
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeMobileDetail();
+    });
+    dialog.addEventListener("close", () => {
+      if (!editor && !$("operation").open && !$("deleteItemDialog").open) expanded = null;
+    });
+    document.body.append(dialog);
+  }
+  if (dialog.dataset.fingerprint !== `${record.id}:${record.versao}:${role}`) {
+    const content = el("div", undefined, "mobile-detail-content");
+    const close = button("", closeMobileDetail, "mobile-sheet-close", "close");
+    close.setAttribute("aria-label", "Fechar detalhes e voltar à lista");
+    dialog.replaceChildren(close, content);
+    renderMobileRecordDetail(record, content);
+    dialog.dataset.fingerprint = `${record.id}:${record.versao}:${role}`;
+  }
+  if (!dialog.open) dialog.showModal();
+  if (focus) dialog.querySelector("button").focus({ preventScroll: true });
+}
+
+function renderMobileRecordDetail(record, panel) {
+  panel.replaceChildren();
+  const header = mobileItemAnchor(record);
+  header.classList.add("mobile-detail-anchor");
+  header.querySelector("strong").id = "mobileDetailTitle";
+  panel.append(header);
+  function group(title, pairs) {
+    const section = el("section", undefined, "mobile-detail-group");
+    section.append(el("h3", title));
+    const facts = el("dl");
+    for (const [label, value] of pairs)
+      facts.append(el("dt", label), el("dd", value || "Não informado"));
+    section.append(facts);
+    panel.append(section);
+  }
+  group("Identificação", [
+    ["Categoria", record.dados.categoria],
+    [
+      "Patrimônio",
+      record.dados.codigo
+        ? `${record.dados.tipo} ${record.dados.codigo}`
+        : "Sem identificação patrimonial",
+    ],
+  ]);
+  group("Localização", [
+    ["Ambiente", record.dados.ambiente],
+    ...(locationText(record) ? [["Posição", locationText(record)]] : []),
+  ]);
+  if (record.controle === "QUANTIDADE")
+    group("Estoque", [
+      ["Saldo", quantityText(record.saldo, record.unidade)],
+      ["Mínimo", quantityText(record.minimo, record.unidade)],
+    ]);
+  if (record.emprestimo)
+    group("Empréstimo", [
+      ["Responsável", record.emprestimo.responsavel],
+      ["Destino", record.emprestimo.destino],
+      ["Registrado em", dateBR(record.emprestimo.momento)],
+    ]);
+  if (record.situacao === "BAIXADO") {
+    const info = record.baixa || {};
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(info.data || "")
+      ? info.data.split("-").reverse().join("/")
+      : info.data;
+    group("Descarte registrado", [
+      ["Data", date],
+      ["Motivo", info.motivo],
+      ["Responsável", info.email],
+      ["Documento", info.documento],
+    ]);
+  }
+  group("Observação", [["Registro", record.dados.observacao || "Sem observações"]]);
+  const history = el("details", undefined, "mobile-record-history");
+  const historyContent = el("div", undefined, "history");
+  history.append(el("summary", "Ver histórico"), historyContent);
+  let loaded = false;
+  history.addEventListener("toggle", () => {
+    if (history.open && !loaded) {
+      loaded = true;
+      historyContent.append(acervoLoader("Abrindo a história deste item…", true));
+      loadHistory(record.id, historyContent);
+    }
+  });
+  panel.append(history);
+  if (record.legado) {
+    const old = el("details");
+    old.append(
+      el("summary", "Informações da versão anterior"),
+      el("pre", JSON.stringify(record.legado, null, 2)),
+    );
+    panel.append(old);
+  }
+  const actions = el("div", undefined, "mobile-detail-actions");
+  if (role !== "leitor") {
+    if (record.situacao === "ATIVO")
+      actions.append(button("Editar", () => startEdit(record), "mobile-outline", "edit"));
+    if (movementActions(record).length)
+      actions.append(
+        button(
+          "Movimentar",
+          () => {
+            closeMobileDetail();
+            openMobileMovement(record);
+          },
+          "primary",
+          "movement",
+        ),
+      );
+    if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(record.situacao)) {
+      const action = record.situacao === "BAIXADO" ? "estornar" : "restaurar";
+      actions.append(
+        button(
+          ACTION[action],
+          () => openOperation(action, record),
+          "",
+          ACTION_ICON[action],
+        ),
+      );
+    }
+  }
+  if (actions.children.length) panel.append(actions);
+  if (role === "admin") {
+    const extra = el("details", undefined, "mobile-record-admin");
+    extra.append(
+      el("summary", "Administração do registro"),
+      button(
+        "Excluir definitivamente",
+        () => openItemDeletion(record),
+        "danger item-delete-action",
+        "close",
+      ),
+    );
+    panel.append(extra);
+  }
+}
+
+function openMobileMovement(record) {
+  journey.movementId = record.id;
+  journey.movementReceipt = "";
+  $("moveSearch").value = internal(record.id);
+  showTab("movements");
+  renderMovementResults();
+}
+
+function renderMobileMovement() {
+  const host = $("moveResults");
+  const search = key($("moveSearch").value);
+  const selectedRecord = rows.find((record) => record.id === journey.movementId);
+  host.replaceChildren();
+  $("movements").classList.toggle("mobile-movement-selected", !!selectedRecord);
+  $("moveMissing").hidden = true;
+  if (selectedRecord) {
+    const back = button(
+      "Trocar item",
+      () => {
+        journey.movementId = null;
+        journey.movementReceipt = "";
+        $("moveSearch").value = "";
+        renderMovementResults();
+        $("moveSearch").focus();
+      },
+      "mobile-text-action",
+      "left",
+    );
+    host.append(back, mobileItemAnchor(selectedRecord));
+    if (journey.movementReceipt)
+      host.append(el("p", journey.movementReceipt, "mobile-operation-receipt"));
+    host.append(el("h3", "O que vai acontecer?"));
+    const descriptions = {
+      emprestar: "Registrar quem ficará com o bem.",
+      devolver: "Confirmar o retorno ao local de origem.",
+      entrada: "Acrescentar unidades ao saldo.",
+      saida: "Registrar a retirada de unidades.",
+      descarte_estoque: "Descontar somente a quantidade descartada.",
+      baixar: "Preservar o registro como descartado.",
+    };
+    if (role !== "leitor") {
+      if (
+        selectedRecord.situacao === "ATIVO" &&
+        selectedRecord.controle !== "QUANTIDADE"
+      ) {
+        const transfer = button(
+          "",
+          () => openMobileTransfer(selectedRecord),
+          "mobile-action-tile",
+          "movement",
+        );
+        const copy = el("div");
+        copy.append(
+          el("strong", "Transferir"),
+          el("small", "Mudar o ambiente ou a posição."),
+        );
+        transfer.append(copy, icon("right"));
+        host.append(transfer);
+      }
+      for (const action of movementActions(selectedRecord)) {
+        const tile = button(
+          "",
+          () => openOperation(action, selectedRecord),
+          "mobile-action-tile" +
+            (["baixar", "descarte_estoque"].includes(action) ? " is-danger" : ""),
+          ACTION_ICON[action],
+        );
+        const copy = el("div");
+        copy.append(el("strong", ACTION[action]), el("small", descriptions[action]));
+        tile.append(copy, icon("right"));
+        host.append(tile);
+      }
+    }
+    if (!movementActions(selectedRecord).length || role === "leitor")
+      host.append(
+        el(
+          "p",
+          role === "leitor"
+            ? "Seu perfil permite consultar os dados deste item."
+            : "Este registro está disponível para consulta e histórico.",
+          "mobile-context-hint",
+        ),
+      );
+    host.append(
+      button(
+        "Ver ficha do item",
+        () => openDashboardRecord(selectedRecord),
+        "mobile-text-action",
+        "search",
+      ),
+    );
+    return;
+  }
+  if (!search) {
+    host.append(
+      acervoEmpty(
+        "Qual item vamos movimentar?",
+        "Busque pelo nome ou leia o código da etiqueta.",
+      ),
+    );
+    return;
+  }
+  const exact = rows.filter(
+    (record) =>
+      key(internal(record.id)) === search || key(record.dados.codigo) === search,
+  );
+  const found = exact.length
+    ? exact
+    : rows.filter((record) =>
+        key(
+          [record.dados.item, record.dados.codigo, internal(record.id)].join(" "),
+        ).includes(search),
+      );
+  for (const record of found.slice(0, 20)) {
+    const choose = button(
+      "",
+      () => {
+        journey.movementId = record.id;
+        renderMovementResults();
+      },
+      "mobile-movement-result",
+    );
+    choose.append(
+      mobileItemAnchor(record),
+      el("small", record.dados.ambiente),
+      icon("right"),
+    );
+    choose.setAttribute(
+      "aria-label",
+      `Selecionar ${record.dados.item}, ${internal(record.id)}`,
+    );
+    host.append(choose);
+  }
+  $("moveMissing").hidden = found.length > 0;
+  $("createDown").hidden = role === "leitor";
+  if (found.length > 20)
+    host.append(
+      el("p", "Digite mais detalhes para encontrar o item.", "mobile-context-hint"),
+    );
+}
+
+function openMobileTransfer(record) {
+  startEdit(record);
+  if (!editor) return;
+  $("editDialog").dataset.mode = "transfer";
+  $("editDialogTitle").textContent = "Transferir item";
+  const origin = el("div", undefined, "mobile-transfer-origin");
+  origin.append(
+    mobileItemAnchor(record),
+    el(
+      "p",
+      "Origem: " +
+        [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · "),
+    ),
+  );
+  $("editFields").querySelector(".mobile-editor-content").prepend(origin);
+  labelButton($("editSave"), "Confirmar transferência", "movement");
+  $("editRooms").closest("fieldset").querySelector("legend").textContent =
+    "Novo ambiente";
+}
+
+function updateMobileOperation() {
+  if (!mobileAcervo() || !selected || !$("operation").open) return;
+  const actions = {
+    emprestar: "Confirmar empréstimo",
+    devolver: "Confirmar devolução",
+    entrada: "Confirmar entrada",
+    saida: "Confirmar saída",
+    descarte_estoque: "Confirmar descarte",
+    baixar: "Confirmar descarte",
+    estornar: "Confirmar reversão",
+    restaurar: "Confirmar restauração",
+  };
+  labelButton(
+    $("confirmOperation"),
+    actions[action] || "Confirmar movimentação",
+    ACTION_ICON[action],
+  );
+  const root = $("mobileOperationPreview");
+  if (!root) return;
+  const amount = Number($("moveQuantity").value || 0);
+  let sentence = "";
+  if (["entrada", "saida", "descarte_estoque"].includes(action)) {
+    const next = Number(selected.saldo) + (action === "entrada" ? amount : -amount);
+    sentence = `Saldo: ${quantityText(selected.saldo, selected.unidade)} → ${quantityText(next, selected.unidade)} após confirmar.`;
+  } else if (action === "emprestar")
+    sentence = `${selected.dados.item} ficará com ${$("movePerson").value.trim() || "o responsável informado"}, em ${$("moveDestination").value.trim() || "local a informar"}.`;
+  else if (action === "devolver")
+    sentence = `${selected.dados.item} voltará para ${selected.dados.ambiente}.`;
+  else if (action === "baixar")
+    sentence = `${selected.dados.item} continuará no acervo como descartado.`;
+  else sentence = `A alteração de ${selected.dados.item} ficará no histórico.`;
+  root.textContent = sentence;
+}
+
+function mobileDashboardQuery(preset = {}) {
+  query({
+    ...preset,
+    ...(journey.dashboardRoom ? { ambiente: journey.dashboardRoom } : {}),
+  });
+}
+
+function renderMobileDashboard() {
+  const root = $("mobileDashboard");
+  if (!root || !mobileAcervo()) return;
+  const scoped = rows.filter(
+    (record) => !journey.dashboardRoom || record.dados.ambiente === journey.dashboardRoom,
+  );
+  const goods = scoped.filter(
+    (record) =>
+      record.controle !== "QUANTIDADE" &&
+      ["ATIVO", "EMPRESTADO"].includes(record.situacao),
+  );
+  const active = goods.filter((record) => record.situacao === "ATIVO");
+  const loans = scoped.filter((record) => record.situacao === "EMPRESTADO");
+  const stocks = scoped.filter(
+    (record) => record.controle === "QUANTIDADE" && record.situacao === "ATIVO",
+  );
+  const low = stocks.filter((record) => Number(record.saldo) <= Number(record.minimo));
+  $("mobileDashboardRoom").value = journey.dashboardRoom;
+  $("mobileDashboardHero").querySelector("b").textContent =
+    goods.length.toLocaleString("pt-BR");
+  $("mobileDashboardHero").querySelector("small").textContent =
+    `${active.length} ativos · ${goods.length - active.length} emprestados`;
+  $("mobileDashboardUpdated").textContent = lastSuccess
+    ? "Atualizado " +
+      new Intl.DateTimeFormat("pt-BR", { timeZone: ZONE, timeStyle: "short" }).format(
+        lastSuccess,
+      )
+    : "Aguardando atualização";
+  $("mobileDashboardAttributes").replaceChildren(
+    ...[
+      [
+        "Emprestados",
+        loans.length,
+        "loan",
+        () => mobileDashboardQuery({ situacao: "EMPRESTADO" }),
+      ],
+      [
+        "Materiais em estoque",
+        stocks.length,
+        "stock",
+        () => mobileDashboardQuery({ controle: "QUANTIDADE", situacao: "ATIVO" }),
+      ],
+      [
+        "Para repor",
+        low.length,
+        "stock-alert",
+        () => {
+          $("mobileDashboardAttention").open = true;
+          $("mobileDashboardAttention").scrollIntoView({
+            block: "nearest",
+            behavior: "smooth",
+          });
+        },
+      ],
+    ].map(([title, total, mark, fn]) => {
+      const control = button("", fn, "mobile-attribute", mark);
+      control.append(el("b", String(total)), el("span", title));
+      return control;
+    }),
+  );
+  const panel = $("mobileDashboardDistribution");
+  const entries = journey.dashboardChart === "categories" ? CATEGORIES : ROOMS;
+  const field = journey.dashboardChart === "categories" ? "categoria" : "ambiente";
+  panel.replaceChildren(
+    el(
+      "h3",
+      journey.dashboardChart === "categories"
+        ? "Bens por categoria"
+        : "Bens por ambiente",
+    ),
+  );
+  if (!goods.length)
+    panel.append(
+      el("p", "Os bens cadastrados aparecerão nesta distribuição.", "mobile-empty-note"),
+    );
+  else
+    for (const entry of entries) {
+      const count = goods.filter((record) => record.dados[field] === entry).length;
+      if (
+        journey.dashboardRoom &&
+        field === "ambiente" &&
+        entry !== journey.dashboardRoom
+      )
+        continue;
+      const row = button(
+        "",
+        () =>
+          mobileDashboardQuery({
+            [field]: entry,
+            controle: "INDIVIDUAL",
+            situacao: "EM_USO",
+          }),
+        "mobile-distribution-row",
+      );
+      const bar = el("i");
+      bar.style.setProperty("--portion", `${(count / goods.length) * 100}%`);
+      row.append(el("span", entry), bar, el("b", String(count)));
+      panel.append(row);
+    }
+  $("mobileDashboardTabs")
+    .querySelectorAll("button")
+    .forEach((button) =>
+      button.setAttribute(
+        "aria-selected",
+        String(button.dataset.chart === journey.dashboardChart),
+      ),
+    );
+  const attention = $("mobileDashboardAttention");
+  attention.querySelector("summary strong").textContent = low.length
+    ? `${low.length} ${low.length === 1 ? "material precisa" : "materiais precisam"} de reposição`
+    : "Reposição em dia";
+  const list = $("mobileDashboardAlerts");
+  list.replaceChildren();
+  if (!low.length)
+    list.append(
+      el(
+        "p",
+        stocks.length
+          ? "Nenhum material está no mínimo ou abaixo dele."
+          : "Os alertas aparecem quando houver materiais por quantidade.",
+        "mobile-empty-note",
+      ),
+    );
+  for (const record of low) {
+    const box = el("div", undefined, "mobile-alert-record");
+    box.append(
+      mobileItemAnchor(record),
+      el(
+        "p",
+        `Saldo ${quantityText(record.saldo, record.unidade)} · mínimo ${quantityText(record.minimo, record.unidade)}`,
+      ),
+    );
+    const actions = el("div", undefined, "actions");
+    actions.append(button("Ver item", () => openDashboardRecord(record), "", "right"));
+    if (role !== "leitor")
+      actions.append(
+        button(
+          "Registrar entrada",
+          () => openOperation("entrada", record),
+          "primary",
+          "stock-in",
+        ),
+      );
+    box.append(actions);
+    list.append(box);
+  }
+}
+
+function initMobileJourney() {
+  const register = $("register");
+  const form = $("itemForm");
+  register.dataset.journey = "home";
+  const home = el("section", undefined, "mobile-journey-home");
+  home.id = "mobileJourneyHome";
+  const art = el("div", undefined, "mobile-journey-art");
+  art.setAttribute("aria-hidden", "true");
+  const mark = el("img", undefined, "mobile-home-mark");
+  mark.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=5";
+  mark.alt = "";
+  for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
+    const card = el("span", undefined, "mobile-art-fiche");
+    card.append(itemIcon(name));
+    art.append(card);
+  }
+  art.append(mark);
+  const title = el("h1");
+  title.append(
+    document.createTextNode("Mais um item"),
+    el("br"),
+    document.createTextNode("no lugar."),
+  );
+  const description = el("p", "Escolha o local. O Acervo guia o restante.");
+  description.id = "mobileJourneyDraft";
+  const start = button(
+    "Começar cadastro",
+    () => openMobileJourney(),
+    "mobile-primary",
+    "right",
+  );
+  start.id = "mobileJourneyStart";
+  const restart = button(
+    "Começar outro cadastro",
+    () => {
+      if (
+        clean($("item").value) &&
+        !confirm("Descartar o rascunho e começar outro cadastro?")
+      )
+        return;
+      resetForm();
+      journey.draftStage = 1;
+      openMobileJourney(1);
+    },
+    "mobile-text-action",
+  );
+  restart.id = "mobileJourneyRestart";
+  const trail = el("ol", undefined, "mobile-home-trail");
+  ["Local", "Item", "Controle", "Revisão"].forEach((name, i) => {
+    const li = el("li");
+    li.append(el("span", String(i + 1)), document.createTextNode(name));
+    trail.append(li);
+  });
+  home.append(
+    art,
+    title,
+    description,
+    start,
+    restart,
+    trail,
+    el("small", "Seu acervo, organizado passo a passo."),
+  );
+  form.before(home);
+  const location = button(
+    "",
+    () => registrationStage(1),
+    "mobile-journey-location",
+    "pin",
+  );
+  location.id = "mobileJourneyLocation";
+  const locationText = el("span");
+  locationText.id = "mobileJourneyLocationText";
+  location.append(locationText, el("small", "Alterar"), icon("right"));
+  $("mobileRegistration").after(location);
+  const exit = button(
+    "Voltar ao início",
+    () => {
+      register.dataset.journey = "home";
+      saveDraft();
+      $("app").scrollTop = 0;
+    },
+    "mobile-text-action",
+    "left",
+  );
+  exit.id = "mobileJourneyExit";
+  $("mobileRegistrationActions").before(exit);
+  $("mobileRegistrationTitle").classList.add("mobile-journey-title");
+  $("mobileRegistrationDescription").classList.add("mobile-journey-description");
+  $("mobileRegistrationContent").prepend(
+    $("mobileRegistrationTitle"),
+    $("mobileRegistrationDescription"),
+  );
+  const live = el("div", undefined, "mobile-live-fiche");
+  live.id = "mobileLiveFiche";
+  $("mobileRegistrationContent").append(live);
+  $("mobileRegistrationProgress")
+    .querySelectorAll("button")
+    .forEach((node, i) => {
+      node.onclick = () => {
+        if (i + 1 > journey.maxStage) return;
+        if (i + 1 > Number(form.dataset.mobileStage)) {
+          for (let stage = 1; stage < i + 1; stage++)
+            if (!validateRegistrationStage(stage)) {
+              registrationStage(stage);
+              return;
+            }
+        }
+        registrationStage(i + 1);
+      };
+    });
+  $("mobileRegistrationBack").onclick = () =>
+    registrationStage(Math.max(1, Number(form.dataset.mobileStage) - 1));
+  for (const event of ["input", "change"])
+    form.addEventListener(event, syncMobileJourney);
+  $("moveSearch").oninput = () => {
+    journey.movementId = null;
+    journey.movementReceipt = "";
+    renderMovementResults();
+  };
+  const preview = el("p", undefined, "mobile-operation-preview");
+  preview.id = "mobileOperationPreview";
+  $("confirmOperation").before(preview);
+  $("operationForm").addEventListener("input", updateMobileOperation);
+  $("operation").addEventListener("close", () => {
+    if (!$("mobileDetail")?.open && !$("movements").hidden) renderMovementResults();
+  });
+  $("createDown").addEventListener("click", () => {
+    openMobileJourney(1);
+  });
+  $("editDialog").addEventListener(
+    "submit",
+    (event) => {
+      if ($("editDialog").dataset.mode !== "transfer" || !editor) return;
+      const record = rows.find((item) => item.id === editor.id);
+      const d = formData("edit");
+      if (
+        record &&
+        d.ambiente === record.dados.ambiente &&
+        d.estante === record.dados.estante &&
+        d.prateleira === record.dados.prateleira
+      ) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        toast("Escolha um destino diferente da localização atual.", true);
+      }
+    },
+    true,
+  );
+  const originalSearchPlaceholder = $("search").placeholder;
+  const dashboard = el("div", undefined, "mobile-dashboard");
+  dashboard.id = "mobileDashboard";
+  const heading = el("div", undefined, "mobile-dashboard-heading");
+  heading.append(el("h2", "Visão geral"));
+  const rooms = el("select");
+  rooms.id = "mobileDashboardRoom";
+  rooms.setAttribute("aria-label", "Ambiente da visão geral");
+  for (const [value, name] of [
+    ["", "Todos os ambientes"],
+    ...ROOMS.map((name) => [name, name]),
+  ]) {
+    const option = el("option", name);
+    option.value = value;
+    rooms.append(option);
+  }
+  rooms.onchange = () => {
+    journey.dashboardRoom = rooms.value;
+    renderMobileDashboard();
+  };
+  heading.append(rooms);
+  const updated = el("small", "Aguardando atualização", "mobile-dashboard-updated");
+  updated.id = "mobileDashboardUpdated";
+  const hero = button(
+    "",
+    () => mobileDashboardQuery({ controle: "INDIVIDUAL", situacao: "EM_USO" }),
+    "mobile-dashboard-hero",
+  );
+  hero.id = "mobileDashboardHero";
+  const image = mark.cloneNode();
+  image.className = "mobile-dashboard-mark";
+  const numbers = el("div");
+  numbers.append(
+    el("b", "0"),
+    el("span", "Bens acompanhados"),
+    el("small", "0 ativos · 0 emprestados"),
+  );
+  hero.append(image, numbers);
+  const attributes = el("div", undefined, "mobile-dashboard-attributes");
+  attributes.id = "mobileDashboardAttributes";
+  const tabs = el("div", undefined, "mobile-dashboard-tabs");
+  tabs.id = "mobileDashboardTabs";
+  tabs.setAttribute("role", "tablist");
+  tabs.setAttribute("aria-label", "Distribuição dos bens");
+  for (const [value, title] of [
+    ["rooms", "Ambientes"],
+    ["categories", "Categorias"],
+  ]) {
+    const tab = button(title, () => {
+      journey.dashboardChart = value;
+      renderMobileDashboard();
+      animateMobileView($("mobileDashboardDistribution"));
+    });
+    tab.dataset.chart = value;
+    tab.setAttribute("role", "tab");
+    tabs.append(tab);
+  }
+  const distribution = el("section", undefined, "mobile-dashboard-distribution");
+  distribution.id = "mobileDashboardDistribution";
+  const attention = el("details", undefined, "mobile-dashboard-attention");
+  attention.id = "mobileDashboardAttention";
+  const summary = el("summary");
+  summary.append(icon("stock-alert"), el("strong", "Reposição em dia"), icon("right"));
+  const alerts = el("div");
+  alerts.id = "mobileDashboardAlerts";
+  attention.append(summary, alerts);
+  const recent = el("details", undefined, "mobile-dashboard-recent");
+  recent.append(el("summary", "Últimas movimentações"));
+  const recentTimeline = $("movementTimeline");
+  const recentToggle = $("toggleMovementTimeline");
+  const placeholder = document.createComment("");
+  recentTimeline.before(placeholder);
+  dashboard.append(
+    heading,
+    updated,
+    hero,
+    attributes,
+    tabs,
+    distribution,
+    attention,
+    recent,
+  );
+  $("dashboard").prepend(dashboard);
+  const layout = () => {
+    if (mobileAcervo()) {
+      recent.append(recentTimeline, recentToggle);
+      $("search").placeholder = "Nome, código ou observação";
+      $("types").querySelector(
+        '[value="SEM_IDENTIFICACAO"]',
+      ).nextElementSibling.lastChild.textContent = "Automático";
+    } else {
+      placeholder.after(recentTimeline, recentToggle);
+      $("search").placeholder = originalSearchPlaceholder;
+      $("types").querySelector(
+        '[value="SEM_IDENTIFICACAO"]',
+      ).nextElementSibling.lastChild.textContent = TYPE.SEM_IDENTIFICACAO;
+      if ($("mobileDetail")?.open) closeMobileDetail();
+    }
+    syncMobileJourney();
+    renderMobileDashboard();
+  };
+  const media = matchMedia(
+    "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
+  );
+  media.addEventListener("change", layout);
+  layout();
 }
 
 $("editDialogClose").onclick = closeEdit;
@@ -5965,7 +8372,11 @@ $("deleteItemForm").onsubmit = async (event) => {
   $("deleteItemError").textContent = "";
   try {
     if (refreshTask) await refreshTask;
-    await rpc("acervo_excluir_item", { p_chave: key, p_id: record.id, p_versao: record.versao });
+    await rpc("acervo_excluir_item", {
+      p_chave: key,
+      p_id: record.id,
+      p_versao: record.versao,
+    });
     if (user?.id !== owner) return;
     rows = rows.filter((item) => item.id !== record.id);
     timelineCache.clear();
@@ -6322,7 +8733,9 @@ $("next").onclick = () => {
   }
 };
 
-document.querySelectorAll("[data-tab]").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
+document
+  .querySelectorAll("[data-tab]")
+  .forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
 
 document.querySelectorAll("[data-close]").forEach(
   (b) =>
@@ -6351,7 +8764,8 @@ $("exportAll").onclick = () => exportExcel(true);
 
 $("exportFiltered").onclick = () => exportExcel(false);
 
-$("rememberSession").checked = rememberSession || authRead("localStorage", REMEMBER_KEY) === "sim";
+$("rememberSession").checked =
+  rememberSession || authRead("localStorage", REMEMBER_KEY) === "sim";
 
 $("loginForm").onsubmit = async (e) => {
   e.preventDefault();
@@ -6384,7 +8798,10 @@ $("loginForm").onsubmit = async (e) => {
 $("logout").onclick = async () => {
   if (busy || !leaveEditor()) return;
   if (pending)
-    return toast("Conclua a operação pendente em Verificar e concluir antes de sair.", true);
+    return toast(
+      "Conclua a operação pendente em Verificar e concluir antes de sair.",
+      true,
+    );
   try {
     const { error } = await db.auth.signOut({
       scope: "local",
@@ -6436,10 +8853,14 @@ $("torch").onclick = async () => {
     if (scene === s) {
       s.torch = !s.torch;
       $("torch").setAttribute("aria-pressed", String(s.torch));
-      $("torch").setAttribute("aria-label", s.torch ? "Desligar lanterna" : "Ligar lanterna");
+      $("torch").setAttribute(
+        "aria-label",
+        s.torch ? "Desligar lanterna" : "Ligar lanterna",
+      );
     }
   } catch {
-    if (scene === s) $("cameraStatus").textContent = "Lanterna indisponível nesta câmera.";
+    if (scene === s)
+      $("cameraStatus").textContent = "Lanterna indisponível nesta câmera.";
   } finally {
     if (scene === s) $("torch").disabled = false;
   }
@@ -6455,7 +8876,8 @@ $("zoom").onchange = async () => {
       zoom: Number($("zoom").value),
     });
   } catch {
-    if (scene === s) $("cameraStatus").textContent = "Não foi possível aplicar esse zoom.";
+    if (scene === s)
+      $("cameraStatus").textContent = "Não foi possível aplicar esse zoom.";
   } finally {
     if (scene === s) {
       $("zoom").value = s.track.getSettings().zoom ?? $("zoom").value;
@@ -6472,7 +8894,8 @@ initVisualExperience();
 
 (async () => {
   if (!db) {
-    $("loginMessage").textContent = "Biblioteca de conexão indisponível. Atualize a página.";
+    $("loginMessage").textContent =
+      "Biblioteca de conexão indisponível. Atualize a página.";
     return;
   }
   const { data, error } = await db.auth.getSession();
@@ -6485,3 +8908,5 @@ initMobileAcervo();
 initMobileIdentity();
 
 initMobileDashboard();
+
+initMobileJourney();

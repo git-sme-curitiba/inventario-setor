@@ -23761,3 +23761,458 @@ body::before {
     color: #315a86;
   }
 }
+.shell > header #acervoHome {
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  line-height: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.shell > header #acervoHome:focus-visible {
+  outline: 2px solid #52dcff;
+  outline-offset: 4px;
+}
+.mobile-municipality-mark {
+  display: none;
+}
+.mobile-home-footer {
+  display: none;
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #mobileAccountMenu {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    flex-shrink: 0;
+  }
+  #mobileAccountTrigger {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    box-shadow: none;
+  }
+  #mobileAccountTrigger > .mobile-account-avatar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    flex: 0 0 36px;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #fff, #e9faff);
+    color: #064caa;
+    font: 700 14px/1 var(--mobile-font);
+    box-shadow:
+      0 3px 14px #00245a29,
+      0 0 0 3px #ffffff10;
+    transition: transform 180ms ease;
+  }
+  #mobileAccountTrigger:active > .mobile-account-avatar {
+    transform: scale(0.94);
+  }
+  #mobileAccountMenu .mobile-municipality-mark {
+    display: block;
+    flex: 0 0 29px;
+    width: 29px;
+    height: 30px;
+  }
+  .mobile-municipality-mark > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  #register[data-journey="home"] #mobileJourneyHome {
+    position: relative;
+    justify-content: center;
+    padding: 24px 8px 32px;
+  }
+  body:not(.auth-screen)
+    .shell:has(#register[data-journey="home"]:not([hidden])) {
+    padding-bottom: calc(90px + var(--app-safe-bottom));
+  }
+  .shell:has(#register[data-journey="home"]:not([hidden])) > .mobile-app-nav {
+    bottom: calc(26px + var(--app-safe-bottom));
+    padding-bottom: 6px;
+  }
+  body:not(.auth-screen)
+    .shell:has(#register[data-journey="home"]:not([hidden]))
+    > .mobile-home-footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    position: fixed;
+    z-index: 10;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: min(560px, 100vw);
+    height: calc(26px + var(--app-safe-bottom));
+    padding: 0 6px var(--app-safe-bottom);
+    background: #0058bf66;
+    color: #d5eaff;
+    white-space: nowrap;
+    font: 400 clamp(8px, 2.2vw, 9px) / 26px var(--mobile-font);
+  }
+  .mobile-home-footer > #mobileHomeAbout {
+    display: inline-flex;
+    align-items: center;
+    min-height: 26px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #edf8ff;
+    box-shadow: none;
+    font: inherit;
+    line-height: 26px;
+  }
+  .mobile-home-footer > small {
+    color: inherit;
+    font: inherit;
+  }
+  .app-typing body:not(.auth-screen) .shell > .mobile-home-footer {
+    display: none;
+  }
+  #mobileAboutDialog.mobile-dialog .mobile-about-copyright {
+    display: block;
+    max-width: 230px;
+    margin: 20px 0 0;
+    color: #60758f;
+    font: 400 9px/1.5 var(--mobile-font);
+  }
+  #mobileDashboard .mobile-dashboard-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 11px 12px;
+    margin-bottom: 18px;
+  }
+  #mobileDashboard .mobile-dashboard-heading > h2 {
+    grid-column: 1 / -1;
+  }
+  #mobileDashboardRoomPicker {
+    grid-column: 1;
+    grid-row: 2;
+    width: max-content;
+    max-width: 100%;
+    justify-self: start;
+  }
+  #mobileDashboardRoomPicker > summary {
+    gap: 8px;
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 1px solid #b1deff55;
+    border-radius: 10px;
+    background: #ffffff0d;
+  }
+  #mobileDashboardRoomPicker > summary small,
+  #mobileDashboardRoomPicker > summary > .icon:first-child {
+    display: none;
+  }
+  #mobileDashboardRoomPicker > summary > span {
+    display: block;
+    font-size: 11px;
+    line-height: 1;
+  }
+  #mobileDashboardRoomPicker > summary strong {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  #mobileDashboardRoomPicker > summary > .icon:last-child {
+    width: 12px;
+    height: 12px;
+    flex-basis: 12px;
+  }
+  #mobileDashboardRoomPicker .mobile-room-options {
+    inset: calc(100% + 6px) auto auto 0;
+    width: min(230px, calc(100vw - 40px));
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px;
+    border-radius: 12px;
+  }
+  #mobileDashboardRoomPicker .mobile-room-options button {
+    min-height: 42px;
+    padding: 10px;
+    font-size: 11px;
+  }
+  #mobileDashboard #mobileDashboardUpdated {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+    margin: 0;
+    color: #d7eaff;
+    font: 400 9px/1.4 var(--mobile-font);
+    white-space: nowrap;
+  }
+  #register #registrationSummary .mobile-item-symbol,
+  #register #saved .mobile-item-symbol {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 48px;
+    flex: 0 0 46px;
+    padding: 0;
+    border: 1px solid #a4d1f3;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e8faff, #b5deff);
+    color: #06499b;
+    box-shadow: none;
+  }
+  #register :is(#registrationSummary, #saved) .mobile-item-symbol .icon {
+    width: 30px;
+    height: 30px;
+    color: inherit;
+  }
+  #register #saved.mobile-receipt {
+    min-height: var(--mobile-main-content-height, 65svh);
+    padding: 54px 8px 34px;
+    gap: 18px;
+  }
+  #saved .mobile-receipt-visual {
+    padding: 55px 20px 21px;
+    border: 1px solid #a7e4ff;
+    border-radius: 21px;
+    box-shadow:
+      0 14px 40px #00286a35,
+      0 0 28px #16b7ff18;
+    animation: acervo-receipt-arrive 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  #saved .mobile-receipt-check {
+    display: grid;
+    place-items: center;
+    top: -37px;
+    left: calc(50% - 37px);
+    width: 74px;
+    height: 74px;
+    padding: 7px;
+    border: 1.5px solid #a7fcff;
+    border-radius: 23px;
+    background:
+      radial-gradient(circle at 25% 15%, #1cccf2, transparent 68%),
+      linear-gradient(145deg, #008edc, #0051c0 80%);
+    box-shadow:
+      inset 0 1px 0 #ffffff99,
+      0 0 9px #00efff66,
+      0 0 32px #00d9ff88;
+    animation: acervo-books-arrive 950ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  #saved .mobile-receipt-check::before {
+    inset: -7px;
+    border-radius: 28px;
+    border-color: #51f1ff;
+    animation: acervo-books-halo 1250ms 150ms ease-out both;
+  }
+  #saved .mobile-receipt-check::after {
+    display: none;
+  }
+  #saved .mobile-completion-books {
+    display: block;
+    width: 57px;
+    height: 57px;
+    color: #fff;
+  }
+  #saved .mobile-completion-books rect {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: acervo-book-shelve 650ms 100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  #saved .mobile-completion-books rect:nth-of-type(2) {
+    animation-delay: 230ms;
+  }
+  #saved .mobile-completion-seal {
+    position: absolute;
+    right: -6px;
+    bottom: -4px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 4px;
+    border: 1px solid #88dfff;
+    border-radius: 50%;
+    background: #fff;
+    color: #0061bf;
+    box-shadow: 0 3px 10px #00448a35;
+    animation: acervo-seal-stamp 550ms 580ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  #saved .mobile-completion-seal .icon {
+    width: 17px;
+    height: 17px;
+    color: inherit;
+  }
+  #saved.is-discarded .mobile-completion-seal {
+    background: var(--mobile-red);
+    color: #fff;
+    border-color: #fff;
+  }
+  #saved .mobile-receipt-celebration {
+    z-index: -1;
+  }
+  #saved .mobile-receipt-celebration i {
+    --gather-x: calc((var(--spark) - 1) * 65px);
+    --gather-turn: calc((var(--spark) - 1) * 12deg);
+    left: calc(50% - 13px);
+    top: -13px;
+    width: 26px;
+    height: 34px;
+    border: 1px solid #9af5ff;
+    border-radius: 7px;
+    background: linear-gradient(140deg, #08c7ed, #0064cb);
+    box-shadow: 0 0 15px #00dfff55;
+    animation: acervo-cards-gather 850ms calc(var(--spark) * 90ms)
+      cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  #saved .mobile-receipt-sweep {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  #saved .mobile-receipt-sweep::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 22%,
+      #6fe9ff24 48%,
+      transparent 72%
+    );
+    animation: acervo-receipt-sweep 950ms 400ms ease-out both;
+  }
+  #saved .mobile-receipt-visual > h2 {
+    animation: acervo-complete-copy 450ms 180ms both;
+  }
+  #saved .mobile-receipt-next {
+    animation: acervo-complete-copy 450ms 260ms both;
+  }
+}
+
+@keyframes acervo-receipt-arrive {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes acervo-books-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.65) rotate(-5deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.045) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes acervo-books-halo {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@keyframes acervo-book-shelve {
+  from {
+    opacity: 0.3;
+    transform: translateY(-9px) scaleY(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes acervo-seal-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(0.15) rotate(-35deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.16) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes acervo-cards-gather {
+  0% {
+    opacity: 0;
+    transform: translate(var(--gather-x), -26px) rotate(var(--gather-turn))
+      scale(0.6);
+  }
+  20% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, -10px) rotate(0) scale(0.3);
+  }
+}
+@keyframes acervo-receipt-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(110%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #register
+    #saved
+    :is(
+      .mobile-receipt-visual,
+      .mobile-receipt-check,
+      .mobile-receipt-next,
+      .mobile-receipt-visual > h2,
+      .mobile-completion-books rect,
+      .mobile-completion-seal
+    ) {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+  #register #saved .mobile-receipt-check::before,
+  #register #saved .mobile-receipt-celebration,
+  #register #saved .mobile-receipt-sweep {
+    display: none;
+  }
+  #mobileAccountTrigger > .mobile-account-avatar {
+    transition: none;
+  }
+}

@@ -1813,6 +1813,7 @@ function showTab(id) {
   });
   updateNavIndicator();
   if (mobileAcervo()) {
+    if (id !== "register") animateMobileReceipt.active?.cancel();
     $("app").scrollTop = 0;
     if ($("mobileAccountDialog")?.open) $("mobileAccountDialog").close();
     document
@@ -3634,6 +3635,16 @@ function saveRecord(prefix = "", discard = false) {
           top: rect.top,
           width: rect.width,
           height: rect.height,
+          viewportWidth: innerWidth,
+          color: getComputedStyle(graphic).color,
+          background: getComputedStyle(graphic).background,
+          border: getComputedStyle(graphic).border,
+          radius: getComputedStyle(graphic).borderRadius,
+          shadow: getComputedStyle(graphic).boxShadow,
+          iconWidth: graphic.querySelector(".icon").getBoundingClientRect()
+            .width,
+          iconHeight: graphic.querySelector(".icon").getBoundingClientRect()
+            .height,
         }
       : null;
   }
@@ -7510,21 +7521,54 @@ function animateMobileView(node, direction = 1) {
   )
     return;
   animateMobileView.active ||= new WeakMap();
-  animateMobileView.active.get(node)?.cancel();
-  const animation = node.animate(
+  animateMobileView.active
+    .get(node)
+    ?.forEach((animation) => animation.cancel());
+  const animations = [];
+  const entrance = node.animate(
     [
-      { opacity: 0.25, transform: `translateX(${direction * 18}px)` },
-      { opacity: 1, transform: "translateX(0)" },
+      {
+        opacity: 0.25,
+        transform: `perspective(900px) translate3d(${direction * 20}px,8px,0) rotateY(${-direction * 1.5}deg) scale(.985)`,
+      },
+      {
+        opacity: 1,
+        transform:
+          "perspective(900px) translate3d(0,0,0) rotateY(0deg) scale(1)",
+      },
     ],
-    { duration: 300, easing: "cubic-bezier(.16,1,.3,1)" },
+    { duration: 420, easing: "cubic-bezier(.16,1,.3,1)" },
   );
-  animateMobileView.active.set(node, animation);
-  animation.finished
-    .then(() => {
-      if (animateMobileView.active.get(node) === animation)
+  animations.push(entrance);
+  const details = node.querySelectorAll(
+    ".mobile-review-row, .mobile-dashboard-attributes > button, .mobile-choice-card, .mobile-action-tile",
+  );
+  [...details]
+    .filter((child) => child.getBoundingClientRect().width)
+    .slice(0, 5)
+    .forEach((child, index) => {
+      animations.push(
+        child.animate(
+          [
+            { opacity: 0.5, transform: "translateY(7px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          {
+            duration: 310,
+            delay: 35 + index * 25,
+            easing: "cubic-bezier(.16,1,.3,1)",
+            fill: "backwards",
+          },
+        ),
+      );
+    });
+  animateMobileView.active.set(node, animations);
+  Promise.allSettled(animations.map((animation) => animation.finished)).then(
+    () => {
+      if (animateMobileView.active.get(node) === animations)
         animateMobileView.active.delete(node);
-    })
-    .catch(() => {});
+    },
+  );
 }
 
 function registrationStage(step, focus = true) {
@@ -8149,11 +8193,13 @@ function mobileStatus(record) {
 
 function openMobileJourney(step = null) {
   if (busy || pending || role === "leitor") return;
+  const entering = $("register").dataset.journey !== "form";
   $("register").dataset.journey = "form";
   $("saved").hidden = true;
   journey.maxStage = Math.max(journey.maxStage, step || 1);
   registrationStage(step || journey.draftStage || 1);
   syncMobileJourney();
+  if (entering) animateMobileView($("mobileRegistrationContent"));
 }
 
 function syncMobileJourney() {
@@ -8317,7 +8363,11 @@ function mobileReceipt(record, template) {
   $("register").dataset.journey = "receipt";
   const visual = el("div", undefined, "mobile-receipt-visual");
   const check = el("span", undefined, "mobile-receipt-check");
-  check.append(icon(discarded ? "discard" : "check"));
+  const books = mobileBooksMark("mobile-completion-books");
+  const seal = el("span", undefined, "mobile-completion-seal");
+  seal.append(icon(discarded ? "discard" : "check"));
+  check.setAttribute("aria-hidden", "true");
+  check.append(books, seal);
   const anchor = mobileItemAnchor(record);
   anchor.querySelector(".mobile-status")?.remove();
   visual.append(
@@ -8350,12 +8400,14 @@ function mobileReceipt(record, template) {
   visual.append(code);
   const celebration = el("div", undefined, "mobile-receipt-celebration");
   celebration.setAttribute("aria-hidden", "true");
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 3; i++) {
     const spark = el("i");
     spark.style.setProperty("--spark", i);
     celebration.append(spark);
   }
-  visual.prepend(celebration);
+  const sweep = el("span", undefined, "mobile-receipt-sweep");
+  sweep.setAttribute("aria-hidden", "true");
+  visual.prepend(celebration, sweep);
   const another = button(
     "Cadastrar outro aqui",
     () => {
@@ -8402,47 +8454,7 @@ function mobileReceipt(record, template) {
   saved.replaceChildren(visual, next);
   saved.hidden = false;
   $("app").scrollTop = 0;
-  const origin = journey.lastFiche;
-  const target = anchor.querySelector(".mobile-item-symbol");
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  requestAnimationFrame(() => {
-    const destination = target.getBoundingClientRect();
-    if (
-      !origin ||
-      !destination.width ||
-      origin.top < 0 ||
-      origin.top > innerHeight
-    )
-      return animateMobileView(visual);
-    const token = target.cloneNode(true);
-    token.classList.add("mobile-fiche-flight");
-    token.setAttribute("aria-hidden", "true");
-    Object.assign(token.style, {
-      left: origin.left + "px",
-      top: origin.top + "px",
-      width: origin.width + "px",
-      height: origin.height + "px",
-    });
-    document.body.append(token);
-    target.style.visibility = "hidden";
-    const cleanup = () => {
-      token.remove();
-      target.style.visibility = "";
-    };
-    token
-      .animate(
-        [
-          { transform: "translate(0,0) scale(1)", opacity: 1 },
-          {
-            transform: `translate(${destination.left - origin.left}px,${destination.top - origin.top}px) scale(${destination.width / origin.width})`,
-            opacity: 1,
-          },
-        ],
-        { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
-      )
-      .finished.then(cleanup)
-      .catch(cleanup);
-  });
+  animateMobileReceipt(visual, anchor);
 }
 
 function renderMobileRecords(found) {
@@ -10158,15 +10170,8 @@ function initMobileJourney() {
   const alerts = el("div");
   alerts.id = "mobileDashboardAlerts";
   attention.append(summary, alerts);
-  dashboard.append(
-    heading,
-    updated,
-    hero,
-    attributes,
-    attention,
-    tabs,
-    distribution,
-  );
+  heading.append(updated);
+  dashboard.append(heading, hero, attributes, attention, tabs, distribution);
   $("dashboard").prepend(dashboard);
   const layout = () => {
     if (mobileAcervo()) {
@@ -10883,7 +10888,6 @@ function showAcervoDialog(dialog) {
 }
 
 function initMobileSurfaces() {
-  const account = $("mobileAccountDialog");
   const oldCredit = document.querySelector("#app > .mobile-app-credit");
   oldCredit?.remove();
   const source = document.querySelector(".institution-footer");
@@ -10913,31 +10917,31 @@ function initMobileSurfaces() {
   );
   about.append(heading, info);
   document.body.append(about);
-  const signature = button(
-    "",
+  info.append(
+    el(
+      "small",
+      `© ${new Date().getFullYear()} Gabriel Santiago Cândido. Todos os direitos reservados.`,
+      "mobile-about-copyright",
+    ),
+  );
+  const homeFooter = el("footer", undefined, "mobile-home-footer");
+  homeFooter.setAttribute("aria-label", "Sobre o Acervo e direitos reservados");
+  const homeAbout = button(
+    "Sobre o Acervo",
     () => showAcervoDialog(about),
-    "mobile-about-signature",
+    "mobile-home-about",
   );
-  signature.append(
-    mobileBooksMark(),
-    el("span", "Sobre o Acervo"),
-    el("small", "por " + author),
+  homeAbout.id = "mobileHomeAbout";
+  homeAbout.setAttribute("aria-haspopup", "dialog");
+  homeAbout.setAttribute("aria-controls", about.id);
+  const separator = el("span", "·");
+  separator.setAttribute("aria-hidden", "true");
+  homeFooter.append(
+    homeAbout,
+    separator,
+    el("small", `© ${new Date().getFullYear()} Gabriel Santiago Cândido`),
   );
-  signature.setAttribute("aria-haspopup", "dialog");
-  signature.setAttribute("aria-controls", about.id);
-  $("mobileJourneyHome").append(signature);
-  const accountAbout = button(
-    "",
-    () => showAcervoDialog(about),
-    "mobile-account-about-link",
-  );
-  const copy = el("span");
-  copy.append(
-    el("strong", "Sobre o Acervo"),
-    el("small", "Desenvolvimento e Prefeitura de Curitiba"),
-  );
-  accountAbout.append(mobileBooksMark(), copy, icon("right"));
-  account.append(accountAbout);
+  document.querySelector(".shell").append(homeFooter);
   const media = matchMedia(
     "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
   );
@@ -11050,10 +11054,6 @@ function mobileChromeColor() {
 }
 
 function initMobileRefinements() {
-  const signature = document.querySelector(".mobile-about-signature");
-  const copyright = signature.querySelector("small");
-  copyright.textContent = `© ${new Date().getFullYear()} Gabriel Santiago Cândido`;
-  signature.append(el("small", "Todos os direitos reservados."));
   const closeMenus = (target) =>
     document.querySelectorAll(".people-overflow[open]").forEach((menu) => {
       if (!target || !menu.contains(target)) menu.open = false;
@@ -11102,6 +11102,7 @@ function initMobileRefinements() {
     const modal =
       mobileAcervo() &&
       !!document.querySelector("body > dialog[open]:not(#camera)");
+    if (modal) animateMobileReceipt.active?.cancel();
     document.documentElement.classList.toggle("acervo-modal-open", modal);
     document
       .querySelectorAll('meta[name="theme-color"]')
@@ -11134,3 +11135,156 @@ function initMobileRefinements() {
 }
 
 initMobileRefinements();
+
+function animateMobileReceipt(visual, anchor) {
+  animateMobileReceipt.active?.cancel();
+  const origin = journey.lastFiche;
+  journey.lastFiche = null;
+  const target = anchor.querySelector(".mobile-item-symbol");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  requestAnimationFrame(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const destination = target.getBoundingClientRect();
+    if (
+      !origin ||
+      !target.isConnected ||
+      !destination.width ||
+      origin.top < 0 ||
+      origin.top > innerHeight ||
+      Math.abs(origin.viewportWidth - innerWidth) > 1
+    )
+      return;
+    const token = target.cloneNode(true);
+    token.classList.add("mobile-fiche-flight");
+    token.setAttribute("aria-hidden", "true");
+    Object.assign(token.style, {
+      display: "grid",
+      placeItems: "center",
+      boxSizing: "border-box",
+      left: origin.left + "px",
+      top: origin.top + "px",
+      width: origin.width + "px",
+      height: origin.height + "px",
+      color: origin.color,
+      background: origin.background,
+      border: origin.border,
+      borderRadius: origin.radius,
+      boxShadow: origin.shadow,
+    });
+    Object.assign(token.querySelector(".icon").style, {
+      color: "inherit",
+      width: origin.iconWidth + "px",
+      height: origin.iconHeight + "px",
+    });
+    document.body.append(token);
+    target.style.visibility = "hidden";
+    visual.classList.add("is-receiving-item");
+    const cleanup = () => {
+      token.remove();
+      target.style.visibility = "";
+      visual.classList.remove("is-receiving-item");
+      if (animateMobileReceipt.active === flight)
+        animateMobileReceipt.active = null;
+    };
+    const x = destination.left - origin.left,
+      y = destination.top - origin.top;
+    const scale = destination.width / origin.width;
+    const flight = token.animate(
+      [
+        { transform: "translate3d(0,0,0) scale(1)", opacity: 1 },
+        {
+          offset: 0.55,
+          transform: `translate3d(${x * 0.6}px,${y * 0.55 - 18}px,0) scale(${1 + (scale - 1) * 0.6})`,
+          opacity: 1,
+        },
+        {
+          transform: `translate3d(${x}px,${y}px,0) scale(${scale})`,
+          opacity: 1,
+        },
+      ],
+      { duration: 650, easing: "cubic-bezier(.22,.7,.15,1)", fill: "forwards" },
+    );
+    animateMobileReceipt.active = flight;
+    flight.finished.then(cleanup).catch(cleanup);
+  });
+}
+
+function goToAcervoHome() {
+  if (busy || deletionSaving) return;
+  document.activeElement?.blur();
+  document
+    .querySelectorAll(".mobile-query-menu[open], .mobile-room-picker[open]")
+    .forEach((menu) => (menu.open = false));
+  animateMobileReceipt.active?.cancel();
+  const register = $("register");
+  const receipt = register.dataset.journey === "receipt";
+  register.dataset.journey = "home";
+  if (receipt) {
+    resetForm();
+    setChoice("room", "");
+    setChoice("shelf", "");
+    setChoice("level", "");
+    journey.maxStage = 1;
+    journey.draftStage = 1;
+    syncForm();
+  }
+  if (!pending) saveDraft();
+  showTab(role === "leitor" ? "browse" : "register");
+  $("app").scrollTop = 0;
+  if (mobileAcervo()) animateMobileView($("mobileJourneyHome"), -1);
+}
+
+function initMobilePlayfulNavigation() {
+  const brand = document.querySelector(".shell > header .brand-logo");
+  const home = button("", goToAcervoHome, brand.className);
+  home.id = "acervoHome";
+  home.setAttribute("aria-label", "Acervo: voltar ao início");
+  home.title = "Voltar ao início";
+  home.append(...brand.childNodes);
+  brand.replaceWith(home);
+  const municipality = el("span", undefined, "mobile-municipality-mark");
+  municipality.setAttribute("role", "img");
+  municipality.setAttribute("aria-label", "Prefeitura de Curitiba");
+  municipality.title = "Prefeitura de Curitiba";
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 185 167");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML =
+    '<defs><filter id="acervoMunicipalityLight" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".9 1.77 .33 0 0 .9 1.77 .33 0 0 .9 1.77 .33 0 0 0 0 0 1 0"/></filter><mask id="acervoMunicipalityMask" x="0" y="0" width="185" height="167" maskUnits="userSpaceOnUse" style="mask-type:luminance"><image width="480" height="167" filter="url(#acervoMunicipalityLight)"/></mask></defs><rect width="185" height="167" fill="white" mask="url(#acervoMunicipalityMask)"/>';
+  svg
+    .querySelector("image")
+    .setAttribute(
+      "href",
+      document.querySelector(".institution-footer .institution-logo").src,
+    );
+  municipality.append(svg);
+  $("mobileAccountMenu").prepend(municipality);
+  const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  motion.addEventListener("change", () => {
+    if (motion.matches) {
+      animateMobileReceipt.active?.cancel();
+      document.getAnimations().forEach((animation) => {
+        if (animation.effect?.target?.closest?.("#app")) animation.cancel();
+      });
+    }
+  });
+  window.addEventListener("resize", () =>
+    animateMobileReceipt.active?.cancel(),
+  );
+  $("itemForm").addEventListener("change", (event) => {
+    if (!mobileAcervo() || motion.matches || event.target.type !== "radio")
+      return;
+    const choice = event.target.nextElementSibling;
+    if (!choice?.animate || !choice.getBoundingClientRect().width) return;
+    choice.animate(
+      [
+        { transform: "scale(.96)" },
+        { transform: "scale(1.025)", offset: 0.6 },
+        { transform: "scale(1)" },
+      ],
+      { duration: 280, easing: "cubic-bezier(.2,.8,.2,1)" },
+    );
+  });
+}
+
+initMobilePlayfulNavigation();

@@ -34,17 +34,31 @@ const ITEM_SYMBOLS = [
     icone: "acv-mesa",
     termos: ["mesa", "mesa de trabalho", "mesa de escritorio", "escrivaninha"],
   },
-  { icone: "acv-mesa-reuniao", termos: ["mesa de reuniao", "mesa de conferencia"] },
+  {
+    icone: "acv-mesa-reuniao",
+    termos: ["mesa de reuniao", "mesa de conferencia"],
+  },
   { icone: "acv-mesa-redonda", termos: ["mesa redonda", "mesa circular"] },
-  { icone: "acv-mesa-l", termos: ["mesa em l", "mesa angular", "estacao em l"] },
-  { icone: "acv-balcao", termos: ["balcao de atendimento", "balcao", "guiche"] },
+  {
+    icone: "acv-mesa-l",
+    termos: ["mesa em l", "mesa angular", "estacao em l"],
+  },
+  {
+    icone: "acv-balcao",
+    termos: ["balcao de atendimento", "balcao", "guiche"],
+  },
   {
     icone: "acv-gaveteiro",
     termos: ["gaveteiro", "gaveteiro volante", "gaveteiro com rodizio"],
   },
   {
     icone: "acv-armario",
-    termos: ["armario", "armario de aco", "armario de madeira", "armario de escritorio"],
+    termos: [
+      "armario",
+      "armario de aco",
+      "armario de madeira",
+      "armario de escritorio",
+    ],
   },
   {
     icone: "acv-arquivo",
@@ -76,7 +90,10 @@ const ITEM_SYMBOLS = [
       "suporte articulado para monitor",
     ],
   },
-  { icone: "lucide-footprints", termos: ["apoio para pes", "descanso para os pes"] },
+  {
+    icone: "lucide-footprints",
+    termos: ["apoio para pes", "descanso para os pes"],
+  },
   { icone: "acv-cadeira-giratoria", termos: ["cadeira", "cadeira estofada"] },
   { icone: "acv-cabideiro", termos: ["cabideiro", "porta casacos"] },
   {
@@ -91,16 +108,31 @@ const ITEM_SYMBOLS = [
       "cadeira com braco de escrever",
     ],
   },
-  { icone: "acv-mesa-infantil", termos: ["mesa infantil", "mesa de educacao infantil"] },
-  { icone: "acv-cadeira-infantil", termos: ["cadeira infantil", "cadeirinha escolar"] },
-  { icone: "acv-mesa-professor", termos: ["mesa do professor", "mesa de professor"] },
+  {
+    icone: "acv-mesa-infantil",
+    termos: ["mesa infantil", "mesa de educacao infantil"],
+  },
+  {
+    icone: "acv-cadeira-infantil",
+    termos: ["cadeira infantil", "cadeirinha escolar"],
+  },
+  {
+    icone: "acv-mesa-professor",
+    termos: ["mesa do professor", "mesa de professor"],
+  },
   {
     icone: "acv-banco-refeitorio",
     termos: ["mesa de refeitorio", "conjunto de refeitorio"],
   },
   {
     icone: "lucide-presentation",
-    termos: ["lousa", "quadro branco", "quadro negro", "lousa branca", "quadro de giz"],
+    termos: [
+      "lousa",
+      "quadro branco",
+      "quadro negro",
+      "lousa branca",
+      "quadro de giz",
+    ],
   },
   {
     icone: "acv-quadro-digital",
@@ -128,7 +160,10 @@ const ITEM_SYMBOLS = [
     icone: "acv-carrinho-livros",
     termos: ["carrinho de livros", "carrinho de biblioteca"],
   },
-  { icone: "lucide-book-open", termos: ["expositor de livros", "suporte de livros"] },
+  {
+    icone: "lucide-book-open",
+    termos: ["expositor de livros", "suporte de livros"],
+  },
   {
     icone: "acv-bancada",
     termos: ["bancada", "bancada de laboratorio", "bancada de trabalho"],
@@ -154,22 +189,39 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "lucide-pc-case",
-    termos: ["gabinete", "cpu", "torre de computador", "gabinete de computador"],
+    termos: [
+      "gabinete",
+      "cpu",
+      "torre de computador",
+      "gabinete de computador",
+    ],
   },
   {
     icone: "lucide-monitor",
     termos: ["monitor", "monitor de computador", "tela de computador"],
   },
-  { icone: "lucide-laptop", termos: ["notebook", "laptop", "computador portatil"] },
+  {
+    icone: "lucide-laptop",
+    termos: ["notebook", "laptop", "computador portatil"],
+  },
   { icone: "acv-chromebook", termos: ["chromebook", "notebook educacional"] },
   { icone: "lucide-tablet", termos: ["tablet", "tablet educacional"] },
-  { icone: "lucide-smartphone", termos: ["celular", "smartphone", "telefone celular"] },
+  {
+    icone: "lucide-smartphone",
+    termos: ["celular", "smartphone", "telefone celular"],
+  },
   {
     icone: "acv-all-in-one",
     termos: ["computador all in one", "all in one", "computador integrado"],
   },
-  { icone: "lucide-server", termos: ["servidor", "servidor de rede", "servidor fisico"] },
-  { icone: "acv-mini-pc", termos: ["mini pc", "minicomputador", "thin client"] },
+  {
+    icone: "lucide-server",
+    termos: ["servidor", "servidor de rede", "servidor fisico"],
+  },
+  {
+    icone: "acv-mini-pc",
+    termos: ["mini pc", "minicomputador", "thin client"],
+  },
   {
     icone: "acv-estacao-carga",
     termos: [
@@ -180,22 +232,52 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "acv-totem",
-    termos: ["totem de atendimento", "totem digital", "terminal de autoatendimento"],
+    termos: [
+      "totem de atendimento",
+      "totem digital",
+      "terminal de autoatendimento",
+    ],
   },
   {
     icone: "acv-leitor-digital",
-    termos: ["leitor digital", "leitor de livros digitais", "e reader", "kindle"],
+    termos: [
+      "leitor digital",
+      "leitor de livros digitais",
+      "e reader",
+      "kindle",
+    ],
   },
   { icone: "lucide-watch", termos: ["relogio inteligente", "smartwatch"] },
-  { icone: "acv-mesa-digitalizadora", termos: ["mesa digitalizadora", "tablet grafico"] },
-  { icone: "acv-microcomputador-placa", termos: ["placa raspberry pi", "raspberry pi"] },
-  { icone: "lucide-keyboard", termos: ["teclado", "teclado usb", "teclado sem fio"] },
+  {
+    icone: "acv-mesa-digitalizadora",
+    termos: ["mesa digitalizadora", "tablet grafico"],
+  },
+  {
+    icone: "acv-microcomputador-placa",
+    termos: ["placa raspberry pi", "raspberry pi"],
+  },
+  {
+    icone: "lucide-keyboard",
+    termos: ["teclado", "teclado usb", "teclado sem fio"],
+  },
   { icone: "lucide-mouse", termos: ["mouse", "mouse usb", "mouse sem fio"] },
-  { icone: "acv-mousepad", termos: ["mousepad", "tapete para mouse", "mouse pad"] },
-  { icone: "lucide-webcam", termos: ["webcam", "camera web", "camera de computador"] },
-  { icone: "lucide-headphones", termos: ["fone de ouvido", "headphone", "fone"] },
+  {
+    icone: "acv-mousepad",
+    termos: ["mousepad", "tapete para mouse", "mouse pad"],
+  },
+  {
+    icone: "lucide-webcam",
+    termos: ["webcam", "camera web", "camera de computador"],
+  },
+  {
+    icone: "lucide-headphones",
+    termos: ["fone de ouvido", "headphone", "fone"],
+  },
   { icone: "lucide-headset", termos: ["headset", "fone com microfone"] },
-  { icone: "lucide-speaker", termos: ["caixa de som", "alto falante", "caixa acustica"] },
+  {
+    icone: "lucide-speaker",
+    termos: ["caixa de som", "alto falante", "caixa acustica"],
+  },
   {
     icone: "lucide-mic",
     termos: ["microfone", "microfone de mesa", "microfone sem fio"],
@@ -214,19 +296,37 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "lucide-scan-barcode",
-    termos: ["leitor de codigo de barras", "leitor de codigo", "leitor barcode"],
+    termos: [
+      "leitor de codigo de barras",
+      "leitor de codigo",
+      "leitor barcode",
+    ],
   },
   {
     icone: "lucide-contact",
-    termos: ["leitor de cartao", "leitor de cartoes", "leitor de cartao de memoria"],
+    termos: [
+      "leitor de cartao",
+      "leitor de cartoes",
+      "leitor de cartao de memoria",
+    ],
   },
   { icone: "acv-hub-usb", termos: ["hub usb", "hub", "concentrador usb"] },
-  { icone: "acv-dock", termos: ["dock station", "docking station", "base de conexao"] },
+  {
+    icone: "acv-dock",
+    termos: ["dock station", "docking station", "base de conexao"],
+  },
   {
     icone: "acv-controle",
-    termos: ["controle remoto", "controle para apresentacao", "passador de slides"],
+    termos: [
+      "controle remoto",
+      "controle para apresentacao",
+      "passador de slides",
+    ],
   },
-  { icone: "lucide-gamepad-2", termos: ["controle de videogame", "gamepad", "joystick"] },
+  {
+    icone: "lucide-gamepad-2",
+    termos: ["controle de videogame", "gamepad", "joystick"],
+  },
   {
     icone: "lucide-fingerprint",
     termos: ["leitor biometrico", "leitor de impressao digital", "biometria"],
@@ -240,8 +340,14 @@ const ITEM_SYMBOLS = [
     termos: ["suporte de notebook", "base para notebook", "suporte de laptop"],
   },
   { icone: "lucide-router", termos: ["roteador", "roteador wi fi", "router"] },
-  { icone: "acv-switch", termos: ["switch", "switch de rede", "comutador de rede"] },
-  { icone: "acv-access-point", termos: ["access point", "ponto de acesso", "ap wi fi"] },
+  {
+    icone: "acv-switch",
+    termos: ["switch", "switch de rede", "comutador de rede"],
+  },
+  {
+    icone: "acv-access-point",
+    termos: ["access point", "ponto de acesso", "ap wi fi"],
+  },
   { icone: "acv-modem", termos: ["modem", "modem de internet", "ont", "onu"] },
   {
     icone: "acv-rack",
@@ -266,10 +372,21 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "acv-fibra",
-    termos: ["conversor de midia", "conversor de fibra", "modulo sfp", "transceiver sfp"],
+    termos: [
+      "conversor de midia",
+      "conversor de fibra",
+      "modulo sfp",
+      "transceiver sfp",
+    ],
   },
-  { icone: "acv-rj45", termos: ["conector rj45", "plug rj45", "conector de rede"] },
-  { icone: "acv-tomada-rede", termos: ["tomada de rede", "keystone", "espelho de rede"] },
+  {
+    icone: "acv-rj45",
+    termos: ["conector rj45", "plug rj45", "conector de rede"],
+  },
+  {
+    icone: "acv-tomada-rede",
+    termos: ["tomada de rede", "keystone", "espelho de rede"],
+  },
   {
     icone: "acv-patch-cord",
     termos: ["patch cord", "cabo de rede", "cabo ethernet", "cabo utp"],
@@ -285,12 +402,18 @@ const ITEM_SYMBOLS = [
   },
   { icone: "acv-switch", termos: ["switch gerenciavel", "switch poe"] },
   { icone: "acv-nobreak", termos: ["nobreak", "no break", "ups"] },
-  { icone: "acv-estabilizador", termos: ["estabilizador", "estabilizador de tensao"] },
+  {
+    icone: "acv-estabilizador",
+    termos: ["estabilizador", "estabilizador de tensao"],
+  },
   {
     icone: "acv-filtro-linha",
     termos: ["filtro de linha", "regua de tomadas", "regua de energia"],
   },
-  { icone: "acv-extensao", termos: ["extensao eletrica", "cabo extensor", "extensao"] },
+  {
+    icone: "acv-extensao",
+    termos: ["extensao eletrica", "cabo extensor", "extensao"],
+  },
   {
     icone: "acv-fonte",
     termos: ["fonte de alimentacao", "fonte atx", "fonte de computador"],
@@ -307,8 +430,14 @@ const ITEM_SYMBOLS = [
     icone: "lucide-battery-full",
     termos: ["pilha", "pilha alcalina", "pilha recarregavel"],
   },
-  { icone: "lucide-plug", termos: ["adaptador de tomada", "plugue", "plug de tomada"] },
-  { icone: "acv-tomada", termos: ["tomada eletrica", "tomada", "espelho de tomada"] },
+  {
+    icone: "lucide-plug",
+    termos: ["adaptador de tomada", "plugue", "plug de tomada"],
+  },
+  {
+    icone: "acv-tomada",
+    termos: ["tomada eletrica", "tomada", "espelho de tomada"],
+  },
   {
     icone: "acv-cabo-usb",
     termos: ["cabo usb", "cabo usb c", "cabo micro usb", "cabo lightning"],
@@ -333,18 +462,32 @@ const ITEM_SYMBOLS = [
       "conversor de video",
     ],
   },
-  { icone: "acv-canaleta", termos: ["canaleta", "canaleta de cabos", "eletrocalha"] },
+  {
+    icone: "acv-canaleta",
+    termos: ["canaleta", "canaleta de cabos", "eletrocalha"],
+  },
   {
     icone: "lucide-cable",
-    termos: ["abracadeira", "enforca gato", "organizador de cabos", "velcro para cabos"],
+    termos: [
+      "abracadeira",
+      "enforca gato",
+      "organizador de cabos",
+      "velcro para cabos",
+    ],
   },
-  { icone: "acv-testador-cabos", termos: ["testador de cabos", "testador de rede"] },
+  {
+    icone: "acv-testador-cabos",
+    termos: ["testador de cabos", "testador de rede"],
+  },
   { icone: "acv-memoria", termos: ["memoria ram", "pente de memoria", "ram"] },
   {
     icone: "lucide-cpu",
     termos: ["processador", "cpu processador", "unidade de processamento"],
   },
-  { icone: "acv-placa-mae", termos: ["placa mae", "motherboard", "placa principal"] },
+  {
+    icone: "acv-placa-mae",
+    termos: ["placa mae", "motherboard", "placa principal"],
+  },
   { icone: "acv-placa-video", termos: ["placa de video", "gpu"] },
   {
     icone: "lucide-hard-drive",
@@ -359,8 +502,14 @@ const ITEM_SYMBOLS = [
     termos: ["hd externo", "disco externo", "ssd externo"],
   },
   { icone: "lucide-usb", termos: ["pen drive", "pendrive", "memoria usb"] },
-  { icone: "acv-cartao-memoria", termos: ["cartao de memoria", "cartao sd", "micro sd"] },
-  { icone: "lucide-disc-3", termos: ["cd", "dvd", "midia optica", "disco virgem"] },
+  {
+    icone: "acv-cartao-memoria",
+    termos: ["cartao de memoria", "cartao sd", "micro sd"],
+  },
+  {
+    icone: "lucide-disc-3",
+    termos: ["cd", "dvd", "midia optica", "disco virgem"],
+  },
   {
     icone: "lucide-fan",
     termos: ["cooler", "ventoinha de computador", "cooler de processador"],
@@ -375,11 +524,20 @@ const ITEM_SYMBOLS = [
     icone: "acv-kit-parafusos",
     termos: ["parafuso de computador", "kit de parafusos", "parafuso"],
   },
-  { icone: "acv-suporte-hd", termos: ["suporte de hd", "case de hd", "gaveta de hd"] },
+  {
+    icone: "acv-suporte-hd",
+    termos: ["suporte de hd", "case de hd", "gaveta de hd"],
+  },
   { icone: "acv-placa-som", termos: ["placa de som", "interface de audio"] },
   { icone: "acv-nas", termos: ["nas", "armazenamento em rede"] },
-  { icone: "lucide-projector", termos: ["projetor", "datashow", "projetor multimidia"] },
-  { icone: "acv-tela-projecao", termos: ["tela de projecao", "telao", "tela retratil"] },
+  {
+    icone: "lucide-projector",
+    termos: ["projetor", "datashow", "projetor multimidia"],
+  },
+  {
+    icone: "acv-tela-projecao",
+    termos: ["tela de projecao", "telao", "tela retratil"],
+  },
   { icone: "lucide-tv", termos: ["televisao", "tv", "smart tv", "televisor"] },
   {
     icone: "lucide-camera",
@@ -391,19 +549,40 @@ const ITEM_SYMBOLS = [
     termos: ["camera de seguranca", "camera ip", "camera de vigilancia"],
   },
   { icone: "acv-gravador", termos: ["gravador de seguranca", "dvr", "nvr"] },
-  { icone: "lucide-phone", termos: ["telefone", "telefone fixo", "aparelho telefonico"] },
-  { icone: "acv-telefone-ip", termos: ["telefone ip", "telefone voip", "telefone sip"] },
+  {
+    icone: "lucide-phone",
+    termos: ["telefone", "telefone fixo", "aparelho telefonico"],
+  },
+  {
+    icone: "acv-telefone-ip",
+    termos: ["telefone ip", "telefone voip", "telefone sip"],
+  },
   {
     icone: "lucide-radio-tower",
     termos: ["radio comunicador", "walkie talkie", "radio ht"],
   },
   { icone: "lucide-radio", termos: ["radio", "radio portatil"] },
-  { icone: "acv-mesa-som", termos: ["mesa de som", "mixador de audio", "mesa de audio"] },
-  { icone: "acv-amplificador", termos: ["amplificador", "amplificador de som"] },
-  { icone: "acv-tripé", termos: ["tripe", "tripe de camera", "suporte de camera"] },
-  { icone: "acv-suporte-tv", termos: ["suporte de tv", "suporte para televisao"] },
+  {
+    icone: "acv-mesa-som",
+    termos: ["mesa de som", "mixador de audio", "mesa de audio"],
+  },
+  {
+    icone: "acv-amplificador",
+    termos: ["amplificador", "amplificador de som"],
+  },
+  {
+    icone: "acv-tripé",
+    termos: ["tripe", "tripe de camera", "suporte de camera"],
+  },
+  {
+    icone: "acv-suporte-tv",
+    termos: ["suporte de tv", "suporte para televisao"],
+  },
   { icone: "acv-microfone-lapela", termos: ["microfone de lapela", "lapela"] },
-  { icone: "acv-gravador-audio", termos: ["gravador de audio", "gravador digital"] },
+  {
+    icone: "acv-gravador-audio",
+    termos: ["gravador de audio", "gravador digital"],
+  },
   {
     icone: "acv-videoconferencia",
     termos: ["equipamento de videoconferencia", "kit de videoconferencia"],
@@ -414,7 +593,10 @@ const ITEM_SYMBOLS = [
     icone: "lucide-file",
     termos: ["papel a4", "resma de papel", "papel sulfite", "papel"],
   },
-  { icone: "lucide-files", termos: ["papel a3", "papel oficio", "papel timbrado"] },
+  {
+    icone: "lucide-files",
+    termos: ["papel a3", "papel oficio", "papel timbrado"],
+  },
   {
     icone: "lucide-notebook",
     termos: ["caderno", "caderno escolar", "caderno de anotacoes"],
@@ -436,8 +618,14 @@ const ITEM_SYMBOLS = [
   { icone: "acv-estilete", termos: ["estilete", "lamina de estilete"] },
   { icone: "acv-grampeador", termos: ["grampeador", "grampeador de mesa"] },
   { icone: "acv-grampo", termos: ["grampo", "grampo para grampeador"] },
-  { icone: "lucide-paperclip", termos: ["clipe", "clipes", "clips", "clipe de papel"] },
-  { icone: "acv-perfurador", termos: ["perfurador de papel", "furador de papel"] },
+  {
+    icone: "lucide-paperclip",
+    termos: ["clipe", "clipes", "clips", "clipe de papel"],
+  },
+  {
+    icone: "acv-perfurador",
+    termos: ["perfurador de papel", "furador de papel"],
+  },
   { icone: "acv-cola", termos: ["cola", "cola branca", "cola bastao"] },
   {
     icone: "acv-fita",
@@ -447,30 +635,54 @@ const ITEM_SYMBOLS = [
     icone: "acv-porta-fita",
     termos: ["suporte de fita adesiva", "porta durex", "dispensador de fita"],
   },
-  { icone: "lucide-folder", termos: ["pasta", "pasta plastica", "pasta de documentos"] },
+  {
+    icone: "lucide-folder",
+    termos: ["pasta", "pasta plastica", "pasta de documentos"],
+  },
   {
     icone: "lucide-folder-open",
     termos: ["pasta suspensa", "pasta sanfonada", "pasta catalogo"],
   },
-  { icone: "lucide-mail", termos: ["envelope", "envelope pardo", "envelope oficio"] },
+  {
+    icone: "lucide-mail",
+    termos: ["envelope", "envelope pardo", "envelope oficio"],
+  },
   {
     icone: "lucide-tag",
     termos: ["etiqueta", "etiqueta adesiva", "etiqueta patrimonial"],
   },
   { icone: "acv-carimbo", termos: ["carimbo", "carimbo datador"] },
-  { icone: "acv-almofada", termos: ["almofada de carimbo", "refil de carimbo"] },
-  { icone: "lucide-calculator", termos: ["calculadora", "calculadora de mesa"] },
+  {
+    icone: "acv-almofada",
+    termos: ["almofada de carimbo", "refil de carimbo"],
+  },
+  {
+    icone: "lucide-calculator",
+    termos: ["calculadora", "calculadora de mesa"],
+  },
   { icone: "lucide-clipboard", termos: ["prancheta", "prancheta de apoio"] },
   { icone: "lucide-calendar", termos: ["agenda", "calendario de mesa"] },
-  { icone: "acv-porta-canetas", termos: ["porta canetas", "organizador de mesa"] },
+  {
+    icone: "acv-porta-canetas",
+    termos: ["porta canetas", "organizador de mesa"],
+  },
   {
     icone: "acv-bandeja-papel",
     termos: ["bandeja de documentos", "caixa de correspondencia"],
   },
   { icone: "acv-plastificadora", termos: ["plastificadora", "laminadora"] },
-  { icone: "acv-guilhotina", termos: ["guilhotina de papel", "cortador de papel"] },
-  { icone: "acv-fragmentadora", termos: ["fragmentadora", "triturador de papel"] },
-  { icone: "acv-encadernadora", termos: ["encadernadora", "maquina de encadernacao"] },
+  {
+    icone: "acv-guilhotina",
+    termos: ["guilhotina de papel", "cortador de papel"],
+  },
+  {
+    icone: "acv-fragmentadora",
+    termos: ["fragmentadora", "triturador de papel"],
+  },
+  {
+    icone: "acv-encadernadora",
+    termos: ["encadernadora", "maquina de encadernacao"],
+  },
   { icone: "acv-espiral", termos: ["espiral de encadernacao", "espiral"] },
   {
     icone: "acv-prendedor",
@@ -486,7 +698,10 @@ const ITEM_SYMBOLS = [
     icone: "acv-cilindro",
     termos: ["cilindro de impressora", "unidade de imagem", "fotocondutor"],
   },
-  { icone: "acv-ribbon", termos: ["ribbon", "fita ribbon", "fita de impressora"] },
+  {
+    icone: "acv-ribbon",
+    termos: ["ribbon", "fita ribbon", "fita de impressora"],
+  },
   { icone: "acv-bobina", termos: ["bobina de papel", "bobina termica"] },
   {
     icone: "acv-etiquetadora",
@@ -496,20 +711,38 @@ const ITEM_SYMBOLS = [
     icone: "acv-filamento",
     termos: ["filamento de impressora 3d", "filamento pla", "filamento abs"],
   },
-  { icone: "acv-impressora-3d", termos: ["impressora 3d", "impressora tridimensional"] },
-  { icone: "lucide-book", termos: ["livro", "livro didatico", "livro paradidatico"] },
-  { icone: "lucide-book-open-text", termos: ["dicionario", "enciclopedia", "atlas"] },
+  {
+    icone: "acv-impressora-3d",
+    termos: ["impressora 3d", "impressora tridimensional"],
+  },
+  {
+    icone: "lucide-book",
+    termos: ["livro", "livro didatico", "livro paradidatico"],
+  },
+  {
+    icone: "lucide-book-open-text",
+    termos: ["dicionario", "enciclopedia", "atlas"],
+  },
   { icone: "lucide-newspaper", termos: ["revista", "jornal", "periodico"] },
   {
     icone: "lucide-notebook-tabs",
     termos: ["apostila", "material apostilado", "apostila escolar"],
   },
-  { icone: "lucide-book-marked", termos: ["livro de literatura", "livro literario"] },
-  { icone: "acv-livro-infantil", termos: ["livro infantil", "livro de historias"] },
+  {
+    icone: "lucide-book-marked",
+    termos: ["livro de literatura", "livro literario"],
+  },
+  {
+    icone: "acv-livro-infantil",
+    termos: ["livro infantil", "livro de historias"],
+  },
   { icone: "lucide-globe", termos: ["globo terrestre", "globo escolar"] },
   { icone: "lucide-map", termos: ["mapa", "mapa escolar", "mapa geografico"] },
   { icone: "acv-abaco", termos: ["abaco", "abaco escolar"] },
-  { icone: "acv-material-dourado", termos: ["material dourado", "blocos de base dez"] },
+  {
+    icone: "acv-material-dourado",
+    termos: ["material dourado", "blocos de base dez"],
+  },
   { icone: "lucide-shapes", termos: ["blocos logicos", "formas geometricas"] },
   { icone: "lucide-puzzle", termos: ["quebra cabeca", "puzzle"] },
   {
@@ -520,8 +753,14 @@ const ITEM_SYMBOLS = [
     icone: "lucide-dices",
     termos: ["jogo de tabuleiro", "jogo pedagogico", "dados", "domino"],
   },
-  { icone: "acv-xadrez", termos: ["xadrez", "jogo de xadrez", "tabuleiro de xadrez"] },
-  { icone: "acv-alfabeto", termos: ["alfabeto movel", "letras moveis", "alfabeto"] },
+  {
+    icone: "acv-xadrez",
+    termos: ["xadrez", "jogo de xadrez", "tabuleiro de xadrez"],
+  },
+  {
+    icone: "acv-alfabeto",
+    termos: ["alfabeto movel", "letras moveis", "alfabeto"],
+  },
   { icone: "acv-numeros", termos: ["numeros moveis", "kit de numeros"] },
   {
     icone: "acv-regua-geometrica",
@@ -530,7 +769,10 @@ const ITEM_SYMBOLS = [
   { icone: "lucide-compass", termos: ["compasso", "compasso escolar"] },
   { icone: "acv-fantoche", termos: ["fantoche", "teatro de fantoches"] },
   { icone: "acv-boneca", termos: ["boneca", "boneco", "brinquedo boneco"] },
-  { icone: "acv-carrinho", termos: ["carrinho de brinquedo", "carro de brinquedo"] },
+  {
+    icone: "acv-carrinho",
+    termos: ["carrinho de brinquedo", "carro de brinquedo"],
+  },
   { icone: "acv-pelucia", termos: ["bicho de pelucia", "pelucia"] },
   { icone: "acv-massinha", termos: ["massa de modelar", "massinha"] },
   { icone: "acv-tinta", termos: ["tinta guache", "guache", "tinta acrilica"] },
@@ -542,9 +784,18 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "acv-cartolina",
-    termos: ["cartolina", "papel cartao", "papel colorido", "papel crepom", "eva"],
+    termos: [
+      "cartolina",
+      "papel cartao",
+      "papel colorido",
+      "papel crepom",
+      "eva",
+    ],
   },
-  { icone: "acv-quadro-digital", termos: ["mesa interativa", "mesa digital interativa"] },
+  {
+    icone: "acv-quadro-digital",
+    termos: ["mesa interativa", "mesa digital interativa"],
+  },
   {
     icone: "lucide-bot",
     termos: ["kit de robotica", "robo educacional", "robotica educacional"],
@@ -553,14 +804,29 @@ const ITEM_SYMBOLS = [
     icone: "lucide-circuit-board",
     termos: ["placa arduino", "arduino", "microcontrolador"],
   },
-  { icone: "acv-kit-ciencias", termos: ["kit de ciencias", "kit de experimentos"] },
-  { icone: "lucide-microscope", termos: ["microscopio", "microscopio escolar"] },
+  {
+    icone: "acv-kit-ciencias",
+    termos: ["kit de ciencias", "kit de experimentos"],
+  },
+  {
+    icone: "lucide-microscope",
+    termos: ["microscopio", "microscopio escolar"],
+  },
   { icone: "lucide-telescope", termos: ["telescopio", "luneta"] },
-  { icone: "lucide-test-tubes", termos: ["tubo de ensaio", "kit de tubos de ensaio"] },
-  { icone: "lucide-flask-conical", termos: ["erlenmeyer", "frasco erlenmeyer"] },
+  {
+    icone: "lucide-test-tubes",
+    termos: ["tubo de ensaio", "kit de tubos de ensaio"],
+  },
+  {
+    icone: "lucide-flask-conical",
+    termos: ["erlenmeyer", "frasco erlenmeyer"],
+  },
   { icone: "lucide-beaker", termos: ["bequer", "bequer graduado"] },
   { icone: "lucide-pipette", termos: ["pipeta", "conta gotas"] },
-  { icone: "lucide-thermometer", termos: ["termometro", "termometro de laboratorio"] },
+  {
+    icone: "lucide-thermometer",
+    termos: ["termometro", "termometro de laboratorio"],
+  },
   {
     icone: "lucide-weight",
     termos: ["balanca", "balanca de precisao", "balanca digital"],
@@ -571,43 +837,85 @@ const ITEM_SYMBOLS = [
   { icone: "acv-lamina", termos: ["lamina de microscopio", "laminula"] },
   { icone: "lucide-magnet", termos: ["ima", "ima escolar", "magneto"] },
   { icone: "acv-lupa", termos: ["lupa", "lupa de bancada"] },
-  { icone: "acv-esqueleto", termos: ["modelo de esqueleto", "esqueleto anatomico"] },
+  {
+    icone: "acv-esqueleto",
+    termos: ["modelo de esqueleto", "esqueleto anatomico"],
+  },
   { icone: "acv-kit-ciencias", termos: ["modelo anatomico", "kit anatomico"] },
-  { icone: "acv-oculos", termos: ["oculos de protecao", "oculos de laboratorio"] },
-  { icone: "acv-luva", termos: ["luva", "luva descartavel", "luva de procedimento"] },
+  {
+    icone: "acv-oculos",
+    termos: ["oculos de protecao", "oculos de laboratorio"],
+  },
+  {
+    icone: "acv-luva",
+    termos: ["luva", "luva descartavel", "luva de procedimento"],
+  },
   {
     icone: "lucide-volleyball",
     termos: ["bola", "bola de volei", "bola de futebol", "bola de basquete"],
   },
-  { icone: "acv-cone", termos: ["cone", "cone esportivo", "cone de sinalizacao"] },
+  {
+    icone: "acv-cone",
+    termos: ["cone", "cone esportivo", "cone de sinalizacao"],
+  },
   { icone: "acv-bambole", termos: ["bambole", "arco de ginastica"] },
   { icone: "acv-corda", termos: ["corda", "corda de pular"] },
-  { icone: "acv-rede", termos: ["rede esportiva", "rede de volei", "rede de futebol"] },
+  {
+    icone: "acv-rede",
+    termos: ["rede esportiva", "rede de volei", "rede de futebol"],
+  },
   {
     icone: "acv-raquete",
     termos: ["raquete", "raquete de tenis", "raquete de tenis de mesa"],
   },
-  { icone: "acv-mesa-pingpong", termos: ["mesa de ping pong", "mesa de tenis de mesa"] },
-  { icone: "lucide-dumbbell", termos: ["halter", "peso de ginastica", "halteres"] },
-  { icone: "acv-colchonete", termos: ["colchonete de ginastica", "tapete de exercicio"] },
+  {
+    icone: "acv-mesa-pingpong",
+    termos: ["mesa de ping pong", "mesa de tenis de mesa"],
+  },
+  {
+    icone: "lucide-dumbbell",
+    termos: ["halter", "peso de ginastica", "halteres"],
+  },
+  {
+    icone: "acv-colchonete",
+    termos: ["colchonete de ginastica", "tapete de exercicio"],
+  },
   { icone: "acv-trave", termos: ["trave de futebol", "gol de futebol"] },
-  { icone: "lucide-guitar", termos: ["violao", "guitarra", "instrumento de cordas"] },
-  { icone: "lucide-piano", termos: ["teclado musical", "piano digital", "piano"] },
+  {
+    icone: "lucide-guitar",
+    termos: ["violao", "guitarra", "instrumento de cordas"],
+  },
+  {
+    icone: "lucide-piano",
+    termos: ["teclado musical", "piano digital", "piano"],
+  },
   { icone: "lucide-drum", termos: ["tambor", "surdo", "caixa de percussao"] },
   { icone: "acv-flauta", termos: ["flauta", "flauta doce"] },
   { icone: "acv-pandeiro", termos: ["pandeiro", "tamborim"] },
-  { icone: "acv-chocalho", termos: ["chocalho", "maraca", "instrumento de percussao"] },
+  {
+    icone: "acv-chocalho",
+    termos: ["chocalho", "maraca", "instrumento de percussao"],
+  },
   {
     icone: "lucide-music",
     termos: ["estante de partituras", "partitura", "instrumento musical"],
   },
-  { icone: "acv-fantasia", termos: ["fantasia", "figurino", "roupa de apresentacao"] },
+  {
+    icone: "acv-fantasia",
+    termos: ["fantasia", "figurino", "roupa de apresentacao"],
+  },
   { icone: "lucide-paintbrush", termos: ["tela de pintura", "tela artistica"] },
   { icone: "acv-teatro", termos: ["teatro de fantoche", "palco portatil"] },
-  { icone: "acv-cadeira-rodas", termos: ["cadeira de rodas", "cadeira de rodas manual"] },
+  {
+    icone: "acv-cadeira-rodas",
+    termos: ["cadeira de rodas", "cadeira de rodas manual"],
+  },
   { icone: "acv-andador", termos: ["andador", "andador de apoio"] },
   { icone: "acv-bengala", termos: ["bengala", "muleta"] },
-  { icone: "lucide-ear", termos: ["aparelho auditivo", "amplificador auditivo"] },
+  {
+    icone: "lucide-ear",
+    termos: ["aparelho auditivo", "amplificador auditivo"],
+  },
   {
     icone: "acv-braille",
     termos: ["maquina braille", "reglete", "puncao braille", "linha braille"],
@@ -621,14 +929,26 @@ const ITEM_SYMBOLS = [
       "comunicacao alternativa",
     ],
   },
-  { icone: "acv-cadeira-adaptada", termos: ["cadeira adaptada", "cadeira postural"] },
+  {
+    icone: "acv-cadeira-adaptada",
+    termos: ["cadeira adaptada", "cadeira postural"],
+  },
   {
     icone: "acv-mesa-regulavel",
     termos: ["mesa regulavel", "mesa adaptada", "mesa acessivel"],
   },
-  { icone: "acv-abafador", termos: ["abafador de ruido", "protetor auricular"] },
-  { icone: "acv-teclado-adaptado", termos: ["teclado adaptado", "teclado ampliado"] },
-  { icone: "lucide-mouse-pointer", termos: ["mouse adaptado", "acionador acessivel"] },
+  {
+    icone: "acv-abafador",
+    termos: ["abafador de ruido", "protetor auricular"],
+  },
+  {
+    icone: "acv-teclado-adaptado",
+    termos: ["teclado adaptado", "teclado ampliado"],
+  },
+  {
+    icone: "lucide-mouse-pointer",
+    termos: ["mouse adaptado", "acionador acessivel"],
+  },
   { icone: "lucide-refrigerator", termos: ["geladeira", "refrigerador"] },
   { icone: "acv-freezer", termos: ["freezer", "congelador"] },
   { icone: "lucide-microwave", termos: ["micro ondas", "microondas"] },
@@ -645,17 +965,29 @@ const ITEM_SYMBOLS = [
     icone: "acv-bebedouro",
     termos: ["bebedouro", "purificador de agua", "filtro de agua"],
   },
-  { icone: "acv-garrafa-termica", termos: ["garrafa termica", "garrafa de cafe"] },
-  { icone: "lucide-cooking-pot", termos: ["panela", "panela de pressao", "caldeirao"] },
+  {
+    icone: "acv-garrafa-termica",
+    termos: ["garrafa termica", "garrafa de cafe"],
+  },
+  {
+    icone: "lucide-cooking-pot",
+    termos: ["panela", "panela de pressao", "caldeirao"],
+  },
   {
     icone: "lucide-utensils",
     termos: ["talher", "garfo", "colher", "faca de mesa", "talheres"],
   },
   { icone: "acv-prato", termos: ["prato", "prato de refeicao"] },
-  { icone: "lucide-glass-water", termos: ["copo", "caneca", "copo descartavel"] },
+  {
+    icone: "lucide-glass-water",
+    termos: ["copo", "caneca", "copo descartavel"],
+  },
   { icone: "acv-garrafa", termos: ["garrafa", "squeeze", "garrafa de agua"] },
   { icone: "acv-bandeja", termos: ["bandeja", "bandeja de alimentacao"] },
-  { icone: "acv-pote", termos: ["pote", "recipiente plastico", "caixa de alimentos"] },
+  {
+    icone: "acv-pote",
+    termos: ["pote", "recipiente plastico", "caixa de alimentos"],
+  },
   { icone: "acv-escorredor", termos: ["escorredor de louca", "escorredor"] },
   { icone: "acv-tabua", termos: ["tabua de corte", "tabua de alimentos"] },
   { icone: "acv-faca", termos: ["faca de cozinha", "faca de corte"] },
@@ -691,8 +1023,14 @@ const ITEM_SYMBOLS = [
     termos: ["lixeira", "cesto de lixo", "coletor de residuos"],
   },
   { icone: "lucide-recycle", termos: ["lixeira seletiva", "coletor seletivo"] },
-  { icone: "acv-carrinho-limpeza", termos: ["carrinho de limpeza", "carro funcional"] },
-  { icone: "acv-pano", termos: ["pano", "pano de chao", "flanela", "microfibra"] },
+  {
+    icone: "acv-carrinho-limpeza",
+    termos: ["carrinho de limpeza", "carro funcional"],
+  },
+  {
+    icone: "acv-pano",
+    termos: ["pano", "pano de chao", "flanela", "microfibra"],
+  },
   { icone: "acv-esponja", termos: ["esponja", "esponja de limpeza"] },
   {
     icone: "lucide-spray-can",
@@ -706,7 +1044,12 @@ const ITEM_SYMBOLS = [
   },
   {
     icone: "acv-detergente",
-    termos: ["detergente", "desinfetante", "agua sanitaria", "produto de limpeza"],
+    termos: [
+      "detergente",
+      "desinfetante",
+      "agua sanitaria",
+      "produto de limpeza",
+    ],
   },
   { icone: "acv-sabao", termos: ["sabao", "sabonete", "sabonete liquido"] },
   {
@@ -720,7 +1063,10 @@ const ITEM_SYMBOLS = [
   },
   { icone: "acv-saco-lixo", termos: ["saco de lixo", "saco para residuos"] },
   { icone: "acv-aspirador", termos: ["aspirador", "aspirador de po"] },
-  { icone: "lucide-washing-machine", termos: ["maquina de lavar", "lavadora de roupas"] },
+  {
+    icone: "lucide-washing-machine",
+    termos: ["maquina de lavar", "lavadora de roupas"],
+  },
   { icone: "acv-enceradeira", termos: ["enceradeira", "politriz de piso"] },
   { icone: "acv-escova", termos: ["escova", "escova de limpeza"] },
   { icone: "acv-luva", termos: ["luva de limpeza", "luva de borracha"] },
@@ -746,8 +1092,14 @@ const ITEM_SYMBOLS = [
   { icone: "acv-janela", termos: ["janela", "janela de vidro"] },
   { icone: "acv-torneira", termos: ["torneira", "misturador de agua"] },
   { icone: "acv-cano", termos: ["cano", "tubo pvc", "tubo hidraulico"] },
-  { icone: "acv-tinta-parede", termos: ["tinta de parede", "tinta de manutencao"] },
-  { icone: "lucide-paint-roller", termos: ["rolo de pintura", "rolo para parede"] },
+  {
+    icone: "acv-tinta-parede",
+    termos: ["tinta de parede", "tinta de manutencao"],
+  },
+  {
+    icone: "lucide-paint-roller",
+    termos: ["rolo de pintura", "rolo para parede"],
+  },
   {
     icone: "acv-carrinho-carga",
     termos: ["carrinho de carga", "carrinho de transporte"],
@@ -771,8 +1123,14 @@ const ITEM_SYMBOLS = [
     icone: "acv-chave-fenda",
     termos: ["chave de fenda", "chave phillips", "chave philips"],
   },
-  { icone: "acv-alicate", termos: ["alicate", "alicate de corte", "alicate universal"] },
-  { icone: "acv-alicate-crimpar", termos: ["alicate de crimpar", "crimpador rj45"] },
+  {
+    icone: "acv-alicate",
+    termos: ["alicate", "alicate de corte", "alicate universal"],
+  },
+  {
+    icone: "acv-alicate-crimpar",
+    termos: ["alicate de crimpar", "crimpador rj45"],
+  },
   { icone: "acv-multimetro", termos: ["multimetro", "multimetro digital"] },
   { icone: "acv-ferro-solda", termos: ["ferro de solda", "estacao de solda"] },
   { icone: "acv-solda", termos: ["estanho para solda", "fio de solda"] },
@@ -792,17 +1150,26 @@ const ITEM_SYMBOLS = [
   { icone: "acv-lanterna", termos: ["lanterna", "lanterna de inspecao"] },
   { icone: "acv-fita-isolante", termos: ["fita isolante", "fita eletrica"] },
   { icone: "acv-oleo", termos: ["oleo lubrificante", "lubrificante"] },
-  { icone: "lucide-fire-extinguisher", termos: ["extintor", "extintor de incendio"] },
+  {
+    icone: "lucide-fire-extinguisher",
+    termos: ["extintor", "extintor de incendio"],
+  },
   { icone: "acv-mangueira", termos: ["mangueira de incendio", "mangueira"] },
   { icone: "lucide-siren", termos: ["alarme", "alarme de incendio", "sirene"] },
-  { icone: "lucide-alarm-smoke", termos: ["detector de fumaca", "detector de incendio"] },
+  {
+    icone: "lucide-alarm-smoke",
+    termos: ["detector de fumaca", "detector de incendio"],
+  },
   {
     icone: "acv-luz-emergencia",
     termos: ["luz de emergencia", "luminaria de emergencia"],
   },
   { icone: "acv-capacete", termos: ["capacete", "capacete de seguranca"] },
   { icone: "acv-colete", termos: ["colete", "colete refletivo"] },
-  { icone: "acv-mascara", termos: ["mascara", "mascara pff2", "mascara descartavel"] },
+  {
+    icone: "acv-mascara",
+    termos: ["mascara", "mascara pff2", "mascara descartavel"],
+  },
   { icone: "acv-oculos", termos: ["oculos de seguranca", "oculos epi"] },
   { icone: "acv-bota", termos: ["bota", "calcado de seguranca"] },
   {
@@ -810,7 +1177,10 @@ const ITEM_SYMBOLS = [
     termos: ["kit de primeiros socorros", "maleta de primeiros socorros"],
   },
   { icone: "acv-curativo", termos: ["curativo", "esparadrapo", "bandagem"] },
-  { icone: "lucide-stethoscope", termos: ["estetoscopio", "aparelho de ausculta"] },
+  {
+    icone: "lucide-stethoscope",
+    termos: ["estetoscopio", "aparelho de ausculta"],
+  },
   {
     icone: "acv-medidor-pressao",
     termos: ["medidor de pressao", "aparelho de pressao", "esfigmomanometro"],
@@ -913,7 +1283,9 @@ let rememberSession =
 const authStorage = {
   getItem(key) {
     try {
-      return window[rememberSession ? "localStorage" : "sessionStorage"].getItem(key);
+      return window[
+        rememberSession ? "localStorage" : "sessionStorage"
+      ].getItem(key);
     } catch {
       return authMemory.get(key) ?? null;
     }
@@ -921,7 +1293,10 @@ const authStorage = {
   setItem(key, value) {
     authMemory.set(key, value);
     try {
-      window[rememberSession ? "localStorage" : "sessionStorage"].setItem(key, value);
+      window[rememberSession ? "localStorage" : "sessionStorage"].setItem(
+        key,
+        value,
+      );
     } catch {}
     authRemove(rememberSession ? "sessionStorage" : "localStorage", key);
   },
@@ -1145,7 +1520,11 @@ function acervoBooks(settled = false) {
 }
 
 function acervoLoader(message, compact = false) {
-  const loader = el("div", undefined, "acervo-loader" + (compact ? " compact" : ""));
+  const loader = el(
+    "div",
+    undefined,
+    "acervo-loader" + (compact ? " compact" : ""),
+  );
   loader.setAttribute("role", "status");
   loader.append(acervoBooks(), el("span", message));
   return loader;
@@ -1220,7 +1599,12 @@ function showAcervoReceipt(record, template) {
   saved.classList.toggle("is-discarded", discarded);
   saved.replaceChildren(
     row,
-    button("Cadastrar outro igual", () => repeatRegistration(template), "", "copy"),
+    button(
+      "Cadastrar outro igual",
+      () => repeatRegistration(template),
+      "",
+      "copy",
+    ),
   );
   if (mobileAcervo()) {
     saved.append(
@@ -1249,7 +1633,9 @@ function showAcervoReceipt(record, template) {
         () => {
           query({ situacao: "TODOS" });
           expanded = record.id;
-          const position = filtered().findIndex((item) => item.id === record.id);
+          const position = filtered().findIndex(
+            (item) => item.id === record.id,
+          );
           if (position >= 0) page = Math.floor(position / 25) + 1;
           renderList();
         },
@@ -1273,7 +1659,8 @@ function showAcervoReceipt(record, template) {
     );
   }
   saved.hidden = false;
-  if (mobileAcervo()) saved.scrollIntoView({ block: "center", behavior: "smooth" });
+  if (mobileAcervo())
+    saved.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
 function labelButton(n, text, name) {
@@ -1318,7 +1705,8 @@ function storage(name, data) {
   try {
     if (!user?.id) return arguments.length === 1 ? null : false;
     const k = "acervo2:" + user?.id + ":" + name;
-    if (arguments.length === 1) return JSON.parse(localStorage.getItem(k) || "null");
+    if (arguments.length === 1)
+      return JSON.parse(localStorage.getItem(k) || "null");
     if (data === null) localStorage.removeItem(k);
     else localStorage.setItem(k, JSON.stringify(data));
     return true;
@@ -1336,7 +1724,9 @@ async function rpc(name, args = {}) {
   chooseSessionStorage($("rememberSession").checked);
   const { data, error } = await db.rpc(name, args);
   if (error) {
-    if (String(error.message || "").includes("ACERVO_TROCA_SENHA_OBRIGATORIA")) {
+    if (
+      String(error.message || "").includes("ACERVO_TROCA_SENHA_OBRIGATORIA")
+    ) {
       user = {
         ...user,
         app_metadata: {
@@ -1414,7 +1804,9 @@ function updateNavIndicator(animate = true) {
 
 function showTab(id) {
   const previous = document.querySelector("main>section:not([hidden])")?.id;
-  document.querySelectorAll("main>section").forEach((s) => (s.hidden = s.id !== id));
+  document
+    .querySelectorAll("main>section")
+    .forEach((s) => (s.hidden = s.id !== id));
   document.querySelectorAll("[data-tab]").forEach((b) => {
     if (b.dataset.tab === id) b.setAttribute("aria-current", "page");
     else b.removeAttribute("aria-current");
@@ -1428,7 +1820,10 @@ function showTab(id) {
       ?.scrollIntoView({ block: "start", behavior: "auto" });
     if (previous && previous !== id) {
       const tabs = ["register", "movements", "browse", "dashboard"];
-      animateMobileView($(id), tabs.indexOf(id) < tabs.indexOf(previous) ? -1 : 1);
+      animateMobileView(
+        $(id),
+        tabs.indexOf(id) < tabs.indexOf(previous) ? -1 : 1,
+      );
     }
   }
   if (mobileAcervo() && $("mobileJourneyHome")) {
@@ -1447,7 +1842,8 @@ function setBusy(v, message = "Salvando…") {
       "#app button,.mobile-app-nav button,#mobileDetail button,#operation button,#registrationDiscardDialog button",
     )
     .forEach((b) => (b.disabled = v));
-  if ($("editFields")) $("editFields").disabled = v || role === "leitor" || !!pending;
+  if ($("editFields"))
+    $("editFields").disabled = v || role === "leitor" || !!pending;
   $("save").disabled = v || role === "leitor" || !!pending;
   $("logout").disabled = v;
   $("refresh").disabled = v;
@@ -1458,7 +1854,8 @@ function setBusy(v, message = "Salvando…") {
   $("discardRegistration").disabled = v || role === "leitor" || !!pending;
   $("directReason").disabled = v;
   $("previous").disabled = v || page <= 1;
-  $("next").disabled = v || page >= Math.max(1, Math.ceil(filtered().length / 25));
+  $("next").disabled =
+    v || page >= Math.max(1, Math.ceil(filtered().length / 25));
   syncMobileJourney();
 }
 
@@ -1630,7 +2027,8 @@ function syncControl(prefix = "") {
     const identity = $("identityBlock");
     if (identity) {
       if (stock) $("stockFields").after(identity);
-      else if (identity.parentElement !== $("formRest")) $("formRest").prepend(identity);
+      else if (identity.parentElement !== $("formRest"))
+        $("formRest").prepend(identity);
     }
     $("types").closest("fieldset").querySelector("legend").textContent = stock
       ? "Código automático"
@@ -1731,7 +2129,9 @@ function renderMovementResults() {
         (r) =>
           q &&
           key(
-            [r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal].join(" "),
+            [r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal].join(
+              " ",
+            ),
           ).includes(q),
       );
   $("moveResults").replaceChildren();
@@ -1766,7 +2166,10 @@ function renderMovementResults() {
       heading,
       el(
         "p",
-        [internal(r.id), r.dados.codigo ? r.dados.tipo + " " + r.dados.codigo : ""]
+        [
+          internal(r.id),
+          r.dados.codigo ? r.dados.tipo + " " + r.dados.codigo : "",
+        ]
           .filter(Boolean)
           .join(" · "),
         "movement-code",
@@ -1781,10 +2184,16 @@ function renderMovementResults() {
       ),
     );
     if (r.controle === "QUANTIDADE")
-      card.append(el("p", "Saldo: " + quantityText(r.saldo, r.unidade), "notice"));
+      card.append(
+        el("p", "Saldo: " + quantityText(r.saldo, r.unidade), "notice"),
+      );
     if (r.emprestimo)
       card.append(
-        el("p", `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`, "notice"),
+        el(
+          "p",
+          `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
+          "notice",
+        ),
       );
     const actions = el("div", undefined, "actions");
     if (role !== "leitor")
@@ -1835,7 +2244,8 @@ function configureMovement(a, r) {
     $(id).required = on;
     $(id).value = "";
   }
-  $("movePersonLabel").textContent = a === "saida" ? "Solicitante" : "Responsável";
+  $("movePersonLabel").textContent =
+    a === "saida" ? "Solicitante" : "Responsável";
   $("moveQuantity").step = ["unidade", "rolo", "caixa"].includes(r.unidade)
     ? "1"
     : "0.001";
@@ -1878,7 +2288,8 @@ function configureMovement(a, r) {
     estornar:
       "Use para corrigir um descarte registrado por engano. O histórico será preservado.",
   };
-  $("operationHint").textContent = hints[a] || "Confira os dados antes de confirmar.";
+  $("operationHint").textContent =
+    hints[a] || "Confira os dados antes de confirmar.";
   labelButton($("confirmOperation"), ACTION[a], ACTION_ICON[a]);
 }
 
@@ -1903,7 +2314,9 @@ function syncLocation(prefix = "") {
     i.disabled = !warehouse;
   });
   $(edit ? "editPosition" : "position").textContent =
-    shelf && level ? shelf + " · " + level.padStart(2, "0") : "Escolha a posição";
+    shelf && level
+      ? shelf + " · " + level.padStart(2, "0")
+      : "Escolha a posição";
   if (!edit) updateMobileLocation();
 }
 
@@ -1932,7 +2345,8 @@ function syncCode(prefix = "") {
   n.maxLength = none ? 64 : 6;
   $(edit ? "editScan" : "scan").hidden = none || !mobileCamera();
   n.placeholder = none ? "Código automático" : "6 números da etiqueta";
-  if (none) n.value = edit && editor?.id ? internal(editor.id) : nextInternalPreview();
+  if (none)
+    n.value = edit && editor?.id ? internal(editor.id) : nextInternalPreview();
   const help = $(edit ? "editCodeHint" : "codeHint");
   setHelpHint(
     help,
@@ -1945,6 +2359,13 @@ function syncCode(prefix = "") {
       : "Prévia calculada pelo último registro disponível. O banco confirma o número ao salvar; ele pode mudar se houver outro cadastro ou lacunas na sequência."
     : "PMC e ICI usam seis números. Os zeros à esquerda são preservados.";
   help.tabIndex = 0;
+  if (!edit && mobileAcervo() && none) {
+    $("codeLabel").textContent = "Código previsto";
+    help.textContent = "Confirmado ao salvar.";
+    help.removeAttribute("data-help");
+    help.removeAttribute("aria-label");
+    help.removeAttribute("tabindex");
+  }
 }
 
 function syncForm() {
@@ -1963,7 +2384,8 @@ function syncForm() {
 function winner(list, field) {
   const count = new Map();
   for (const r of list) {
-    const v = field === "controle" ? r.controle || "INDIVIDUAL" : r.dados[field];
+    const v =
+      field === "controle" ? r.controle || "INDIVIDUAL" : r.dados[field];
     if (v) count.set(v, (count.get(v) || 0) + 1);
   }
   const ranks = [...count].sort((a, b) => b[1] - a[1]);
@@ -1999,7 +2421,9 @@ function learnItem() {
   if (!manual.controle && control) setChoice("control", control);
   const suggestions = [];
   if (control && !manual.controle)
-    suggestions.push(control === "QUANTIDADE" ? "Por quantidade" : "Individual");
+    suggestions.push(
+      control === "QUANTIDADE" ? "Por quantidade" : "Individual",
+    );
   if (cat && !manual.categoria) suggestions.push(cat);
   if (ident && !manual.tipo) suggestions.push(TYPE[ident]);
   setHelpHint(
@@ -2084,7 +2508,9 @@ function updateRegistrationSummary() {
   const stock = d.controle === "QUANTIDADE";
   const summary = $("registrationSummary");
   if (!clean(d.item)) {
-    summary.replaceChildren(el("span", "Preencha a ficha para conferir o registro."));
+    summary.replaceChildren(
+      el("span", "Preencha a ficha para conferir o registro."),
+    );
     return;
   }
   const down = $("directDown").checked;
@@ -2134,7 +2560,10 @@ function updateRegistrationSummary() {
       : "",
   );
   const category = el("div", undefined, "mobile-summary-fact");
-  category.append(el("dt", "Categoria"), el("dd", d.categoria || "A selecionar"));
+  category.append(
+    el("dt", "Categoria"),
+    el("dd", d.categoria || "A selecionar"),
+  );
   facts.prepend(category);
   if (!automatic) {
     const code = el("div", undefined, "mobile-summary-fact");
@@ -2148,7 +2577,10 @@ function updateRegistrationSummary() {
 }
 
 function repeatRegistration(d) {
-  if (clean($("item").value) && !confirm("Substituir o rascunho por outro item igual?"))
+  if (
+    clean($("item").value) &&
+    !confirm("Substituir o rascunho por outro item igual?")
+  )
     return;
   resetForm();
   $("item").value = d.item;
@@ -2194,7 +2626,9 @@ function saveDraft() {
   });
   setHelpHint(
     $("draftInfo"),
-    ok ? "Rascunho salvo" : "Não foi possível guardar o rascunho neste navegador.",
+    ok
+      ? "Rascunho salvo"
+      : "Não foi possível guardar o rascunho neste navegador.",
     "draft",
   );
 }
@@ -2242,6 +2676,10 @@ function resetForm() {
   const keep = false;
   $("code").value = "";
   $("note").value = "";
+  if (mobileAcervo() && $("mobileNoteToggle")) {
+    $("notesBlock").classList.add("mobile-notes-collapsed");
+    $("mobileNoteToggle").setAttribute("aria-expanded", "false");
+  }
   $("quantity").value = "1";
   $("directDown").checked = false;
   $("directReason").value = "";
@@ -2259,7 +2697,11 @@ function resetForm() {
     $("minimum").value = "0";
     $("unit").value = "unidade";
     learnedKey = "";
-    setHelpHint($("learningHint"), "Sugestões conforme você digita.", "suggestion");
+    setHelpHint(
+      $("learningHint"),
+      "Sugestões conforme você digita.",
+      "suggestion",
+    );
     $("learningHint").dataset.help =
       "Escolha um nome existente ou cadastre um novo. As sugestões se baseiam no histórico do inventário.";
   }
@@ -2277,7 +2719,9 @@ function duplicateHint() {
     t = value(e ? "editType" : "type"),
     r = rows.find(
       (r) =>
-        r.dados.tipo === t && r.dados.codigo === code && r.id !== (e ? editor?.id : null),
+        r.dados.tipo === t &&
+        r.dados.codigo === code &&
+        r.id !== (e ? editor?.id : null),
     );
   setHelpHint(
     $(e ? "editCodeHint" : "codeHint"),
@@ -2297,7 +2741,8 @@ async function refresh(visual = false) {
     try {
       return await refreshTask;
     } finally {
-      if (!user || user.id === owner) setAcervoSync(false, undefined, false, token);
+      if (!user || user.id === owner)
+        setAcervoSync(false, undefined, false, token);
     }
   }
   const owner = user?.id;
@@ -2398,12 +2843,17 @@ function filtered() {
       return (
         (!q ||
           key(
-            [d.item, d.codigo, internal(r.id), d.observacao, r.legado?.numero_serie].join(
-              " ",
-            ),
+            [
+              d.item,
+              d.codigo,
+              internal(r.id),
+              d.observacao,
+              r.legado?.numero_serie,
+            ].join(" "),
           ).includes(q)) &&
         (!filters.ambiente || d.ambiente === filters.ambiente) &&
-        (!filters.controle || (r.controle || "INDIVIDUAL") === filters.controle) &&
+        (!filters.controle ||
+          (r.controle || "INDIVIDUAL") === filters.controle) &&
         (!filters.categoria || d.categoria === filters.categoria) &&
         (!filters.tipo || d.tipo === filters.tipo) &&
         (filters.situacao === "TODOS" ||
@@ -2418,7 +2868,9 @@ function filtered() {
         (!filters.item || key(d.item) === key(filters.item))
       );
     })
-    .sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em) || b.id - a.id);
+    .sort(
+      (a, b) => new Date(b.criado_em) - new Date(a.criado_em) || b.id - a.id,
+    );
 }
 
 function leaveEditor() {
@@ -2469,12 +2921,20 @@ function renderFilters() {
   filterButtons("filterStatus", "situacao", [
     ["TODOS", "Todos os registros"],
     ...Object.entries(STATUS).filter(
-      ([state]) => state !== "ARQUIVADO" || rows.some((r) => r.situacao === "ARQUIVADO"),
+      ([state]) =>
+        state !== "ARQUIVADO" || rows.some((r) => r.situacao === "ARQUIVADO"),
     ),
   ]);
   const discarded = rows.filter((r) => r.situacao === "BAIXADO").length;
-  labelButton($("viewDiscarded"), "Descartados (" + discarded + ")", "writeoff");
-  $("viewDiscarded").setAttribute("aria-pressed", String(filters.situacao === "BAIXADO"));
+  labelButton(
+    $("viewDiscarded"),
+    "Descartados (" + discarded + ")",
+    "writeoff",
+  );
+  $("viewDiscarded").setAttribute(
+    "aria-pressed",
+    String(filters.situacao === "BAIXADO"),
+  );
   filterButtons(
     "filterShelf",
     "estante",
@@ -2535,7 +2995,8 @@ function renderList() {
   $("pageLabel").textContent = page + " / " + pages;
   $("previous").disabled = busy || page === 1;
   $("next").disabled = busy || page === pages;
-  if (mobileAcervo()) return renderMobileRecords(found.slice((page - 1) * 25, page * 25));
+  if (mobileAcervo())
+    return renderMobileRecords(found.slice((page - 1) * 25, page * 25));
   closeMobileDetail();
   $("results").replaceChildren();
   for (const r of found.slice((page - 1) * 25, page * 25)) {
@@ -2561,7 +3022,11 @@ function renderList() {
       );
     if (r.emprestimo)
       tr.firstChild.append(
-        el("div", `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`, "hint"),
+        el(
+          "div",
+          `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
+          "hint",
+        ),
       );
     const status = el("td");
     status.append(
@@ -2692,7 +3157,10 @@ function renderDetails(r, panel) {
   if (r.situacao === "BAIXADO") {
     const disposal = el("aside", undefined, "discard-summary");
     const title = el("strong");
-    title.append(icon("writeoff"), document.createTextNode("Descarte registrado"));
+    title.append(
+      icon("writeoff"),
+      document.createTextNode("Descarte registrado"),
+    );
     disposal.append(
       title,
       el(
@@ -2735,7 +3203,9 @@ function renderDetails(r, panel) {
   if (role !== "leitor") {
     for (const a of movementActions(r)) {
       if (a !== "baixar")
-        actions.append(button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]));
+        actions.append(
+          button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]),
+        );
     }
     if (r.situacao === "EMPRESTADO")
       actions.append(
@@ -2759,7 +3229,9 @@ function renderDetails(r, panel) {
     );
   if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(r.situacao)) {
     const a = r.situacao === "BAIXADO" ? "estornar" : "restaurar";
-    actions.append(button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]));
+    actions.append(
+      button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]),
+    );
     if (a === "restaurar")
       panel.append(
         el(
@@ -2809,7 +3281,8 @@ function historyAction(h) {
     descarte_estoque: "Descarte de estoque",
     cadastrar_baixado: "Cadastro de item descartado",
   };
-  if (action === "salvar") return h.antes === null && h.depois ? "Registro" : "Edição";
+  if (action === "salvar")
+    return h.antes === null && h.depois ? "Registro" : "Edição";
   return (
     names[action] ||
     (action ? action.charAt(0).toUpperCase() + action.slice(1) : "Atualização")
@@ -2817,7 +3290,8 @@ function historyAction(h) {
 }
 
 function historyFacts(h) {
-  const object = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+  const object = (v) =>
+    v && typeof v === "object" && !Array.isArray(v) ? v : {};
   const before = object(h.antes),
     after = object(h.depois);
   const movement = object(after.movimento);
@@ -2827,7 +3301,8 @@ function historyFacts(h) {
     (a === "salvar" && h.antes === null);
   const facts = [];
   const add = (label, v) => {
-    if (v !== undefined && v !== null && String(v).trim()) facts.push([label, String(v)]);
+    if (v !== undefined && v !== null && String(v).trim())
+      facts.push([label, String(v)]);
   };
   const number = (v) =>
     v !== null && v !== undefined && v !== "" && Number.isFinite(Number(v))
@@ -2857,9 +3332,15 @@ function historyFacts(h) {
   }
   if (stock && initial !== null && final !== null && initial !== final)
     add("Saldo", `${format(initial)} → ${amount(final)}`);
-  else if (stock && registration && !Object.keys(before).length && final !== null)
+  else if (
+    stock &&
+    registration &&
+    !Object.keys(before).length &&
+    final !== null
+  )
     add("Saldo inicial", amount(final));
-  const loan = a === "devolver" ? object(before.emprestimo) : object(after.emprestimo);
+  const loan =
+    a === "devolver" ? object(before.emprestimo) : object(after.emprestimo);
   if (["emprestar", "devolver", "saida"].includes(a)) {
     add(
       a === "saida" ? "Solicitante" : "Responsável",
@@ -2874,7 +3355,10 @@ function historyFacts(h) {
     );
   const bd = object(before.dados),
     ad = object(after.dados);
-  if (["salvar", "editar", "edicao"].includes(a) && Object.keys(before).length) {
+  if (
+    ["salvar", "editar", "edicao"].includes(a) &&
+    Object.keys(before).length
+  ) {
     for (const [field, label] of [
       ["item", "Item"],
       ["categoria", "Categoria"],
@@ -2914,7 +3398,10 @@ function historyFacts(h) {
     );
     add("Ambiente", ad.ambiente);
     if (ad.estante && ad.prateleira)
-      add("Posição", `${ad.estante} · ${String(ad.prateleira).padStart(2, "0")}`);
+      add(
+        "Posição",
+        `${ad.estante} · ${String(ad.prateleira).padStart(2, "0")}`,
+      );
   }
   add("Motivo / observação", h.motivo);
   if (["baixar", "baixa", "cadastrar_baixado"].includes(a))
@@ -2952,7 +3439,8 @@ async function loadHistory(id, target) {
         return n;
       }),
     );
-    if (!data.length) target.textContent = "Nenhuma alteração registrada nesta versão.";
+    if (!data.length)
+      target.textContent = "Nenhuma alteração registrada nesta versão.";
   } catch (e) {
     if (target.isConnected) target.textContent = e.message;
   }
@@ -2986,7 +3474,8 @@ function closeEdit() {
 }
 
 function startEdit(r) {
-  if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+  if (busy || pending)
+    return toast("Conclua a operação pendente primeiro.", true);
   delete $("editDialog").dataset.mode;
   editor = {
     id: r.id,
@@ -3001,7 +3490,8 @@ function startEdit(r) {
   $("editItem").value = d.item;
   organizeEditor(r);
   mountControlFields($("editControlHost"), "edit", r);
-  if (r.controle === "QUANTIDADE") $("editStockFields").after($("editCodeWrap"));
+  if (r.controle === "QUANTIDADE")
+    $("editStockFields").after($("editCodeWrap"));
   $("editCode").value = d.codigo || "";
   $("editNote").value = d.observacao || "";
   choices(
@@ -3063,9 +3553,13 @@ function validateRecord(d, id = null) {
   };
   const duplicate = rows.find(
     (r) =>
-      d.codigo && r.dados.tipo === d.tipo && r.dados.codigo === d.codigo && r.id !== id,
+      d.codigo &&
+      r.dados.tipo === d.tipo &&
+      r.dados.codigo === d.codigo &&
+      r.id !== id,
   );
-  if (duplicate) return reject("Código já cadastrado: " + internal(duplicate.id), true);
+  if (duplicate)
+    return reject("Código já cadastrado: " + internal(duplicate.id), true);
   if (d.controle === "QUANTIDADE" && d.ambiente !== "Almoxarifado")
     return reject(
       "Por quantidade: selecione Almoxarifado ou troque o controle para Individual.",
@@ -3082,10 +3576,17 @@ function validateRecord(d, id = null) {
 function saveRecord(prefix = "", discard = false) {
   if (busy || role === "leitor" || pending) return false;
   if (mobileAcervo() && !prefix) {
-    const graphic = $("registrationSummary").querySelector(".mobile-item-symbol");
+    const graphic = $("registrationSummary").querySelector(
+      ".mobile-item-symbol",
+    );
     const rect = graphic?.getBoundingClientRect();
     journey.lastFiche = rect?.width
-      ? { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
+      ? {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        }
       : null;
   }
   const d = formData(prefix),
@@ -3112,7 +3613,8 @@ function saveRecord(prefix = "", discard = false) {
 }
 
 function openOperation(a, r) {
-  if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+  if (busy || pending)
+    return toast("Conclua a operação pendente primeiro.", true);
   selected = r;
   action = a;
   $("operation").classList.toggle(
@@ -3125,7 +3627,10 @@ function openOperation(a, r) {
     code = el("span", internal(r.id), "operation-code");
   context.append(
     el("strong", r.dados.item),
-    el("small", [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · ")),
+    el(
+      "small",
+      [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · "),
+    ),
   );
   $("operationRecord").replaceChildren(context, code);
   $("confirmOperation").replaceChildren(
@@ -3158,7 +3663,8 @@ function openOperation(a, r) {
 
 async function commit(body, origin = "operation") {
   if (busy || role === "leitor") return;
-  if (pending) return toast("Use Verificar e concluir antes de outra operação.", true);
+  if (pending)
+    return toast("Use Verificar e concluir antes de outra operação.", true);
   pending = {
     chave: crypto.randomUUID(),
     body,
@@ -3166,7 +3672,10 @@ async function commit(body, origin = "operation") {
   };
   if (!storage("pending", pending)) {
     pending = null;
-    return toast("Habilite o armazenamento do navegador antes de salvar.", true);
+    return toast(
+      "Habilite o armazenamento do navegador antes de salvar.",
+      true,
+    );
   }
   await transmit();
 }
@@ -3211,15 +3720,25 @@ async function transmit() {
     $("save").classList.remove("saved-flash");
     requestAnimationFrame(() => $("save").classList.add("saved-flash"));
     setTimeout(() => $("save").classList.remove("saved-flash"), 700);
-    toast(
-      op.origin === "create" && result.situacao !== "BAIXADO"
-        ? "Pronto. Mais um bem no seu lugar."
-        : "Operação salva.",
-    );
+    if (
+      !(
+        mobileAcervo() &&
+        (op.origin === "create" || !op.body.id) &&
+        op.body.acao === "salvar"
+      )
+    )
+      toast(
+        op.origin === "create" && result.situacao !== "BAIXADO"
+          ? "Pronto. Mais um bem no seu lugar."
+          : "Operação salva.",
+      );
     try {
       await refresh();
     } catch {
-      toast("Salvo no banco. A lista será atualizada quando a conexão voltar.", true);
+      toast(
+        "Salvo no banco. A lista será atualizada quando a conexão voltar.",
+        true,
+      );
     }
     if (op.origin === "create" && !mobileAcervo()) $("item").focus();
   } catch (e) {
@@ -3244,7 +3763,10 @@ function chart(target, groups, total, fn) {
       track.append(fill);
       b.append(el("span", label), track, el("b", n));
       b.title =
-        label + ": " + n + (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
+        label +
+        ": " +
+        n +
+        (total ? " (" + Math.round((n / total) * 100) + "%)" : "");
       return b;
     }),
   );
@@ -3322,7 +3844,12 @@ async function renderMovementTimeline() {
         return row;
       }),
     );
-    syncDashboardList("movementTimeline", "toggleMovementTimeline", 4, "movimentações");
+    syncDashboardList(
+      "movementTimeline",
+      "toggleMovementTimeline",
+      4,
+      "movimentações",
+    );
     if (!events.length)
       $("movementTimeline").textContent =
         "Cada movimento tem uma história. A primeira vai aparecer aqui.";
@@ -3388,7 +3915,9 @@ function renderExecutiveSummary(active, loans, lowStock) {
     ...(loans.length
       ? [...loans]
           .sort((a, b) =>
-            String(a.emprestimo?.momento || a.atualizado_em || "").localeCompare(
+            String(
+              a.emprestimo?.momento || a.atualizado_em || "",
+            ).localeCompare(
               String(b.emprestimo?.momento || b.atualizado_em || ""),
             ),
           )
@@ -3402,9 +3931,12 @@ function renderExecutiveSummary(active, loans, lowStock) {
                 "loan-holder",
               ),
             );
-            if (r.emprestimo?.destino) card.append(el("p", r.emprestimo.destino));
+            if (r.emprestimo?.destino)
+              card.append(el("p", r.emprestimo.destino));
             if (r.emprestimo?.momento)
-              card.append(el("p", "Desde " + dateBR(r.emprestimo.momento), "hint"));
+              card.append(
+                el("p", "Desde " + dateBR(r.emprestimo.momento), "hint"),
+              );
             const actions = el("div", undefined, "attention-actions");
             actions.append(
               button("Consultar", () => openDashboardRecord(r), "", "right"),
@@ -3427,8 +3959,12 @@ function renderExecutiveSummary(active, loans, lowStock) {
   $("roomSummary").replaceChildren(
     ...ROOMS.map((room) => {
       const roomActive = active.filter((r) => r.dados.ambiente === room);
-      const goods = roomActive.filter((r) => r.controle !== "QUANTIDADE").length;
-      const stockCount = roomActive.filter((r) => r.controle === "QUANTIDADE").length;
+      const goods = roomActive.filter(
+        (r) => r.controle !== "QUANTIDADE",
+      ).length;
+      const stockCount = roomActive.filter(
+        (r) => r.controle === "QUANTIDADE",
+      ).length;
       const low = lowStock.filter((r) => r.dados.ambiente === room).length;
       const card = button(
         "",
@@ -3455,7 +3991,9 @@ function renderExecutiveSummary(active, loans, lowStock) {
         );
       const meter = el("span", undefined, "room-summary-meter"),
         fill = el("i");
-      const totalGoods = active.filter((r) => r.controle !== "QUANTIDADE").length;
+      const totalGoods = active.filter(
+        (r) => r.controle !== "QUANTIDADE",
+      ).length;
       fill.style.width = (totalGoods ? (goods / totalGoods) * 100 : 0) + "%";
       meter.setAttribute("aria-hidden", "true");
       meter.append(fill);
@@ -3481,7 +4019,8 @@ function renderExecutiveSummary(active, loans, lowStock) {
 }
 
 function renderOverviewCharts() {
-  const percent = (n, total) => (total ? Math.round((n / total) * 100) + "%" : "0%");
+  const percent = (n, total) =>
+    total ? Math.round((n / total) * 100) + "%" : "0%";
   const goods = rows.filter(
     (r) =>
       r.controle !== "QUANTIDADE" &&
@@ -3507,7 +4046,8 @@ function renderOverviewCharts() {
     offset += goods.length ? (g.n / goods.length) * 360 : 0;
     return `${g.color} ${start}deg ${offset}deg`;
   });
-  if (goods.length) ring.style.background = `conic-gradient(${stops.join(",")})`;
+  if (goods.length)
+    ring.style.background = `conic-gradient(${stops.join(",")})`;
   ring.setAttribute("aria-hidden", "true");
   center.append(el("b", goods.length), el("span", "bens no gráfico"));
   ring.append(center);
@@ -3549,14 +4089,16 @@ function renderOverviewCharts() {
     {
       label: "Acima do mínimo",
       color: "#1376c5",
-      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) > Number(r.minimo))
-        .length,
+      n: stocks.filter(
+        (r) => Number(r.saldo) > 0 && Number(r.saldo) > Number(r.minimo),
+      ).length,
     },
     {
       label: "No mínimo ou abaixo",
       color: "#b17b2e",
-      n: stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo))
-        .length,
+      n: stocks.filter(
+        (r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo),
+      ).length,
     },
     {
       label: "Sem saldo",
@@ -3569,7 +4111,10 @@ function renderOverviewCharts() {
     list = el("div");
   heading.append(
     el("b", stocks.length),
-    el("span", stocks.length === 1 ? "material acompanhado" : "materiais acompanhados"),
+    el(
+      "span",
+      stocks.length === 1 ? "material acompanhado" : "materiais acompanhados",
+    ),
   );
   track.setAttribute("aria-hidden", "true");
   health.forEach((g) => {
@@ -3605,7 +4150,9 @@ function renderOverviewCharts() {
 
 function renderMetrics() {
   const individual = rows.filter(
-    (r) => r.controle !== "QUANTIDADE" && ["ATIVO", "EMPRESTADO"].includes(r.situacao),
+    (r) =>
+      r.controle !== "QUANTIDADE" &&
+      ["ATIVO", "EMPRESTADO"].includes(r.situacao),
   );
   const available = individual.filter((r) => r.situacao === "ATIVO").length,
     borrowed = individual.length - available;
@@ -3613,7 +4160,9 @@ function renderMetrics() {
     inUse = rows.filter((r) => ["ATIVO", "EMPRESTADO"].includes(r.situacao)),
     count = (f, v) => inUse.filter((r) => r.dados[f] === v).length;
   const lowStock = active
-    .filter((r) => r.controle === "QUANTIDADE" && Number(r.saldo) <= Number(r.minimo))
+    .filter(
+      (r) => r.controle === "QUANTIDADE" && Number(r.saldo) <= Number(r.minimo),
+    )
     .sort(
       (a, b) =>
         Number(a.saldo > 0) - Number(b.saldo > 0) ||
@@ -3697,7 +4246,9 @@ function renderMetrics() {
       }),
   );
   $("sideTotal").textContent = active.length;
-  const a = active.length ? (count("ambiente", ROOMS[0]) / active.length) * 360 : 0,
+  const a = active.length
+      ? (count("ambiente", ROOMS[0]) / active.length) * 360
+      : 0,
     b = active.length ? (count("ambiente", ROOMS[1]) / active.length) * 360 : 0;
   $("sideRing").style.background =
     `conic-gradient(#b6e4ff 0deg ${a}deg,#65a0d0 ${a}deg ${a + b}deg,#526473 ${a + b}deg 360deg)`;
@@ -3760,7 +4311,9 @@ function renderMetrics() {
             amounts.append(group);
           }
           const actions = el("div", undefined, "attention-actions");
-          actions.append(button("Consultar", () => openDashboardRecord(r), "", "right"));
+          actions.append(
+            button("Consultar", () => openDashboardRecord(r), "", "right"),
+          );
           if (role !== "leitor")
             actions.append(
               button(
@@ -3815,7 +4368,9 @@ function passwordRequirements(password) {
     upper: /[A-Z]/.test(password),
     lower: /[a-z]/.test(password),
     number: /[0-9]/.test(password),
-    special: Array.from(password).filter((c) => PASSWORD_SYMBOLS.includes(c)).length >= 2,
+    special:
+      Array.from(password).filter((c) => PASSWORD_SYMBOLS.includes(c)).length >=
+      2,
   };
 }
 
@@ -3830,7 +4385,9 @@ function setPasswordVisibility(button, show) {
     (show ? "Ocultar " : "Mostrar ") + button.dataset.passwordLabel,
   );
   button.setAttribute("aria-pressed", String(show));
-  button.querySelector("use").setAttribute("href", show ? "#i-eye-off" : "#i-eye");
+  button
+    .querySelector("use")
+    .setAttribute("href", show ? "#i-eye-off" : "#i-eye");
 }
 
 function resetPasswordVisibility() {
@@ -3843,7 +4400,9 @@ function updatePasswordRules() {
   const checks = passwordRequirements($("newPassword").value);
   document
     .querySelectorAll("[data-password-rule]")
-    .forEach((node) => node.classList.toggle("met", checks[node.dataset.passwordRule]));
+    .forEach((node) =>
+      node.classList.toggle("met", checks[node.dataset.passwordRule]),
+    );
   const met = Object.values(checks).filter(Boolean).length;
   $("passwordRuleProgress").value = met;
   $("passwordRuleCount").textContent = met + " de 5 requisitos atendidos";
@@ -3903,7 +4462,8 @@ async function accessService(body) {
         ok: true,
       };
     }
-    if (role !== "admin") throw Error("Somente administradores podem gerenciar pessoas.");
+    if (role !== "admin")
+      throw Error("Somente administradores podem gerenciar pessoas.");
     if (!demoPeople)
       demoPeople = [
         {
@@ -3978,7 +4538,8 @@ async function accessService(body) {
     } catch {}
     throw Error(message);
   }
-  if (!data?.ok) throw Error(data?.message || "Não foi possível concluir a operação.");
+  if (!data?.ok)
+    throw Error(data?.message || "Não foi possível concluir a operação.");
   return data;
 }
 
@@ -4027,6 +4588,24 @@ function setAccessView(mode) {
       "check",
     ],
   };
+  if (mobileAcervo()) {
+    labels.list = ["Pessoas", "Gerencie os acessos ao Acervo.", "users"];
+    labels.create = [
+      "Novo acesso",
+      "Cadastre a pessoa e escolha o perfil.",
+      "user-add",
+    ];
+    labels.profile = [
+      "Perfil de acesso",
+      "Escolha as permissões desta pessoa.",
+      "shield-key",
+    ];
+    labels.result = [
+      "Acesso criado",
+      "Compartilhe as instruções de primeiro acesso.",
+      "check",
+    ];
+  }
   $("userAccessTitle").textContent = labels[mode][0];
   $("userAccessDescription").textContent = labels[mode][1];
   $("userAccessMark")
@@ -4105,7 +4684,9 @@ function renderPeople() {
       meta.append(
         el(
           "span",
-          person.primeiro_acesso ? "Primeiro acesso pendente" : "Acesso liberado",
+          person.primeiro_acesso
+            ? "Primeiro acesso pendente"
+            : "Acesso liberado",
           "people-status",
         ),
       );
@@ -4130,11 +4711,34 @@ function renderPeople() {
     remove.type = "button";
     labelButton(remove, "Excluir", "discard");
     remove.disabled = self;
-    remove.setAttribute("aria-label", "Excluir " + (person.nome || person.email));
+    remove.setAttribute(
+      "aria-label",
+      "Excluir " + (person.nome || person.email),
+    );
     if (self) remove.title = "Você não pode excluir sua própria conta.";
     remove.onclick = () => confirmPersonRemoval(person);
     actions.append(profile, remove);
-    row.append(avatar, info, actions);
+    if (mobileAcervo()) {
+      const menu = el("details", undefined, "people-overflow");
+      const toggle = el("summary", "•••");
+      toggle.setAttribute(
+        "aria-label",
+        "Ações de " + (person.nome || person.email),
+      );
+      menu.append(toggle, actions);
+      menu.addEventListener("toggle", () => {
+        if (menu.open)
+          $("peopleList")
+            .querySelectorAll(".people-overflow")
+            .forEach((other) => {
+              if (other !== menu) other.open = false;
+            });
+      });
+      menu.addEventListener("click", (event) => {
+        if (event.target.closest("button")) menu.open = false;
+      });
+      row.append(avatar, info, menu);
+    } else row.append(avatar, info, actions);
     return row;
   });
   $("peopleList").replaceChildren(
@@ -4194,7 +4798,11 @@ async function loadPeople(page = peoplePage) {
       busca: $("peopleSearch").value.trim(),
       pagina: page,
     });
-    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open)
+    if (
+      request !== peopleRequest ||
+      owner !== user?.id ||
+      !$("userAccessDialog").open
+    )
       return;
     peopleRows = result.pessoas || [];
     peoplePage = result.pagina || 1;
@@ -4202,7 +4810,11 @@ async function loadPeople(page = peoplePage) {
     peopleLimit = result.limite || 30;
     renderPeople();
   } catch (error) {
-    if (request !== peopleRequest || owner !== user?.id || !$("userAccessDialog").open)
+    if (
+      request !== peopleRequest ||
+      owner !== user?.id ||
+      !$("userAccessDialog").open
+    )
       return;
     peopleRows = [];
     $("peopleCount").textContent = "";
@@ -4278,10 +4890,13 @@ async function loginReady(session, initialPassword = false) {
   resetFirstAccess();
   pending = storage("pending");
   const userDisplayName =
-    String(user.user_metadata?.nome || shortEmail(user.email)).trim() || "Pessoa";
+    String(user.user_metadata?.nome || shortEmail(user.email)).trim() ||
+    "Pessoa";
   $("account").textContent = userDisplayName;
   $("account").title = userDisplayName;
-  $("accountAvatar").textContent = userDisplayName.charAt(0).toLocaleUpperCase("pt-BR");
+  $("accountAvatar").textContent = userDisplayName
+    .charAt(0)
+    .toLocaleUpperCase("pt-BR");
   $("accountRole").textContent = "Acesso ao Acervo";
   $("login").hidden = true;
   $("app").hidden = false;
@@ -4389,7 +5004,9 @@ function initForm() {
   $("createDown").onclick = () => {
     if (
       clean($("item").value) &&
-      !confirm("Substituir o rascunho atual por um cadastro de item descartado?")
+      !confirm(
+        "Substituir o rascunho atual por um cadastro de item descartado?",
+      )
     )
       return;
     $("repeat").checked = false;
@@ -4450,7 +5067,8 @@ function endSession() {
   resetFirstAccess();
   if ($("deleteItemDialog").open) $("deleteItemDialog").close();
   deletionTarget = deletionKey = null;
-  if ($("registrationDiscardDialog").open) $("registrationDiscardDialog").close();
+  if ($("registrationDiscardDialog").open)
+    $("registrationDiscardDialog").close();
   finishEdit();
   clearTimeout(toastTimer);
   $("toast").hidden = true;
@@ -4537,7 +5155,9 @@ function excelDate(value) {
       .formatToParts(new Date(value))
       .map((x) => [x.type, x.value]),
   );
-  return new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second));
+  return new Date(
+    Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second),
+  );
 }
 
 async function exportExcel(all) {
@@ -4598,7 +5218,11 @@ async function exportExcel(all) {
                 }[v] ||
                 v),
           )
-          .concat(!filters.situacao ? ["Situação: Lista corrente (sem arquivados)"] : [])
+          .concat(
+            !filters.situacao
+              ? ["Situação: Lista corrente (sem arquivados)"]
+              : [],
+          )
           .concat($("search").value ? ["Busca: " + $("search").value] : [])
           .join(" · ") || "Lista corrente";
     const issued = dateBR(emitted);
@@ -4630,7 +5254,12 @@ async function exportExcel(all) {
       const tone = tones[String(cell.value)];
       if (!tone) return;
       cell.fill = fill(tone[0]);
-      cell.font = { name: "Aptos", size: 10, bold: true, color: { argb: tone[1] } };
+      cell.font = {
+        name: "Aptos",
+        size: 10,
+        bold: true,
+        color: { argb: tone[1] },
+      };
       cell.border = cellBorders(tone[2]);
       cell.alignment = {
         vertical: "middle",
@@ -4663,7 +5292,8 @@ async function exportExcel(all) {
     }
     function paint(ws, firstRow, lastRow, firstCol, lastCol, bg) {
       for (let r = firstRow; r <= lastRow; r++)
-        for (let c = firstCol; c <= lastCol; c++) ws.getCell(r, c).fill = fill(bg);
+        for (let c = firstCol; c <= lastCol; c++)
+          ws.getCell(r, c).fill = fill(bg);
     }
     const measure = document.createElement("canvas").getContext("2d");
     measure.font = "14.67px Arial";
@@ -4771,7 +5401,10 @@ async function exportExcel(all) {
     }
     function contain(context, image, x, y, width, height, white = false) {
       if (!image?.complete || !image.naturalWidth) return;
-      const ratio = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+      const ratio = Math.min(
+        width / image.naturalWidth,
+        height / image.naturalHeight,
+      );
       const w = image.naturalWidth * ratio,
         h = image.naturalHeight * ratio;
       context.save();
@@ -4804,7 +5437,8 @@ async function exportExcel(all) {
       const panelWidth = 4 * (40 * 7 + 5),
         panelHeight = (panelWidth * 1160) / 1600;
       const panelRowHeight = (panelHeight * 0.75) / 40;
-      for (let row = 1; row <= 40; row++) ws.getRow(row).height = panelRowHeight;
+      for (let row = 1; row <= 40; row++)
+        ws.getRow(row).height = panelRowHeight;
       paint(ws, 1, 40, 1, 4, "FFEAF1FC");
       const { canvas, context: c } = graphic(1600, 1160);
       c.fillStyle = "#eaf1fc";
@@ -4839,9 +5473,17 @@ async function exportExcel(all) {
       const available = goods.filter((r) => r.situacao === "ATIVO").length;
       const borrowed = list.filter((r) => r.situacao === "EMPRESTADO").length;
       const disposed = list.filter((r) => r.situacao === "BAIXADO").length;
-      const low = stocks.filter((r) => Number(r.saldo) <= Number(r.minimo)).length;
+      const low = stocks.filter(
+        (r) => Number(r.saldo) <= Number(r.minimo),
+      ).length;
       const cards = [
-        ["Bens em uso", available, "Controle individual", "available", "#155fc1"],
+        [
+          "Bens em uso",
+          available,
+          "Controle individual",
+          "available",
+          "#155fc1",
+        ],
         [
           "Materiais em estoque",
           stocks.length,
@@ -4849,7 +5491,13 @@ async function exportExcel(all) {
           "stock",
           "#216aba",
         ],
-        ["Bens emprestados", borrowed, "Empréstimos em aberto", "loan", "#3479c2"],
+        [
+          "Bens emprestados",
+          borrowed,
+          "Empréstimos em aberto",
+          "loan",
+          "#3479c2",
+        ],
         [
           "Materiais para repor",
           low,
@@ -4866,7 +5514,16 @@ async function exportExcel(all) {
         rounded(c, x + 20, 261, 43, 43, 13, i === 0 ? "#ffffff20" : "#edf4ff");
         const image = await graphicIcon(mark, i === 0 ? "white" : tone);
         if (image) c.drawImage(image, x + 30, 271, 23, 23);
-        label(c, title, x + 76, 287, 17, i === 0 ? "white" : "#21466e", 700, 266);
+        label(
+          c,
+          title,
+          x + 76,
+          287,
+          17,
+          i === 0 ? "white" : "#21466e",
+          700,
+          266,
+        );
         label(
           c,
           value.toLocaleString("pt-BR"),
@@ -4877,7 +5534,16 @@ async function exportExcel(all) {
           700,
           320,
         );
-        label(c, note, x + 22, 369, 13, i === 0 ? "#d3e9ff" : "#74859c", 400, 320);
+        label(
+          c,
+          note,
+          x + 22,
+          369,
+          13,
+          i === 0 ? "#d3e9ff" : "#74859c",
+          400,
+          320,
+        );
       }
       rounded(c, 40, 410, 745, 302, 22, "white", true);
       rounded(c, 809, 410, 751, 302, 22, "white", true);
@@ -4897,7 +5563,11 @@ async function exportExcel(all) {
           goods.filter((r) => r.situacao === "EMPRESTADO").length,
           "#82baf2",
         ],
-        ["Descartados", goods.filter((r) => r.situacao === "BAIXADO").length, "#cc6a82"],
+        [
+          "Descartados",
+          goods.filter((r) => r.situacao === "BAIXADO").length,
+          "#cc6a82",
+        ],
       ];
       const total = states.reduce((n, s) => n + s[1], 0);
       let start = -Math.PI / 2;
@@ -4952,11 +5622,16 @@ async function exportExcel(all) {
         ],
         [
           "No mínimo ou abaixo",
-          stocks.filter((r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo))
-            .length,
+          stocks.filter(
+            (r) => Number(r.saldo) > 0 && Number(r.saldo) <= Number(r.minimo),
+          ).length,
           "#e8b254",
         ],
-        ["Sem saldo", stocks.filter((r) => Number(r.saldo) <= 0).length, "#d27387"],
+        [
+          "Sem saldo",
+          stocks.filter((r) => Number(r.saldo) <= 0).length,
+          "#d27387",
+        ],
       ];
       rounded(c, 835, 500, 695, 22, 11, "#edf3fa");
       let offset = 835;
@@ -5050,14 +5725,20 @@ async function exportExcel(all) {
       );
       label(
         c,
-        disposed + (disposed === 1 ? " registro descartado" : " registros descartados"),
+        disposed +
+          (disposed === 1 ? " registro descartado" : " registros descartados"),
         1120,
         1010,
         17,
         "#9c425e",
         700,
       );
-      const destinations = ["Inventário", "Empréstimos", "Descartados", "Relatório A4"];
+      const destinations = [
+        "Inventário",
+        "Empréstimos",
+        "Descartados",
+        "Relatório A4",
+      ];
       destinations.forEach((name, index) => {
         const x = 40 + index * 386;
         rounded(c, x, 1052, 362, 53, 14, "#155fc1");
@@ -5075,7 +5756,14 @@ async function exportExcel(all) {
         700,
       );
       c.textAlign = "right";
-      label(c, "Abra os detalhes pelos cards e botões.", 1558, 1138, 13, "#5d7797");
+      label(
+        c,
+        "Abra os detalhes pelos cards e botões.",
+        1558,
+        1138,
+        13,
+        "#5d7797",
+      );
       c.textAlign = "left";
       const panelImage = wb.addImage({
         base64: canvas.toDataURL("image/jpeg", 0.96),
@@ -5112,10 +5800,18 @@ async function exportExcel(all) {
           hyperlinks: { hyperlink: "#'" + destination + "'!A1", tooltip },
         });
       }
-      ["Inventário", "Inventário", "Empréstimos", "Inventário"].forEach((name, index) =>
-        linkArea(40 + index * 386, 240, 362, 145, name, "Abrir " + name),
+      ["Inventário", "Inventário", "Empréstimos", "Inventário"].forEach(
+        (name, index) =>
+          linkArea(40 + index * 386, 240, 362, 145, name, "Abrir " + name),
       );
-      linkArea(40, 410, 745, 302, "Inventário", "Consultar os bens no inventário");
+      linkArea(
+        40,
+        410,
+        745,
+        302,
+        "Inventário",
+        "Consultar os bens no inventário",
+      );
       linkArea(
         809,
         410,
@@ -5134,7 +5830,12 @@ async function exportExcel(all) {
           formula: "HYPERLINK(\"#'" + name + '\'!A1","' + name + ' →")',
           result: name + " →",
         };
-        cell.font = { name: "Aptos", size: 12, bold: true, color: { argb: color.green } };
+        cell.font = {
+          name: "Aptos",
+          size: 12,
+          bold: true,
+          color: { argb: color.green },
+        };
         cell.fill = fill(color.soft);
         cell.alignment = { vertical: "middle", horizontal: "center" };
       });
@@ -5151,7 +5852,8 @@ async function exportExcel(all) {
       c.fillRect(0, 0, width, height);
       paint(ws, 1, 3, 1, lastCol, color.white);
       for (let row = 1; row <= 3; row++)
-        for (let col = 1; col <= lastCol; col++) ws.getCell(row, col).value = null;
+        for (let col = 1; col <= lastCol; col++)
+          ws.getCell(row, col).value = null;
       const blue = c.createLinearGradient(0, 0, Math.min(width, 1300), height);
       blue.addColorStop(0, "#093b84");
       blue.addColorStop(0.62, "#155fc1");
@@ -5168,7 +5870,8 @@ async function exportExcel(all) {
       label(c, "Emitido em " + issued, width - 22, 106, 11, "#d5ebff");
       label(c, "← Voltar ao resumo", width - 22, 128, 12, "#e2f1ff", 700);
       c.textAlign = "left";
-      for (let row = 1; row <= 3; row++) ws.getRow(row).height = (height * 0.75) / 3;
+      for (let row = 1; row <= 3; row++)
+        ws.getRow(row).height = (height * 0.75) / 3;
       const imageId = wb.addImage({
         base64: canvas.toDataURL("image/jpeg", 0.96),
         extension: "jpeg",
@@ -5184,11 +5887,16 @@ async function exportExcel(all) {
     function brand(ws, start, lastCol) {
       const edge = ws.getColumn(lastCol).letter;
       const left = Math.min(2, lastCol - 2);
-      text(ws, "A" + start + ":" + ws.getColumn(left).letter + start, "ACERVO", {
-        size: 13,
-        fg: color.green,
-        indent: 0,
-      });
+      text(
+        ws,
+        "A" + start + ":" + ws.getColumn(left).letter + start,
+        "ACERVO",
+        {
+          size: 13,
+          fg: color.green,
+          indent: 0,
+        },
+      );
       text(
         ws,
         "A" + (start + 1) + ":" + ws.getColumn(left).letter + (start + 1),
@@ -5239,8 +5947,13 @@ async function exportExcel(all) {
           },
         },
       });
-      const width = ws.columns.slice(0, lastCol).reduce((n, c) => n + c.width * 7, 0);
-      ws.getRow(4).height = Math.max(25, wrap(scope, width - 20).length * 12 + 10);
+      const width = ws.columns
+        .slice(0, lastCol)
+        .reduce((n, c) => n + c.width * 7, 0);
+      ws.getRow(4).height = Math.max(
+        25,
+        wrap(scope, width - 20).length * 12 + 10,
+      );
       ws.getRow(6).height = 14;
       paint(ws, 1, 3, 1, lastCol, "FF133C78");
       for (const address of [
@@ -5344,7 +6057,9 @@ async function exportExcel(all) {
         data.length
           ? {
               formula:
-                "SUBTOTAL(103,A8:A" + (data.length + 7) + ')&" registros visíveis"',
+                "SUBTOTAL(103,A8:A" +
+                (data.length + 7) +
+                ')&" registros visíveis"',
               result: data.length + " registros visíveis",
             }
           : "0 registros",
@@ -5445,7 +6160,9 @@ async function exportExcel(all) {
           const cell = row.getCell(j);
           const missing =
             options.details && j === 4 && values[3] === TYPE.SEM_IDENTIFICACAO;
-          cell.fill = fill(missing ? color.warning : i % 2 ? color.soft : color.white);
+          cell.fill = fill(
+            missing ? color.warning : i % 2 ? color.soft : color.white,
+          );
           cell.font = {
             name: "Aptos",
             size: 11,
@@ -5465,7 +6182,9 @@ async function exportExcel(all) {
           cell.border = cellBorders();
           if (options.details && j === 8) formatStatusCell(cell);
           if ((options.dates || []).includes(j))
-            cell.numFmt = options.dateOnly ? "dd/mm/yyyy" : "dd/mm/yyyy hh:mm:ss";
+            cell.numFmt = options.dateOnly
+              ? "dd/mm/yyyy"
+              : "dd/mm/yyyy hh:mm:ss";
           else if (typeof cell.value === "string") cell.numFmt = "@";
         }
       });
@@ -5481,7 +6200,9 @@ async function exportExcel(all) {
       return ws;
     }
     await drawExportPanel();
-    const widths = [18, 35, 18, 26, 19, 26, 15, 17, 48, 25, 24, 30, 20, 12, 16, 12];
+    const widths = [
+      18, 35, 18, 26, 19, 26, 15, 17, 48, 25, 24, 30, 20, 12, 16, 12,
+    ];
     table(
       "Inventário",
       "ACERVO_Inventario",
@@ -5613,7 +6334,12 @@ async function exportExcel(all) {
     report.getRow(5).height = 28;
     report.getRow(5).eachCell((cell) => {
       cell.fill = fill(color.green);
-      cell.font = { name: "Aptos", size: 10, bold: true, color: { argb: color.white } };
+      cell.font = {
+        name: "Aptos",
+        size: 10,
+        bold: true,
+        color: { argb: color.white },
+      };
       cell.alignment = { vertical: "middle", wrapText: true, indent: 1 };
       cell.border = cellBorders("FF5982B3");
     });
@@ -5683,13 +6409,18 @@ async function exportExcel(all) {
     for (const room of groupOrder) {
       const knownRoomIndex = ROOMS.indexOf(room);
       const roomIndex =
-        knownRoomIndex >= 0 ? knownRoomIndex : ROOMS.length + groupOrder.indexOf(room);
+        knownRoomIndex >= 0
+          ? knownRoomIndex
+          : ROOMS.length + groupOrder.indexOf(room);
       const roomTone = ["FF286CAB", "FF1988A5", "FF5C779B"][roomIndex % 3];
       const roomShade = ["FFE1EDFA", "FFDFF1F7", "FFE5EBF3"][roomIndex % 3];
       const roomStripe = ["FFF0F6FC", "FFEDF8FC", "FFF1F4F9"][roomIndex % 3];
       const records = groups
         .get(room)
-        .sort((a, b) => a.dados.item.localeCompare(b.dados.item, "pt-BR") || a.id - b.id);
+        .sort(
+          (a, b) =>
+            a.dados.item.localeCompare(b.dados.item, "pt-BR") || a.id - b.id,
+        );
       let headingPending = true,
         itemIndex = 0;
       for (const r of records) {
@@ -5699,7 +6430,9 @@ async function exportExcel(all) {
         const identity =
           r.dados.tipo === "SEM_IDENTIFICACAO"
             ? "Sem etiqueta externa"
-            : (TYPE[r.dados.tipo] || r.dados.tipo) + "\n" + String(r.dados.codigo || "");
+            : (TYPE[r.dados.tipo] || r.dados.tipo) +
+              "\n" +
+              String(r.dados.codigo || "");
         const balance = stock
           ? quantityText(r.saldo, r.unidade) + "\nMínimo: " + Number(r.minimo)
           : "—";
@@ -5747,7 +6480,9 @@ async function exportExcel(all) {
           );
           const height = Math.max(
             32,
-            ...part.map((v, j) => wrap(v, reportWidths[j] * 7 - 18).length * 14 + 10),
+            ...part.map(
+              (v, j) => wrap(v, reportWidths[j] * 7 - 18).length * 14 + 10,
+            ),
           );
           if (headingPending) {
             const gap = groupIndex ? 7 : 0;
@@ -5803,12 +6538,20 @@ async function exportExcel(all) {
                   },
                   {
                     text: part[1].slice(positionStart),
-                    font: { name: "Aptos", size: 10, color: { argb: color.muted } },
+                    font: {
+                      name: "Aptos",
+                      size: 10,
+                      color: { argb: color.muted },
+                    },
                   },
                 ],
               };
             formatStatusCell(row.getCell(4));
-            if (stock && r.situacao === "ATIVO" && Number(r.saldo) <= Number(r.minimo))
+            if (
+              stock &&
+              r.situacao === "ATIVO" &&
+              Number(r.saldo) <= Number(r.minimo)
+            )
               row.getCell(5).font = {
                 name: "Aptos",
                 size: 11,
@@ -5822,18 +6565,24 @@ async function exportExcel(all) {
       }
     }
     if (!list.length) {
-      text(report, "A6:F6", "Nenhum registro neste recorte.", { fg: color.muted });
+      text(report, "A6:F6", "Nenhum registro neste recorte.", {
+        fg: color.muted,
+      });
       report.getRow(6).height = 35;
       for (let column = 1; column <= 6; column++)
         report.getCell(6, column).border = cellBorders();
       nextRow = 7;
     }
     report.pageSetup.printArea = "A1:F" + (nextRow - 1);
-    ["Resumo", "Inventário", "Empréstimos", "Descartados", "Relatório A4"].forEach(
-      (name, index) => {
-        wb.getWorksheet(name).orderNo = index;
-      },
-    );
+    [
+      "Resumo",
+      "Inventário",
+      "Empréstimos",
+      "Descartados",
+      "Relatório A4",
+    ].forEach((name, index) => {
+      wb.getWorksheet(name).orderNo = index;
+    });
     for (const sheet of wb.worksheets) {
       if (sheet.name !== "Resumo")
         await drawTableHeading(sheet, sheet.name, sheet.columnCount);
@@ -6017,7 +6766,10 @@ function crop(guide, contrast = false, angle = 0) {
   if (contrast) {
     for (let i = 0; i < img.data.length; i += 4) {
       let g =
-        (img.data[i] * 0.299 + img.data[i + 1] * 0.587 + img.data[i + 2] * 0.114 - 128) *
+        (img.data[i] * 0.299 +
+          img.data[i + 1] * 0.587 +
+          img.data[i + 2] * 0.114 -
+          128) *
           1.5 +
         128;
       img.data[i] = img.data[i + 1] = img.data[i + 2] = g;
@@ -6056,7 +6808,9 @@ function showCandidates(s) {
   for (const [value, entry] of [...s.candidates.entries()].slice(-4)) {
     if (validScanValue(value)) {
       $("candidates").append(
-        button("Usar " + value + " · " + entry.source, () => acceptCode(s, value)),
+        button("Usar " + value + " · " + entry.source, () =>
+          acceptCode(s, value),
+        ),
       );
     } else {
       const p = el("p");
@@ -6086,7 +6840,12 @@ function candidate(s, text, source, automatic) {
     if (now - e.time > 4000) s.candidates.delete(v);
   }
   showCandidates(s);
-  if (automatic && validScanValue(value) && count >= 2 && s.candidates.size === 1) {
+  if (
+    automatic &&
+    validScanValue(value) &&
+    count >= 2 &&
+    s.candidates.size === 1
+  ) {
     acceptCode(s, value);
   }
 }
@@ -6137,7 +6896,7 @@ async function barcodeLoop(s) {
     } catch (e) {
       if (scene === s) {
         $("cameraStatus").textContent =
-          "Barras: " + e.message + ". OCR continua disponível.";
+          "Aproxime a etiqueta. Se preferir, digite o código.";
       }
       if (++errors >= 3) break;
     } finally {
@@ -6160,7 +6919,7 @@ async function ocrLoop(s) {
       if (scene !== s) break;
       if (!w) {
         $("cameraStatus").textContent =
-          "OCR indisponível; a leitura de códigos continua.";
+          "Aponte para o código de barras ou digite o número.";
         break;
       }
       const frame = crop("numberGuide", ++n % 2 === 0);
@@ -6171,14 +6930,15 @@ async function ocrLoop(s) {
           for (const line of data.text.split(/[\r\n]+/)) {
             const value = line.replace(/\s/g, "");
             if (/^\d{6}$/.test(value)) {
-              candidate(s, value, "OCR · confirme", false);
+              candidate(s, value, "Número encontrado", false);
             }
           }
         }
       }
     } catch (e) {
       if (scene === s) {
-        $("cameraStatus").textContent = "OCR falhou; leitura de códigos continua.";
+        $("cameraStatus").textContent =
+          "Aponte para o código de barras ou digite o número.";
       }
       break;
     } finally {
@@ -6203,7 +6963,8 @@ async function openScanner(target = "code") {
     busy ||
     pending ||
     (!["moveSearch", "search"].includes(target) &&
-      value(target === "editCode" ? "editType" : "type") === "SEM_IDENTIFICACAO")
+      value(target === "editCode" ? "editType" : "type") ===
+        "SEM_IDENTIFICACAO")
   )
     return;
   const s = {
@@ -6213,13 +6974,8 @@ async function openScanner(target = "code") {
   };
   scanTarget = target;
   scene = s;
-  $("cameraTitle").textContent =
-    target === "search"
-      ? "Buscar item no inventário"
-      : target === "moveSearch"
-        ? "Buscar item para movimentar"
-        : "Ler " + TYPE[value(target === "editCode" ? "editType" : "type")];
-  $("cameraStatus").textContent = "Procurando códigos…";
+  $("cameraTitle").textContent = "Ler etiqueta";
+  $("cameraStatus").textContent = "Procurando etiqueta…";
   $("candidates").replaceChildren();
   $("torch").disabled = true;
   $("torch").setAttribute("aria-pressed", "false");
@@ -6264,13 +7020,13 @@ async function openScanner(target = "code") {
       $("zoom").min = min;
       $("zoom").max = max;
       $("zoom").step = step;
-      const middle = Math.min(
+      const initialZoom = Math.min(
         max,
-        Math.max(min, min + Math.round((max - min) / 2 / step) * step),
+        Math.max(min, min + Math.round(((max - min) * 0.25) / step) * step),
       );
       try {
         await cameraSettings(s, {
-          zoom: middle,
+          zoom: initialZoom,
         });
       } catch {}
       if (scene !== s) return;
@@ -6349,11 +7105,14 @@ function initVisualExperience() {
   function positionTip(target) {
     const r = target.getBoundingClientRect(),
       t = tip.getBoundingClientRect();
-    tip.style.left = Math.max(12, Math.min(innerWidth - t.width - 12, r.left)) + "px";
+    tip.style.left =
+      Math.max(12, Math.min(innerWidth - t.width - 12, r.left)) + "px";
     tip.style.top =
       Math.max(
         12,
-        r.bottom + t.height + 12 > innerHeight ? r.top - t.height - 8 : r.bottom + 8,
+        r.bottom + t.height + 12 > innerHeight
+          ? r.top - t.height - 8
+          : r.bottom + 8,
       ) + "px";
     const dialog = tip.closest("dialog");
     if (dialog) {
@@ -6366,11 +7125,15 @@ function initVisualExperience() {
         bounds.top + 12,
         Math.min(
           bounds.bottom - t.height - 12,
-          r.bottom + t.height + 12 > bounds.bottom ? r.top - t.height - 8 : r.bottom + 8,
+          r.bottom + t.height + 12 > bounds.bottom
+            ? r.top - t.height - 8
+            : r.bottom + 8,
         ),
       );
-      tip.style.left = left - bounds.left - dialog.clientLeft + dialog.scrollLeft + "px";
-      tip.style.top = top - bounds.top - dialog.clientTop + dialog.scrollTop + "px";
+      tip.style.left =
+        left - bounds.left - dialog.clientLeft + dialog.scrollLeft + "px";
+      tip.style.top =
+        top - bounds.top - dialog.clientTop + dialog.scrollTop + "px";
     }
   }
   function openTip(target) {
@@ -6477,7 +7240,11 @@ function initVisualExperience() {
   function finishIntro() {
     const wasIntro = !!$("brandIntro");
     $("brandIntro")?.remove();
-    document.body.classList.remove("intro-active", "intro-reveal", "intro-landed");
+    document.body.classList.remove(
+      "intro-active",
+      "intro-reveal",
+      "intro-landed",
+    );
     document.body.classList.add("screen-ready");
     if (wasIntro && !footerAnimation) revealFooter();
   }
@@ -6517,7 +7284,9 @@ function initVisualExperience() {
   if (typeof ResizeObserver !== "undefined") {
     const navObserver = new ResizeObserver(() => updateNavIndicator(false));
     navObserver.observe(nav);
-    nav.querySelectorAll("button").forEach((button) => navObserver.observe(button));
+    nav
+      .querySelectorAll("button")
+      .forEach((button) => navObserver.observe(button));
   } else {
     addEventListener("resize", () => updateNavIndicator(false));
   }
@@ -6561,7 +7330,11 @@ function initVisualExperience() {
   $("draftInfo").dataset.help =
     "O rascunho fica neste navegador, associado à sua conta. O registro definitivo acontece ao cadastrar.";
   $("draftInfo").tabIndex = 0;
-  setHelpHint($("learningHint"), $("learningHint").textContent.trim(), "suggestion");
+  setHelpHint(
+    $("learningHint"),
+    $("learningHint").textContent.trim(),
+    "suggestion",
+  );
   if (!$("learningHint").dataset.help)
     $("learningHint").dataset.help =
       "Escolha um nome existente ou cadastre um novo. As sugestões se baseiam no histórico do inventário.";
@@ -6614,11 +7387,14 @@ function initAppViewport() {
       );
     const height = viewport?.height || window.innerHeight;
     const active = document.activeElement;
-    const focused = active?.matches("input,textarea,select,[contenteditable='true']");
+    const focused = active?.matches(
+      "input,textarea,select,[contenteditable='true']",
+    );
     if (Math.abs(window.innerWidth - baselineWidth) > 50) {
       baselineWidth = window.innerWidth;
       baselineHeight = window.innerHeight;
-    } else if (!focused) baselineHeight = Math.max(baselineHeight, window.innerHeight);
+    } else if (!focused)
+      baselineHeight = Math.max(baselineHeight, window.innerHeight);
     const keyboard =
       !!focused &&
       !!viewport &&
@@ -6639,7 +7415,8 @@ function initAppViewport() {
         const area = app.getBoundingClientRect();
         const field = active.getBoundingClientRect();
         const top = Math.max(area.top, viewport.offsetTop) + 16;
-        const bottom = Math.min(area.bottom, viewport.offsetTop + viewport.height) - 20;
+        const bottom =
+          Math.min(area.bottom, viewport.offsetTop + viewport.height) - 20;
         if (field.bottom > bottom)
           app.scrollBy({ top: field.bottom - bottom, behavior: "instant" });
         else if (field.top < top)
@@ -6697,7 +7474,8 @@ function registrationStage(step, focus = true) {
   if (!$("mobileRegistration")) return;
   const previous = Number(form.dataset.mobileStage || 1);
   form.dataset.mobileStage = String(step);
-  if (mobileAcervo() && step === 4) $("registrationSave").append($("notesBlock"));
+  if (mobileAcervo() && step === 4)
+    $("registrationSave").append($("notesBlock"));
   else $("registrationMain").append($("notesBlock"));
   const titles = [
     "Onde fica o item?",
@@ -6726,7 +7504,10 @@ function registrationStage(step, focus = true) {
     heading.focus({ preventScroll: true });
     $("app").scrollTop = 0;
     if (previous !== step)
-      animateMobileView($("mobileRegistrationContent"), step < previous ? -1 : 1);
+      animateMobileView(
+        $("mobileRegistrationContent"),
+        step < previous ? -1 : 1,
+      );
   }
   if (mobileAcervo() && $("mobileJourneyHome")) {
     journey.draftStage = step;
@@ -6741,7 +7522,8 @@ function validateRegistrationStage(step) {
   const d = formData();
   if (
     step === 1 &&
-    (!d.ambiente || (d.ambiente === "Almoxarifado" && (!d.estante || !d.prateleira)))
+    (!d.ambiente ||
+      (d.ambiente === "Almoxarifado" && (!d.estante || !d.prateleira)))
   ) {
     toast("Selecione o ambiente e a posição do item.", true);
     return false;
@@ -6751,8 +7533,14 @@ function validateRegistrationStage(step) {
     return false;
   }
   if (step === 3) {
-    if (!d.tipo || (d.tipo !== "SEM_IDENTIFICACAO" && !/^\d{6}$/.test(d.codigo))) {
-      toast("Escolha a identificação e informe os seis números da etiqueta.", true);
+    if (
+      !d.tipo ||
+      (d.tipo !== "SEM_IDENTIFICACAO" && !/^\d{6}$/.test(d.codigo))
+    ) {
+      toast(
+        "Escolha a identificação e informe os seis números da etiqueta.",
+        true,
+      );
       return false;
     }
     for (const id of ["code", "quantity", "minimum"]) {
@@ -6846,7 +7634,9 @@ function initMobileAcervo() {
     "mobile-review-back",
     "left",
   );
-  $("registrationSave").querySelector(".registration-actions").before(reviewBack);
+  $("registrationSave")
+    .querySelector(".registration-actions")
+    .before(reviewBack);
   form.addEventListener("keydown", (event) => {
     if (
       mobileAcervo() &&
@@ -6881,7 +7671,10 @@ function updateMobileLocation() {
   const d = formData();
   const line = [d.ambiente];
   if (d.ambiente === "Almoxarifado" && d.estante && d.prateleira)
-    line.push(`Estante ${d.estante}`, `Prateleira ${d.prateleira.padStart(2, "0")}`);
+    line.push(
+      `Estante ${d.estante}`,
+      `Prateleira ${d.prateleira.padStart(2, "0")}`,
+    );
   target.hidden = d.ambiente !== "Almoxarifado";
   const copy = el("div");
   copy.append(
@@ -6964,7 +7757,9 @@ function initMobileIdentity() {
     $("registrationBody"),
     $("registrationSave"),
   );
-  const reviewActions = $("registrationSave").querySelector(".registration-actions");
+  const reviewActions = $("registrationSave").querySelector(
+    ".registration-actions",
+  );
   const reviewBack = $("registrationSave").querySelector(".mobile-review-back");
   const descriptions = [
     "Selecione o ambiente do item.",
@@ -7072,7 +7867,9 @@ function revealStockWatch() {
   if (group) group.open = true;
   panel.scrollIntoView({
     block: "start",
-    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth",
   });
 }
 
@@ -7162,7 +7959,13 @@ function initMobileDashboard() {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
     const next =
-      event.key === "Home" ? 0 : event.key === "End" ? 1 : chart === "goods" ? 1 : 0;
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? 1
+          : chart === "goods"
+            ? 1
+            : 0;
     chart = controls[next].key;
     update();
     controls[next].control.focus();
@@ -7175,7 +7978,9 @@ function initMobileDashboard() {
     } else {
       $("stats").before($("dashboardPulse"));
       rooms.before(focus);
-      groups.forEach((group) => focus.insertBefore(group.section, groups[0].details));
+      groups.forEach((group) =>
+        focus.insertBefore(group.section, groups[0].details),
+      );
     }
     update();
   };
@@ -7275,17 +8080,21 @@ function syncMobileJourney() {
     syncCode();
   }
   const hasDraft = !!clean(d.item);
-  labelButton(
-    $("mobileJourneyStart"),
-    hasDraft ? "Continuar cadastro" : "Começar cadastro",
-    "right",
+  $("mobileJourneyStart").setAttribute(
+    "aria-label",
+    hasDraft ? "Continuar cadastro de " + d.item : "Começar cadastro",
   );
+  $("mobileJourneyStart")
+    .querySelector(".mobile-start-caption")
+    ?.replaceChildren(
+      document.createTextNode(hasDraft ? "Continuar" : "Começar"),
+    );
   $("mobileJourneyStart").disabled = busy || !!pending || role === "leitor";
   $("mobileJourneyRestart").hidden = !hasDraft;
   $("mobileJourneyDraft").textContent = hasDraft
     ? `${d.item} · ${d.ambiente || "Local a escolher"}`
-    : "Escolha o local. O Acervo guia o restante.";
-  $("mobileJourneyLocation").hidden = stage === 1;
+    : "Toque no símbolo para começar.";
+  $("mobileJourneyLocation").hidden = true;
   $("mobileJourneyLocationText").textContent = [
     d.ambiente || "Escolher local",
     d.ambiente === "Almoxarifado"
@@ -7295,7 +8104,7 @@ function syncMobileJourney() {
     .filter(Boolean)
     .join(" · ");
   const live = $("mobileLiveFiche");
-  live.hidden = !hasDraft || stage === 1 || stage === 4;
+  live.hidden = true;
   const fingerprint = [
     d.item,
     d.categoria,
@@ -7308,7 +8117,7 @@ function syncMobileJourney() {
   if (live.dataset.fingerprint !== fingerprint) {
     const copy = el("div");
     copy.append(el("strong", d.item || "Seu próximo item"));
-    copy.append(el("small", [d.ambiente, d.categoria].filter(Boolean).join(" · ")));
+    copy.append(el("small", d.categoria || ""));
     const symbol = el("span", undefined, "mobile-item-symbol");
     symbol.append(itemIcon(d.item, d.categoria));
     live.replaceChildren(symbol, copy);
@@ -7331,6 +8140,22 @@ function syncMobileJourney() {
       );
   }
   if (mobileAcervo()) {
+    if ($("mobileProgressLabel"))
+      $("mobileProgressLabel").textContent =
+        ["Local", "Item", "Controle", "Revisão"][stage - 1] +
+        " · " +
+        stage +
+        " de 4";
+    if (!busy)
+      labelButton(
+        $("save"),
+        d.controle === "QUANTIDADE" ? "Cadastrar estoque" : "Cadastrar item",
+        "save",
+      );
+    if (clean($("note").value) && $("mobileNoteToggle")) {
+      $("notesBlock").classList.remove("mobile-notes-collapsed");
+      $("mobileNoteToggle").setAttribute("aria-expanded", "true");
+    }
     journey.maxStage = Math.max(journey.maxStage, stage);
     $("mobileRegistrationProgress")
       .querySelectorAll("button")
@@ -7342,71 +8167,110 @@ function syncMobileJourney() {
 
 function mobileReview() {
   const d = formData();
-  const summary = $("registrationSummary");
-  const anchor = mobileItemAnchor({ dados: d });
-  const facts = el("div", undefined, "mobile-review-facts");
   const stock = d.controle === "QUANTIDADE";
+  const anchor = mobileItemAnchor({ dados: d });
+  const editItem = button(
+    "",
+    () => registrationStage(2),
+    "mobile-inline-edit",
+    "edit",
+  );
+  editItem.setAttribute("aria-label", "Alterar item e categoria");
+  anchor.append(editItem);
+  const facts = el("div", undefined, "mobile-review-facts");
   const location = [
     d.ambiente,
     d.ambiente === "Almoxarifado"
-      ? `Estante ${d.estante || "—"} · Nível ${d.prateleira || "—"}`
+      ? `Estante ${d.estante || "—"} · Prateleira ${d.prateleira || "—"}`
       : "",
   ]
     .filter(Boolean)
     .join(" · ");
-  for (const [label, text, stage] of [
-    ["Local", location, 1],
-    ["Categoria", d.categoria || "Escolher categoria", 2],
-    [
-      "Controle",
-      stock
-        ? `${quantityText(d.quantidade, d.unidade)} · mínimo ${d.minimo}`
-        : "Individual",
-      3,
-    ],
-    [
-      "Identificação",
-      d.tipo === "SEM_IDENTIFICACAO"
-        ? "Código gerado ao cadastrar"
-        : [d.tipo, d.codigo].filter(Boolean).join(" ") || "Escolher identificação",
-      3,
-    ],
-  ]) {
-    const row = el("div");
+  const pairs = [["Local", location || "Escolher local", 1]];
+  if (stock)
+    pairs.push(
+      ["Saldo inicial", quantityText(d.quantidade, d.unidade), 3],
+      ["Estoque mínimo", quantityText(d.minimo, d.unidade), 3],
+    );
+  else pairs.push(["Controle", "Individual", 3]);
+  pairs.push([
+    d.tipo === "SEM_IDENTIFICACAO" ? "Código previsto" : "Identificação",
+    d.tipo === "SEM_IDENTIFICACAO"
+      ? nextInternalPreview()
+      : [d.tipo, d.codigo].filter(Boolean).join(" ") ||
+        "Escolher identificação",
+    d.tipo === "SEM_IDENTIFICACAO" ? null : 3,
+  ]);
+  for (const [label, text, stage] of pairs) {
+    const row = el(
+      "div",
+      undefined,
+      label === "Saldo inicial" ? "mobile-review-quantity" : "",
+    );
     const copy = el("div");
     copy.append(el("small", label), el("strong", text));
-    const edit = button("Alterar", () => registrationStage(stage), "", "edit");
-    edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
-    row.append(copy, edit);
+    row.append(copy);
+    if (stage) {
+      const edit = button(
+        "",
+        () => registrationStage(stage),
+        "mobile-inline-edit",
+        "edit",
+      );
+      edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
+      row.append(edit);
+    } else
+      row.append(
+        el("small", "Confirmado ao salvar", "mobile-code-confirmation"),
+      );
     facts.append(row);
   }
-  const sentence = el(
-    "p",
-    stock
-      ? `${quantityText(d.quantidade, d.unidade)} de ${d.item} no ${d.ambiente}.`
-      : `${d.item} será cadastrado em ${d.ambiente}.`,
-    "mobile-review-sentence",
-  );
-  summary.replaceChildren(anchor, facts, sentence);
+  $("registrationSummary").replaceChildren(anchor, facts);
 }
 
 function mobileReceipt(record, template) {
   const discarded = record.situacao === "BAIXADO";
+  const stock = record.controle === "QUANTIDADE";
   const saved = $("saved");
   $("register").dataset.journey = "receipt";
   const visual = el("div", undefined, "mobile-receipt-visual");
   const check = el("span", undefined, "mobile-receipt-check");
   check.append(icon(discarded ? "discard" : "check"));
-  visual.append(check, mobileItemAnchor(record));
+  const anchor = mobileItemAnchor(record);
+  anchor.querySelector(".mobile-status")?.remove();
   visual.append(
-    el("p", [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · ")),
+    check,
+    el(
+      "h2",
+      discarded
+        ? "Descarte registrado"
+        : stock
+          ? "Estoque cadastrado"
+          : "Item cadastrado",
+    ),
+    anchor,
   );
-  const heading = el(
-    "h2",
-    discarded ? "Descarte registrado." : "Mais um bem no seu lugar.",
+  if (stock) {
+    const balance = el("div", undefined, "mobile-receipt-balance");
+    balance.append(
+      el("small", discarded ? "Quantidade descartada" : "Saldo cadastrado"),
+      el("strong", quantityText(record.saldo, record.unidade)),
+    );
+    visual.append(balance);
+  }
+  const location = el(
+    "p",
+    [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · "),
+    "mobile-receipt-location",
   );
-  const samePlace = button(
-    "Cadastrar outro neste local",
+  const code = el(
+    "p",
+    "Código do registro · " + internal(record.id),
+    "mobile-receipt-code",
+  );
+  visual.append(location, code);
+  const another = button(
+    "Cadastrar outro",
     () => {
       resetForm();
       for (const [name, field] of [
@@ -7423,75 +8287,76 @@ function mobileReceipt(record, template) {
     "record-add",
   );
   const view = button(
-    "Ver item",
+    "Ver ficha",
     () => {
       query({ situacao: "TODOS" });
       $("search").value = internal(record.id);
       expanded = record.id;
       renderList();
     },
-    "mobile-outline",
-    "search",
-  );
-  const anotherPlace = button(
-    "Escolher outro local",
-    () => {
-      resetForm();
-      setChoice("shelf", "");
-      setChoice("level", "");
-      syncForm();
-      openMobileJourney(1);
-      saveDraft();
-    },
     "mobile-text-action",
-    "pin",
+    "right",
   );
-  const repeat = button(
-    "Cadastrar outro igual",
-    () => {
-      repeatRegistration(template);
-      openMobileJourney(3);
-    },
-    "mobile-text-action",
-    "copy",
+  const more = el("details", undefined, "mobile-receipt-more");
+  more.append(
+    el("summary", "Outras opções"),
+    button(
+      "Escolher outro local",
+      () => {
+        resetForm();
+        setChoice("shelf", "");
+        setChoice("level", "");
+        syncForm();
+        openMobileJourney(1);
+        saveDraft();
+      },
+      "mobile-text-action",
+      "pin",
+    ),
+    button(
+      "Cadastrar outro igual",
+      () => {
+        repeatRegistration(template);
+        openMobileJourney(3);
+      },
+      "mobile-text-action",
+      "copy",
+    ),
   );
-  saved.className = "notice mobile-receipt" + (discarded ? " is-discarded" : "");
-  saved.replaceChildren(
-    visual,
-    heading,
-    el("p", "Registro salvo. Você pode seguir com o próximo item."),
-    samePlace,
-    view,
-    anotherPlace,
-    repeat,
-  );
+  saved.className =
+    "notice mobile-receipt" + (discarded ? " is-discarded" : "");
+  saved.replaceChildren(visual, another, view, more);
   saved.hidden = false;
   $("app").scrollTop = 0;
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const origin = journey.lastFiche;
-    const target = visual.querySelector(".mobile-item-symbol");
-    requestAnimationFrame(() => {
-      const destination = target.getBoundingClientRect();
-      if (!origin || !destination.width || origin.top < 0 || origin.top > innerHeight) {
-        animateMobileView(visual);
-        return;
-      }
-      const token = target.cloneNode(true);
-      token.classList.add("mobile-fiche-flight");
-      token.setAttribute("aria-hidden", "true");
-      Object.assign(token.style, {
-        left: origin.left + "px",
-        top: origin.top + "px",
-        width: origin.width + "px",
-        height: origin.height + "px",
-      });
-      document.body.append(token);
-      target.style.visibility = "hidden";
-      const cleanup = () => {
-        token.remove();
-        target.style.visibility = "";
-      };
-      const animation = token.animate(
+  const origin = journey.lastFiche;
+  const target = anchor.querySelector(".mobile-item-symbol");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  requestAnimationFrame(() => {
+    const destination = target.getBoundingClientRect();
+    if (
+      !origin ||
+      !destination.width ||
+      origin.top < 0 ||
+      origin.top > innerHeight
+    )
+      return animateMobileView(visual);
+    const token = target.cloneNode(true);
+    token.classList.add("mobile-fiche-flight");
+    token.setAttribute("aria-hidden", "true");
+    Object.assign(token.style, {
+      left: origin.left + "px",
+      top: origin.top + "px",
+      width: origin.width + "px",
+      height: origin.height + "px",
+    });
+    document.body.append(token);
+    target.style.visibility = "hidden";
+    const cleanup = () => {
+      token.remove();
+      target.style.visibility = "";
+    };
+    token
+      .animate(
         [
           { transform: "translate(0,0) scale(1)", opacity: 1 },
           {
@@ -7499,11 +8364,11 @@ function mobileReceipt(record, template) {
             opacity: 1,
           },
         ],
-        { duration: 440, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
-      );
-      animation.finished.then(cleanup).catch(cleanup);
-    });
-  }
+        { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)", fill: "forwards" },
+      )
+      .finished.then(cleanup)
+      .catch(cleanup);
+  });
 }
 
 function renderMobileRecords(found) {
@@ -7560,7 +8425,11 @@ function renderMobileRecords(found) {
     );
     if (record.controle === "QUANTIDADE")
       copy.append(
-        el("span", quantityText(record.saldo, record.unidade), "mobile-stock-caption"),
+        el(
+          "span",
+          quantityText(record.saldo, record.unidade),
+          "mobile-stock-caption",
+        ),
       );
     open.append(symbol, copy, mobileStatus(record), icon("right"));
     cell.append(open);
@@ -7572,7 +8441,10 @@ function renderMobileRecords(found) {
     const cell = el("td");
     cell.colSpan = 7;
     cell.append(
-      acervoEmpty("Nenhum item por aqui.", "Tente outro nome ou ajuste os filtros."),
+      acervoEmpty(
+        "Nenhum item por aqui.",
+        "Tente outro nome ou ajuste os filtros.",
+      ),
       button(
         "Limpar filtros",
         () => $("clearFilters").click(),
@@ -7605,7 +8477,8 @@ function openMobileRecord(record, focus = true) {
       closeMobileDetail();
     });
     dialog.addEventListener("close", () => {
-      if (!editor && !$("operation").open && !$("deleteItemDialog").open) expanded = null;
+      if (!editor && !$("operation").open && !$("deleteItemDialog").open)
+        expanded = null;
     });
     document.body.append(dialog);
   }
@@ -7613,7 +8486,9 @@ function openMobileRecord(record, focus = true) {
     const content = el("div", undefined, "mobile-detail-content");
     const close = button("", closeMobileDetail, "mobile-sheet-close", "close");
     close.setAttribute("aria-label", "Fechar detalhes e voltar à lista");
-    dialog.replaceChildren(close, content);
+    const toolbar = el("div", undefined, "mobile-detail-toolbar");
+    toolbar.append(el("span", "Ficha do item"), close);
+    dialog.replaceChildren(toolbar, content);
     renderMobileRecordDetail(record, content);
     dialog.dataset.fingerprint = `${record.id}:${record.versao}:${role}`;
   }
@@ -7626,77 +8501,148 @@ function renderMobileRecordDetail(record, panel) {
   const header = mobileItemAnchor(record);
   header.classList.add("mobile-detail-anchor");
   header.querySelector("strong").id = "mobileDetailTitle";
-  panel.append(header);
-  function group(title, pairs) {
-    const section = el("section", undefined, "mobile-detail-group");
-    section.append(el("h3", title));
-    const facts = el("dl");
-    for (const [label, value] of pairs)
-      facts.append(el("dt", label), el("dd", value || "Não informado"));
-    section.append(facts);
-    panel.append(section);
+  const tabs = el("div", undefined, "mobile-detail-tabs");
+  tabs.setAttribute("role", "tablist");
+  tabs.setAttribute("aria-label", "Informações do item");
+  const summary = el("section", undefined, "mobile-detail-summary");
+  summary.id = "mobileDetailSummary";
+  summary.setAttribute("role", "tabpanel");
+  summary.setAttribute("aria-labelledby", "mobileDetailSummaryTab");
+  const history = el("section", undefined, "mobile-detail-history");
+  history.id = "mobileDetailHistory";
+  history.hidden = true;
+  history.setAttribute("role", "tabpanel");
+  history.setAttribute("aria-labelledby", "mobileDetailHistoryTab");
+  const historyEntries = el("div", undefined, "history");
+  history.append(historyEntries);
+  let loaded = false;
+  const summaryTab = button("Resumo", () => select(false));
+  const historyTab = button("Histórico", () => select(true));
+  summaryTab.id = "mobileDetailSummaryTab";
+  historyTab.id = "mobileDetailHistoryTab";
+  for (const [tab, target] of [
+    [summaryTab, summary],
+    [historyTab, history],
+  ]) {
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", target.id);
+    tab.onkeydown = (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+        return;
+      event.preventDefault();
+      const next =
+        event.key === "Home"
+          ? summaryTab
+          : event.key === "End"
+            ? historyTab
+            : tab === summaryTab
+              ? historyTab
+              : summaryTab;
+      next.click();
+      next.focus();
+    };
   }
-  group("Identificação", [
+  function select(showHistory) {
+    summary.hidden = showHistory;
+    history.hidden = !showHistory;
+    for (const [tab, active] of [
+      [summaryTab, !showHistory],
+      [historyTab, showHistory],
+    ]) {
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    }
+    if (showHistory && !loaded) {
+      loaded = true;
+      historyEntries.append(acervoLoader("Abrindo o histórico…", true));
+      loadHistory(record.id, historyEntries);
+    }
+  }
+  tabs.append(summaryTab, historyTab);
+  if (record.controle === "QUANTIDADE") {
+    const balance = el("div", undefined, "mobile-detail-balance");
+    const main = el("div");
+    main.append(
+      el("small", "Saldo disponível"),
+      el("strong", quantityText(record.saldo, record.unidade)),
+    );
+    const minimum = el("div");
+    minimum.append(
+      el("small", "Estoque mínimo"),
+      el("strong", quantityText(record.minimo, record.unidade)),
+    );
+    balance.append(main, minimum);
+    summary.append(balance);
+  }
+  const facts = el("dl", undefined, "mobile-detail-facts");
+  const pairs = [
+    ["Local", record.dados.ambiente],
+    ...(locationText(record) ? [["Posição", locationText(record)]] : []),
     ["Categoria", record.dados.categoria],
     [
-      "Patrimônio",
+      "Controle",
+      record.controle === "QUANTIDADE" ? "Por quantidade" : "Individual",
+    ],
+    [
+      "Identificação",
       record.dados.codigo
         ? `${record.dados.tipo} ${record.dados.codigo}`
-        : "Sem identificação patrimonial",
+        : internal(record.id),
     ],
-  ]);
-  group("Localização", [
-    ["Ambiente", record.dados.ambiente],
-    ...(locationText(record) ? [["Posição", locationText(record)]] : []),
-  ]);
-  if (record.controle === "QUANTIDADE")
-    group("Estoque", [
-      ["Saldo", quantityText(record.saldo, record.unidade)],
-      ["Mínimo", quantityText(record.minimo, record.unidade)],
-    ]);
+  ];
+  for (const [label, value] of pairs) {
+    const row = el("div");
+    row.append(el("dt", label), el("dd", value || "Não informado"));
+    facts.append(row);
+  }
+  summary.append(facts);
+  function extra(title, pairs) {
+    const group = el("section", undefined, "mobile-detail-extra");
+    group.append(el("h3", title));
+    for (const [label, value] of pairs)
+      if (value) {
+        const line = el("p");
+        line.append(el("small", label), el("span", value));
+        group.append(line);
+      }
+    summary.append(group);
+  }
   if (record.emprestimo)
-    group("Empréstimo", [
+    extra("Empréstimo em aberto", [
       ["Responsável", record.emprestimo.responsavel],
       ["Destino", record.emprestimo.destino],
-      ["Registrado em", dateBR(record.emprestimo.momento)],
+      ["Desde", dateBR(record.emprestimo.momento)],
     ]);
   if (record.situacao === "BAIXADO") {
     const info = record.baixa || {};
-    const date = /^\d{4}-\d{2}-\d{2}$/.test(info.data || "")
-      ? info.data.split("-").reverse().join("/")
-      : info.data;
-    group("Descarte registrado", [
-      ["Data", date],
+    extra("Descarte registrado", [
+      [
+        "Data",
+        /^\d{4}-\d{2}-\d{2}$/.test(info.data || "")
+          ? info.data.split("-").reverse().join("/")
+          : info.data,
+      ],
       ["Motivo", info.motivo],
       ["Responsável", info.email],
       ["Documento", info.documento],
     ]);
   }
-  group("Observação", [["Registro", record.dados.observacao || "Sem observações"]]);
-  const history = el("details", undefined, "mobile-record-history");
-  const historyContent = el("div", undefined, "history");
-  history.append(el("summary", "Ver histórico"), historyContent);
-  let loaded = false;
-  history.addEventListener("toggle", () => {
-    if (history.open && !loaded) {
-      loaded = true;
-      historyContent.append(acervoLoader("Abrindo a história deste item…", true));
-      loadHistory(record.id, historyContent);
-    }
-  });
-  panel.append(history);
+  if (record.dados.observacao)
+    extra("Observação", [["", record.dados.observacao]]);
   if (record.legado) {
     const old = el("details");
     old.append(
       el("summary", "Informações da versão anterior"),
       el("pre", JSON.stringify(record.legado, null, 2)),
     );
-    panel.append(old);
+    history.append(old);
   }
   const actions = el("div", undefined, "mobile-detail-actions");
   if (role !== "leitor") {
     if (record.situacao === "ATIVO")
-      actions.append(button("Editar", () => startEdit(record), "mobile-outline", "edit"));
+      actions.append(
+        button("Editar", () => startEdit(record), "mobile-outline", "edit"),
+      );
     if (movementActions(record).length)
       actions.append(
         button(
@@ -7709,7 +8655,10 @@ function renderMobileRecordDetail(record, panel) {
           "movement",
         ),
       );
-    if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(record.situacao)) {
+    if (
+      role === "admin" &&
+      ["BAIXADO", "ARQUIVADO"].includes(record.situacao)
+    ) {
       const action = record.situacao === "BAIXADO" ? "estornar" : "restaurar";
       actions.append(
         button(
@@ -7721,10 +8670,9 @@ function renderMobileRecordDetail(record, panel) {
       );
     }
   }
-  if (actions.children.length) panel.append(actions);
   if (role === "admin") {
-    const extra = el("details", undefined, "mobile-record-admin");
-    extra.append(
+    const admin = el("details", undefined, "mobile-record-admin");
+    admin.append(
       el("summary", "Administração do registro"),
       button(
         "Excluir definitivamente",
@@ -7733,8 +8681,11 @@ function renderMobileRecordDetail(record, panel) {
         "close",
       ),
     );
-    panel.append(extra);
+    summary.append(admin);
   }
+  panel.append(header, tabs, summary, history);
+  if (actions.children.length) panel.append(actions);
+  select(false);
 }
 
 function openMobileMovement(record) {
@@ -7748,7 +8699,9 @@ function openMobileMovement(record) {
 function renderMobileMovement() {
   const host = $("moveResults");
   const search = key($("moveSearch").value);
-  const selectedRecord = rows.find((record) => record.id === journey.movementId);
+  const selectedRecord = rows.find(
+    (record) => record.id === journey.movementId,
+  );
   host.replaceChildren();
   $("movements").classList.toggle("mobile-movement-selected", !!selectedRecord);
   $("moveMissing").hidden = true;
@@ -7801,11 +8754,16 @@ function renderMobileMovement() {
           "",
           () => openOperation(action, selectedRecord),
           "mobile-action-tile" +
-            (["baixar", "descarte_estoque"].includes(action) ? " is-danger" : ""),
+            (["baixar", "descarte_estoque"].includes(action)
+              ? " is-danger"
+              : ""),
           ACTION_ICON[action],
         );
         const copy = el("div");
-        copy.append(el("strong", ACTION[action]), el("small", descriptions[action]));
+        copy.append(
+          el("strong", ACTION[action]),
+          el("small", descriptions[action]),
+        );
         tile.append(copy, icon("right"));
         host.append(tile);
       }
@@ -7841,13 +8799,16 @@ function renderMobileMovement() {
   }
   const exact = rows.filter(
     (record) =>
-      key(internal(record.id)) === search || key(record.dados.codigo) === search,
+      key(internal(record.id)) === search ||
+      key(record.dados.codigo) === search,
   );
   const found = exact.length
     ? exact
     : rows.filter((record) =>
         key(
-          [record.dados.item, record.dados.codigo, internal(record.id)].join(" "),
+          [record.dados.item, record.dados.codigo, internal(record.id)].join(
+            " ",
+          ),
         ).includes(search),
       );
   for (const record of found.slice(0, 20)) {
@@ -7874,7 +8835,11 @@ function renderMobileMovement() {
   $("createDown").hidden = role === "leitor";
   if (found.length > 20)
     host.append(
-      el("p", "Digite mais detalhes para encontrar o item.", "mobile-context-hint"),
+      el(
+        "p",
+        "Digite mais detalhes para encontrar o item.",
+        "mobile-context-hint",
+      ),
     );
 }
 
@@ -7889,7 +8854,9 @@ function openMobileTransfer(record) {
     el(
       "p",
       "Origem: " +
-        [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · "),
+        [record.dados.ambiente, locationText(record)]
+          .filter(Boolean)
+          .join(" · "),
     ),
   );
   $("editFields").querySelector(".mobile-editor-content").prepend(origin);
@@ -7920,7 +8887,8 @@ function updateMobileOperation() {
   const amount = Number($("moveQuantity").value || 0);
   let sentence = "";
   if (["entrada", "saida", "descarte_estoque"].includes(action)) {
-    const next = Number(selected.saldo) + (action === "entrada" ? amount : -amount);
+    const next =
+      Number(selected.saldo) + (action === "entrada" ? amount : -amount);
     sentence = `Saldo: ${quantityText(selected.saldo, selected.unidade)} → ${quantityText(next, selected.unidade)} após confirmar.`;
   } else if (action === "emprestar")
     sentence = `${selected.dados.item} ficará com ${$("movePerson").value.trim() || "o responsável informado"}, em ${$("moveDestination").value.trim() || "local a informar"}.`;
@@ -7943,7 +8911,8 @@ function renderMobileDashboard() {
   const root = $("mobileDashboard");
   if (!root || !mobileAcervo()) return;
   const scoped = rows.filter(
-    (record) => !journey.dashboardRoom || record.dados.ambiente === journey.dashboardRoom,
+    (record) =>
+      !journey.dashboardRoom || record.dados.ambiente === journey.dashboardRoom,
   );
   const goods = scoped.filter(
     (record) =>
@@ -7955,7 +8924,9 @@ function renderMobileDashboard() {
   const stocks = scoped.filter(
     (record) => record.controle === "QUANTIDADE" && record.situacao === "ATIVO",
   );
-  const low = stocks.filter((record) => Number(record.saldo) <= Number(record.minimo));
+  const low = stocks.filter(
+    (record) => Number(record.saldo) <= Number(record.minimo),
+  );
   $("mobileDashboardRoom").value = journey.dashboardRoom;
   $("mobileDashboardHero").querySelector("b").textContent =
     goods.length.toLocaleString("pt-BR");
@@ -7963,9 +8934,10 @@ function renderMobileDashboard() {
     `${active.length} ativos · ${goods.length - active.length} emprestados`;
   $("mobileDashboardUpdated").textContent = lastSuccess
     ? "Atualizado " +
-      new Intl.DateTimeFormat("pt-BR", { timeZone: ZONE, timeStyle: "short" }).format(
-        lastSuccess,
-      )
+      new Intl.DateTimeFormat("pt-BR", {
+        timeZone: ZONE,
+        timeStyle: "short",
+      }).format(lastSuccess)
     : "Aguardando atualização";
   $("mobileDashboardAttributes").replaceChildren(
     ...[
@@ -7979,7 +8951,8 @@ function renderMobileDashboard() {
         "Materiais em estoque",
         stocks.length,
         "stock",
-        () => mobileDashboardQuery({ controle: "QUANTIDADE", situacao: "ATIVO" }),
+        () =>
+          mobileDashboardQuery({ controle: "QUANTIDADE", situacao: "ATIVO" }),
       ],
       [
         "Para repor",
@@ -8001,7 +8974,8 @@ function renderMobileDashboard() {
   );
   const panel = $("mobileDashboardDistribution");
   const entries = journey.dashboardChart === "categories" ? CATEGORIES : ROOMS;
-  const field = journey.dashboardChart === "categories" ? "categoria" : "ambiente";
+  const field =
+    journey.dashboardChart === "categories" ? "categoria" : "ambiente";
   panel.replaceChildren(
     el(
       "h3",
@@ -8012,11 +8986,17 @@ function renderMobileDashboard() {
   );
   if (!goods.length)
     panel.append(
-      el("p", "Os bens cadastrados aparecerão nesta distribuição.", "mobile-empty-note"),
+      el(
+        "p",
+        "Os bens cadastrados aparecerão nesta distribuição.",
+        "mobile-empty-note",
+      ),
     );
   else
     for (const entry of entries) {
-      const count = goods.filter((record) => record.dados[field] === entry).length;
+      const count = goods.filter(
+        (record) => record.dados[field] === entry,
+      ).length;
       if (
         journey.dashboardRoom &&
         field === "ambiente" &&
@@ -8072,7 +9052,9 @@ function renderMobileDashboard() {
       ),
     );
     const actions = el("div", undefined, "actions");
-    actions.append(button("Ver item", () => openDashboardRecord(record), "", "right"));
+    actions.append(
+      button("Ver item", () => openDashboardRecord(record), "", "right"),
+    );
     if (role !== "leitor")
       actions.append(
         button(
@@ -8127,7 +9109,9 @@ function initMobileRefresh() {
     const next = amount >= 64;
     if (next !== ready) {
       ready = next;
-      label.textContent = ready ? "Solte para atualizar" : "Puxe para atualizar";
+      label.textContent = ready
+        ? "Solte para atualizar"
+        : "Puxe para atualizar";
     }
     indicator.dataset.state = ready ? "ready" : "pulling";
   }
@@ -8164,7 +9148,13 @@ function initMobileRefresh() {
   app.addEventListener(
     "touchstart",
     (event) => {
-      if (loading || blocked() || event.touches.length !== 1 || app.scrollTop > 1) return;
+      if (
+        loading ||
+        blocked() ||
+        event.touches.length !== 1 ||
+        app.scrollTop > 1
+      )
+        return;
       if (
         event.target.closest(
           "input,textarea,select,button,a,summary,dialog,[contenteditable='true'],.choices",
@@ -8234,6 +9224,100 @@ function initMobileAccount() {
   update();
 }
 
+function initMobileCompact() {
+  const home = $("mobileJourneyHome"),
+    art = home.querySelector(".mobile-journey-art"),
+    start = $("mobileJourneyStart");
+  art.removeAttribute("aria-hidden");
+  const mark = art.querySelector(".mobile-home-mark");
+  start.className = "mobile-start-symbol";
+  start.replaceChildren(mark, el("span", "Começar", "mobile-start-caption"));
+  art.append(start);
+  home.querySelector("h1").textContent = "Cadastre um item";
+  const progressCopy = el("span", undefined, "mobile-progress-label");
+  progressCopy.id = "mobileProgressLabel";
+  $("mobileRegistration").prepend(progressCopy);
+  $("mobileRegistrationProgress")
+    .querySelectorAll("button")
+    .forEach((button, i) =>
+      button.setAttribute(
+        "aria-label",
+        ["Local", "Item", "Controle", "Revisão"][i] +
+          ", etapa " +
+          (i + 1) +
+          " de 4",
+      ),
+    );
+  const notes = $("notesBlock");
+  const noteToggle = button(
+    "Adicionar observação",
+    () => {
+      const expanded = noteToggle.getAttribute("aria-expanded") !== "true";
+      noteToggle.setAttribute("aria-expanded", String(expanded));
+      notes.classList.toggle("mobile-notes-collapsed", !expanded);
+      if (expanded) $("note").focus();
+    },
+    "mobile-note-toggle",
+    "draft",
+  );
+  noteToggle.id = "mobileNoteToggle";
+  noteToggle.setAttribute("aria-controls", "note");
+  noteToggle.setAttribute("aria-expanded", "false");
+  notes.prepend(noteToggle);
+  notes.classList.add("mobile-notes-collapsed");
+  const other = el("details", undefined, "mobile-review-other");
+  other.id = "mobileReviewOther";
+  other.append(el("summary", "Outras opções"));
+  const credit = $("mobileAccountDialog").querySelector(
+    ".mobile-institution-credit",
+  );
+  const about = el("details", undefined, "mobile-account-about");
+  about.append(el("summary", "Sobre o Acervo"), credit);
+  $("mobileAccountDialog").append(about);
+  $("mobileAccountDialog")
+    .querySelector(".mobile-account-refresh-help")
+    ?.remove();
+  $("camera").setAttribute("aria-labelledby", "cameraTitle");
+  $("closeCamera").setAttribute("aria-label", "Fechar leitor da câmera");
+  const instruction = $("camera").querySelector(".camerafoot > p");
+  instruction.textContent = "Posicione a etiqueta na moldura.";
+  const manual = button(
+    "Digitar código",
+    () => {
+      const target = scanTarget;
+      closeScanner();
+      $(target)?.focus({ preventScroll: true });
+    },
+    "mobile-camera-manual",
+    "edit",
+  );
+  manual.id = "cameraManual";
+  $("camera").querySelector(".camerafoot").append(manual);
+  const firstAccess = el(
+    "p",
+    "No primeiro acesso, a pessoa troca a senha inicial.",
+    "mobile-new-access-help",
+  );
+  $("newUserSave").before(firstAccess);
+  const media = matchMedia(
+    "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
+  );
+  const layout = () => {
+    const actions = $("save").parentElement;
+    if (media.matches) {
+      actions.append(other);
+      other.append($("discardRegistration"));
+    } else {
+      actions.append($("discardRegistration"));
+      other.remove();
+    }
+    syncMobileJourney();
+    if ($("userAccessDialog").open) renderPeople();
+  };
+  media.addEventListener("change", layout);
+  layout();
+}
+
 function initMobileJourney() {
   const register = $("register");
   const form = $("itemForm");
@@ -8243,7 +9327,8 @@ function initMobileJourney() {
   const art = el("div", undefined, "mobile-journey-art");
   art.setAttribute("aria-hidden", "true");
   const mark = el("img", undefined, "mobile-home-mark");
-  mark.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=5";
+  mark.src =
+    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=5";
   mark.alt = "";
   for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
     const card = el("span", undefined, "mobile-art-fiche");
@@ -8310,7 +9395,9 @@ function initMobileJourney() {
   exit.id = "mobileJourneyExit";
   $("mobileRegistrationActions").before(exit);
   $("mobileRegistrationTitle").classList.add("mobile-journey-title");
-  $("mobileRegistrationDescription").classList.add("mobile-journey-description");
+  $("mobileRegistrationDescription").classList.add(
+    "mobile-journey-description",
+  );
   $("mobileRegistrationContent").prepend(
     $("mobileRegistrationTitle"),
     $("mobileRegistrationDescription"),
@@ -8347,7 +9434,8 @@ function initMobileJourney() {
   $("confirmOperation").before(preview);
   $("operationForm").addEventListener("input", updateMobileOperation);
   $("operation").addEventListener("close", () => {
-    if (!$("mobileDetail")?.open && !$("movements").hidden) renderMovementResults();
+    if (!$("mobileDetail")?.open && !$("movements").hidden)
+      renderMovementResults();
   });
   $("createDown").addEventListener("click", () => {
     openMobileJourney(1);
@@ -8392,7 +9480,11 @@ function initMobileJourney() {
     renderMobileDashboard();
   };
   heading.append(rooms);
-  const updated = el("small", "Aguardando atualização", "mobile-dashboard-updated");
+  const updated = el(
+    "small",
+    "Aguardando atualização",
+    "mobile-dashboard-updated",
+  );
   updated.id = "mobileDashboardUpdated";
   const hero = button(
     "",
@@ -8428,12 +9520,20 @@ function initMobileJourney() {
     tab.setAttribute("role", "tab");
     tabs.append(tab);
   }
-  const distribution = el("section", undefined, "mobile-dashboard-distribution");
+  const distribution = el(
+    "section",
+    undefined,
+    "mobile-dashboard-distribution",
+  );
   distribution.id = "mobileDashboardDistribution";
   const attention = el("details", undefined, "mobile-dashboard-attention");
   attention.id = "mobileDashboardAttention";
   const summary = el("summary");
-  summary.append(icon("stock-alert"), el("strong", "Reposição em dia"), icon("right"));
+  summary.append(
+    icon("stock-alert"),
+    el("strong", "Reposição em dia"),
+    icon("right"),
+  );
   const alerts = el("div");
   alerts.id = "mobileDashboardAlerts";
   attention.append(summary, alerts);
@@ -8510,8 +9610,11 @@ $("deleteItemDialog").addEventListener("cancel", (event) => {
 
 $("deleteItemForm").onsubmit = async (event) => {
   event.preventDefault();
-  if (role !== "admin" || busy || pending || deletionSaving || !deletionTarget) return;
-  if ($("deleteItemConfirmation").value.trim() !== internal(deletionTarget.id)) {
+  if (role !== "admin" || busy || pending || deletionSaving || !deletionTarget)
+    return;
+  if (
+    $("deleteItemConfirmation").value.trim() !== internal(deletionTarget.id)
+  ) {
     $("deleteItemConfirmation").setCustomValidity(
       "Digite exatamente " + internal(deletionTarget.id) + ".",
     );
@@ -8561,7 +9664,8 @@ $("firstAccessForm").onsubmit = async (event) => {
   if (passwordChanging) return;
   const password = $("newPassword").value;
   if (!Object.values(passwordRequirements(password)).every(Boolean)) {
-    $("firstAccessMessage").textContent = "Atenda a todos os requisitos da nova senha.";
+    $("firstAccessMessage").textContent =
+      "Atenda a todos os requisitos da nova senha.";
     return;
   }
   if (new TextEncoder().encode(password).length > 72) {
@@ -8575,7 +9679,8 @@ $("firstAccessForm").onsubmit = async (event) => {
     return;
   }
   if (password === "curitiba" || password === "Curitiba@01!") {
-    $("firstAccessMessage").textContent = "Escolha uma senha diferente da senha inicial.";
+    $("firstAccessMessage").textContent =
+      "Escolha uma senha diferente da senha inicial.";
     return;
   }
   passwordChanging = true;
@@ -8637,7 +9742,8 @@ $("leaveFirstAccess").onclick = async () => {
     scope: "local",
   });
   if (error) {
-    $("firstAccessMessage").textContent = "Não foi possível sair. Tente novamente.";
+    $("firstAccessMessage").textContent =
+      "Não foi possível sair. Tente novamente.";
     return;
   }
   endSession();
@@ -8687,7 +9793,8 @@ $("addPerson").onclick = () => {
 
 $("newUserForm").onsubmit = async (event) => {
   event.preventDefault();
-  if (role !== "admin" || accessSaving || !$("newUserForm").reportValidity()) return;
+  if (role !== "admin" || accessSaving || !$("newUserForm").reportValidity())
+    return;
   setPeopleBusy(true);
   $("newUserMessage").textContent = "";
   labelButton($("newUserSave"), "Cadastrando…", "clock");
@@ -8859,7 +9966,10 @@ $("viewDiscarded").onclick = () =>
 
 $("moreFilters").onclick = () => {
   $("filterPanel").hidden = !$("filterPanel").hidden;
-  $("moreFilters").setAttribute("aria-expanded", String(!$("filterPanel").hidden));
+  $("moreFilters").setAttribute(
+    "aria-expanded",
+    String(!$("filterPanel").hidden),
+  );
 };
 
 $("clearFilters").onclick = () => {
@@ -8937,7 +10047,9 @@ $("loginForm").onsubmit = async (e) => {
       password: $("password").value,
     });
     if (error) throw error;
-    const initialPassword = ["curitiba", "Curitiba@01!"].includes($("password").value);
+    const initialPassword = ["curitiba", "Curitiba@01!"].includes(
+      $("password").value,
+    );
     $("password").value = "";
     await loginReady(data.session, initialPassword);
   } catch (e) {
@@ -9069,3 +10181,5 @@ initMobileJourney();
 initMobileAccount();
 
 initMobileRefresh();
+
+initMobileCompact();

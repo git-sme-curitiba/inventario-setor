@@ -2100,9 +2100,7 @@ function openRegistrationDiscard() {
           ),
         );
     $("registrationDiscardItem").replaceChildren(anchor);
-    $("registrationDiscardDialog")
-      .querySelector("[data-close]")
-      .focus({ preventScroll: true });
+    focusAcervoDialog($("registrationDiscardDialog"));
   } else $("directReason").focus();
 }
 
@@ -3588,6 +3586,12 @@ function startEdit(r) {
   showAcervoDialog($("editDialog"));
   focusAcervoDialog($("editDialog"), "editItem");
   $("editDialog").scrollTop = 0;
+  const scroll = $("editDialog").querySelector(".mobile-dialog-body");
+  if (scroll) scroll.scrollTop = 0;
+  if (mobileAcervo()) {
+    labelButton($("editSave"), "Salvar alterações", "save");
+    labelButton($("editCancel"), "Cancelar", "left");
+  }
 }
 
 function validateRecord(d, id = null) {
@@ -4771,8 +4775,20 @@ function renderPeople() {
         "aria-label",
         "Ações de " + (person.nome || person.email),
       );
+      toggle.setAttribute("aria-expanded", "false");
       menu.append(toggle, actions);
       menu.addEventListener("toggle", () => {
+        toggle.setAttribute("aria-expanded", String(menu.open));
+        menu.classList.remove("opens-up");
+        if (menu.open) {
+          const body = menu.closest(".mobile-dialog-body");
+          if (
+            body &&
+            actions.getBoundingClientRect().bottom >
+              body.getBoundingClientRect().bottom - 8
+          )
+            menu.classList.add("opens-up");
+        }
         if (menu.open)
           $("peopleList")
             .querySelectorAll(".people-overflow")
@@ -7306,18 +7322,7 @@ function initVisualExperience() {
     document.documentElement.classList.toggle("auth-viewport", authScreen);
     document
       .querySelectorAll('meta[name="theme-color"]')
-      .forEach((meta) =>
-        meta.setAttribute(
-          "content",
-          mobileAcervo()
-            ? authScreen
-              ? "#0852b8"
-              : "#0852b8"
-            : authScreen
-              ? "#0d61b0"
-              : "#e8f1fa",
-        ),
-      );
+      .forEach((meta) => meta.setAttribute("content", mobileChromeColor()));
     if (
       previousAuthScreen !== null &&
       previousAuthScreen !== authScreen &&
@@ -7436,18 +7441,7 @@ function initAppViewport() {
     const authScreen = !$("login").hidden;
     document
       .querySelectorAll('meta[name="theme-color"]')
-      .forEach((meta) =>
-        meta.setAttribute(
-          "content",
-          mobileAcervo()
-            ? authScreen
-              ? "#0852b8"
-              : "#0852b8"
-            : authScreen
-              ? "#0d61b0"
-              : "#e8f1fa",
-        ),
-      );
+      .forEach((meta) => meta.setAttribute("content", mobileChromeColor()));
     const height = viewport?.height || window.innerHeight;
     const active = document.activeElement;
     const focused = active?.matches(
@@ -7647,6 +7641,9 @@ function closeMobileDetail() {
   const dialog = $("mobileDetail");
   const id = expanded;
   expanded = null;
+  $("results")
+    .querySelectorAll(".mobile-record-button[aria-expanded=true]")
+    .forEach((control) => control.setAttribute("aria-expanded", "false"));
   if (dialog?.open) dialog.close();
   $("browse").classList.remove("mobile-detail-open");
   if (mobileAcervo() && !$("browse").hidden) {
@@ -8968,7 +8965,8 @@ function openMobileTransfer(record) {
     ),
   );
   $("editFields").querySelector(".mobile-editor-content").prepend(origin);
-  labelButton($("editSave"), "Confirmar transferência", "movement");
+  labelButton($("editSave"), "Transferir", "movement");
+  labelButton($("editCancel"), "Cancelar", "left");
   $("editRooms").closest("fieldset").querySelector("legend").textContent =
     "Novo ambiente";
 }
@@ -9018,28 +9016,13 @@ function mobileDashboardQuery(preset = {}) {
 function renderMobileDashboard() {
   const root = $("mobileDashboard");
   if (!root || !mobileAcervo()) return;
-  const scoped = rows.filter(
-    (record) =>
-      !journey.dashboardRoom || record.dados.ambiente === journey.dashboardRoom,
-  );
-  const goods = scoped.filter(
-    (record) =>
-      record.controle !== "QUANTIDADE" &&
-      ["ATIVO", "EMPRESTADO"].includes(record.situacao),
-  );
-  const active = goods.filter((record) => record.situacao === "ATIVO");
-  const loans = scoped.filter((record) => record.situacao === "EMPRESTADO");
-  const stocks = scoped.filter(
-    (record) => record.controle === "QUANTIDADE" && record.situacao === "ATIVO",
-  );
-  const low = stocks.filter(
-    (record) => Number(record.saldo) <= Number(record.minimo),
-  );
+  const data = mobileInventorySnapshot(rows, journey.dashboardRoom);
+  const { goods, stocks, loans, low } = data;
   $("mobileDashboardRoom").value = journey.dashboardRoom;
   $("mobileDashboardHero").querySelector("b").textContent =
     goods.length.toLocaleString("pt-BR");
   $("mobileDashboardHero").querySelector("small").textContent =
-    `${active.length} ativos · ${goods.length - active.length} emprestados`;
+    `${goods.length - loans.length} ativos · ${loans.length} emprestados`;
   $("mobileDashboardUpdated").textContent = lastSuccess
     ? "Atualizado " +
       new Intl.DateTimeFormat("pt-BR", {
@@ -9053,10 +9036,14 @@ function renderMobileDashboard() {
         "Emprestados",
         loans.length,
         "loan",
-        () => mobileDashboardQuery({ situacao: "EMPRESTADO" }),
+        () =>
+          mobileDashboardQuery({
+            controle: "INDIVIDUAL",
+            situacao: "EMPRESTADO",
+          }),
       ],
       [
-        "Materiais em estoque",
+        "Tipos de material",
         stocks.length,
         "stock",
         () =>
@@ -9066,51 +9053,108 @@ function renderMobileDashboard() {
         "Para repor",
         low.length,
         "stock-alert",
-        () => {
-          $("mobileDashboardAttention").open = true;
+        () =>
           $("mobileDashboardAttention").scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
-          });
-        },
+            block: "start",
+            behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+              ? "auto"
+              : "smooth",
+          }),
       ],
-    ].map(([title, total, mark, fn]) => {
-      const control = button("", fn, "mobile-attribute", mark);
-      control.append(el("b", String(total)), el("span", title));
+    ].map(([label, number, mark, action]) => {
+      const control = button("", action, "mobile-attribute", mark);
+      control.append(el("b", String(number)), el("span", label));
       return control;
     }),
   );
+  const attention = $("mobileDashboardAttention");
+  attention.dataset.alert = String(low.length > 0);
+  attention.querySelector(".mobile-stock-heading strong").textContent =
+    low.length ? "Prioridades do estoque" : "Estoque acompanhado";
+  const list = $("mobileDashboardAlerts");
+  list.replaceChildren();
+  if (!stocks.length)
+    list.append(
+      el(
+        "p",
+        "Cadastre materiais por quantidade para acompanhar os saldos e a reposição.",
+        "inventory-note",
+      ),
+    );
+  else if (!low.length)
+    list.append(
+      el(
+        "p",
+        "Todos os materiais estão acima do mínimo cadastrado.",
+        "inventory-note",
+      ),
+    );
+  else {
+    list.append(
+      el(
+        "p",
+        `${data.empty.length} sem saldo · ${low.length} no mínimo ou abaixo`,
+        "inventory-note",
+      ),
+    );
+    for (const record of low) {
+      const entry = button(
+        "",
+        () => openDashboardRecord(record),
+        "inventory-stock-row",
+      );
+      const symbol = el("span", undefined, "inventory-stock-symbol");
+      symbol.append(itemIcon(record));
+      const copy = el("span", undefined, "inventory-stock-copy");
+      const missing = Math.max(
+        0,
+        Math.round((Number(record.minimo) - Number(record.saldo)) * 1000) /
+          1000,
+      );
+      copy.append(
+        el("strong", record.dados.item),
+        el(
+          "small",
+          missing
+            ? `Faltam ${quantityText(missing, record.unidade)} para o mínimo`
+            : "No mínimo cadastrado",
+        ),
+      );
+      entry.append(
+        symbol,
+        copy,
+        el("b", quantityText(record.saldo, record.unidade)),
+        icon("right"),
+      );
+      list.append(entry);
+    }
+  }
   const panel = $("mobileDashboardDistribution");
-  const entries = journey.dashboardChart === "categories" ? CATEGORIES : ROOMS;
-  const field =
-    journey.dashboardChart === "categories" ? "categoria" : "ambiente";
+  const categoryView = journey.dashboardChart === "categories";
+  const field = categoryView ? "categoria" : "ambiente";
   panel.replaceChildren(
-    el(
-      "h3",
-      journey.dashboardChart === "categories"
-        ? "Bens por categoria"
-        : "Bens por ambiente",
-    ),
+    el("h3", categoryView ? "De que é feito o acervo?" : "Onde estão os bens?"),
+    el("p", `${goods.length} bens ativos ou emprestados`, "inventory-note"),
   );
   if (!goods.length)
     panel.append(
       el(
         "p",
-        "Os bens cadastrados aparecerão nesta distribuição.",
-        "mobile-empty-note",
+        "A distribuição aparece com o cadastro dos primeiros bens.",
+        "inventory-note",
       ),
     );
   else
-    for (const entry of entries) {
-      const count = goods.filter(
-        (record) => record.dados[field] === entry,
-      ).length;
+    for (const entry of categoryView ? CATEGORIES : ROOMS) {
       if (
+        !categoryView &&
         journey.dashboardRoom &&
-        field === "ambiente" &&
         entry !== journey.dashboardRoom
       )
         continue;
+      const count = goods.filter(
+        (record) => record.dados[field] === entry,
+      ).length;
       const row = button(
         "",
         () =>
@@ -9123,58 +9167,171 @@ function renderMobileDashboard() {
       );
       const bar = el("i");
       bar.style.setProperty("--portion", `${(count / goods.length) * 100}%`);
-      row.append(el("span", entry), bar, el("b", String(count)));
+      const value = el("span", undefined, "inventory-distribution-value");
+      value.append(
+        el("b", count.toLocaleString("pt-BR")),
+        el("small", `${Math.round((count / goods.length) * 100)}%`),
+      );
+      row.append(el("span", entry), bar, value);
       panel.append(row);
     }
   $("mobileDashboardTabs")
     .querySelectorAll("button")
-    .forEach((button) =>
-      button.setAttribute(
+    .forEach((control) =>
+      control.setAttribute(
         "aria-selected",
-        String(button.dataset.chart === journey.dashboardChart),
+        String(control.dataset.chart === journey.dashboardChart),
       ),
     );
-  const attention = $("mobileDashboardAttention");
-  attention.querySelector("summary strong").textContent = low.length
-    ? `${low.length} ${low.length === 1 ? "material precisa" : "materiais precisam"} de reposição`
-    : "Reposição em dia";
-  const list = $("mobileDashboardAlerts");
-  list.replaceChildren();
-  if (!low.length)
-    list.append(
-      el(
-        "p",
-        stocks.length
-          ? "Nenhum material está no mínimo ou abaixo dele."
-          : "Os alertas aparecem quando houver materiais por quantidade.",
-        "mobile-empty-note",
-      ),
-    );
-  for (const record of low) {
-    const box = el("div", undefined, "mobile-alert-record");
-    box.append(
-      mobileItemAnchor(record),
-      el(
-        "p",
-        `Saldo ${quantityText(record.saldo, record.unidade)} · mínimo ${quantityText(record.minimo, record.unidade)}`,
-      ),
-    );
-    const actions = el("div", undefined, "actions");
-    actions.append(
-      button("Ver item", () => openDashboardRecord(record), "", "right"),
-    );
-    if (role !== "leitor")
-      actions.append(
-        button(
-          "Registrar entrada",
-          () => openOperation("entrada", record),
-          "primary",
-          "stock-in",
-        ),
-      );
-    box.append(actions);
-    list.append(box);
+  let insights = $("mobileInventoryInsights");
+  if (!insights) {
+    insights = el("div", undefined, "mobile-inventory-insights");
+    insights.id = "mobileInventoryInsights";
+    root.append(insights);
   }
+  const identity = el("section", undefined, "inventory-insight-card");
+  const percent = goods.length
+    ? Math.round((data.identified.length / goods.length) * 100)
+    : 0;
+  identity.append(
+    el("h3", "Identificação dos bens"),
+    el("p", "Etiquetas PMC ou ICI informadas", "inventory-note"),
+  );
+  const gauge = el("div", undefined, "inventory-gauge");
+  gauge.setAttribute("role", "meter");
+  gauge.setAttribute("aria-label", "Bens com etiqueta PMC ou ICI informada");
+  gauge.setAttribute("aria-valuemin", "0");
+  gauge.setAttribute("aria-valuemax", "100");
+  gauge.setAttribute("aria-valuenow", String(percent));
+  const fill = el("i");
+  fill.style.width = percent + "%";
+  gauge.append(fill);
+  const identityNumbers = el("div", undefined, "inventory-identity-numbers");
+  identityNumbers.append(
+    el("strong", `${percent}%`),
+    el("span", `${data.identified.length} de ${goods.length} bens`),
+  );
+  identity.append(identityNumbers, gauge);
+  const internalOnly = goods.filter(
+    (record) => record.dados.tipo === "SEM_IDENTIFICACAO",
+  ).length;
+  identity.append(
+    button(
+      `${internalOnly} com código interno`,
+      () =>
+        mobileDashboardQuery({
+          controle: "INDIVIDUAL",
+          tipo: "SEM_IDENTIFICACAO",
+          situacao: "EM_USO",
+        }),
+      "inventory-inline-action",
+      "code",
+    ),
+  );
+  const balances = el(
+    "section",
+    undefined,
+    "inventory-insight-card inventory-balances",
+  );
+  balances.append(
+    el("h3", "Saldo dos materiais"),
+    el(
+      "p",
+      `${stocks.length} tipos de material · saldos por unidade de medida`,
+      "inventory-note",
+    ),
+  );
+  if (!data.units.size)
+    balances.append(
+      el("p", "Ainda não há materiais por quantidade.", "inventory-note"),
+    );
+  for (const [unit, amount] of data.units)
+    balances.append(el("strong", quantityText(amount, unit)));
+  const facts = el(
+    "section",
+    undefined,
+    "inventory-insight-card inventory-facts",
+  );
+  facts.append(el("h3", "Você sabia?"));
+  const varieties = el("div", undefined, "inventory-fact");
+  varieties.append(
+    icon("composition"),
+    el(
+      "span",
+      `${data.models.size} nomes de itens diferentes entre os bens acompanhados.`,
+    ),
+  );
+  facts.append(varieties);
+  const frequent = data.common[0];
+  if (frequent && frequent.count > 1) {
+    const tied =
+      data.common.filter((group) => group.count === frequent.count).length > 1;
+    const fact = button(
+      "",
+      () =>
+        mobileDashboardQuery({
+          controle: "INDIVIDUAL",
+          item: frequent.name,
+          situacao: "EM_USO",
+        }),
+      "inventory-fact inventory-fact-link",
+    );
+    fact.append(
+      itemIcon(frequent.record),
+      el(
+        "span",
+        `${frequent.name}: ${frequent.count} registros${tied ? ", entre os itens mais frequentes" : ", o item mais frequente"}.`,
+      ),
+      icon("right"),
+    );
+    facts.append(fact);
+  }
+  const categories = CATEGORIES.map((name) => ({
+    name,
+    count: goods.filter((record) => record.dados.categoria === name).length,
+  })).sort(
+    (a, b) => b.count - a.count || a.name.localeCompare(b.name, "pt-BR"),
+  );
+  if (goods.length && categories[0]?.count) {
+    const largest = categories[0];
+    const fact = el("div", undefined, "inventory-fact");
+    fact.append(
+      icon(CATEGORY_ICON[largest.name] || "composition"),
+      el(
+        "span",
+        `${largest.name} reúne ${Math.round((largest.count / goods.length) * 100)}% dos bens (${largest.count} de ${goods.length}).`,
+      ),
+    );
+    facts.append(fact);
+  }
+  const positions = new Set(
+    data.current
+      .filter(
+        (record) =>
+          record.dados.ambiente === "Almoxarifado" &&
+          record.dados.estante &&
+          record.dados.prateleira,
+      )
+      .map((record) => record.dados.estante + "/" + record.dados.prateleira),
+  );
+  if (positions.size) {
+    const fact = el("div", undefined, "inventory-fact");
+    fact.append(
+      icon("shelf"),
+      el(
+        "span",
+        `${positions.size} ${positions.size === 1 ? "posição do almoxarifado tem" : "posições do almoxarifado têm"} bens ou materiais cadastrados.`,
+      ),
+    );
+    facts.append(fact);
+  }
+  const history = button(
+    `${data.discarded.length} ${data.discarded.length === 1 ? "registro descartado" : "registros descartados"} no histórico`,
+    () => mobileDashboardQuery({ situacao: "BAIXADO" }),
+    "inventory-history-link",
+    "discard",
+  );
+  insights.replaceChildren(identity, balances, facts, history);
 }
 
 function initMobileRefresh() {
@@ -9901,9 +10058,9 @@ function initMobileJourney() {
     "mobile-dashboard-distribution",
   );
   distribution.id = "mobileDashboardDistribution";
-  const attention = el("details", undefined, "mobile-dashboard-attention");
+  const attention = el("section", undefined, "mobile-dashboard-attention");
   attention.id = "mobileDashboardAttention";
-  const summary = el("summary");
+  const summary = el("div", undefined, "mobile-stock-heading");
   summary.append(
     icon("stock-alert"),
     el("strong", "Reposição em dia"),
@@ -9912,32 +10069,23 @@ function initMobileJourney() {
   const alerts = el("div");
   alerts.id = "mobileDashboardAlerts";
   attention.append(summary, alerts);
-  const recent = el("details", undefined, "mobile-dashboard-recent");
-  recent.append(el("summary", "Últimas movimentações"));
-  const recentTimeline = $("movementTimeline");
-  const recentToggle = $("toggleMovementTimeline");
-  const placeholder = document.createComment("");
-  recentTimeline.before(placeholder);
   dashboard.append(
     heading,
     updated,
     hero,
     attributes,
+    attention,
     tabs,
     distribution,
-    attention,
-    recent,
   );
   $("dashboard").prepend(dashboard);
   const layout = () => {
     if (mobileAcervo()) {
-      recent.append(recentTimeline, recentToggle);
       $("search").placeholder = "Nome, código ou observação";
       $("types").querySelector(
         '[value="SEM_IDENTIFICACAO"]',
       ).nextElementSibling.lastChild.textContent = "Automático";
     } else {
-      placeholder.after(recentTimeline, recentToggle);
       $("search").placeholder = originalSearchPlaceholder;
       $("types").querySelector(
         '[value="SEM_IDENTIFICACAO"]',
@@ -10736,3 +10884,164 @@ function initMobileSurfaces() {
 }
 
 initMobileSurfaces();
+
+function mobileInventorySnapshot(records, room = "") {
+  const scoped = records.filter(
+    (record) => !room || record.dados.ambiente === room,
+  );
+  const current = scoped.filter((record) =>
+    ["ATIVO", "EMPRESTADO"].includes(record.situacao),
+  );
+  const goods = current.filter((record) => record.controle !== "QUANTIDADE");
+  const stocks = current.filter(
+    (record) => record.controle === "QUANTIDADE" && record.situacao === "ATIVO",
+  );
+  const loans = goods.filter((record) => record.situacao === "EMPRESTADO");
+  const identified = goods.filter(
+    (record) =>
+      ["PMC", "ICI"].includes(record.dados.tipo) &&
+      /^\d{6}$/.test(record.dados.codigo || ""),
+  );
+  const low = stocks
+    .filter((record) => Number(record.saldo) <= Number(record.minimo))
+    .sort(
+      (a, b) =>
+        Number(a.saldo > 0) - Number(b.saldo > 0) ||
+        Number(a.saldo) / Math.max(1, Number(a.minimo)) -
+          Number(b.saldo) / Math.max(1, Number(b.minimo)) ||
+        a.dados.item.localeCompare(b.dados.item, "pt-BR"),
+    );
+  const models = new Map(),
+    units = new Map();
+  for (const record of goods) {
+    const name = key(record.dados.item);
+    const group = models.get(name) || {
+      name: record.dados.item,
+      count: 0,
+      record,
+    };
+    group.count++;
+    models.set(name, group);
+  }
+  for (const record of stocks) {
+    const unit = record.unidade || "unidade";
+    units.set(
+      unit,
+      Math.round(((units.get(unit) || 0) + Number(record.saldo || 0)) * 1000) /
+        1000,
+    );
+  }
+  const common = [...models.values()].sort(
+    (a, b) => b.count - a.count || a.name.localeCompare(b.name, "pt-BR"),
+  );
+  return {
+    scoped,
+    current,
+    goods,
+    stocks,
+    loans,
+    identified,
+    low,
+    models,
+    units,
+    common,
+    discarded: scoped.filter((record) => record.situacao === "BAIXADO"),
+    empty: stocks.filter((record) => Number(record.saldo) === 0),
+    rooms: new Set(current.map((record) => record.dados.ambiente)).size,
+  };
+}
+
+function mobileChromeColor() {
+  if (!mobileAcervo()) return $("login").hidden ? "#e8f1fa" : "#0d61b0";
+  return document.querySelector("#camera[open]")
+    ? "#063d8f"
+    : document.querySelector("body > dialog[open]")
+      ? "#033071"
+      : "#0852b8";
+}
+
+function initMobileRefinements() {
+  const signature = document.querySelector(".mobile-about-signature");
+  const copyright = signature.querySelector("small");
+  copyright.textContent = `© ${new Date().getFullYear()} Gabriel Santiago Cândido`;
+  signature.append(el("small", "Todos os direitos reservados."));
+  const closeMenus = (target) =>
+    document.querySelectorAll(".people-overflow[open]").forEach((menu) => {
+      if (!target || !menu.contains(target)) menu.open = false;
+    });
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        ["Tab", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(
+          event.key,
+        )
+      )
+        document.documentElement.classList.add("acervo-keyboard-nav");
+    },
+    true,
+  );
+  document.addEventListener(
+    "pointerdown",
+    () => document.documentElement.classList.remove("acervo-keyboard-nav"),
+    true,
+  );
+  $("userAccessDialog")
+    .querySelector(".mobile-dialog-body")
+    ?.addEventListener("scroll", () => closeMenus(), { passive: true });
+  document.addEventListener(
+    "pointerdown",
+    (event) => closeMenus(event.target),
+    true,
+  );
+  document.addEventListener("focusin", (event) => closeMenus(event.target));
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      const open = document.querySelector(".people-overflow[open]");
+      if (open && event.key === "Escape") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        open.open = false;
+        open.querySelector("summary").focus();
+      }
+    },
+    true,
+  );
+  $("userAccessDialog").addEventListener("close", () => closeMenus());
+  const syncChrome = () => {
+    const modal =
+      mobileAcervo() &&
+      !!document.querySelector("body > dialog[open]:not(#camera)");
+    document.documentElement.classList.toggle("acervo-modal-open", modal);
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((meta) => (meta.content = mobileChromeColor()));
+  };
+  new MutationObserver(syncChrome).observe(document.body, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["open"],
+  });
+  window.addEventListener("resize", syncChrome);
+  syncChrome();
+  const app = $("app");
+  const measure = () => {
+    const style = getComputedStyle(app);
+    app.style.setProperty(
+      "--mobile-main-content-height",
+      Math.max(
+        0,
+        app.clientHeight -
+          parseFloat(style.paddingTop) -
+          parseFloat(style.paddingBottom),
+      ) + "px",
+    );
+  };
+  new ResizeObserver(measure).observe(app);
+  measure();
+  const deleteMark = $("deleteItemDialog").querySelector(".operation-mark");
+  deleteMark.replaceChildren(icon("discard"));
+}
+
+initMobileRefinements();

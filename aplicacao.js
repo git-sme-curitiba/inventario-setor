@@ -7801,10 +7801,23 @@ function initMobileIdentity() {
   const queryMenu = el("details", undefined, "mobile-query-menu");
   queryMenu.id = "mobileQueryMenu";
   const queryButton = el("summary", "•••");
-  queryButton.setAttribute("aria-label", "Exportação e itens descartados");
+  queryButton.setAttribute("aria-label", "Baixar planilha Excel");
   queryMenu.append(queryButton);
   const queryBar = $("browse").querySelector(".card > .bar"),
     queryTools = queryBar.querySelector(".query-tools");
+  const exportMenu = queryTools.querySelector(".export-menu");
+  const exportOptions = queryTools.querySelector(".export-options");
+  const exportHeading = el("div", undefined, "mobile-export-heading");
+  exportHeading.append(icon("sheet"), el("strong", "Baixar Excel"));
+  queryTools.prepend(exportHeading);
+  exportOptions.addEventListener("click", (event) => {
+    if (event.target.closest("button")) queryMenu.open = false;
+  });
+  const queryTitle = $("browse").querySelector(".workspace-title");
+  const queryTitleText = [...queryTitle.childNodes].find(
+    (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+  );
+  const originalQueryTitle = queryTitleText.textContent;
   queryBar.append(queryMenu);
   const camera = button(
     "",
@@ -7900,6 +7913,8 @@ function initMobileIdentity() {
       document.querySelector(".shell").append(appNav);
       credit.before($("draftInfo"));
       queryMenu.append(queryTools);
+      queryTools.append(exportOptions);
+      queryTitleText.textContent = "Consultar";
     } else {
       reviewActions.removeAttribute("id");
       $("registrationSave").append(reviewBack, reviewActions);
@@ -7910,7 +7925,9 @@ function initMobileIdentity() {
         $("acervoOpening") || $("app").querySelector("section"),
       );
       $("itemForm").after($("draftInfo"));
+      exportMenu.append(exportOptions);
       queryBar.append(queryTools);
+      queryTitleText.textContent = originalQueryTitle;
       if (accountPanel.open) accountPanel.close();
       queryMenu.open = false;
     }
@@ -9019,6 +9036,16 @@ function renderMobileDashboard() {
   const data = mobileInventorySnapshot(rows, journey.dashboardRoom);
   const { goods, stocks, loans, low } = data;
   $("mobileDashboardRoom").value = journey.dashboardRoom;
+  $("mobileDashboardRoomName").textContent =
+    journey.dashboardRoom || "Todos os ambientes";
+  $("mobileDashboardRoomPicker")
+    .querySelectorAll("button[data-room]")
+    .forEach((choice) => {
+      choice.setAttribute(
+        "aria-pressed",
+        String(choice.dataset.room === journey.dashboardRoom),
+      );
+    });
   $("mobileDashboardHero").querySelector("b").textContent =
     goods.length.toLocaleString("pt-BR");
   $("mobileDashboardHero").querySelector("small").textContent =
@@ -9995,7 +10022,15 @@ function initMobileJourney() {
   const dashboard = el("div", undefined, "mobile-dashboard");
   dashboard.id = "mobileDashboard";
   const heading = el("div", undefined, "mobile-dashboard-heading");
-  heading.append(el("h2", "Visão geral"));
+  const dashboardTitle = el("h2", undefined, "workspace-title");
+  const dashboardTitleMark = el("span", undefined, "title-mark");
+  dashboardTitleMark.setAttribute("aria-hidden", "true");
+  dashboardTitleMark.append(icon("chart"));
+  dashboardTitle.append(
+    dashboardTitleMark,
+    document.createTextNode("Visão geral"),
+  );
+  heading.append(dashboardTitle);
   const rooms = el("select");
   rooms.id = "mobileDashboardRoom";
   rooms.setAttribute("aria-label", "Ambiente da visão geral");
@@ -10011,7 +10046,61 @@ function initMobileJourney() {
     journey.dashboardRoom = rooms.value;
     renderMobileDashboard();
   };
-  heading.append(rooms);
+  rooms.hidden = true;
+  rooms.tabIndex = -1;
+  const roomPicker = el("details", undefined, "mobile-room-picker");
+  roomPicker.id = "mobileDashboardRoomPicker";
+  const roomTrigger = el("summary");
+  const roomCopy = el("span");
+  const roomName = el("strong", "Todos os ambientes");
+  roomName.id = "mobileDashboardRoomName";
+  roomCopy.append(el("small", "Ambiente"), roomName);
+  roomTrigger.append(icon("pin"), roomCopy, icon("right"));
+  const roomOptions = el("div", undefined, "mobile-room-options");
+  roomOptions.setAttribute("role", "group");
+  roomOptions.setAttribute("aria-label", "Escolher ambiente da visão geral");
+  for (const option of rooms.options) {
+    const choice = button("", () => {
+      rooms.value = option.value;
+      rooms.dispatchEvent(new Event("change"));
+      roomPicker.open = false;
+      roomTrigger.focus({ preventScroll: true });
+    });
+    choice.dataset.room = option.value;
+    choice.append(el("span", option.textContent), icon("check"));
+    roomOptions.append(choice);
+  }
+  roomPicker.append(roomTrigger, roomOptions);
+  roomPicker.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && roomPicker.open) {
+      event.preventDefault();
+      roomPicker.open = false;
+      roomTrigger.focus({ preventScroll: true });
+    } else if (
+      roomPicker.open &&
+      ["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)
+    ) {
+      event.preventDefault();
+      const options = [...roomOptions.children];
+      const current = options.indexOf(document.activeElement);
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? options.length - 1
+            : event.key === "ArrowDown"
+              ? (current + 1) % options.length
+              : (current <= 0 ? options.length : current) - 1;
+      options[next].focus({ preventScroll: true });
+    }
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!roomPicker.contains(event.target)) roomPicker.open = false;
+  });
+  document.addEventListener("focusin", (event) => {
+    if (!roomPicker.contains(event.target)) roomPicker.open = false;
+  });
+  heading.append(rooms, roomPicker);
   const updated = el(
     "small",
     "Aguardando atualização",

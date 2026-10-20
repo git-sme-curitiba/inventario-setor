@@ -21,12 +21,15 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="ACERVO" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="apple-mobile-web-app-title" content="ACERVO" />
     <title>ACERVO · Gestão de bens e materiais</title>
     <link rel="icon" href="./favicon.svg?v=5" type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href="./icone-apple.png?v=5" />
-    <link rel="manifest" href="./site.webmanifest?v=3.5.53" />
+    <link rel="manifest" href="./site.webmanifest?v=3.5.54" />
     <script
       src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"
       integrity="sha384-WgXwGL6fUsYJWNaKJgVbrJKGRQwc1vieh2oy4kw9nXqpNDz3tdSsqEYUgeHD/NuF"
@@ -44,43 +47,55 @@
       integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="./estilos.css?v=3.5.53" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.54" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
       <div id="introMark">
-        <img class="acervo-mark" src="./favicon.svg?v=5" alt="" width="64" height="64" />
+        <img
+          class="acervo-mark"
+          src="./favicon.svg?v=5"
+          alt=""
+          width="64"
+          height="64"
+        />
       </div>
     </div>
     <div id="contextTip" class="context-tip" role="tooltip" hidden></div>
     <svg class="svg-library" aria-hidden="true">
       <defs>
         <metadata>
-          ISC License Copyright (c) for portions of Lucide are held by Cole Bemis
-          2013-2022 as part of Feather (MIT). All other copyright (c) for Lucide are held
-          by Lucide Contributors 2022. Permission to use, copy, modify, and/or distribute
-          this software for any purpose with or without fee is hereby granted, provided
-          that the above copyright notice and this permission notice appear in all copies.
-          THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-          REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-          FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-          INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
-          OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-          TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-          THIS SOFTWARE.
+          ISC License Copyright (c) for portions of Lucide are held by Cole
+          Bemis 2013-2022 as part of Feather (MIT). All other copyright (c) for
+          Lucide are held by Lucide Contributors 2022. Permission to use, copy,
+          modify, and/or distribute this software for any purpose with or
+          without fee is hereby granted, provided that the above copyright
+          notice and this permission notice appear in all copies. THE SOFTWARE
+          IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+          REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+          MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
+          FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+          DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+          WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+          ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+          SOFTWARE.
         </metadata>
         <symbol id="lucide-air-vent" viewBox="0 0 24 24">
           <path
             d="M6 12H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
           />
           <path d="M6 8h12" />
-          <path d="M18.3 17.7a2.5 2.5 0 0 1-3.16 3.83 2.53 2.53 0 0 1-1.14-2V12" />
+          <path
+            d="M18.3 17.7a2.5 2.5 0 0 1-3.16 3.83 2.53 2.53 0 0 1-1.14-2V12"
+          />
           <path d="M6.6 15.6A2 2 0 1 0 10 17v-5" />
         </symbol>
         <symbol id="lucide-alarm-smoke" viewBox="0 0 24 24">
           <path d="M11 21c0-2.5 2-2.5 2-5" />
           <path d="M16 21c0-2.5 2-2.5 2-5" />
-          <path d="m19 8-.8 3a1.25 1.25 0 0 1-1.2 1H7a1.25 1.25 0 0 1-1.2-1L5 8" />
+          <path
+            d="m19 8-.8 3a1.25 1.25 0 0 1-1.2 1H7a1.25 1.25 0 0 1-1.2-1L5 8"
+          />
           <path
             d="M21 3a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a1 1 0 0 1 1-1z"
           />
@@ -285,7 +300,9 @@
           <path d="M18 12c0 1.7-.7 3.2-1.8 4.2" />
         </symbol>
         <symbol id="lucide-drill" viewBox="0 0 24 24">
-          <path d="M10 18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a3 3 0 0 1-3-3 1 1 0 0 1 1-1z" />
+          <path
+            d="M10 18a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H5a3 3 0 0 1-3-3 1 1 0 0 1 1-1z"
+          />
           <path
             d="M13 10H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1l-.81 3.242a1 1 0 0 1-.97.758H8"
           />
@@ -332,12 +349,16 @@
           <path d="M12 12v.01" />
         </symbol>
         <symbol id="lucide-file" viewBox="0 0 24 24">
-          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+          <path
+            d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+          />
           <path d="M14 2v4a2 2 0 0 0 2 2h4" />
         </symbol>
         <symbol id="lucide-files" viewBox="0 0 24 24">
           <path d="M20 7h-3a2 2 0 0 1-2-2V2" />
-          <path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z" />
+          <path
+            d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z"
+          />
           <path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8" />
         </symbol>
         <symbol id="lucide-fingerprint" viewBox="0 0 24 24">
@@ -466,7 +487,9 @@
         </symbol>
         <symbol id="lucide-highlighter" viewBox="0 0 24 24">
           <path d="m9 11-6 6v3h9l3-3" />
-          <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" />
+          <path
+            d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"
+          />
         </symbol>
         <symbol id="lucide-key-round" viewBox="0 0 24 24">
           <path
@@ -619,7 +642,9 @@
         </symbol>
         <symbol id="lucide-paint-roller" viewBox="0 0 24 24">
           <rect width="16" height="6" x="2" y="2" rx="2" />
-          <path d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+          <path
+            d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
+          />
           <rect width="4" height="6" x="8" y="16" rx="1" />
         </symbol>
         <symbol id="lucide-paintbrush" viewBox="0 0 24 24">
@@ -956,7 +981,9 @@
           <path
             d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05"
           />
-          <path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05" />
+          <path
+            d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05"
+          />
         </symbol>
         <symbol id="lucide-webcam" viewBox="0 0 24 24">
           <circle cx="12" cy="10" r="8" />
@@ -983,7 +1010,9 @@
         </symbol>
         <symbol id="acv-abaco" viewBox="0 0 24 24">
           <rect x="3" y="3" width="18" height="18" rx="1" />
-          <path d="M3 7h18M3 12h18M3 17h18M7 5v4M10 5v4M14 10v4M17 10v4M7 15v4" />
+          <path
+            d="M3 7h18M3 12h18M3 17h18M7 5v4M10 5v4M14 10v4M17 10v4M7 15v4"
+          />
         </symbol>
         <symbol id="acv-abafador" viewBox="0 0 24 24">
           <path d="M4 14V9c0-11 16-11 16 0v5" />
@@ -1002,10 +1031,14 @@
         <symbol id="acv-alfabeto" viewBox="0 0 24 24">
           <rect x="2" y="3" width="10" height="10" rx="1" />
           <rect x="12" y="11" width="10" height="11" rx="1" />
-          <path d="m4 11 3-6 3 6M5 9h4M15 14v5h3a1.5 1.5 0 0 0 0-3h-3M15 14h2" />
+          <path
+            d="m4 11 3-6 3 6M5 9h4M15 14v5h3a1.5 1.5 0 0 0 0-3h-3M15 14h2"
+          />
         </symbol>
         <symbol id="acv-alicate" viewBox="0 0 24 24">
-          <path d="M4 2c-3 5 0 9 5 9l10 11M20 2c3 5 0 9-5 9L5 22M9 11l6-6M15 11 9 5" />
+          <path
+            d="M4 2c-3 5 0 9 5 9l10 11M20 2c3 5 0 9-5 9L5 22M9 11l6-6M15 11 9 5"
+          />
           <circle cx="12" cy="12" r="1" />
         </symbol>
         <symbol id="acv-alicate-crimpar" viewBox="0 0 24 24">
@@ -1048,7 +1081,9 @@
         </symbol>
         <symbol id="acv-arquivo" viewBox="0 0 24 24">
           <rect x="5" y="2" width="14" height="20" rx="1" />
-          <path d="M5 7h14M5 12h14M5 17h14M10 4.5h4M10 9.5h4M10 14.5h4M10 19.5h4" />
+          <path
+            d="M5 7h14M5 12h14M5 17h14M10 4.5h4M10 9.5h4M10 14.5h4M10 19.5h4"
+          />
         </symbol>
         <symbol id="acv-aspirador" viewBox="0 0 24 24">
           <rect x="4" y="12" width="14" height="9" rx="4" />
@@ -1239,7 +1274,9 @@
           <circle cx="19" cy="22" r="1" />
         </symbol>
         <symbol id="acv-cartao-memoria" viewBox="0 0 24 24">
-          <path d="M7 2h10l3 3v17H4V5ZM8 2v5M11 2v5M14 2v5M17 2v5M8 13h8M8 17h8" />
+          <path
+            d="M7 2h10l3 3v17H4V5ZM8 2v5M11 2v5M14 2v5M17 2v5M8 13h8M8 17h8"
+          />
         </symbol>
         <symbol id="acv-carteira" viewBox="0 0 24 24">
           <rect x="2" y="5" width="12" height="3" rx="1" />
@@ -1387,7 +1424,9 @@
           <path d="M8 5v11M12 5v11M16 5v11M4 17h16M6 20v2M18 20v2" />
         </symbol>
         <symbol id="acv-estante" viewBox="0 0 24 24">
-          <path d="M3 2v20M21 2v20M3 5h18M3 11h18M3 17h18M3 21h18M7 5v6M10 5v6M15 11v6" />
+          <path
+            d="M3 2v20M21 2v20M3 5h18M3 11h18M3 17h18M3 21h18M7 5v6M10 5v6M15 11v6"
+          />
         </symbol>
         <symbol id="acv-estilete" viewBox="0 0 24 24">
           <path d="m3 20 3-8L17 1l6 6-11 11ZM8 14l4 4M12 10l4 4" />
@@ -1400,7 +1439,9 @@
         <symbol id="acv-exaustor" viewBox="0 0 24 24">
           <rect x="2" y="2" width="20" height="20" rx="1" />
           <circle cx="12" cy="12" r="7" />
-          <path d="M12 12c-9-7 4-10 0 0M12 12c10-5 7 9 0 0M12 12c-2 10-12 1 0 0" />
+          <path
+            d="M12 12c-9-7 4-10 0 0M12 12c10-5 7 9 0 0M12 12c-2 10-12 1 0 0"
+          />
         </symbol>
         <symbol id="acv-extensao" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="8" />
@@ -1545,7 +1586,9 @@
           <circle cx="15" cy="12" r="2" />
         </symbol>
         <symbol id="acv-lanterna" viewBox="0 0 24 24">
-          <path d="M7 8h10l-2 5v9H9v-9ZM7 8V4h10v4M5 1 3 3M12 0v2M19 1l2 2M11 16h2" />
+          <path
+            d="M7 8h10l-2 5v9H9v-9ZM7 8V4h10v4M5 1 3 3M12 0v2M19 1l2 2M11 16h2"
+          />
         </symbol>
         <symbol id="acv-lapis-cor" viewBox="0 0 24 24">
           <path
@@ -1711,7 +1754,9 @@
         </symbol>
         <symbol id="acv-nas" viewBox="0 0 24 24">
           <rect x="3" y="3" width="18" height="19" rx="2" />
-          <path d="M9 3v19M15 3v19M5 6h2M11 6h2M17 6h2M5 18h2M11 18h2M17 18h2" />
+          <path
+            d="M9 3v19M15 3v19M5 6h2M11 6h2M17 6h2M5 18h2M11 18h2M17 18h2"
+          />
         </symbol>
         <symbol id="acv-nivel" viewBox="0 0 24 24">
           <rect x="2" y="8" width="20" height="8" rx="2" />
@@ -1749,7 +1794,9 @@
           <path d="M11 8h2M11 16h2M5 20v2M19 20v2" />
         </symbol>
         <symbol id="acv-palete" viewBox="0 0 24 24">
-          <path d="M2 5h20v5H2ZM2 17h20v5H2ZM4 10v7M12 10v7M20 10v7M7 5v5M17 5v5" />
+          <path
+            d="M2 5h20v5H2ZM2 17h20v5H2ZM4 10v7M12 10v7M20 10v7M7 5v5M17 5v5"
+          />
         </symbol>
         <symbol id="acv-pandeiro" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="9" />
@@ -1772,10 +1819,14 @@
           <path d="M3 3l18 18M1 5l4-4M7 10l3-3M11 14l3-3M15 18l3-3" />
         </symbol>
         <symbol id="acv-parquinho" viewBox="0 0 24 24">
-          <path d="M3 21 8 3h5l-5 18M6 11h5M5 16h4M12 4c0 7 8 5 8 12v5M8 21h14" />
+          <path
+            d="M3 21 8 3h5l-5 18M6 11h5M5 16h4M12 4c0 7 8 5 8 12v5M8 21h14"
+          />
         </symbol>
         <symbol id="acv-patch-cord" viewBox="0 0 24 24">
-          <path d="M4 8v8c0 6 16 6 16 0V8M2 2h4v6H2ZM18 2h4v6h-4M3 4h2M19 4h2" />
+          <path
+            d="M4 8v8c0 6 16 6 16 0V8M2 2h4v6H2ZM18 2h4v6h-4M3 4h2M19 4h2"
+          />
         </symbol>
         <symbol id="acv-patch-panel" viewBox="0 0 24 24">
           <rect x="2" y="7" width="20" height="11" rx="1" />
@@ -1853,7 +1904,9 @@
           <circle cx="12" cy="12" r="7" />
         </symbol>
         <symbol id="acv-prendedor" viewBox="0 0 24 24">
-          <path d="M5 9h14l-2 12H7ZM8 9V5a4 4 0 0 1 8 0v4M10 9V5a2 2 0 0 1 4 0v4" />
+          <path
+            d="M5 9h14l-2 12H7ZM8 9V5a4 4 0 0 1 8 0v4M10 9V5a2 2 0 0 1 4 0v4"
+          />
         </symbol>
         <symbol id="acv-proveta" viewBox="0 0 24 24">
           <path d="M8 2h8M9 2v17h6V2M6 22h12M12 19v3M9 6h3M9 10h3M9 14h3" />
@@ -1864,7 +1917,9 @@
         </symbol>
         <symbol id="acv-rack" viewBox="0 0 24 24">
           <rect x="5" y="2" width="14" height="20" rx="1" />
-          <path d="M5 7h14M5 12h14M5 17h14M8 5h1M8 10h1M8 15h1M8 20h1M15 4v1M15 9v1" />
+          <path
+            d="M5 7h14M5 12h14M5 17h14M8 5h1M8 10h1M8 15h1M8 20h1M15 4v1M15 9v1"
+          />
         </symbol>
         <symbol id="acv-raquete" viewBox="0 0 24 24">
           <ellipse cx="10" cy="9" rx="7" ry="8" />
@@ -1876,7 +1931,9 @@
           />
         </symbol>
         <symbol id="acv-regua-geometrica" viewBox="0 0 24 24">
-          <path d="M3 3v18h18ZM7 12v5h5M3 7h2M3 11h2M3 15h2M7 21v-2M11 21v-2M15 21v-2" />
+          <path
+            d="M3 3v18h18ZM7 12v5h5M3 7h2M3 11h2M3 15h2M7 21v-2M11 21v-2M15 21v-2"
+          />
         </symbol>
         <symbol id="acv-ribbon" viewBox="0 0 24 24">
           <rect x="2" y="6" width="20" height="13" rx="1" />
@@ -1894,7 +1951,9 @@
         </symbol>
         <symbol id="acv-roupeiro" viewBox="0 0 24 24">
           <rect x="3" y="2" width="18" height="20" rx="1" />
-          <path d="M9 2v20M15 2v20M5 5h2M11 5h2M17 5h2M7 11v2M13 11v2M19 11v2" />
+          <path
+            d="M9 2v20M15 2v20M5 5h2M11 5h2M17 5h2M7 11v2M13 11v2M19 11v2"
+          />
         </symbol>
         <symbol id="acv-sabao" viewBox="0 0 24 24">
           <rect x="3" y="7" width="18" height="13" rx="5" />
@@ -1903,7 +1962,9 @@
           <circle cx="18" cy="3" r="2" />
         </symbol>
         <symbol id="acv-saco-lixo" viewBox="0 0 24 24">
-          <path d="M9 7 7 2h10l-2 5c10 12 7 16-3 16S2 19 9 7ZM9 7h6M10 11l-3 7" />
+          <path
+            d="M9 7 7 2h10l-2 5c10 12 7 16-3 16S2 19 9 7ZM9 7h6M10 11l-3 7"
+          />
         </symbol>
         <symbol id="acv-serra" viewBox="0 0 24 24">
           <path d="M3 7h13v4L5 21l-3-3 3-2-2-2 3-1-1-2M16 7V2h6v9h-6Z" />
@@ -1950,7 +2011,9 @@
         </symbol>
         <symbol id="acv-tapete" viewBox="0 0 24 24">
           <rect x="4" y="6" width="16" height="12" rx="1" />
-          <path d="M1 7h3M1 11h3M1 15h3M20 7h3M20 11h3M20 15h3M8 6v12M4 12h16M16 6v12" />
+          <path
+            d="M1 7h3M1 11h3M1 15h3M20 7h3M20 11h3M20 15h3M8 6v12M4 12h16M16 6v12"
+          />
         </symbol>
         <symbol id="acv-teatro" viewBox="0 0 24 24">
           <rect x="2" y="3" width="20" height="18" rx="1" />
@@ -2061,7 +2124,9 @@
       </symbol>
       <symbol id="i-users" viewBox="0 0 24 24">
         <circle cx="9" cy="7" r="4" />
-        <path d="M2 21v-3a7 7 0 0 1 14 0v3M16 3a4 4 0 0 1 0 8m3 3a6 6 0 0 1 3 4v3" />
+        <path
+          d="M2 21v-3a7 7 0 0 1 14 0v3M16 3a4 4 0 0 1 0 8m3 3a6 6 0 0 1 3 4v3"
+        />
       </symbol>
       <symbol id="i-user-add" viewBox="0 0 24 24">
         <circle cx="9" cy="7" r="4" />
@@ -2091,7 +2156,9 @@
         />
       </symbol>
       <symbol id="i-shelf" viewBox="0 0 24 24">
-        <path d="M4 3v18M20 3v18M4 8h16M4 14h16M4 20h16M7 4h4v4M14 10h3v4M7 16h5v4" />
+        <path
+          d="M4 3v18M20 3v18M4 8h16M4 14h16M4 20h16M7 4h4v4M14 10h3v4M7 16h5v4"
+        />
       </symbol>
       <symbol id="i-pin" viewBox="0 0 24 24">
         <path
@@ -2113,7 +2180,9 @@
         <path d="M12 16v5m-4 0h8M3 12h18" />
       </symbol>
       <symbol id="i-materials" viewBox="0 0 24 24">
-        <path d="M4 14h16l-1 7H5l-1-7M6 14V8m6 6V8M15 14V3h4v11m-4-7h2m-2 3h2M8 18h8" />
+        <path
+          d="M4 14h16l-1 7H5l-1-7M6 14V8m6 6V8M15 14V3h4v11m-4-7h2m-2 3h2M8 18h8"
+        />
         <ellipse cx="9" cy="8" rx="3" ry="1.8" />
       </symbol>
       <symbol id="i-individual" viewBox="0 0 24 24">
@@ -2188,7 +2257,9 @@
         <path d="M4 20l5-1L20 8l-5-5L4 14v6M13 5l5 5" />
       </symbol>
       <symbol id="i-reverse" viewBox="0 0 24 24">
-        <path d="M11 21h8V8l-5-5H5v6M14 3v5h5M8 11l-4 4 4 4M4 15h8a3 3 0 0 1 0 6" />
+        <path
+          d="M11 21h8V8l-5-5H5v6M14 3v5h5M8 11l-4 4 4 4M4 15h8a3 3 0 0 1 0 6"
+        />
       </symbol>
       <symbol id="i-restore" viewBox="0 0 24 24">
         <path d="M3 3h18v5H3V3M5 8v13h14V8M12 18v-7m-3 3 3-3 3 3" />
@@ -2206,7 +2277,9 @@
         <path d="M3 4v16M8 5h6M8 12h9M8 19h13M3 5h1m-1 7h1m-1 7h1" />
       </symbol>
       <symbol id="i-code" viewBox="0 0 24 24">
-        <path d="M6 5H3v14h3M18 5h3v14h-3M10 7l-1 10m6-10-1 10M7 10h10M7 14h10" />
+        <path
+          d="M6 5H3v14h3M18 5h3v14h-3M10 7l-1 10m6-10-1 10M7 10h10M7 14h10"
+        />
       </symbol>
       <symbol id="i-suggestion" viewBox="0 0 24 24">
         <path
@@ -2238,14 +2311,18 @@
         <path d="M8 5H5v16h14V5h-3M8 3h8v4H8V3M8 14l3 3 5-6" />
       </symbol>
       <symbol id="i-reopen" viewBox="0 0 24 24">
-        <path d="M11 21H5V5h3m8 0h3v5M8 3h8v4H8V3M14 13h-3v3m0-3a6 6 0 1 1-1 6" />
+        <path
+          d="M11 21H5V5h3m8 0h3v5M8 3h8v4H8V3M14 13h-3v3m0-3a6 6 0 1 1-1 6"
+        />
       </symbol>
       <symbol id="i-available" viewBox="0 0 24 24">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <path d="M7 7h10M7 11h5M7 15h3M13 17l2 2 4-5" />
       </symbol>
       <symbol id="i-stock-alert" viewBox="0 0 24 24">
-        <path d="M9 20H3V5h12v4M3 10h8M7 5v3h4V5M16 11l6 10H10l6-10M16 15v2m0 2v.01" />
+        <path
+          d="M9 20H3V5h12v4M3 10h8M7 5v3h4V5M16 11l6 10H10l6-10M16 15v2m0 2v.01"
+        />
       </symbol>
       <symbol id="i-copy" viewBox="0 0 24 24">
         <path d="M8 5V3h13v13h-2" />
@@ -2259,7 +2336,9 @@
         <path d="M6 10h12v11H6V10M8 10V6a4 4 0 0 1 8 0v4M12 14v3" />
       </symbol>
       <symbol id="i-scan" viewBox="0 0 24 24">
-        <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7v10m3-10v10m4-10v10m3-10v10" />
+        <path
+          d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7v10m3-10v10m4-10v10m3-10v10"
+        />
       </symbol>
       <symbol id="i-torch" viewBox="0 0 24 24">
         <path d="M7 2h10v5l-3 4v11h-4V11L7 7zM7 6h10m-5 7v3" />
@@ -2284,10 +2363,14 @@
         <div class="header-meta">
           <div class="account-toolbar" role="group" aria-label="Conta e ações">
             <div class="header-person">
-              <span id="accountAvatar" class="account-avatar" aria-hidden="true">A</span>
+              <span id="accountAvatar" class="account-avatar" aria-hidden="true"
+                >A</span
+              >
               <div class="header-account-text">
                 <span class="account" id="account">Aguardando acesso</span
-                ><span id="accountRole" class="account-role">Acesso ao Acervo</span>
+                ><span id="accountRole" class="account-role"
+                  >Acesso ao Acervo</span
+                >
               </div>
             </div>
             <div
@@ -2304,18 +2387,27 @@
                 aria-label="Gerenciar pessoas"
                 title="Gerenciar pessoas"
               >
-                <svg class="icon" aria-hidden="true"><use href="#i-users" /></svg
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-users" /></svg
                 ><span>Pessoas</span>
               </button>
-              <button id="refresh" type="button" aria-label="Atualizar inventário">
-                <svg class="icon" aria-hidden="true"><use href="#i-refresh" /></svg
+              <button
+                id="refresh"
+                type="button"
+                aria-label="Atualizar inventário"
+              >
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-refresh" /></svg
                 ><span class="refresh-caption"
                   ><span>Atualizar</span
-                  ><span class="live" id="live" role="status">Conectando</span></span
+                  ><span class="live" id="live" role="status"
+                    >Conectando</span
+                  ></span
                 >
               </button>
               <button id="logout" type="button" hidden>
-                <svg class="icon" aria-hidden="true"><use href="#i-logout" /></svg
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-logout" /></svg
                 ><span>Sair</span>
               </button>
             </div>
@@ -2337,7 +2429,12 @@
         </div>
         <div class="eyebrow">Prefeitura de Curitiba</div>
         <h1 id="loginHeading">Bem-vindo.</h1>
-        <form id="loginForm" name="acervo-login" autocomplete="on" method="post">
+        <form
+          id="loginForm"
+          name="acervo-login"
+          autocomplete="on"
+          method="post"
+        >
           <label for="email">E-mail</label>
           <input
             id="email"
@@ -2373,12 +2470,15 @@
             </button>
           </div>
           <label class="remember-session" for="rememberSession"
-            ><input id="rememberSession" name="remember-session" type="checkbox" /><span
-              >Manter conectado neste dispositivo</span
-            ></label
+            ><input
+              id="rememberSession"
+              name="remember-session"
+              type="checkbox"
+            /><span>Manter conectado neste dispositivo</span></label
           >
           <button type="submit" class="primary" id="loginButton">
-            <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Entrar
+            <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg
+            >Entrar
           </button>
         </form>
         <div id="firstAccess" hidden>
@@ -2386,10 +2486,15 @@
             Escolha uma senha pessoal para concluir seu primeiro acesso.
           </p>
           <div class="security-state">
-            <svg class="icon" aria-hidden="true"><use href="#i-shield-key" /></svg>
+            <svg class="icon" aria-hidden="true">
+              <use href="#i-shield-key" />
+            </svg>
             <div>
               <strong>Última etapa para entrar no Acervo</strong
-              ><span>A senha inicial será substituída pela que você criar aqui.</span>
+              ><span
+                >A senha inicial será substituída pela que você criar
+                aqui.</span
+              >
             </div>
           </div>
           <form id="firstAccessForm">
@@ -2466,9 +2571,11 @@
             </p>
             <div class="actions spaced">
               <button id="saveFirstPassword" class="primary" disabled>
-                <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg>Salvar
-                senha e continuar</button
-              ><button id="leaveFirstAccess" type="button">Voltar ao login</button>
+                <svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg
+                >Salvar senha e continuar</button
+              ><button id="leaveFirstAccess" type="button">
+                Voltar ao login
+              </button>
             </div>
           </form>
           <p id="firstAccessMessage" role="status"></p>
@@ -2542,12 +2649,18 @@
                     aria-expanded="false"
                   />
                   <div id="suggestions" class="suggestions" hidden></div>
-                  <p id="learningHint" class="hint">Sugestões conforme você digita.</p>
+                  <p id="learningHint" class="hint">
+                    Sugestões conforme você digita.
+                  </p>
                   <div id="formRest" hidden>
                     <div id="controlHost" class="step"></div>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg
+                          class="icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <use href="#i-composition" />
                         </svg>
                         03 / Categoria e identificação
@@ -2576,7 +2689,11 @@
                             type="button"
                             aria-label="Ler código"
                           >
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <svg
+                              class="icon"
+                              viewBox="0 0 24 24"
+                              aria-hidden="true"
+                            >
                               <use href="#i-scan" />
                             </svg>
                           </button>
@@ -2586,7 +2703,11 @@
                     </div>
                     <div class="step">
                       <div class="step-title">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg
+                          class="icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <use href="#i-pin" />
                         </svg>
                         01 / Onde está
@@ -2612,7 +2733,11 @@
                               data-help="Prateleiras numeradas de cima para baixo: 01 no topo, 06 na base."
                               aria-label="Como contar as prateleiras"
                             >
-                              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                              <svg
+                                class="icon"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                              >
                                 <use href="#i-levels" />
                               </svg></button></span
                           ><strong id="position">Escolha a posição</strong>
@@ -2620,7 +2745,8 @@
                       </div>
                     </div>
                     <div class="step" id="notesBlock">
-                      <label for="note">Observação <small>· opcional</small></label
+                      <label for="note"
+                        >Observação <small>· opcional</small></label
                       ><textarea
                         id="note"
                         maxlength="2000"
@@ -2642,7 +2768,11 @@
                     </div>
                     <div class="registration-actions">
                       <button id="save" class="primary">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg
+                          class="icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
                           <use href="#i-save" />
                         </svg>
                         Cadastrar
@@ -2656,7 +2786,9 @@
                   </div>
                 </fieldset>
               </form>
-              <p id="draftInfo" class="hint">O rascunho é salvo neste navegador.</p>
+              <p id="draftInfo" class="hint">
+                O rascunho é salvo neste navegador.
+              </p>
               <div id="saved" class="notice" hidden></div>
             </div>
             <aside class="card side">
@@ -2679,7 +2811,10 @@
                   <use href="#i-movement" /></svg></span
               >Movimentações
             </h2>
-            <ol class="movement-steps" aria-label="Como registrar uma movimentação">
+            <ol
+              class="movement-steps"
+              aria-label="Como registrar uma movimentação"
+            >
               <li><b>1</b>Buscar item</li>
               <li><b>2</b>Escolher ação</li>
               <li><b>3</b>Confirmar</li>
@@ -2707,7 +2842,9 @@
             <div id="moveMissing" class="notice" hidden>
               <strong>Ainda não encontramos por aqui.</strong
               ><span>Tente outro nome ou confira o código.</span>
-              <button id="createDown" type="button">Cadastrar para descarte</button>
+              <button id="createDown" type="button">
+                Cadastrar para descarte
+              </button>
             </div>
           </div>
         </section>
@@ -2730,7 +2867,8 @@
                   class="danger"
                   aria-pressed="false"
                 >
-                  <svg class="icon" aria-hidden="true"><use href="#i-writeoff" /></svg
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#i-writeoff" /></svg
                   >Descartados
                 </button>
                 <details class="export-menu">
@@ -2772,7 +2910,11 @@
                 Mais filtros</button
               ><button id="clearFilters">Limpar filtros</button>
             </div>
-            <div id="quickRooms" class="quick" aria-label="Filtrar por ambiente"></div>
+            <div
+              id="quickRooms"
+              class="quick"
+              aria-label="Filtrar por ambiente"
+            ></div>
             <div id="filterPanel" class="filter-panel" hidden>
               <fieldset>
                 <legend>Categoria</legend>
@@ -2858,7 +3000,9 @@
           <div class="dashboard-visuals">
             <section class="card" aria-labelledby="goodsStatusTitle">
               <div class="visual-heading">
-                <svg class="icon" aria-hidden="true"><use href="#i-composition" /></svg>
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-composition" />
+                </svg>
                 <div>
                   <h3 id="goodsStatusTitle">Situação dos bens</h3>
                   <p>Bens individuais ativos, emprestados e descartados</p>
@@ -2868,7 +3012,9 @@
             </section>
             <section class="card" aria-labelledby="stockHealthTitle">
               <div class="visual-heading">
-                <svg class="icon" aria-hidden="true"><use href="#i-stock" /></svg>
+                <svg class="icon" aria-hidden="true">
+                  <use href="#i-stock" />
+                </svg>
                 <div>
                   <h3 id="stockHealthTitle">Saúde dos estoques</h3>
                   <p>Materiais ativos comparados ao mínimo cadastrado</p>
@@ -2887,7 +3033,11 @@
                 <h3 id="stockWatchTitle">Materiais para repor</h3>
                 <span id="stockAlertCount" class="badge"></span>
               </div>
-              <div id="stockAlerts" class="stock-alert-grid" aria-live="polite"></div>
+              <div
+                id="stockAlerts"
+                class="stock-alert-grid"
+                aria-live="polite"
+              ></div>
               <button
                 id="toggleStockAlerts"
                 class="dashboard-more"
@@ -2922,17 +3072,27 @@
           </section>
           <details id="inventoryDetails" class="dashboard-details">
             <summary>
-              <svg class="icon" aria-hidden="true"><use href="#i-history" /></svg
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-history" /></svg
               ><span
                 ><strong>Movimentações e identificação</strong
-                ><small>O que mudou e como os bens estão identificados</small></span
-              ><svg class="icon" aria-hidden="true"><use href="#i-right" /></svg>
+                ><small
+                  >O que mudou e como os bens estão identificados</small
+                ></span
+              ><svg class="icon" aria-hidden="true">
+                <use href="#i-right" />
+              </svg>
             </summary>
             <div class="dashboard-details-body history-layout">
-              <section class="card timeline-card" aria-labelledby="movementTimelineTitle">
+              <section
+                class="card timeline-card"
+                aria-labelledby="movementTimelineTitle"
+              >
                 <div class="card-heading">
                   <h3 id="movementTimelineTitle">Últimas movimentações</h3>
-                  <svg class="icon" aria-hidden="true"><use href="#i-history" /></svg>
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#i-history" />
+                  </svg>
                 </div>
                 <div id="movementTimeline"></div>
                 <button
@@ -2947,9 +3107,13 @@
               <section class="card identification-overview">
                 <div class="card-heading">
                   <h3>Identificação dos bens</h3>
-                  <svg class="icon" aria-hidden="true"><use href="#i-draft" /></svg>
+                  <svg class="icon" aria-hidden="true">
+                    <use href="#i-draft" />
+                  </svg>
                 </div>
-                <p class="hint">Bens em uso, agrupados pela etiqueta externa.</p>
+                <p class="hint">
+                  Bens em uso, agrupados pela etiqueta externa.
+                </p>
                 <div id="typeChart"></div>
               </section>
             </div>
@@ -2965,7 +3129,10 @@
             width="122"
             height="42"
           />
-          <span>Gestão de bens e materiais<br />Controle e organização do acervo</span>
+          <span
+            >Gestão de bens e materiais<br />Controle e organização do
+            acervo</span
+          >
         </div>
         <div class="institution-credits">
           ACERVO · Concepção e desenvolvimento<br /><strong
@@ -2981,7 +3148,8 @@
           <h2 id="editDialogTitle"></h2>
         </div>
         <button type="button" id="editDialogClose" aria-label="Fechar edição">
-          <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>Fechar
+          <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg
+          >Fechar
         </button>
       </div>
       <div id="editDialogContent"></div>
@@ -2993,12 +3161,16 @@
     >
       <div class="access-dialog-hero">
         <div class="access-dialog-kicker">Acervo · Pessoas e acessos</div>
-        <button type="button" id="closeUserAccess" aria-label="Fechar gestão de pessoas">
+        <button
+          type="button"
+          id="closeUserAccess"
+          aria-label="Fechar gestão de pessoas"
+        >
           <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
         </button>
         <button type="button" id="accessBack" hidden>
-          <svg class="icon" aria-hidden="true"><use href="#i-left" /></svg>Voltar às
-          pessoas
+          <svg class="icon" aria-hidden="true"><use href="#i-left" /></svg
+          >Voltar às pessoas
         </button>
         <div class="access-dialog-title">
           <span class="access-dialog-mark" id="userAccessMark"
@@ -3007,7 +3179,8 @@
           <h2 id="userAccessTitle">Gerenciar pessoas</h2>
         </div>
         <p id="userAccessDescription">
-          Veja quem tem uma conta, escolha o perfil e gerencie os acessos ao Acervo.
+          Veja quem tem uma conta, escolha o perfil e gerencie os acessos ao
+          Acervo.
         </p>
       </div>
       <div class="access-dialog-body">
@@ -3024,14 +3197,16 @@
               />
             </div>
             <button type="button" id="addPerson">
-              <svg class="icon" aria-hidden="true"><use href="#i-user-add" /></svg
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-user-add" /></svg
               >Adicionar pessoa
             </button>
           </div>
           <div class="people-summary">
             <span id="peopleCount"></span
             ><button type="button" id="refreshPeople">
-              <svg class="icon" aria-hidden="true"><use href="#i-refresh" /></svg
+              <svg class="icon" aria-hidden="true">
+                <use href="#i-refresh" /></svg
               >Atualizar
             </button>
           </div>
@@ -3042,7 +3217,9 @@
               >Anterior</button
             ><span id="peoplePage"></span
             ><button type="button" id="peopleNext">
-              Próxima<svg class="icon" aria-hidden="true"><use href="#i-right" /></svg>
+              Próxima<svg class="icon" aria-hidden="true">
+                <use href="#i-right" />
+              </svg>
             </button>
           </div>
         </section>
@@ -3051,13 +3228,15 @@
             <div class="access-flow-step">
               <span>01</span>
               <div>
-                <strong>Você cria a conta</strong><small>Nome, e-mail e perfil</small>
+                <strong>Você cria a conta</strong
+                ><small>Nome, e-mail e perfil</small>
               </div>
             </div>
             <div class="access-flow-step">
               <span>02</span>
               <div>
-                <strong>A pessoa cria a senha</strong><small>No primeiro acesso</small>
+                <strong>A pessoa cria a senha</strong
+                ><small>No primeiro acesso</small>
               </div>
             </div>
           </div>
@@ -3095,20 +3274,30 @@
                 ><small>Consulta o acervo e exporta relatórios.</small></label
               >
               <label class="role-option"
-                ><input type="radio" name="newUserRole" value="editor" required /><strong
-                  >Operador</strong
+                ><input
+                  type="radio"
+                  name="newUserRole"
+                  value="editor"
+                  required
+                /><strong>Operador</strong
                 ><small>Cadastra, edita e registra movimentações.</small></label
               >
               <label class="role-option"
-                ><input type="radio" name="newUserRole" value="admin" required /><strong
-                  >Administrador</strong
-                ><small>Realiza operações e gerencia pessoas e acessos.</small></label
+                ><input
+                  type="radio"
+                  name="newUserRole"
+                  value="admin"
+                  required
+                /><strong>Administrador</strong
+                ><small
+                  >Realiza operações e gerencia pessoas e acessos.</small
+                ></label
               >
             </div>
           </fieldset>
           <button id="newUserSave" class="primary spaced">
-            <svg class="icon" aria-hidden="true"><use href="#i-user-add" /></svg>Cadastrar
-            pessoa
+            <svg class="icon" aria-hidden="true"><use href="#i-user-add" /></svg
+            >Cadastrar pessoa
           </button>
         </form>
         <form id="personRoleForm" hidden>
@@ -3133,22 +3322,32 @@
                 ><small>Consulta o acervo e exporta relatórios.</small></label
               >
               <label class="role-option"
-                ><input type="radio" name="personRole" value="editor" required /><strong
-                  >Operador</strong
+                ><input
+                  type="radio"
+                  name="personRole"
+                  value="editor"
+                  required
+                /><strong>Operador</strong
                 ><small>Cadastra, edita e registra movimentações.</small></label
               >
               <label class="role-option"
-                ><input type="radio" name="personRole" value="admin" required /><strong
-                  >Administrador</strong
-                ><small>Realiza operações e gerencia pessoas e acessos.</small></label
+                ><input
+                  type="radio"
+                  name="personRole"
+                  value="admin"
+                  required
+                /><strong>Administrador</strong
+                ><small
+                  >Realiza operações e gerencia pessoas e acessos.</small
+                ></label
               >
             </div>
           </fieldset>
           <div class="actions spaced">
             <button type="button" id="cancelPersonRole">Cancelar</button
             ><button id="savePersonRole">
-              <svg class="icon" aria-hidden="true"><use href="#i-check" /></svg>Salvar
-              perfil
+              <svg class="icon" aria-hidden="true"><use href="#i-check" /></svg
+              >Salvar perfil
             </button>
           </div>
         </form>
@@ -3166,7 +3365,8 @@
         <h2 id="deletePersonTitle">Excluir pessoa?</h2>
       </div>
       <div class="delete-person-body">
-        <strong id="deletePersonName"></strong><span id="deletePersonEmail"></span>
+        <strong id="deletePersonName"></strong
+        ><span id="deletePersonEmail"></span>
         <p id="deletePersonDescription">
           A conta será excluída e a pessoa perderá o acesso. Os cadastros e as
           movimentações que ela registrou continuarão no acervo.
@@ -3175,8 +3375,8 @@
         <div class="actions spaced">
           <button type="button" id="cancelPersonDelete">Cancelar</button
           ><button type="button" id="confirmPersonDelete">
-            <svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Excluir
-            pessoa
+            <svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg
+            >Excluir pessoa
           </button>
         </div>
       </div>
@@ -3208,8 +3408,8 @@
       <form id="registrationDiscardForm">
         <div id="registrationDiscardItem"></div>
         <p id="registrationDiscardDescription">
-          O registro ficará no acervo como <strong>Descartado</strong>, com seu histórico
-          preservado. Não entrará no estoque disponível.
+          O registro ficará no acervo como <strong>Descartado</strong>, com seu
+          histórico preservado. Não entrará no estoque disponível.
         </p>
         <div id="directReasonWrap">
           <label for="directReason"
@@ -3223,10 +3423,12 @@
           ></textarea>
         </div>
         <div class="actions">
-          <button type="button" data-close="registrationDiscardDialog">Cancelar</button>
+          <button type="button" data-close="registrationDiscardDialog">
+            Cancelar
+          </button>
           <button id="confirmRegistrationDiscard" type="submit">
-            <svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg>Confirmar
-            descarte
+            <svg class="icon" aria-hidden="true"><use href="#i-discard" /></svg
+            >Confirmar descarte
           </button>
         </div>
       </form>
@@ -3252,10 +3454,11 @@
           <strong id="deleteItemName"></strong><span id="deleteItemCode"></span>
         </div>
         <p>
-          O registro será removido do acervo. Esta ação não pode ser desfeita. A trilha de
-          auditoria ficará preservada no banco.
+          O registro será removido do acervo. Esta ação não pode ser desfeita. A
+          trilha de auditoria ficará preservada no banco.
         </p>
-        <label for="deleteItemConfirmation">Digite o código interno para confirmar</label
+        <label for="deleteItemConfirmation"
+          >Digite o código interno para confirmar</label
         ><input
           id="deleteItemConfirmation"
           required
@@ -3278,7 +3481,11 @@
             <h2 id="operationTitle"></h2>
           </div>
         </div>
-        <button type="button" data-close="operation" aria-label="Fechar movimentação">
+        <button
+          type="button"
+          data-close="operation"
+          aria-label="Fechar movimentação"
+        >
           <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
         </button>
         <div id="operationRecord" class="operation-record"></div>
@@ -3313,7 +3520,12 @@
           ><input id="document" maxlength="200" />
         </div>
         <label for="reason">Motivo / justificativa</label
-        ><textarea id="reason" required minlength="3" maxlength="2000"></textarea
+        ><textarea
+          id="reason"
+          required
+          minlength="3"
+          maxlength="2000"
+        ></textarea
         ><button id="confirmOperation" class="primary spaced">
           <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
             <use href="#i-check" />
@@ -3326,7 +3538,12 @@
       <div class="bar">
         <strong id="cameraTitle">Ler identificação</strong>
         <div class="actions">
-          <button id="torch" aria-label="Ligar lanterna" aria-pressed="false" disabled>
+          <button
+            id="torch"
+            aria-label="Ligar lanterna"
+            aria-pressed="false"
+            disabled
+          >
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-torch" />
             </svg></button
@@ -3345,8 +3562,8 @@
       </div>
       <div class="camerafoot">
         <p>
-          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code e OCR
-          trabalham em paralelo.
+          Etiqueta no quadro maior; números na faixa tracejada. Barras, QR Code
+          e OCR trabalham em paralelo.
         </p>
         <div id="cameraStatus" role="status">Preparando leitores…</div>
         <label id="zoomLabel" hidden
@@ -3442,6 +3659,6 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.53"></script>
+    <script src="./aplicacao.js?v=3.5.54"></script>
   </body>
 </html>

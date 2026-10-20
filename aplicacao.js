@@ -2085,7 +2085,7 @@ function openRegistrationDiscard() {
         place,
     ),
   );
-  $("registrationDiscardDialog").showModal();
+  showAcervoDialog($("registrationDiscardDialog"));
   if (mobileAcervo()) {
     const anchor = mobileItemAnchor({ dados: d });
     anchor.querySelector("small")?.remove();
@@ -3585,8 +3585,8 @@ function startEdit(r) {
   };
   syncFieldIdentity();
   editBaseline = JSON.stringify(formData("edit"));
-  $("editDialog").showModal();
-  $(innerWidth <= 640 ? "editDialogClose" : "editItem").focus();
+  showAcervoDialog($("editDialog"));
+  focusAcervoDialog($("editDialog"), "editItem");
   $("editDialog").scrollTop = 0;
 }
 
@@ -3698,7 +3698,7 @@ function openOperation(a, r) {
   $("reason").value = "";
   $("document").value = "";
   configureMovement(a, r);
-  $("operation").showModal();
+  showAcervoDialog($("operation"));
   if (mobileAcervo()) {
     $("operationRecord").prepend(itemIcon(r));
     updateMobileOperation();
@@ -4403,7 +4403,7 @@ function openItemDeletion(record) {
   $("deleteItemConfirmation").value = "";
   $("deleteItemConfirmation").setCustomValidity("");
   $("deleteItemError").textContent = "";
-  $("deleteItemDialog").showModal();
+  showAcervoDialog($("deleteItemDialog"));
 }
 
 function passwordRequirements(password) {
@@ -4888,7 +4888,7 @@ function returnToPeople() {
   profileTarget = null;
   setAccessView("list");
   loadPeople();
-  $("peopleSearch").focus();
+  focusAcervoDialog($("userAccessDialog"), "peopleSearch");
 }
 
 function editPersonRole(person) {
@@ -4911,7 +4911,7 @@ function confirmPersonRemoval(person) {
   $("deletePersonName").textContent = person.nome || person.email;
   $("deletePersonEmail").textContent = person.email;
   $("deletePersonMessage").textContent = "";
-  $("deletePersonDialog").showModal();
+  showAcervoDialog($("deletePersonDialog"));
   $("cancelPersonDelete").focus();
 }
 
@@ -7778,7 +7778,7 @@ function initMobileIdentity() {
   accountClose.setAttribute("aria-label", "Fechar opções da conta");
   accountHeading.append(accountTitle, accountClose);
   accountPanel.append(accountHeading);
-  accountButton.onclick = () => accountPanel.showModal();
+  accountButton.onclick = () => showAcervoDialog(accountPanel);
   const credit = footer.cloneNode(true);
   credit.className = "mobile-institution-credit";
   accountPanel.append(credit);
@@ -7896,7 +7896,9 @@ function initMobileIdentity() {
       reviewActions.id = "mobileReviewActions";
       reviewActions.prepend(reviewBack);
       $("fields").append(reviewActions);
-      accountHeading.after(accountToolbar);
+      const body = accountPanel.querySelector(".mobile-dialog-body");
+      if (body) body.prepend(accountToolbar);
+      else accountHeading.after(accountToolbar);
       appNav.classList.add("mobile-app-nav");
       document.querySelector(".shell").append(appNav);
       credit.before($("draftInfo"));
@@ -8341,7 +8343,7 @@ function mobileReceipt(record, template) {
   }
   visual.prepend(celebration);
   const another = button(
-    "Continuar neste local",
+    "Cadastrar outro aqui",
     () => {
       resetForm();
       for (const [name, field] of [
@@ -8358,7 +8360,7 @@ function mobileReceipt(record, template) {
     "record-add",
   );
   const restart = button(
-    "Voltar ao início",
+    "Concluir e voltar ao início",
     () => {
       $("register").dataset.journey = "home";
       resetForm();
@@ -8376,7 +8378,14 @@ function mobileReceipt(record, template) {
   );
   saved.className =
     "notice mobile-receipt" + (discarded ? " is-discarded" : "");
-  saved.replaceChildren(visual, another, restart);
+  const next = el("div", undefined, "mobile-receipt-next");
+  next.append(
+    el("small", "PRÓXIMO PASSO"),
+    another,
+    el("span", "Mantém " + template.ambiente + "."),
+    restart,
+  );
+  saved.replaceChildren(visual, next);
   saved.hidden = false;
   $("app").scrollTop = 0;
   const origin = journey.lastFiche;
@@ -8519,6 +8528,7 @@ function renderMobileRecords(found) {
 
 function openMobileRecord(record, focus = true) {
   let dialog = $("mobileDetail");
+  if (dialog?.dataset.mobileSuspended === "true") return;
   if (!dialog) {
     dialog = el("dialog", undefined, "mobile-detail-sheet");
     dialog.id = "mobileDetail";
@@ -8528,7 +8538,12 @@ function openMobileRecord(record, focus = true) {
       closeMobileDetail();
     });
     dialog.addEventListener("close", () => {
-      if (!editor && !$("operation").open && !$("deleteItemDialog").open)
+      if (
+        !dialog.dataset.mobileSuspended &&
+        !editor &&
+        !$("operation").open &&
+        !$("deleteItemDialog").open
+      )
         expanded = null;
     });
     document.body.append(dialog);
@@ -8543,8 +8558,9 @@ function openMobileRecord(record, focus = true) {
     renderMobileRecordDetail(record, content);
     dialog.dataset.fingerprint = `${record.id}:${record.versao}:${role}`;
   }
-  if (!dialog.open) dialog.showModal();
-  if (focus) dialog.querySelector("button").focus({ preventScroll: true });
+  prepareAcervoDialog(dialog);
+  if (!dialog.open) showAcervoDialog(dialog);
+  if (focus) focusAcervoDialog(dialog);
 }
 
 function renderMobileRecordDetail(record, panel) {
@@ -8722,18 +8738,19 @@ function renderMobileRecordDetail(record, panel) {
     }
   }
   if (role === "admin") {
-    const admin = el("details", undefined, "mobile-record-admin");
-    admin.append(
-      el("summary", "Administração do registro"),
-      button(
-        "Excluir definitivamente",
-        () => openItemDeletion(record),
-        "danger item-delete-action",
-        "close",
-      ),
+    const remove = button(
+      "Excluir definitivamente",
+      () => openItemDeletion(record),
+      "danger item-delete-action",
+      "discard",
     );
-    summary.append(admin);
+    remove.setAttribute(
+      "aria-label",
+      "Excluir definitivamente " + record.dados.item,
+    );
+    actions.append(remove);
   }
+
   panel.append(header, tabs, summary, history);
   if (actions.children.length) panel.append(actions);
   const balance = summary.querySelector(".mobile-detail-balance");
@@ -10110,9 +10127,9 @@ $("leaveFirstAccess").onclick = async () => {
 $("manageAccess").onclick = () => {
   if (role !== "admin" || busy || pending) return;
   resetPeopleManagement();
-  $("userAccessDialog").showModal();
+  showAcervoDialog($("userAccessDialog"));
   loadPeople(1);
-  $("peopleSearch").focus();
+  focusAcervoDialog($("userAccessDialog"), "peopleSearch");
 };
 
 $("closeUserAccess").onclick = () => {
@@ -10146,7 +10163,7 @@ $("addPerson").onclick = () => {
   $("newUserForm").reset();
   $("newUserResult").replaceChildren();
   setAccessView("create");
-  $("newUserName").focus();
+  focusAcervoDialog($("userAccessDialog"), "newUserName");
 };
 
 $("newUserForm").onsubmit = async (event) => {
@@ -10543,3 +10560,179 @@ initMobileRefresh();
 initMobileCompact();
 
 initMobileReference();
+
+function focusAcervoDialog(dialog, desktopField) {
+  if (!mobileAcervo()) {
+    if (desktopField) $(desktopField).focus();
+    return;
+  }
+  const heading = dialog.querySelector(
+    ".mobile-dialog-heading h2, .mobile-dialog-heading [data-dialog-title], .mobile-dialog-heading",
+  );
+  if (heading) {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  }
+}
+
+function prepareAcervoDialog(dialog) {
+  if (!mobileAcervo() || dialog.id === "camera") return;
+  dialog.classList.add("mobile-dialog");
+  let heading = dialog.querySelector(":scope > .mobile-dialog-heading");
+  if (!heading) {
+    heading = dialog.querySelector(
+      ":scope > .operation-hero, :scope > .access-dialog-hero, :scope > .dialog-heading, :scope > .delete-person-heading, :scope > .mobile-account-heading, :scope > .mobile-detail-toolbar, :scope > .mobile-about-heading",
+    );
+    if (!heading) return;
+    heading.classList.add("mobile-dialog-heading");
+  }
+  if (!dialog.querySelector(":scope > .mobile-dialog-body")) {
+    const body = el("div", undefined, "mobile-dialog-body");
+    for (const node of [...dialog.childNodes])
+      if (node !== heading) body.append(node);
+    dialog.append(body);
+  }
+  const context = heading.querySelector("#operationRecord");
+  if (context)
+    dialog.querySelector(":scope > .mobile-dialog-body").prepend(context);
+  for (const control of heading.querySelectorAll("button")) {
+    if (control.id === "accessBack") continue;
+    control.mobileOriginalMarkup ??= control.innerHTML;
+    control.classList.add("mobile-dialog-close");
+    control.setAttribute(
+      "aria-label",
+      control.getAttribute("aria-label") || "Fechar janela",
+    );
+    control.replaceChildren(icon("close"));
+  }
+  const title = heading.querySelector("h2") || heading;
+  title.tabIndex = -1;
+  title.setAttribute("autofocus", "");
+  if (dialog.dataset.mobilePrepared) return;
+  dialog.dataset.mobilePrepared = "true";
+  dialog.addEventListener("close", () => {
+    const parent = dialog.mobileParentDialog;
+    dialog.mobileParentDialog = null;
+    if (!parent) return;
+    delete parent.dataset.mobileSuspended;
+    if (!mobileAcervo() || $("app").hidden || parent.open) return;
+    if (parent.id === "mobileDetail") {
+      const record = rows.find((item) => item.id === expanded);
+      if (record) openMobileRecord(record);
+    } else if (parent.id === "userAccessDialog" && role === "admin") {
+      showAcervoDialog(parent);
+    }
+  });
+}
+
+function showAcervoDialog(dialog) {
+  if (!mobileAcervo()) {
+    if (!dialog.open) dialog.showModal();
+    return;
+  }
+  prepareAcervoDialog(dialog);
+  if (!dialog.open) {
+    const parent = [...document.querySelectorAll("dialog[open]")].find(
+      (node) => node !== dialog && node.id !== "camera",
+    );
+    if (parent) {
+      dialog.mobileParentDialog = parent;
+      parent.dataset.mobileSuspended = "true";
+      parent.close();
+    }
+    dialog.showModal();
+  }
+  focusAcervoDialog(dialog);
+}
+
+function initMobileSurfaces() {
+  const account = $("mobileAccountDialog");
+  const oldCredit = document.querySelector("#app > .mobile-app-credit");
+  oldCredit?.remove();
+  const source = document.querySelector(".institution-footer");
+  const author = source
+    .querySelector(".institution-credits strong")
+    .textContent.trim();
+  const about = el("dialog");
+  about.id = "mobileAboutDialog";
+  about.setAttribute("aria-labelledby", "mobileAboutTitle");
+  const heading = el("div", undefined, "mobile-about-heading");
+  const title = el("h2", "Sobre o Acervo");
+  title.id = "mobileAboutTitle";
+  const close = button("", () => about.close(), "", "close");
+  close.setAttribute("aria-label", "Fechar informações do Acervo");
+  heading.append(title, close);
+  const info = el("div", undefined, "mobile-about-content");
+  const logo = source.querySelector(".institution-logo").cloneNode(true);
+  const mark = el("span", undefined, "mobile-about-mark");
+  mark.append(mobileBooksMark());
+  info.append(
+    mark,
+    el("h3", "ACERVO"),
+    el("p", "Gestão de bens e materiais"),
+    el("small", "Concepção e desenvolvimento"),
+    el("strong", author),
+    logo,
+  );
+  about.append(heading, info);
+  document.body.append(about);
+  const signature = button(
+    "",
+    () => showAcervoDialog(about),
+    "mobile-about-signature",
+  );
+  signature.append(
+    mobileBooksMark(),
+    el("span", "Sobre o Acervo"),
+    el("small", "por " + author),
+  );
+  signature.setAttribute("aria-haspopup", "dialog");
+  signature.setAttribute("aria-controls", about.id);
+  $("mobileJourneyHome").append(signature);
+  const accountAbout = button(
+    "",
+    () => showAcervoDialog(about),
+    "mobile-account-about-link",
+  );
+  const copy = el("span");
+  copy.append(
+    el("strong", "Sobre o Acervo"),
+    el("small", "Desenvolvimento e Prefeitura de Curitiba"),
+  );
+  accountAbout.append(mobileBooksMark(), copy, icon("right"));
+  account.append(accountAbout);
+  const media = matchMedia(
+    "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
+  );
+  const update = () => {
+    for (const dialog of document.querySelectorAll(
+      "body > dialog:not(#camera)",
+    )) {
+      if (media.matches) prepareAcervoDialog(dialog);
+      else {
+        const body = dialog.querySelector(":scope > .mobile-dialog-body");
+        if (body) {
+          const context = body.querySelector("#operationRecord");
+          if (context) dialog.querySelector(".operation-hero").append(context);
+          body.replaceWith(...body.childNodes);
+        }
+        for (const control of dialog.querySelectorAll(".mobile-dialog-close")) {
+          control.innerHTML = control.mobileOriginalMarkup;
+          control.classList.remove("mobile-dialog-close");
+        }
+        dialog.classList.remove("mobile-dialog");
+        for (const title of dialog.querySelectorAll("[autofocus]"))
+          title.removeAttribute("autofocus");
+      }
+    }
+  };
+  media.addEventListener("change", update);
+  update();
+  const app = $("app");
+  const measure = () =>
+    app.style.setProperty("--mobile-main-height", app.clientHeight + "px");
+  new ResizeObserver(measure).observe(app);
+  measure();
+}
+
+initMobileSurfaces();

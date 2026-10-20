@@ -20952,3 +20952,1749 @@ body::before {
     letter-spacing: -0.5px;
   }
 }
+
+.mobile-about-signature,
+.mobile-account-about-link {
+  display: none;
+}
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  :root {
+    --mobile-blue: linear-gradient(125deg, #007de3, #0057d5 45%, #0641a9);
+    --mobile-deep: linear-gradient(130deg, #0759bd, #07377f);
+    --mobile-red: linear-gradient(120deg, #ed1745, #c10035 55%, #930d32);
+    --mobile-amber: linear-gradient(125deg, #a65b00, #783600);
+    --mobile-paper: #fff;
+    --mobile-ink: #101e49;
+    --mobile-line: #c4d6ec;
+  }
+  #mobileJourneyHome h1,
+  #mobileJourneyHome h1 span {
+    color: #fff;
+    background: none;
+    -webkit-text-fill-color: #fff;
+    font-size: clamp(28px, 7.5vw, 36px);
+    line-height: 1.13;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-shadow: 0 3px 24px #002d8270;
+  }
+  #mobileJourneyHome h1 {
+    position: relative;
+    max-width: 100%;
+    margin: 0 0 14px;
+  }
+  #mobileJourneyHome #mobileJourneyDraft {
+    font-size: 13px;
+    line-height: 1.45;
+    color: #e6f5ff;
+  }
+  #mobileJourneyHome .mobile-about-signature {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    order: 5;
+    margin: 18px auto 0;
+    padding: 9px 12px;
+    min-height: 44px;
+    max-width: 300px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: #e1f1ff;
+    font: 500 10px/1.35 var(--mobile-font);
+  }
+  .mobile-about-signature .icon {
+    width: 13px;
+    height: 13px;
+  }
+  .mobile-about-signature > .mobile-books-mark {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+  }
+  .mobile-about-signature small {
+    flex-basis: 100%;
+    color: #d0e7ff;
+    font-size: 9px;
+    font-weight: 400;
+  }
+  #app > .mobile-app-credit {
+    display: none;
+  }
+  #app:has(#register[data-journey="receipt"]:not([hidden])) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  #register #saved.mobile-receipt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--mobile-main-height, 65svh);
+    padding: 42px 10px 32px;
+    margin: 0;
+    gap: 18px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  #saved .mobile-receipt-visual {
+    margin: 0;
+    border-radius: 20px;
+    padding: 43px 20px 20px;
+    background: #fff;
+    box-shadow: 0 14px 40px #00286a35;
+  }
+  #saved .mobile-receipt-visual > h2 {
+    color: var(--mobile-ink);
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  #saved .mobile-item-symbol {
+    width: 46px;
+    height: 48px;
+    flex: 0 0 46px;
+    border-radius: 12px;
+    background: var(--mobile-blue);
+    color: #fff;
+    box-shadow: 0 4px 12px #0055bf24;
+  }
+  #saved .mobile-item-symbol .icon {
+    width: 30px;
+    height: 30px;
+  }
+  #saved .mobile-item-anchor > div > strong:first-child {
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.35;
+  }
+  #saved .mobile-receipt-code {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-color: var(--mobile-line);
+  }
+  #saved .mobile-receipt-code small {
+    color: #4c6082;
+    font-size: 10px;
+  }
+  #saved .mobile-receipt-code strong {
+    margin: 0;
+    font-size: 15px;
+  }
+  .mobile-receipt-next {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    animation: acervo-complete-copy 450ms 350ms both;
+  }
+  .mobile-receipt-next > small {
+    font: 700 9px/1.4 var(--mobile-font);
+    letter-spacing: 1.4px;
+    color: #d1eaff;
+  }
+  #saved .mobile-receipt-next > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font: 650 13px/1.35 var(--mobile-font);
+    white-space: normal;
+  }
+  #saved .mobile-receipt-next > .mobile-primary {
+    background: #fff;
+    border: 1px solid #fff;
+    color: #084faa;
+    box-shadow: 0 5px 18px #00357c26;
+  }
+  #saved .mobile-receipt-next > .mobile-primary .icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+  .mobile-receipt-next > span {
+    margin: -2px 0 5px;
+    color: #e0f0ff;
+    font: 400 10px/1.45 var(--mobile-font);
+  }
+  #saved .mobile-receipt-next > .mobile-receipt-restart {
+    background: #003e9a45;
+    color: #fff;
+    border: 1px solid #a2d9ff80;
+    box-shadow: none;
+    font-weight: 500;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )[open] {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: auto;
+    top: calc(
+      var(--app-viewport-top, 0px) +
+        (
+          var(--app-visible-height, 100dvh) + var(--app-safe-top) -
+            var(--app-safe-bottom)
+        ) /
+        2
+    );
+    left: calc((100vw + var(--app-safe-left) - var(--app-safe-right)) / 2);
+    transform: translate(-50%, -50%);
+    width: min(
+      390px,
+      calc(100vw - 28px - var(--app-safe-left) - var(--app-safe-right))
+    );
+    max-width: none;
+    max-height: calc(
+      var(--app-visible-height, 100dvh) - var(--app-safe-top) -
+        var(--app-safe-bottom) - 28px
+    );
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 20px;
+    color: var(--mobile-ink);
+    background: #fff;
+    overflow: hidden;
+    box-shadow:
+      0 22px 70px #00193b65,
+      0 0 0 1px #b4e2ff70;
+    isolation: isolate;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )::backdrop {
+    background: #001d4ba6;
+    backdrop-filter: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    > .mobile-dialog-heading {
+    position: relative;
+    inset: auto;
+    height: auto;
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 66px;
+    padding: 17px 58px 17px 18px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--mobile-blue);
+    color: #fff;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    ):is(
+      #registrationDiscardDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      .destructive
+    )
+    > .mobile-dialog-heading {
+    background: var(--mobile-red);
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    > .mobile-dialog-heading::before,
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    > .mobile-dialog-heading::after {
+    display: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    h2,
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    [data-dialog-title] {
+    margin: 0;
+    color: #fff;
+    font: 700 17px/1.25 var(--mobile-font);
+    letter-spacing: -0.25px;
+    overflow-wrap: anywhere;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(
+      .eyebrow,
+      .access-dialog-kicker,
+      #userAccessDescription,
+      .mobile-account-title > small
+    ) {
+    display: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(.operation-heading, .access-dialog-title) {
+    display: flex;
+    align-items: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(.operation-mark, .access-dialog-mark, .mobile-account-mark) {
+    display: grid;
+    place-items: center;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: #fff;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(.operation-mark, .access-dialog-mark, .mobile-account-mark)
+    .icon {
+    width: 25px;
+    height: 25px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(
+      .mobile-dialog-close,
+      #editDialogClose,
+      #deleteItemClose,
+      #closeUserAccess
+    ) {
+    position: absolute;
+    inset: 13px 10px auto auto;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    min-width: 40px;
+    padding: 10px;
+    margin: 0;
+    background: #001f582b;
+    border: 1px solid #ffffff40;
+    border-radius: 50%;
+    color: #fff;
+    box-shadow: none;
+    outline: none;
+    transform: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(
+      .mobile-dialog-close,
+      #editDialogClose,
+      #deleteItemClose,
+      #closeUserAccess
+    )
+    .icon {
+    width: 20px;
+    height: 20px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :focus {
+    outline: none;
+    box-shadow: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-heading
+    :is(
+      .mobile-dialog-close,
+      #editDialogClose,
+      #deleteItemClose,
+      #closeUserAccess
+    ):focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -5px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    > .mobile-dialog-body {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    width: 100%;
+    padding: 18px;
+    background: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #0a63cb transparent;
+    scroll-padding: 18px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    > :is(
+      form,
+      .access-dialog-body,
+      .delete-person-body,
+      #editDialogContent,
+      .mobile-detail-content
+    ) {
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    max-height: none;
+    overflow: visible;
+    background: transparent;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    :is(input:not([type="radio"]):not([type="checkbox"]), textarea, select) {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #abc4e2;
+    border-radius: 11px;
+    background: #fff;
+    color: var(--mobile-ink);
+    padding: 10px 12px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    input[type="date"] {
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: left;
+    height: 46px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    min-width: 0;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    textarea {
+    min-height: 92px;
+    resize: vertical;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    :is(label, legend) {
+    color: #183c68;
+    font: 600 12px/1.45 var(--mobile-font);
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    :is(p, .hint) {
+    color: #425b7d;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    button {
+    min-height: 44px;
+    padding: 10px 13px;
+    margin-top: 0;
+    border-radius: 11px;
+    border: 1px solid #1265cf;
+    background: #fff;
+    color: #0754b3;
+    font: 600 12px/1.35 var(--mobile-font);
+    white-space: normal;
+    box-shadow: none;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    button:is(
+      .primary,
+      #addPerson,
+      #newUserSave,
+      #savePersonRole,
+      #editSave,
+      #confirmOperation,
+      .mobile-primary
+    ) {
+    border-color: transparent;
+    background: var(--mobile-blue);
+    color: #fff;
+    box-shadow: 0 4px 12px #0052b82b;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    button:is(
+      .danger,
+      #confirmPersonDelete,
+      #confirmRegistrationDiscard,
+      #deleteItemSave,
+      #logout
+    ),
+  body > #operation.destructive.mobile-dialog #confirmOperation {
+    background: var(--mobile-red);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 12px #9d0b3026;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    button:disabled {
+    opacity: 0.55;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .actions {
+    display: grid;
+    grid-template-columns: minmax(80px, 0.65fr) minmax(0, 1.35fr);
+    gap: 9px;
+    margin-top: 18px;
+    align-items: stretch;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .spaced {
+    margin-top: 18px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    #operationRecord {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    > .operation-record,
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    #registrationDiscardItem,
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .deletion-record {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    margin: 0 0 16px;
+    padding: 13px;
+    border: 1px solid var(--mobile-line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--mobile-ink);
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    > .operation-record {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    flex: 0 0 auto;
+    margin-bottom: 16px;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .mobile-dialog-body
+    > .operation-record
+    > .icon {
+    width: 28px;
+    height: 28px;
+    color: #0759bd;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .operation-record
+    :is(strong, small),
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .deletion-record
+    :is(strong, span) {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--mobile-ink);
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .operation-record
+    strong {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .operation-record
+    :is(small, .operation-code) {
+    color: #4d6688;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )
+    .operation-record
+    .operation-code {
+    grid-column: 2;
+    padding: 0;
+    background: none;
+    border: 0;
+    margin-top: -6px;
+  }
+  #operation.mobile-dialog #operationForm > :first-child {
+    margin-top: 0;
+  }
+  #operation.mobile-dialog #mobileOperationPreview {
+    padding: 12px;
+    margin: 14px 0;
+    border: 0;
+    border-radius: 10px;
+    background: var(--mobile-deep);
+    color: #fff;
+    font-size: 11px;
+  }
+  #operation.mobile-dialog.destructive #mobileOperationPreview {
+    background: var(--mobile-red);
+  }
+  #operation.mobile-dialog
+    :is(
+      #reason,
+      #document,
+      #downDate,
+      #moveQuantity,
+      #movePerson,
+      #moveDestination
+    ) {
+    margin-top: 7px;
+    margin-bottom: 14px;
+  }
+  #registrationDiscardDialog.mobile-dialog .mobile-item-anchor {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  #registrationDiscardDialog.mobile-dialog
+    #registrationDiscardItem
+    .mobile-item-symbol {
+    background: var(--mobile-red);
+    color: #fff;
+    border: 0;
+    width: 42px;
+    height: 46px;
+    flex-basis: 42px;
+  }
+  #registrationDiscardDialog.mobile-dialog #registrationDiscardDescription {
+    margin: 0 0 18px;
+  }
+  #registrationDiscardDialog.mobile-dialog #directReasonWrap > label {
+    margin-bottom: 7px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-toolbar {
+    display: flex;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-toolbar > span {
+    display: block;
+    font: 700 17px/1.3 var(--mobile-font);
+    color: #fff;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-anchor {
+    padding: 0 0 16px;
+    margin: 0;
+    gap: 12px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-anchor > div > strong {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  #mobileDetail.mobile-dialog .mobile-item-symbol {
+    background: var(--mobile-blue);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+    width: 46px;
+    height: 50px;
+    flex-basis: 46px;
+  }
+  #mobileDetail.mobile-dialog .mobile-item-symbol .icon {
+    width: 31px;
+    height: 31px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-primary > div > span {
+    background: var(--mobile-blue);
+    color: #fff;
+    border-radius: 10px 0 0 10px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 18px;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions .item-delete-action {
+    grid-column: 1 / -1;
+    min-height: 44px;
+    margin-top: 3px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions > button:only-child {
+    grid-column: 1 / -1;
+  }
+  #mobileAccountDialog.mobile-dialog .account-toolbar {
+    padding: 0;
+  }
+  #mobileAccountDialog.mobile-dialog .header-person {
+    padding: 0 0 16px;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--mobile-line);
+  }
+  #mobileAccountDialog.mobile-dialog #accountAvatar {
+    background: var(--mobile-blue);
+    color: #fff;
+  }
+  #mobileAccountDialog.mobile-dialog .toolbar-actions {
+    padding-top: 16px;
+  }
+  #mobileAccountDialog.mobile-dialog #manageAccess {
+    background: var(--mobile-blue);
+    color: #fff;
+    border-color: transparent;
+  }
+  #mobileAccountDialog.mobile-dialog .mobile-account-sync {
+    margin: 14px 0 0;
+    font-size: 10px;
+  }
+  #mobileAccountDialog.mobile-dialog .mobile-institution-credit {
+    display: none;
+  }
+  #mobileAccountDialog.mobile-dialog .mobile-account-about-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px;
+    background: var(--mobile-deep);
+    border: 0;
+    color: #fff;
+    text-align: left;
+  }
+  .mobile-account-about-link > .mobile-books-mark {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+  .mobile-account-about-link > span {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .mobile-account-about-link strong {
+    font-size: 12px;
+  }
+  .mobile-account-about-link small {
+    color: #d4ecff;
+    font-size: 9px;
+    font-weight: 400;
+  }
+  #mobileAboutDialog.mobile-dialog .mobile-about-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 7px 0;
+  }
+  .mobile-about-mark {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 60px;
+    background: var(--mobile-blue);
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 23px #0066cc30;
+  }
+  .mobile-about-mark .mobile-books-mark {
+    width: 45px;
+    height: 45px;
+  }
+  #mobileAboutDialog.mobile-dialog h3 {
+    font-size: 22px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
+    margin: 15px 0 0;
+  }
+  #mobileAboutDialog.mobile-dialog p {
+    margin: 4px 0 24px;
+    font-size: 12px;
+  }
+  .mobile-about-content > small {
+    font-size: 10px;
+    color: #526a88;
+  }
+  .mobile-about-content > strong {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #143d70;
+  }
+  #mobileAboutDialog.mobile-dialog .institution-logo {
+    display: block;
+    width: 145px;
+    max-width: 100%;
+    height: auto;
+    max-height: 58px;
+    margin: 24px 0 0;
+    object-fit: contain;
+    filter: none;
+  }
+  #userAccessDialog.mobile-dialog .people-summary {
+    margin-top: 15px;
+  }
+  #userAccessDialog.mobile-dialog :is(.people-role, .people-avatar),
+  #userAccessDialog.mobile-dialog .people-overflow > summary {
+    background: var(--mobile-blue);
+    color: #fff;
+    border-color: transparent;
+  }
+  #userAccessDialog.mobile-dialog .people-overflow-menu {
+    background: #fff;
+    box-shadow: 0 8px 28px #002e6933;
+    border-color: var(--mobile-line);
+  }
+  #userAccessDialog.mobile-dialog .role-option {
+    padding: 12px;
+    border: 1px solid var(--mobile-line);
+    border-radius: 12px;
+    background: #fff;
+  }
+  #userAccessDialog.mobile-dialog .role-option:has(input:checked) {
+    color: #fff;
+    border-color: transparent;
+    background: var(--mobile-blue);
+    box-shadow: 0 4px 14px #0050bb24;
+  }
+  #userAccessDialog.mobile-dialog
+    .role-option:has(input:checked)
+    :is(strong, small) {
+    color: #fff;
+  }
+  #userAccessDialog.mobile-dialog .access-flow,
+  #userAccessDialog.mobile-dialog #newUserResult {
+    background: var(--mobile-deep);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  #userAccessDialog.mobile-dialog
+    :is(.access-flow, #newUserResult)
+    :is(strong, small, p, span) {
+    color: #fff;
+  }
+  #userAccessDialog.mobile-dialog #accessBack {
+    position: static;
+    order: 2;
+    flex: 0 0 100%;
+    align-self: flex-start;
+    width: auto;
+    max-width: 100%;
+    min-height: 32px;
+    margin-top: 0;
+    padding: 6px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 11px;
+  }
+  #userAccessDialog.mobile-dialog.creating-person > .mobile-dialog-heading {
+    padding-bottom: 13px;
+  }
+  #register #itemForm .choice > input:checked + span,
+  #editDialog.mobile-dialog .choice > input:checked + span {
+    background: var(--mobile-blue);
+    border-color: #005cc9;
+    color: #fff;
+    box-shadow: 0 4px 10px #004fba24;
+  }
+  #register
+    #itemForm
+    .choice
+    > input:checked
+    + span
+    :is(small, .mobile-control-description) {
+    color: #e4f4ff;
+  }
+  #app :is(#pendingBox, #moveMissing, #listNotice):not([hidden]) {
+    background: var(--mobile-amber);
+    color: #fff;
+    border: 1px solid #ffc36f80;
+    border-radius: 12px;
+    padding: 14px;
+  }
+  #app :is(#pendingBox, #moveMissing, #listNotice) button {
+    background: #fff;
+    color: #763d00;
+    border-color: #fff;
+    min-height: 44px;
+  }
+  #app .mobile-status {
+    border: 0;
+    background: var(--mobile-blue);
+    color: #fff;
+  }
+  #app .mobile-status:is(.is-low, .is-discarded),
+  #mobileDetail .mobile-status:is(.is-low, .is-discarded) {
+    background: var(--mobile-red);
+    color: #fff;
+  }
+  .mobile-dialog .mobile-status {
+    background: var(--mobile-blue);
+    color: #fff;
+    border: 0;
+  }
+  .app-typing .mobile-about-signature {
+    display: none !important;
+  }
+  .app-typing
+    body
+    > dialog.mobile-dialog:is(
+      #mobileAccountDialog,
+      #userAccessDialog,
+      #registrationDiscardDialog,
+      #operation,
+      #editDialog,
+      #deleteItemDialog,
+      #deletePersonDialog,
+      #mobileDetail,
+      #mobileAboutDialog
+    )[open] {
+    max-height: calc(
+      var(--app-visible-height, 100dvh) - var(--app-safe-top) -
+        var(--app-safe-bottom) - 20px
+    );
+  }
+  @media (max-width: 359px) {
+    body
+      > dialog.mobile-dialog:is(
+        #mobileAccountDialog,
+        #userAccessDialog,
+        #registrationDiscardDialog,
+        #operation,
+        #editDialog,
+        #deleteItemDialog,
+        #deletePersonDialog,
+        #mobileDetail,
+        #mobileAboutDialog
+      )
+      > .mobile-dialog-body {
+      padding: 15px;
+    }
+    body
+      > dialog.mobile-dialog:is(
+        #mobileAccountDialog,
+        #userAccessDialog,
+        #registrationDiscardDialog,
+        #operation,
+        #editDialog,
+        #deleteItemDialog,
+        #deletePersonDialog,
+        #mobileDetail,
+        #mobileAboutDialog
+      )
+      .mobile-dialog-heading
+      h2 {
+      font-size: 15px;
+    }
+    #mobileJourneyHome h1,
+    #mobileJourneyHome h1 span {
+      font-size: 28px;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-receipt-next {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  body
+    > #mobileAccountDialog.mobile-dialog
+    .mobile-dialog-body
+    .mobile-account-about-link {
+    background: var(--mobile-deep);
+    color: #fff;
+    border: 0;
+  }
+  body > #userAccessDialog.mobile-dialog #accessBack:not([hidden]) {
+    display: inline-flex;
+  }
+  #register #itemForm.mobile-automatic-code #identityBlock #codeWrap {
+    background: var(--mobile-deep);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+  }
+  #register #itemForm.mobile-automatic-code :is(#codeLabel, #code, #codeHint) {
+    color: #fff;
+    background: transparent;
+    -webkit-text-fill-color: #fff;
+  }
+  #register #itemForm.mobile-automatic-code #codeWrap .mobile-code-symbol {
+    color: #fff;
+    background: #ffffff14;
+  }
+  #register
+    #itemForm
+    :is(#rooms, #types, #categories)
+    .choice
+    input:checked
+    + span,
+  body
+    > #editDialog.mobile-dialog
+    #editDialogContent
+    .choice
+    input:checked
+    + span,
+  #browse #filterPanel .choice input:checked + span {
+    color: #fff;
+    background: var(--mobile-blue);
+    border-color: transparent;
+    box-shadow: 0 4px 12px #0057bc24;
+  }
+  body > #editDialog.mobile-dialog #editForm {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #fff;
+  }
+  body
+    > #editDialog.mobile-dialog
+    :is(.editor-group-heading, #editIdentityHeading, #editControlHeading) {
+    background: var(--mobile-deep);
+    color: #fff;
+    border-radius: 9px;
+    padding: 10px;
+  }
+  body > #editDialog.mobile-dialog :is(#editCodeWrap, #editStockFields) {
+    background: #fff;
+    border-color: var(--mobile-line);
+  }
+  body > #editDialog.mobile-dialog #editCodeWrap label {
+    color: #183c68;
+  }
+  #browse #filterPanel .choice > span {
+    background: #fff;
+    border: 1px solid #bdd2eb;
+    color: #124e96;
+    min-height: 40px;
+    border-radius: 10px;
+  }
+  #browse #filterPanel legend {
+    font-weight: 650;
+    color: #173e70;
+  }
+  #browse #results .mobile-record-button .mobile-status,
+  #mobileDetail.mobile-dialog .mobile-detail-anchor .mobile-status {
+    background: var(--mobile-blue);
+    border-color: transparent;
+    color: #fff;
+  }
+  #browse #results .mobile-record-button .mobile-status.emprestado,
+  #mobileDetail.mobile-dialog .mobile-detail-anchor .mobile-status.emprestado {
+    background: var(--mobile-amber);
+    color: #fff;
+  }
+  #browse #results .mobile-record-button .mobile-status.baixado,
+  #mobileDetail.mobile-dialog .mobile-detail-anchor .mobile-status.baixado {
+    background: var(--mobile-red);
+    color: #fff;
+  }
+  #browse #results .mobile-record-button .mobile-status.arquivado,
+  #mobileDetail.mobile-dialog .mobile-detail-anchor .mobile-status.arquivado {
+    background: linear-gradient(120deg, #465570, #253651);
+    color: #fff;
+  }
+  #browse #applied button {
+    background: var(--mobile-deep);
+    border-color: #84bcff;
+    color: #fff;
+  }
+  #register #mobileReviewActions #discardRegistration {
+    background: var(--mobile-red);
+    border-color: transparent;
+    color: #fff;
+  }
+  #register #suggestions .mobile-new-item {
+    background: var(--mobile-deep);
+    border-color: transparent;
+    color: #fff;
+  }
+  #register #suggestions .mobile-new-item :is(strong, small, .icon) {
+    color: #fff;
+  }
+  #camera[open] {
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    overflow: hidden auto;
+    background: #fff;
+    color: #17385e;
+  }
+  #camera > .bar {
+    position: relative;
+    min-height: 66px;
+    padding: 13px 16px;
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    background: var(--mobile-blue);
+    color: #fff;
+  }
+  #camera > .bar #cameraTitle {
+    color: #fff;
+    font-size: 16px;
+  }
+  #camera #closeCamera {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 10px;
+    border: 1px solid #ffffff40;
+    border-radius: 50%;
+    background: #001f582b;
+    color: #fff;
+    font-size: 0;
+    outline: none;
+    box-shadow: none;
+  }
+  #camera #closeCamera .icon {
+    width: 20px;
+    height: 20px;
+  }
+  #camera #closeCamera:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -5px;
+  }
+  #camera .camerafoot {
+    padding: 16px;
+    color: #fff;
+    background: transparent;
+  }
+  #camera .camerafoot button {
+    color: #fff;
+    background: var(--mobile-blue);
+    border-color: transparent;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #register #itemForm .choice input:checked + span .icon,
+  body
+    > #editDialog.mobile-dialog
+    #editDialogContent
+    .choice
+    input:checked
+    + span
+    .icon {
+    color: #fff;
+  }
+  body
+    > #editDialog.mobile-dialog
+    :is(
+      .registration-group-heading,
+      .editor-group-heading,
+      #editIdentityHeading,
+      #editControlHeading
+    ) {
+    background: var(--mobile-deep);
+    color: #fff;
+    border-radius: 9px;
+    padding: 10px;
+  }
+  body
+    > #editDialog.mobile-dialog
+    :is(
+      .registration-group-heading,
+      .editor-group-heading,
+      #editIdentityHeading,
+      #editControlHeading
+    )
+    :is(strong, small, p, .icon) {
+    color: #fff;
+  }
+  body
+    > #editDialog.mobile-dialog
+    :is(
+      .registration-group-heading,
+      .editor-group-heading,
+      #editIdentityHeading,
+      #editControlHeading
+    )
+    > .icon {
+    background: transparent;
+    border-color: #ffffff60;
+  }
+  #camera .camerafoot button#cameraManual {
+    background: #fff;
+    color: #0754b3;
+    border: 1px solid #fff;
+    border-radius: 11px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #userAccessDialog.mobile-dialog #peopleList .people-role {
+    background: var(--mobile-blue);
+    color: #fff;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-notes {
+    background: #fff;
+    border-color: var(--mobile-line);
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions button .icon {
+    display: block;
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-tabs > button {
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+  #mobileDetail.mobile-dialog
+    .mobile-detail-tabs
+    > button[aria-selected="true"] {
+    color: #0057c8;
+    border-bottom: 3px solid #0057d5;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-primary > div > span .icon {
+    color: #fff;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  body > #mobileDetail.mobile-dialog .mobile-detail-tabs > button {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+  body
+    > #mobileDetail.mobile-dialog
+    .mobile-detail-tabs
+    > button[aria-selected="true"] {
+    border-bottom-color: #0057d5;
+    color: #0057c8;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #browse #filterPanel button {
+    color: #124e96;
+    background: #fff;
+    border: 1px solid #bdd2eb;
+    min-height: 40px;
+    border-radius: 10px;
+  }
+  #browse #filterPanel button[aria-pressed="true"] {
+    color: #fff;
+    background: var(--mobile-blue);
+    border-color: transparent;
+    box-shadow: 0 4px 12px #0057bc24;
+  }
+  #movements #moveResults .mobile-action-tile {
+    background: var(--mobile-blue);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px #0057bc22;
+  }
+  #movements #moveResults .mobile-action-tile.is-danger {
+    background: var(--mobile-red);
+    color: #fff;
+    border-color: transparent;
+  }
+  #movements #moveResults .mobile-action-tile :is(small, .icon) {
+    color: #fff;
+  }
+  #movements #moveResults .mobile-operation-receipt {
+    background: var(--mobile-deep);
+    color: #fff;
+    border: 0;
+  }
+  #movements #moveResults .mobile-status.baixado {
+    background: var(--mobile-red);
+  }
+  #movements #moveResults .mobile-status.emprestado {
+    background: var(--mobile-amber);
+  }
+  #movements #moveResults .mobile-status.arquivado {
+    background: linear-gradient(120deg, #465570, #253651);
+  }
+  .toast {
+    background: var(--mobile-deep);
+    color: #fff;
+  }
+  .toast.error {
+    background: var(--mobile-red);
+    color: #fff;
+  }
+}

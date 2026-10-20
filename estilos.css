@@ -20354,3 +20354,601 @@ body::before {
     display: none;
   }
 }
+
+.mobile-app-credit {
+  display: none;
+}
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  :root {
+    --app-content-background:
+      linear-gradient(180deg, #0852b8 0, #0852b8 160px, #0852b800 440px),
+      radial-gradient(ellipse at 100% 70%, #0085ed55, transparent 70%),
+      linear-gradient(145deg, #0852b8, #005dcc 65%, #034899);
+  }
+  html:not(.auth-viewport) {
+    background-color: #0852b8;
+    background-image: var(--app-content-background);
+    background-size: 100vw 100lvh;
+    background-attachment: fixed;
+  }
+  body:not(.auth-screen),
+  .app-typing body:not(.auth-screen) {
+    background: transparent;
+  }
+  #mobileJourneyHome {
+    min-height: 0;
+    padding: clamp(20px, 3.8svh, 34px) 0 12px;
+  }
+  #mobileJourneyHome .mobile-journey-art {
+    height: 320px;
+    flex-basis: 320px;
+    margin-top: 16px;
+  }
+  #mobileJourneyHome #mobileJourneyStart {
+    height: 230px;
+  }
+  #mobileJourneyStart .mobile-start-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 48px;
+    min-height: 48px;
+    gap: 4px;
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    animation: acervo-caption-float 3.8s 400ms ease-in-out infinite;
+  }
+  #mobileJourneyStart .mobile-start-arrow {
+    display: block;
+    transform: rotate(-90deg);
+    flex: 0 0 19px;
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    color: #bdffff;
+  }
+  #mobileJourneyStart .mobile-start-caption {
+    font: 500 13px/1.4 var(--mobile-font);
+    color: white;
+    text-shadow: 0 1px 10px #00296b88;
+  }
+  #mobileJourneyHome .mobile-start-emblem {
+    animation: acervo-emblem-float 5s ease-in-out infinite;
+    will-change: translate;
+  }
+  #mobileJourneyHome .mobile-art-fiche {
+    animation:
+      acervo-card-reveal 650ms cubic-bezier(0.16, 1, 0.3, 1) backwards,
+      acervo-card-float 5.2s 650ms ease-in-out infinite;
+    will-change: translate;
+  }
+  #mobileJourneyHome .mobile-art-fiche:nth-child(2) {
+    animation-delay: 100ms, 850ms;
+  }
+  #mobileJourneyHome .mobile-art-fiche:nth-child(3) {
+    animation-delay: 200ms, 1050ms;
+  }
+  #mobileJourneyRestart {
+    margin-top: 0;
+  }
+  .mobile-pull-refresh .mobile-refresh-content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 58px;
+    gap: 3px;
+  }
+  .mobile-pull-refresh .mobile-refresh-content > .acervo-books {
+    flex: 0 0 33px;
+    width: 42px;
+    height: 33px;
+    margin: 0;
+  }
+  .mobile-pull-refresh .mobile-refresh-content > span {
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .mobile-pull-refresh .mobile-refresh-outcome {
+    position: absolute;
+    left: calc(50% + 30px);
+    top: 10px;
+    width: 20px;
+    height: 20px;
+  }
+  #register #saved.mobile-receipt {
+    min-height: max(
+      380px,
+      calc(
+        var(--app-visible-height, 100dvh) - var(--app-safe-top) -
+          var(--app-safe-bottom) - 220px
+      )
+    );
+    justify-content: center;
+    gap: 13px;
+    padding: 38px 10px 24px;
+  }
+  #saved > .mobile-primary {
+    min-height: 47px;
+  }
+  #saved > .mobile-receipt-restart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px;
+    color: white;
+    background: #ffffff0b;
+    border: 1px solid #a2dcff88;
+    border-radius: 11px;
+    font: 500 12px/1.3 var(--mobile-font);
+    animation: acervo-complete-copy 450ms 350ms both;
+  }
+  #saved > .mobile-receipt-restart .icon {
+    width: 18px;
+    height: 18px;
+  }
+  #app > .mobile-app-credit {
+    display: grid;
+    grid-template-columns: 94px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding: 14px 6px 8px;
+    margin: 16px 4px 0;
+    border-top: 1px solid #b6ddff35;
+    color: #d7eeff;
+  }
+  .mobile-app-credit > .institution-logo {
+    display: block;
+    width: 94px;
+    height: 34px;
+    object-fit: contain;
+    opacity: 0.94;
+    filter: none;
+    margin: 0;
+  }
+  .mobile-app-credit > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .mobile-app-credit small {
+    color: #c2dfff;
+    font: 400 8px/1.35 var(--mobile-font);
+    letter-spacing: 0;
+  }
+  .mobile-app-credit small:first-child {
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .mobile-app-credit span {
+    color: #eff9ff;
+    font: 500 10px/1.3 var(--mobile-font);
+    margin-bottom: 4px;
+  }
+  .mobile-app-credit strong {
+    color: white;
+    font: 600 11px/1.3 var(--mobile-font);
+  }
+  .app-typing body:not(.auth-screen) .shell {
+    padding-bottom: 0;
+  }
+  .app-typing .mobile-app-nav,
+  .app-typing .mobile-pull-refresh,
+  .app-typing #app > .mobile-app-credit {
+    display: none;
+  }
+  .app-typing body:not(.auth-screen) .shell > header.bar {
+    flex-basis: 50px;
+    height: 50px;
+    min-height: 50px;
+    padding: 2px 5px 8px;
+  }
+  .app-typing body:not(.auth-screen) .shell > header .brand b {
+    font-size: 18px;
+  }
+  .app-typing body:not(.auth-screen) .shell > header .brand small {
+    font-size: 9px;
+    margin-top: 2px;
+  }
+  .app-typing body:not(.auth-screen) .shell > header .brand-logo,
+  .app-typing body:not(.auth-screen) .shell > header .brand-logo .acervo-mark {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+  .app-typing body:not(.auth-screen) .shell > #app {
+    padding: 10px 0 16px;
+  }
+  .app-typing #register #mobileRegistration {
+    display: none;
+  }
+  .app-typing #register #mobileRegistrationDescription {
+    margin-bottom: 12px;
+  }
+  .app-typing #register #itemForm #mobileRegistrationContent {
+    padding: 16px;
+  }
+  .app-typing #register #mobileRegistrationTitle {
+    font-size: 20px;
+  }
+  .app-typing #movements .movement-steps {
+    margin-bottom: 12px;
+  }
+  #movements #moveResults > .acervo-empty {
+    color: white;
+    background: #ffffff0d;
+    border: 1px solid #83c5ff50;
+  }
+  #movements #moveResults > .acervo-empty strong {
+    color: white;
+  }
+  #movements #moveResults > .acervo-empty p {
+    color: #daedff;
+  }
+  #movements #moveResults > .acervo-empty .acervo-books {
+    color: #91e5ff;
+  }
+  #app #pendingBox:not([hidden]) {
+    margin: 0 4px 13px;
+    padding: 14px;
+    border: 1px solid #ffd39188;
+    border-radius: 13px;
+    color: #fff4df;
+    background: #12478e;
+    font: 500 12px/1.5 var(--mobile-font);
+  }
+  #app #pendingBox #retry {
+    margin-top: 9px;
+    min-height: 42px;
+    padding: 9px 12px;
+    color: #064ca9;
+    background: #fff4df;
+    border: 1px solid #ffe1af;
+    font-size: 12px;
+  }
+  body > #mobileAccountDialog,
+  body > #userAccessDialog {
+    width: min(
+      370px,
+      calc(100vw - 28px - var(--app-safe-left) - var(--app-safe-right))
+    );
+    border: 1px solid #8acbff;
+    border-radius: 18px;
+    background: #f6faff;
+    padding: 0;
+    color: #10305b;
+  }
+  #mobileAccountDialog .mobile-account-heading,
+  #userAccessDialog .access-dialog-hero {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    padding: 15px 54px 15px 18px;
+    gap: 11px;
+    border-radius: 17px 17px 0 0;
+    background:
+      radial-gradient(ellipse at 0 0, #08b9ee55, transparent 75%),
+      linear-gradient(125deg, #075ccb, #06449c);
+    border-bottom: 2px solid #64ddf288;
+  }
+  #mobileAccountDialog .mobile-account-mark,
+  #userAccessDialog .access-dialog-mark {
+    display: grid;
+    place-items: center;
+    flex: 0 0 35px;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #89dbff66;
+    border-radius: 11px;
+    background: #ffffff12;
+  }
+  #mobileAccountDialog .mobile-account-mark .icon,
+  #userAccessDialog .access-dialog-mark .icon {
+    width: 22px;
+    height: 22px;
+  }
+  #mobileAccountDialog .mobile-account-title > small {
+    display: block;
+    color: #c2efff;
+    font: 600 8px/1.3 var(--mobile-font);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  #mobileAccountDialog .mobile-account-heading h2,
+  #userAccessDialog #userAccessTitle {
+    color: white;
+    font: 700 18px/1.2 var(--mobile-font);
+    margin: 0;
+  }
+  #mobileAccountDialog .mobile-account-heading button,
+  #userAccessDialog #closeUserAccess {
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 10px;
+    border-radius: 50%;
+    border: 1px solid #b4e2ff66;
+    background: #ffffff0b;
+    color: white;
+  }
+  #mobileAccountDialog .account-toolbar {
+    padding: 17px 16px 0;
+  }
+  #mobileAccountDialog .header-person {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border: 1px solid #c9e0f5;
+    border-radius: 13px;
+    background: white;
+  }
+  #mobileAccountDialog #accountAvatar {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    flex: 0 0 40px;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+  #mobileAccountDialog .header-account-text {
+    min-width: 0;
+  }
+  #mobileAccountDialog .account {
+    font: 700 14px/1.3 var(--mobile-font);
+    color: #123668;
+    overflow-wrap: anywhere;
+  }
+  #mobileAccountDialog .account-role {
+    font-size: 11px;
+    margin-top: 3px;
+    color: #537099;
+  }
+  #mobileAccountDialog .toolbar-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 13px;
+    gap: 10px;
+  }
+  #mobileAccountDialog .toolbar-actions > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 47px;
+    padding: 11px 7px;
+    border-radius: 11px;
+    font-size: 12px;
+  }
+  #mobileAccountDialog #manageAccess {
+    background: #e6f4ff;
+    border: 1px solid #b6d9fa;
+    color: #085bc2;
+  }
+  #mobileAccountDialog #logout {
+    background: #fff0f2;
+    border: 1px solid #edc2cb;
+    color: #a92545;
+  }
+  #mobileAccountDialog .toolbar-actions > button > .mobile-account-arrow {
+    display: none;
+  }
+  #mobileAccountDialog .mobile-account-sync {
+    text-align: center;
+    margin: 15px 16px 18px;
+    color: #526f98;
+    font-size: 10px;
+  }
+  #userAccessDialog .access-dialog-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+  }
+  #userAccessDialog .access-dialog-body {
+    padding: 16px;
+  }
+  #userAccessDialog .people-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  #userAccessDialog #peopleSearch {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+  #userAccessDialog #addPerson {
+    min-height: 44px;
+    padding: 11px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+  #userAccessDialog .people-summary {
+    margin: 13px 0 5px;
+    min-height: 38px;
+    align-items: center;
+  }
+  #userAccessDialog #refreshPeople {
+    min-width: 40px;
+    min-height: 38px;
+    padding: 8px;
+    font-size: 11px;
+  }
+  #userAccessDialog .people-row {
+    grid-template-columns: 34px minmax(0, 1fr) 38px;
+    column-gap: 10px;
+    row-gap: 4px;
+    min-height: 75px;
+    padding: 13px 0;
+    align-items: center;
+  }
+  #userAccessDialog .people-avatar {
+    grid-column: 1;
+    grid-row: 1/3;
+  }
+  #userAccessDialog .people-person {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    align-self: end;
+  }
+  #userAccessDialog .people-name {
+    font: 600 13px/1.3 var(--mobile-font);
+    color: #143565;
+    overflow-wrap: anywhere;
+  }
+  #userAccessDialog .people-email {
+    display: block;
+    font: 400 10px/1.3 var(--mobile-font);
+    color: #5a7496;
+    overflow-wrap: anywhere;
+    margin-top: 2px;
+  }
+  #userAccessDialog .people-row > .people-role {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    align-self: start;
+    padding: 4px 8px;
+    max-width: none;
+    font-size: 9px;
+  }
+  #userAccessDialog .people-overflow {
+    grid-column: 3;
+    grid-row: 1/3;
+    align-self: center;
+  }
+  #userAccessDialog .people-overflow > summary {
+    width: 38px;
+    height: 42px;
+    min-height: 42px;
+    display: grid;
+    place-items: center;
+    padding: 8px;
+    border-radius: 10px;
+    background: #eaf4ff;
+  }
+}
+@keyframes acervo-emblem-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
+}
+@keyframes acervo-card-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
+@keyframes acervo-caption-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -4px;
+  }
+}
+@keyframes acervo-card-reveal {
+  from {
+    opacity: 0;
+    translate: 0 17px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #mobileJourneyHome .mobile-start-emblem,
+  #mobileJourneyHome .mobile-art-fiche,
+  #mobileJourneyStart .mobile-start-label,
+  #saved > .mobile-receipt-restart {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #mobileAccountDialog > .mobile-institution-credit {
+    display: none;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  .app-typing :is(#app > .nav, .mobile-app-nav) {
+    display: none !important;
+  }
+  .mobile-credit-logo {
+    display: block;
+    position: relative;
+    width: 94px;
+    height: 34px;
+  }
+  .mobile-credit-logo > .institution-logo {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 94px;
+    height: 34px;
+    object-fit: contain;
+    clip-path: inset(0 66% 0 0);
+    filter: none;
+    opacity: 1;
+  }
+  .mobile-app-credit .mobile-credit-wordmark {
+    position: absolute;
+    left: 34px;
+    top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    color: white;
+  }
+  .mobile-app-credit .mobile-credit-wordmark small {
+    color: white;
+    font:
+      600 7px/1.05 Arial,
+      sans-serif;
+    letter-spacing: -0.2px;
+  }
+  .mobile-app-credit .mobile-credit-wordmark b {
+    color: white;
+    font:
+      900 10px/1.05 Arial,
+      sans-serif;
+    letter-spacing: -0.5px;
+  }
+}

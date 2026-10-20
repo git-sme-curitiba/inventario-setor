@@ -1848,7 +1848,7 @@ function setBusy(v, message = "Salvando…") {
   $("logout").disabled = v;
   $("refresh").disabled = v;
   $("manageAccess").disabled = v;
-  $("pendingBox").hidden = !pending;
+  $("pendingBox").hidden = !pending || v;
   $("retry").disabled = v;
   labelButton($("save"), v ? message : "Cadastrar", v ? "clock" : "save");
   $("discardRegistration").disabled = v || role === "leitor" || !!pending;
@@ -7312,7 +7312,7 @@ function initVisualExperience() {
           mobileAcervo()
             ? authScreen
               ? "#0852b8"
-              : "#06489f"
+              : "#0852b8"
             : authScreen
               ? "#0d61b0"
               : "#e8f1fa",
@@ -7442,7 +7442,7 @@ function initAppViewport() {
           mobileAcervo()
             ? authScreen
               ? "#0852b8"
-              : "#06489f"
+              : "#0852b8"
             : authScreen
               ? "#0d61b0"
               : "#e8f1fa",
@@ -7463,7 +7463,8 @@ function initAppViewport() {
       !!viewport &&
       viewport.scale === 1 &&
       Math.max(baselineHeight, window.innerHeight) - height > 120;
-    root.classList.toggle("keyboard-open", keyboard);
+    root.classList.toggle("keyboard-open", keyboard && authScreen);
+    root.classList.toggle("app-typing", keyboard && !authScreen);
     if (!viewport || viewport.scale === 1) {
       root.style.setProperty("--app-visible-height", Math.round(height) + "px");
       root.style.setProperty(
@@ -8340,7 +8341,7 @@ function mobileReceipt(record, template) {
   }
   visual.prepend(celebration);
   const another = button(
-    "Cadastrar outro",
+    "Continuar neste local",
     () => {
       resetForm();
       for (const [name, field] of [
@@ -8356,55 +8357,26 @@ function mobileReceipt(record, template) {
     "mobile-primary",
     "record-add",
   );
-  const view = button(
-    "Ver ficha",
+  const restart = button(
+    "Voltar ao início",
     () => {
-      query({ situacao: "TODOS" });
-      $("search").value = internal(record.id);
-      expanded = record.id;
-      renderList();
+      $("register").dataset.journey = "home";
+      resetForm();
+      setChoice("room", "");
+      setChoice("shelf", "");
+      setChoice("level", "");
+      syncForm();
+      journey.maxStage = 1;
+      journey.draftStage = 1;
+      saveDraft();
+      $("app").scrollTop = 0;
     },
-    "mobile-text-action",
-    "right",
-  );
-  const more = el("div", undefined, "mobile-receipt-tools");
-  more.setAttribute("role", "group");
-  more.setAttribute("aria-label", "Ações após o cadastro");
-  more.append(
-    view,
-    button(
-      "Outro local",
-      () => {
-        resetForm();
-        setChoice("shelf", "");
-        setChoice("level", "");
-        syncForm();
-        openMobileJourney(1);
-        saveDraft();
-      },
-      "mobile-text-action",
-      "pin",
-    ),
-    button(
-      "Repetir",
-      () => {
-        repeatRegistration(template);
-        openMobileJourney(3);
-      },
-      "mobile-text-action",
-      "copy",
-    ),
+    "mobile-receipt-restart",
+    "left",
   );
   saved.className =
     "notice mobile-receipt" + (discarded ? " is-discarded" : "");
-  for (const [node, title] of [
-    [more.children[1], "Cadastrar em outro local"],
-    [more.children[2], "Cadastrar outro igual"],
-  ]) {
-    node.setAttribute("aria-label", title);
-    node.title = title;
-  }
-  saved.replaceChildren(visual, another, more);
+  saved.replaceChildren(visual, another, restart);
   saved.hidden = false;
   $("app").scrollTop = 0;
   const origin = journey.lastFiche;
@@ -9214,7 +9186,7 @@ function initMobileRefresh() {
     busy ||
     !!pending ||
     !!editor ||
-    document.documentElement.classList.contains("keyboard-open") ||
+    document.documentElement.matches(".keyboard-open, .app-typing") ||
     !!document.querySelector("dialog[open]");
   function reset() {
     start = null;
@@ -9411,38 +9383,6 @@ function initMobileReference() {
     el("span", "Observação opcional"),
     icon("right"),
   );
-  const keyboard = el("div", undefined, "mobile-keyboard-heading");
-  keyboard.id = "mobileKeyboardHeading";
-  const keyboardText = el("strong");
-  keyboardText.id = "mobileKeyboardTitle";
-  const closeKeyboard = button(
-    "",
-    () => document.activeElement?.blur(),
-    "",
-    "close",
-  );
-  closeKeyboard.setAttribute("aria-label", "Concluir digitação");
-  closeKeyboard.onpointerdown = (event) => event.preventDefault();
-  keyboard.append(mobileBooksMark(), keyboardText, closeKeyboard);
-  $("app").prepend(keyboard);
-  const updateKeyboard = () => {
-    const active = document.activeElement;
-    $("mobileKeyboardTitle").textContent =
-      active?.id === "moveSearch"
-        ? "Movimentar"
-        : active?.id === "search"
-          ? "Consultar"
-          : Number($("itemForm").dataset.mobileStage) +
-            " · " +
-            ["Local", "Item", "Controle", "Conferência"][
-              Number($("itemForm").dataset.mobileStage) - 1
-            ];
-  };
-  document.addEventListener("focusin", updateKeyboard);
-  new MutationObserver(updateKeyboard).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
   const cameraTitle = $("cameraTitle"),
     cameraMark = mobileBooksMark("mobile-camera-mark");
   cameraTitle.before(cameraMark);
@@ -9558,7 +9498,6 @@ function initMobileReference() {
         .querySelectorAll(".role-option small")
         .forEach((n, i) => (n.textContent = originalRoles[i]));
     }
-    updateKeyboard();
     syncMobileJourney();
   };
   media.addEventListener("change", layout);
@@ -9611,6 +9550,45 @@ function initMobilePolish() {
   };
   media.addEventListener("change", layout);
   layout();
+  initMobileContinuity();
+}
+
+function initMobileContinuity() {
+  const start = $("mobileJourneyStart"),
+    label = start.querySelector(".mobile-start-label");
+  label.prepend(start.querySelector(".mobile-start-arrow"));
+  const source = document.querySelector(".institution-footer");
+  const credit = el("footer", undefined, "mobile-app-credit");
+  credit.setAttribute("aria-label", "Sobre o Acervo e desenvolvimento");
+  const logo = source.querySelector(".institution-logo").cloneNode(true),
+    copy = el("div");
+  copy.append(
+    el("small", "SOBRE O ACERVO"),
+    el("span", "Gestão de bens e materiais"),
+    el("small", "Concepção e desenvolvimento"),
+    el(
+      "strong",
+      source.querySelector(".institution-credits strong").textContent.trim(),
+    ),
+  );
+  const logoWrap = el("span", undefined, "mobile-credit-logo");
+  const wordmark = el("span", undefined, "mobile-credit-wordmark");
+  wordmark.setAttribute("aria-hidden", "true");
+  wordmark.append(el("small", "Prefeitura de"), el("b", "CURITIBA"));
+  logoWrap.append(logo, wordmark);
+  credit.append(logoWrap, copy);
+  $("app").append(credit);
+  const about = $("mobileAccountDialog").querySelector(".mobile-account-about");
+  const institutional = about?.querySelector(".mobile-institution-credit");
+  if (about && institutional) about.replaceWith(institutional);
+  const kicker = $("mobileAccountDialog").querySelector(
+    ".mobile-account-title > small",
+  );
+  if (kicker) kicker.textContent = "PERFIL E ACESSO";
+  $("retry").setAttribute(
+    "aria-label",
+    "Verificar a confirmação da operação pendente",
+  );
 }
 
 function initMobileCompact() {

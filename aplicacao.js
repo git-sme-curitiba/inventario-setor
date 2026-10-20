@@ -2086,7 +2086,24 @@ function openRegistrationDiscard() {
     ),
   );
   $("registrationDiscardDialog").showModal();
-  $("directReason").focus();
+  if (mobileAcervo()) {
+    const anchor = mobileItemAnchor({ dados: d });
+    anchor.querySelector("small")?.remove();
+    if (d.controle === "QUANTIDADE")
+      anchor
+        .querySelector("div")
+        .append(
+          el(
+            "strong",
+            quantityText(d.quantidade, d.unidade),
+            "mobile-discard-quantity",
+          ),
+        );
+    $("registrationDiscardItem").replaceChildren(anchor);
+    $("registrationDiscardDialog")
+      .querySelector("[data-close]")
+      .focus({ preventScroll: true });
+  } else $("directReason").focus();
 }
 
 function movementActions(r) {
@@ -2472,6 +2489,17 @@ function suggestions() {
       ),
     ),
   );
+  if (mobileAcervo())
+    [...$("suggestions").children].forEach((node, i) => {
+      const record = rows.find((r) => key(r.dados.item) === key(found[i])),
+        copy = el("div"),
+        symbol = el("span", undefined, "mobile-item-symbol");
+      symbol.append(itemIcon(record || found[i]));
+      copy.append(el("strong", found[i]));
+      if (record?.dados.categoria)
+        copy.append(el("small", record.dados.categoria));
+      node.replaceChildren(symbol, copy, icon("right"));
+    });
   $("suggestions").hidden = !found.length;
   $("item").setAttribute("aria-expanded", String(!!found.length));
 }
@@ -4591,7 +4619,7 @@ function setAccessView(mode) {
   if (mobileAcervo()) {
     labels.list = ["Pessoas", "Gerencie os acessos ao Acervo.", "users"];
     labels.create = [
-      "Novo acesso",
+      "Adicionar pessoa",
       "Cadastre a pessoa e escolha o perfil.",
       "user-add",
     ];
@@ -4606,6 +4634,8 @@ function setAccessView(mode) {
       "check",
     ];
   }
+  if (mobileAcervo() && mode === "create")
+    labelButton($("newUserSave"), "Criar acesso");
   $("userAccessTitle").textContent = labels[mode][0];
   $("userAccessDescription").textContent = labels[mode][1];
   $("userAccessMark")
@@ -4751,6 +4781,11 @@ function renderPeople() {
           ),
         ]),
   );
+  if (mobileAcervo())
+    for (const row of $("peopleList").querySelectorAll(".people-row")) {
+      const badge = row.querySelector(".people-role");
+      if (badge) row.insertBefore(badge, row.querySelector(".people-overflow"));
+    }
   $("peopleCount").textContent =
     peopleTotal + (peopleTotal === 1 ? " pessoa" : " pessoas");
   const pages = Math.max(1, Math.ceil(peopleTotal / peopleLimit));
@@ -7481,7 +7516,7 @@ function registrationStage(step, focus = true) {
     "Onde fica o item?",
     "Qual é o item?",
     "Como acompanhar?",
-    "Confira o cadastro.",
+    "Tudo certo?",
   ];
   const symbols = ["pin", "draft", "stock", "save"];
   const heading = $("mobileRegistrationTitle");
@@ -7762,10 +7797,10 @@ function initMobileIdentity() {
   );
   const reviewBack = $("registrationSave").querySelector(".mobile-review-back");
   const descriptions = [
-    "Selecione o ambiente do item.",
+    "Escolha o ambiente.",
     "Informe o nome e escolha a categoria.",
-    "Defina o controle e a identificação.",
-    "Revise os dados antes de cadastrar.",
+    "Escolha o tipo de controle para este item.",
+    "Confira as informações antes de salvar.",
   ];
   const description = el("p", descriptions[0], "mobile-stage-description");
   description.id = "mobileRegistrationDescription";
@@ -8087,13 +8122,15 @@ function syncMobileJourney() {
   $("mobileJourneyStart")
     .querySelector(".mobile-start-caption")
     ?.replaceChildren(
-      document.createTextNode(hasDraft ? "Continuar" : "Começar"),
+      document.createTextNode(
+        hasDraft ? "Continuar cadastro" : "Começar cadastro",
+      ),
     );
   $("mobileJourneyStart").disabled = busy || !!pending || role === "leitor";
   $("mobileJourneyRestart").hidden = !hasDraft;
   $("mobileJourneyDraft").textContent = hasDraft
     ? `${d.item} · ${d.ambiente || "Local a escolher"}`
-    : "Toque no símbolo para começar.";
+    : "Toque no Acervo para começar.";
   $("mobileJourneyLocation").hidden = true;
   $("mobileJourneyLocationText").textContent = [
     d.ambiente || "Escolher local",
@@ -8125,10 +8162,10 @@ function syncMobileJourney() {
   }
   $("mobileJourneyExit").hidden = stage !== 1;
   $("mobileRegistrationDescription").textContent = [
-    "Selecione o ambiente do item.",
+    "Escolha o ambiente.",
     "Informe o nome e escolha a categoria.",
-    "Defina o controle e a identificação.",
-    "Revise os dados antes de cadastrar.",
+    "Escolha o tipo de controle para este item.",
+    "Confira as informações antes de salvar.",
   ][stage - 1];
   if (stage === 3) {
     const automatic = value("type") === "SEM_IDENTIFICACAO";
@@ -8142,10 +8179,7 @@ function syncMobileJourney() {
   if (mobileAcervo()) {
     if ($("mobileProgressLabel"))
       $("mobileProgressLabel").textContent =
-        ["Local", "Item", "Controle", "Revisão"][stage - 1] +
-        " · " +
-        stage +
-        " de 4";
+        stage + " · " + ["Local", "Item", "Controle", "Conferência"][stage - 1];
     if (!busy)
       labelButton(
         $("save"),
@@ -8166,50 +8200,55 @@ function syncMobileJourney() {
 }
 
 function mobileReview() {
-  const d = formData();
-  const stock = d.controle === "QUANTIDADE";
+  const d = formData(),
+    stock = d.controle === "QUANTIDADE";
   const anchor = mobileItemAnchor({ dados: d });
-  const editItem = button(
+  const itemEdit = button(
     "",
     () => registrationStage(2),
     "mobile-inline-edit",
     "edit",
   );
-  editItem.setAttribute("aria-label", "Alterar item e categoria");
-  anchor.append(editItem);
-  const facts = el("div", undefined, "mobile-review-facts");
-  const location = [
-    d.ambiente,
-    d.ambiente === "Almoxarifado"
-      ? `Estante ${d.estante || "—"} · Prateleira ${d.prateleira || "—"}`
-      : "",
-  ]
-    .filter(Boolean)
-    .join(" · ");
-  const pairs = [["Local", location || "Escolher local", 1]];
-  if (stock)
-    pairs.push(
-      ["Saldo inicial", quantityText(d.quantidade, d.unidade), 3],
-      ["Estoque mínimo", quantityText(d.minimo, d.unidade), 3],
+  itemEdit.setAttribute("aria-label", "Alterar item e categoria");
+  const copy = anchor.querySelector("div");
+  if (stock) {
+    copy.querySelector("small")?.remove();
+    const quantity = button(
+      quantityText(d.quantidade, d.unidade),
+      () => registrationStage(3),
+      "mobile-review-stock-value",
     );
-  else pairs.push(["Controle", "Individual", 3]);
+    quantity.setAttribute(
+      "aria-label",
+      "Alterar saldo inicial: " + quantityText(d.quantidade, d.unidade),
+    );
+    copy.append(quantity);
+  }
+  anchor.append(itemEdit);
+  const facts = el("div", undefined, "mobile-review-facts");
+  const location =
+    d.ambiente === "Almoxarifado"
+      ? `${d.ambiente} · ${d.estante || "—"} / ${String(d.prateleira || "—").padStart(2, "0")}`
+      : d.ambiente;
+  const pairs = [["Local", location || "Escolher local", 1]];
+  if (stock) pairs.push(["Mínimo", quantityText(d.minimo, d.unidade), 3]);
+  else
+    pairs.push(
+      ["Categoria", d.categoria || "Escolher categoria", 2],
+      ["Controle", "Individual", 3],
+    );
   pairs.push([
     d.tipo === "SEM_IDENTIFICACAO" ? "Código previsto" : "Identificação",
     d.tipo === "SEM_IDENTIFICACAO"
       ? nextInternalPreview()
-      : [d.tipo, d.codigo].filter(Boolean).join(" ") ||
-        "Escolher identificação",
+      : [d.tipo, d.codigo].filter(Boolean).join(" "),
     d.tipo === "SEM_IDENTIFICACAO" ? null : 3,
   ]);
-  for (const [label, text, stage] of pairs) {
-    const row = el(
-      "div",
-      undefined,
-      label === "Saldo inicial" ? "mobile-review-quantity" : "",
-    );
-    const copy = el("div");
-    copy.append(el("small", label), el("strong", text));
-    row.append(copy);
+  for (const [label, value, stage] of pairs) {
+    const row = el("div", undefined, "mobile-review-row");
+    const text = el("div");
+    text.append(el("small", label), el("strong", value));
+    row.append(text);
     if (stage) {
       const edit = button(
         "",
@@ -8219,10 +8258,7 @@ function mobileReview() {
       );
       edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
       row.append(edit);
-    } else
-      row.append(
-        el("small", "Confirmado ao salvar", "mobile-code-confirmation"),
-      );
+    }
     facts.append(row);
   }
   $("registrationSummary").replaceChildren(anchor, facts);
@@ -8250,25 +8286,22 @@ function mobileReceipt(record, template) {
     ),
     anchor,
   );
-  if (stock) {
-    const balance = el("div", undefined, "mobile-receipt-balance");
-    balance.append(
-      el("small", discarded ? "Quantidade descartada" : "Saldo cadastrado"),
-      el("strong", quantityText(record.saldo, record.unidade)),
-    );
-    visual.append(balance);
-  }
-  const location = el(
-    "p",
-    [record.dados.ambiente, locationText(record)].filter(Boolean).join(" · "),
-    "mobile-receipt-location",
+  if (stock)
+    anchor
+      .querySelector("div")
+      .append(
+        el(
+          "strong",
+          quantityText(record.saldo, record.unidade),
+          "mobile-receipt-stock",
+        ),
+      );
+  const code = el("div", undefined, "mobile-receipt-code");
+  code.append(
+    el("small", "Código do registro"),
+    el("strong", internal(record.id)),
   );
-  const code = el(
-    "p",
-    "Código do registro · " + internal(record.id),
-    "mobile-receipt-code",
-  );
-  visual.append(location, code);
+  visual.append(code);
   const another = button(
     "Cadastrar outro",
     () => {
@@ -8685,6 +8718,46 @@ function renderMobileRecordDetail(record, panel) {
   }
   panel.append(header, tabs, summary, history);
   if (actions.children.length) panel.append(actions);
+  const balance = summary.querySelector(".mobile-detail-balance");
+  if (balance) panel.insertBefore(balance, tabs);
+  const primary = el("div", undefined, "mobile-detail-primary");
+  const location =
+    record.dados.ambiente === "Almoxarifado"
+      ? [
+          record.dados.ambiente,
+          record.dados.estante +
+            " / " +
+            String(record.dados.prateleira).padStart(2, "0"),
+        ].join(" · ")
+      : record.dados.ambiente;
+  for (const [name, value, symbol] of [
+    ["Local", location, "pin"],
+    ["Código do registro", internal(record.id), "code"],
+  ]) {
+    const tile = el("div"),
+      graphic = el("span"),
+      copy = el("div");
+    graphic.append(symbol === "code" ? mobileBarcodeMark() : icon(symbol));
+    copy.append(el("small", name), el("strong", value));
+    tile.append(graphic, copy);
+    primary.append(tile);
+  }
+  const more = el("details", undefined, "mobile-detail-more");
+  more.append(el("summary", "Mais detalhes"));
+  facts.replaceWith(primary, more);
+  more.append(facts);
+  for (const row of [...facts.children])
+    if (["Local", "Posição"].includes(row.querySelector("dt").textContent))
+      row.remove();
+  for (const group of summary.querySelectorAll(".mobile-detail-extra"))
+    if (group.querySelector("h3").textContent === "Observação") {
+      const notes = el("details", undefined, "mobile-detail-notes"),
+        label = el("summary", "Observação");
+      group.querySelector("h3").remove();
+      notes.append(label);
+      group.replaceWith(notes);
+      notes.append(group);
+    }
   select(false);
 }
 
@@ -9222,6 +9295,226 @@ function initMobileAccount() {
     attributeFilter: ["class"],
   });
   update();
+}
+
+function mobileBooksMark(className = "") {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 64 64");
+  svg.setAttribute("class", "mobile-books-mark " + className);
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML =
+    '<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="10" width="17" height="43" rx="3.5"/><rect x="36" y="23" width="16" height="30" rx="3.5"/><path d="M9 55h47"/></g>';
+  return svg;
+}
+
+function mobileBarcodeMark() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML =
+    '<path d="M4 4v16M7 4v16M11 4v16M14 4v16M18 4v16M21 4v16" fill="none" stroke="currentColor" stroke-width="1.8"/>';
+  return svg;
+}
+
+function initMobileReference() {
+  const home = $("mobileJourneyHome");
+  home.prepend(home.querySelector("h1"), $("mobileJourneyDraft"));
+  const start = $("mobileJourneyStart"),
+    caption = start.querySelector(".mobile-start-caption");
+  const emblem = el("span", undefined, "mobile-start-emblem");
+  emblem.append(mobileBooksMark());
+  start.querySelector(".mobile-home-mark").replaceWith(emblem);
+  const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  arrow.setAttribute("viewBox", "0 0 24 24");
+  arrow.setAttribute("class", "icon");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.innerHTML =
+    '<path d="M4 12h16M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+  arrow.classList.add("mobile-start-arrow");
+  start.insertBefore(arrow, caption);
+  document
+    .querySelector(".shell > header .brand-logo")
+    .append(mobileBooksMark("mobile-header-mark"));
+  for (const node of [$("manageAccess"), $("logout")]) {
+    const arrow = icon("right");
+    arrow.classList.add("mobile-account-arrow");
+    node.append(arrow);
+  }
+  const symbol = el("span", undefined, "mobile-code-symbol");
+  symbol.append(mobileBarcodeMark());
+  $("codeWrap").prepend(symbol);
+  for (const input of $("controlHost").querySelectorAll(
+    'input[name="control"]',
+  )) {
+    const caption = el(
+      "small",
+      input.value === "QUANTIDADE"
+        ? "Vários itens iguais em estoque."
+        : "Um bem por cadastro.",
+      "mobile-control-description",
+    );
+    input.nextElementSibling.append(caption);
+  }
+  $("mobileNoteToggle").replaceChildren(
+    icon("plus"),
+    el("span", "Observação opcional"),
+    icon("right"),
+  );
+  const keyboard = el("div", undefined, "mobile-keyboard-heading");
+  keyboard.id = "mobileKeyboardHeading";
+  const keyboardText = el("strong");
+  keyboardText.id = "mobileKeyboardTitle";
+  const closeKeyboard = button(
+    "",
+    () => document.activeElement?.blur(),
+    "",
+    "close",
+  );
+  closeKeyboard.setAttribute("aria-label", "Concluir digitação");
+  closeKeyboard.onpointerdown = (event) => event.preventDefault();
+  keyboard.append(mobileBooksMark(), keyboardText, closeKeyboard);
+  $("app").prepend(keyboard);
+  const updateKeyboard = () => {
+    const active = document.activeElement;
+    $("mobileKeyboardTitle").textContent =
+      active?.id === "moveSearch"
+        ? "Movimentar"
+        : active?.id === "search"
+          ? "Consultar"
+          : Number($("itemForm").dataset.mobileStage) +
+            " · " +
+            ["Local", "Item", "Controle", "Conferência"][
+              Number($("itemForm").dataset.mobileStage) - 1
+            ];
+  };
+  document.addEventListener("focusin", updateKeyboard);
+  new MutationObserver(updateKeyboard).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  const cameraTitle = $("cameraTitle"),
+    cameraMark = mobileBooksMark("mobile-camera-mark");
+  cameraTitle.before(cameraMark);
+  const zoomControls = el("div", undefined, "mobile-camera-zoom-controls");
+  const adjust = (direction) => {
+    const slider = $("zoom"),
+      min = Number(slider.min),
+      max = Number(slider.max),
+      step = Number(slider.step) || 0.1;
+    slider.value = Math.min(
+      max,
+      Math.max(
+        min,
+        min +
+          Math.round(
+            (Number(slider.value) + (direction * (max - min)) / 10 - min) /
+              step,
+          ) *
+            step,
+      ),
+    );
+    slider.dispatchEvent(new Event("input", { bubbles: true }));
+    slider.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+  const decrease = button("−", () => adjust(-1)),
+    increase = button("+", () => adjust(1));
+  decrease.setAttribute("aria-label", "Diminuir zoom");
+  increase.setAttribute("aria-label", "Aumentar zoom");
+  zoomControls.append(decrease, $("zoom"), increase);
+  $("zoomLabel").append(zoomControls);
+  const loading = el("div", undefined, "mobile-camera-loading");
+  loading.append(mobileBooksMark(), $("cameraStatus"));
+  const dots = el("span", undefined, "mobile-camera-dots");
+  dots.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 3; i++) dots.append(el("i"));
+  loading.append(dots);
+  $("cameraManual").before(loading);
+  const discardCounter = el("small", "0/2000", "mobile-discard-counter");
+  $("directReason").after(discardCounter);
+  $("directReason").addEventListener(
+    "input",
+    () =>
+      (discardCounter.textContent = $("directReason").value.length + "/2000"),
+  );
+  const mainAnchor = document.createComment(""),
+    exitAnchor = document.createComment("");
+  $("mobileRegistrationActions").before(mainAnchor);
+  $("mobileJourneyExit").before(exitAnchor);
+  const media = matchMedia(
+    "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
+  );
+  const originalDiscard = $("registrationDiscardDescription").innerHTML;
+  const originalDiscardTitle = $("registrationDiscardTitle").textContent;
+  const originalPlaceholder = $("directReason").placeholder;
+  const originalCancel = $("registrationDiscardForm").querySelector(
+    "[data-close]",
+  ).textContent;
+  const originalNewSave = $("newUserSave").innerHTML;
+  const roomIcons = [...$("rooms").querySelectorAll("use")].map((n) =>
+    n.getAttribute("href"),
+  );
+  const originalExit = $("mobileJourneyExit").innerHTML;
+  const originalRoles = [
+    ...$("newUserForm").querySelectorAll(".role-option small"),
+  ].map((n) => n.textContent);
+  const layout = () => {
+    const content = $("mobileRegistrationContent"),
+      review = $("save").parentElement;
+    if (media.matches) {
+      content.append(
+        $("mobileRegistrationActions"),
+        $("mobileJourneyExit"),
+        review,
+      );
+      $("mobileReviewOther").querySelector("summary").textContent =
+        "Outras opções •••";
+      $("registrationDiscardTitle").textContent = "Registrar descarte";
+      labelButton($("mobileJourneyExit"), "Voltar");
+      const rooms = $("rooms").querySelectorAll("use");
+      rooms[1]?.setAttribute("href", "#i-users");
+      rooms[2]?.setAttribute("href", "#acv-armario");
+      $("registrationDiscardDescription").textContent =
+        "O registro fica no histórico como descartado.";
+      $("directReason").placeholder = "Conte o motivo, se quiser.";
+      $("registrationDiscardForm").querySelector("[data-close]").textContent =
+        "Voltar";
+      $("newUserName").placeholder = "Digite o nome completo";
+      $("newUserEmail").placeholder = "Digite o e-mail institucional";
+      labelButton($("newUserSave"), "Criar acesso");
+      const descriptions = [
+        "Apenas consulta e leitura.",
+        "Cadastro e movimentações.",
+        "Acesso total ao sistema.",
+      ];
+      $("newUserForm")
+        .querySelectorAll(".role-option small")
+        .forEach((n, i) => (n.textContent = descriptions[i]));
+    } else {
+      mainAnchor.after($("mobileRegistrationActions"));
+      exitAnchor.after($("mobileJourneyExit"));
+      $("registrationSave").append(review);
+      $("registrationDiscardTitle").textContent = originalDiscardTitle;
+      $("rooms")
+        .querySelectorAll("use")
+        .forEach((n, i) => n.setAttribute("href", roomIcons[i]));
+      $("mobileJourneyExit").innerHTML = originalExit;
+      $("registrationDiscardDescription").innerHTML = originalDiscard;
+      $("directReason").placeholder = originalPlaceholder;
+      $("registrationDiscardForm").querySelector("[data-close]").textContent =
+        originalCancel;
+      $("newUserName").placeholder = "";
+      $("newUserEmail").placeholder = "";
+      $("newUserSave").innerHTML = originalNewSave;
+      $("newUserForm")
+        .querySelectorAll(".role-option small")
+        .forEach((n, i) => (n.textContent = originalRoles[i]));
+    }
+    updateKeyboard();
+    syncMobileJourney();
+  };
+  media.addEventListener("change", layout);
+  layout();
 }
 
 function initMobileCompact() {
@@ -10183,3 +10476,5 @@ initMobileAccount();
 initMobileRefresh();
 
 initMobileCompact();
+
+initMobileReference();

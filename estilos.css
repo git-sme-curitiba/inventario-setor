@@ -17775,13 +17775,10 @@ body::before {
     border-radius: 0;
   }
   body:not(.auth-screen) .shell > header .brand-logo .acervo-mark {
-    display: none;
-  }
-  body:not(.auth-screen) .shell > header .mobile-header-mark {
     display: block;
-    width: 34px;
-    height: 36px;
-    color: white;
+    width: 30px;
+    height: 30px;
+    margin: 3px 0;
   }
   body:not(.auth-screen) .shell > header .brand {
     gap: 10px;

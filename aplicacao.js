@@ -9299,11 +9299,11 @@ function initMobileAccount() {
 
 function mobileBooksMark(className = "") {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 64 64");
+  svg.setAttribute("viewBox", "8 8 48 48");
   svg.setAttribute("class", "mobile-books-mark " + className);
   svg.setAttribute("aria-hidden", "true");
   svg.innerHTML =
-    '<g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="10" width="17" height="43" rx="3.5"/><rect x="36" y="23" width="16" height="30" rx="3.5"/><path d="M9 55h47"/></g>';
+    '<g fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="21" width="15" height="29" rx="3"/><rect x="34" y="14" width="15" height="36" rx="3"/><path d="M21 27h5M21 32h5M39 20h5M39 25h5M39 30h5M14 51h38"/></g>';
   return svg;
 }
 
@@ -9333,9 +9333,6 @@ function initMobileReference() {
     '<path d="M4 12h16M13 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
   arrow.classList.add("mobile-start-arrow");
   start.insertBefore(arrow, caption);
-  document
-    .querySelector(".shell > header .brand-logo")
-    .append(mobileBooksMark("mobile-header-mark"));
   for (const node of [$("manageAccess"), $("logout")]) {
     const arrow = icon("right");
     arrow.classList.add("mobile-account-arrow");

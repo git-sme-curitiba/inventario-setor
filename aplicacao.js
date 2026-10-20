@@ -2464,7 +2464,8 @@ function learnItem() {
 }
 
 function suggestions() {
-  const q = key($("item").value),
+  const name = clean($("item").value);
+  const q = key(name),
     names = new Map();
   rows.forEach((r) => {
     if (r.situacao !== "ARQUIVADO") names.set(key(r.dados.item), r.dados.item);
@@ -2473,35 +2474,50 @@ function suggestions() {
     .filter((n) => key(n).includes(q))
     .sort((a, b) => a.localeCompare(b, "pt-BR"))
     .slice(0, 8);
-  $("suggestions").replaceChildren(
-    ...found.map((n) =>
-      button(
-        n,
-        () => {
-          $("item").value = n;
-          learnItem();
-          $("suggestions").hidden = true;
-          $("item").setAttribute("aria-expanded", "false");
-          saveDraft();
-        },
-        "",
-        "suggestion",
-      ),
-    ),
+  const host = $("suggestions");
+  const choose = (text) => {
+    $("item").value = text;
+    learnItem();
+    host.hidden = true;
+    $("item").setAttribute("aria-expanded", "false");
+    saveDraft();
+    if (mobileAcervo()) $("item").blur();
+  };
+  host.replaceChildren(
+    ...found.map((n) => button(n, () => choose(n), "", "suggestion")),
   );
-  if (mobileAcervo())
-    [...$("suggestions").children].forEach((node, i) => {
-      const record = rows.find((r) => key(r.dados.item) === key(found[i])),
-        copy = el("div"),
+  if (mobileAcervo()) {
+    [...host.children].forEach((node, i) => {
+      const record = rows.find((r) => key(r.dados.item) === key(found[i]));
+      const copy = el("div"),
         symbol = el("span", undefined, "mobile-item-symbol");
       symbol.append(itemIcon(record || found[i]));
-      copy.append(el("strong", found[i]));
-      if (record?.dados.categoria)
-        copy.append(el("small", record.dados.categoria));
+      copy.append(
+        el("strong", found[i]),
+        el("small", record?.dados.categoria || "Já está no acervo"),
+      );
       node.replaceChildren(symbol, copy, icon("right"));
     });
-  $("suggestions").hidden = !found.length;
-  $("item").setAttribute("aria-expanded", String(!!found.length));
+    if (q.length >= 2 && !found.some((n) => key(n) === q)) {
+      const candidate = button(
+        "",
+        () => choose(name),
+        "mobile-new-item",
+        "plus",
+      );
+      const symbol = el("span", undefined, "mobile-item-symbol"),
+        copy = el("div");
+      symbol.append(itemIcon(name, value("category")));
+      copy.append(
+        el("strong", name),
+        el("small", "Usar este nome · novo item"),
+      );
+      candidate.replaceChildren(symbol, copy, icon("plus"));
+      host.prepend(candidate);
+    }
+  }
+  host.hidden = !host.children.length;
+  $("item").setAttribute("aria-expanded", String(!host.hidden));
 }
 
 function formData(prefix = "") {
@@ -7293,7 +7309,13 @@ function initVisualExperience() {
       .forEach((meta) =>
         meta.setAttribute(
           "content",
-          mobileAcervo() ? "#0852b8" : authScreen ? "#0d61b0" : "#e8f1fa",
+          mobileAcervo()
+            ? authScreen
+              ? "#0852b8"
+              : "#06489f"
+            : authScreen
+              ? "#0d61b0"
+              : "#e8f1fa",
         ),
       );
     if (
@@ -7417,7 +7439,13 @@ function initAppViewport() {
       .forEach((meta) =>
         meta.setAttribute(
           "content",
-          mobileAcervo() ? "#0852b8" : authScreen ? "#0d61b0" : "#e8f1fa",
+          mobileAcervo()
+            ? authScreen
+              ? "#0852b8"
+              : "#06489f"
+            : authScreen
+              ? "#0d61b0"
+              : "#e8f1fa",
         ),
       );
     const height = viewport?.height || window.innerHeight;
@@ -7550,6 +7578,11 @@ function registrationStage(step, focus = true) {
     updateRegistrationSummary();
     $("mobileRegistrationContent").scrollTop = 0;
     if (focus && user && !busy) saveDraft();
+    if (focus && mobileAcervo())
+      requestAnimationFrame(() => {
+        $("app").scrollTop = 0;
+        $("mobileRegistrationContent").scrollTop = 0;
+      });
   }
 }
 
@@ -8130,7 +8163,7 @@ function syncMobileJourney() {
   $("mobileJourneyRestart").hidden = !hasDraft;
   $("mobileJourneyDraft").textContent = hasDraft
     ? `${d.item} · ${d.ambiente || "Local a escolher"}`
-    : "Toque no Acervo para começar.";
+    : "Um cadastro simples, passo a passo.";
   $("mobileJourneyLocation").hidden = true;
   $("mobileJourneyLocationText").textContent = [
     d.ambiente || "Escolher local",
@@ -8203,13 +8236,13 @@ function mobileReview() {
   const d = formData(),
     stock = d.controle === "QUANTIDADE";
   const anchor = mobileItemAnchor({ dados: d });
-  const itemEdit = button(
+  const edit = button(
     "",
     () => registrationStage(2),
     "mobile-inline-edit",
     "edit",
   );
-  itemEdit.setAttribute("aria-label", "Alterar item e categoria");
+  edit.setAttribute("aria-label", "Alterar item e categoria");
   const copy = anchor.querySelector("div");
   if (stock) {
     copy.querySelector("small")?.remove();
@@ -8223,8 +8256,11 @@ function mobileReview() {
       "Alterar saldo inicial: " + quantityText(d.quantidade, d.unidade),
     );
     copy.append(quantity);
-  }
-  anchor.append(itemEdit);
+  } else
+    copy.querySelector("small").textContent = [d.categoria, "Individual"]
+      .filter(Boolean)
+      .join(" · ");
+  anchor.append(edit);
   const facts = el("div", undefined, "mobile-review-facts");
   const location =
     d.ambiente === "Almoxarifado"
@@ -8232,33 +8268,26 @@ function mobileReview() {
       : d.ambiente;
   const pairs = [["Local", location || "Escolher local", 1]];
   if (stock) pairs.push(["Mínimo", quantityText(d.minimo, d.unidade), 3]);
-  else
-    pairs.push(
-      ["Categoria", d.categoria || "Escolher categoria", 2],
-      ["Controle", "Individual", 3],
-    );
   pairs.push([
     d.tipo === "SEM_IDENTIFICACAO" ? "Código previsto" : "Identificação",
     d.tipo === "SEM_IDENTIFICACAO"
       ? nextInternalPreview()
       : [d.tipo, d.codigo].filter(Boolean).join(" "),
-    d.tipo === "SEM_IDENTIFICACAO" ? null : 3,
+    3,
   ]);
   for (const [label, value, stage] of pairs) {
-    const row = el("div", undefined, "mobile-review-row");
-    const text = el("div");
+    const row = el("div", undefined, "mobile-review-row"),
+      text = el("div");
     text.append(el("small", label), el("strong", value));
     row.append(text);
-    if (stage) {
-      const edit = button(
-        "",
-        () => registrationStage(stage),
-        "mobile-inline-edit",
-        "edit",
-      );
-      edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
-      row.append(edit);
-    }
+    const edit = button(
+      "",
+      () => registrationStage(stage),
+      "mobile-inline-edit",
+      "edit",
+    );
+    edit.setAttribute("aria-label", "Alterar " + label.toLowerCase());
+    row.append(edit);
     facts.append(row);
   }
   $("registrationSummary").replaceChildren(anchor, facts);
@@ -8302,6 +8331,14 @@ function mobileReceipt(record, template) {
     el("strong", internal(record.id)),
   );
   visual.append(code);
+  const celebration = el("div", undefined, "mobile-receipt-celebration");
+  celebration.setAttribute("aria-hidden", "true");
+  for (let i = 0; i < 10; i++) {
+    const spark = el("i");
+    spark.style.setProperty("--spark", i);
+    celebration.append(spark);
+  }
+  visual.prepend(celebration);
   const another = button(
     "Cadastrar outro",
     () => {
@@ -8330,11 +8367,13 @@ function mobileReceipt(record, template) {
     "mobile-text-action",
     "right",
   );
-  const more = el("details", undefined, "mobile-receipt-more");
+  const more = el("div", undefined, "mobile-receipt-tools");
+  more.setAttribute("role", "group");
+  more.setAttribute("aria-label", "Ações após o cadastro");
   more.append(
-    el("summary", "Outras opções"),
+    view,
     button(
-      "Escolher outro local",
+      "Outro local",
       () => {
         resetForm();
         setChoice("shelf", "");
@@ -8347,7 +8386,7 @@ function mobileReceipt(record, template) {
       "pin",
     ),
     button(
-      "Cadastrar outro igual",
+      "Repetir",
       () => {
         repeatRegistration(template);
         openMobileJourney(3);
@@ -8358,7 +8397,14 @@ function mobileReceipt(record, template) {
   );
   saved.className =
     "notice mobile-receipt" + (discarded ? " is-discarded" : "");
-  saved.replaceChildren(visual, another, view, more);
+  for (const [node, title] of [
+    [more.children[1], "Cadastrar em outro local"],
+    [more.children[2], "Cadastrar outro igual"],
+  ]) {
+    node.setAttribute("aria-label", title);
+    node.title = title;
+  }
+  saved.replaceChildren(visual, another, more);
   saved.hidden = false;
   $("app").scrollTop = 0;
   const origin = journey.lastFiche;
@@ -9150,7 +9196,11 @@ function initMobileRefresh() {
   indicator.setAttribute("aria-live", "polite");
   const books = acervoBooks(true);
   const label = el("span", "Puxe para atualizar");
-  indicator.append(books, label);
+  const content = el("div", undefined, "mobile-refresh-content");
+  const outcome = el("span", undefined, "mobile-refresh-outcome");
+  outcome.append(icon("check"));
+  content.append(books, label, outcome);
+  indicator.append(content);
   app.prepend(indicator);
   let start = null;
   let distance = 0;
@@ -9195,6 +9245,7 @@ function initMobileRefresh() {
     if (distance < 64 || blocked()) return reset();
     clearTimeout(timer);
     const owner = user.id;
+    const started = performance.now();
     loading = true;
     indicator.style.height = "64px";
     indicator.dataset.state = "loading";
@@ -9202,6 +9253,9 @@ function initMobileRefresh() {
     label.textContent = "Atualizando o acervo…";
     try {
       await refresh(false);
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.max(0, 500 - (performance.now() - started))),
+      );
       if (user?.id === owner) {
         label.textContent = "Acervo atualizado";
         indicator.dataset.state = "done";
@@ -9214,8 +9268,7 @@ function initMobileRefresh() {
       }
     } finally {
       loading = false;
-      books.classList.add("is-settled");
-      timer = setTimeout(reset, user?.id === owner ? 1000 : 0);
+      timer = setTimeout(reset, user?.id === owner ? 1800 : 0);
     }
   }
   app.addEventListener(
@@ -9464,8 +9517,6 @@ function initMobileReference() {
         $("mobileJourneyExit"),
         review,
       );
-      $("mobileReviewOther").querySelector("summary").textContent =
-        "Outras opções •••";
       $("registrationDiscardTitle").textContent = "Registrar descarte";
       labelButton($("mobileJourneyExit"), "Voltar");
       const rooms = $("rooms").querySelectorAll("use");
@@ -9512,6 +9563,54 @@ function initMobileReference() {
   };
   media.addEventListener("change", layout);
   layout();
+  initMobilePolish();
+}
+
+function initMobilePolish() {
+  const home = $("mobileJourneyHome");
+  const title = home.querySelector("h1");
+  title.replaceChildren(
+    document.createTextNode("Cadastre "),
+    el("span", "um item."),
+  );
+  const start = $("mobileJourneyStart"),
+    label = el("span", undefined, "mobile-start-label");
+  label.append(
+    start.querySelector(".mobile-start-caption"),
+    start.querySelector(".mobile-start-arrow"),
+  );
+  start.append(label);
+  const labels = ["Local", "Item", "Controle", "Conferir"];
+  $("mobileRegistrationProgress")
+    .querySelectorAll("button")
+    .forEach((node, i) => {
+      const number = node.querySelector("span");
+      node.replaceChildren(number, el("small", labels[i]));
+    });
+  const back = document.querySelector(".mobile-review-back");
+  const discard = $("discardRegistration");
+  const originalBack = back.innerHTML;
+  const media = matchMedia(
+    "(max-width: 640px), (hover: none) and (pointer: coarse) and (max-width: 1024px)",
+  );
+  const layout = () => {
+    if (media.matches) {
+      back.replaceChildren(icon("left"));
+      back.setAttribute("aria-label", "Voltar ao controle");
+      back.title = "Voltar ao controle";
+      discard.replaceChildren(icon("discard"));
+      discard.setAttribute("aria-label", "Registrar descarte");
+      discard.title = "Registrar descarte";
+    } else {
+      back.innerHTML = originalBack;
+      back.removeAttribute("aria-label");
+      back.removeAttribute("title");
+      discard.removeAttribute("aria-label");
+      discard.removeAttribute("title");
+    }
+  };
+  media.addEventListener("change", layout);
+  layout();
 }
 
 function initMobileCompact() {
@@ -9555,9 +9654,6 @@ function initMobileCompact() {
   noteToggle.setAttribute("aria-expanded", "false");
   notes.prepend(noteToggle);
   notes.classList.add("mobile-notes-collapsed");
-  const other = el("details", undefined, "mobile-review-other");
-  other.id = "mobileReviewOther";
-  other.append(el("summary", "Outras opções"));
   const credit = $("mobileAccountDialog").querySelector(
     ".mobile-institution-credit",
   );
@@ -9594,13 +9690,7 @@ function initMobileCompact() {
   );
   const layout = () => {
     const actions = $("save").parentElement;
-    if (media.matches) {
-      actions.append(other);
-      other.append($("discardRegistration"));
-    } else {
-      actions.append($("discardRegistration"));
-      other.remove();
-    }
+    actions.append($("discardRegistration"));
     syncMobileJourney();
     if ($("userAccessDialog").open) renderPeople();
   };

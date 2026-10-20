@@ -6595,6 +6595,8 @@ function initAppViewport() {
   const installed = matchMedia("(display-mode: standalone)");
   const viewport = window.visualViewport;
   let scheduled = 0;
+  let baselineHeight = window.innerHeight;
+  let baselineWidth = window.innerWidth;
   function update() {
     scheduled = 0;
     root.classList.toggle(
@@ -6611,14 +6613,17 @@ function initAppViewport() {
         ),
       );
     const height = viewport?.height || window.innerHeight;
-    const focused = document.activeElement?.matches(
-      "input, textarea, select, [contenteditable='true']",
-    );
+    const active = document.activeElement;
+    const focused = active?.matches("input,textarea,select,[contenteditable='true']");
+    if (Math.abs(window.innerWidth - baselineWidth) > 50) {
+      baselineWidth = window.innerWidth;
+      baselineHeight = window.innerHeight;
+    } else if (!focused) baselineHeight = Math.max(baselineHeight, window.innerHeight);
     const keyboard =
       !!focused &&
       !!viewport &&
       viewport.scale === 1 &&
-      window.innerHeight - height > 140;
+      Math.max(baselineHeight, window.innerHeight) - height > 120;
     root.classList.toggle("keyboard-open", keyboard);
     if (!viewport || viewport.scale === 1) {
       root.style.setProperty("--app-visible-height", Math.round(height) + "px");
@@ -6626,6 +6631,20 @@ function initAppViewport() {
         "--app-viewport-top",
         Math.round(viewport?.offsetTop || 0) + "px",
       );
+    }
+    if (mobileAcervo() && keyboard && $("app").contains(active)) {
+      requestAnimationFrame(() => {
+        if (document.activeElement !== active) return;
+        const app = $("app");
+        const area = app.getBoundingClientRect();
+        const field = active.getBoundingClientRect();
+        const top = Math.max(area.top, viewport.offsetTop) + 16;
+        const bottom = Math.min(area.bottom, viewport.offsetTop + viewport.height) - 20;
+        if (field.bottom > bottom)
+          app.scrollBy({ top: field.bottom - bottom, behavior: "instant" });
+        else if (field.top < top)
+          app.scrollBy({ top: field.top - top, behavior: "instant" });
+      });
     }
   }
   function schedule() {
@@ -6682,9 +6701,9 @@ function registrationStage(step, focus = true) {
   else $("registrationMain").append($("notesBlock"));
   const titles = [
     "Onde fica o item?",
-    "Qual item chegou?",
+    "Qual é o item?",
     "Como acompanhar?",
-    "Está tudo no lugar?",
+    "Confira o cadastro.",
   ];
   const symbols = ["pin", "draft", "stock", "save"];
   const heading = $("mobileRegistrationTitle");
@@ -6705,7 +6724,7 @@ function registrationStage(step, focus = true) {
   $("mobileRegistrationActions").hidden = step === 4;
   if (focus && mobileAcervo() && !$("register").hidden) {
     heading.focus({ preventScroll: true });
-    $("register").scrollIntoView({ block: "start", behavior: "auto" });
+    $("app").scrollTop = 0;
     if (previous !== step)
       animateMobileView($("mobileRegistrationContent"), step < previous ? -1 : 1);
   }
@@ -6948,10 +6967,10 @@ function initMobileIdentity() {
   const reviewActions = $("registrationSave").querySelector(".registration-actions");
   const reviewBack = $("registrationSave").querySelector(".mobile-review-back");
   const descriptions = [
-    "Selecione o local e a posição no acervo.",
-    "Informe o item e sua categoria.",
-    "Identifique e escolha como acompanhar.",
-    "Revise as informações do registro.",
+    "Selecione o ambiente do item.",
+    "Informe o nome e escolha a categoria.",
+    "Defina o controle e a identificação.",
+    "Revise os dados antes de cadastrar.",
   ];
   const description = el("p", descriptions[0], "mobile-stage-description");
   description.id = "mobileRegistrationDescription";
@@ -7297,10 +7316,10 @@ function syncMobileJourney() {
   }
   $("mobileJourneyExit").hidden = stage !== 1;
   $("mobileRegistrationDescription").textContent = [
-    "A posição aparece quando o ambiente precisa dela.",
-    "O nome ajuda o Acervo a representar este item.",
-    "Escolha a identificação e a forma de acompanhar.",
-    "Toque em Alterar para corrigir qualquer parte.",
+    "Selecione o ambiente do item.",
+    "Informe o nome e escolha a categoria.",
+    "Defina o controle e a identificação.",
+    "Revise os dados antes de cadastrar.",
   ][stage - 1];
   if (stage === 3) {
     const automatic = value("type") === "SEM_IDENTIFICACAO";
@@ -8068,6 +8087,153 @@ function renderMobileDashboard() {
   }
 }
 
+function initMobileRefresh() {
+  const app = $("app");
+  const indicator = el("div", undefined, "mobile-pull-refresh");
+  indicator.id = "mobilePullRefresh";
+  indicator.setAttribute("role", "status");
+  indicator.setAttribute("aria-live", "polite");
+  const books = acervoBooks(true);
+  const label = el("span", "Puxe para atualizar");
+  indicator.append(books, label);
+  app.prepend(indicator);
+  let start = null;
+  let distance = 0;
+  let loading = false;
+  let timer = 0;
+  let ready = false;
+  const blocked = () =>
+    !mobileAcervo() ||
+    !user ||
+    $("app").hidden ||
+    busy ||
+    !!pending ||
+    !!editor ||
+    document.documentElement.classList.contains("keyboard-open") ||
+    !!document.querySelector("dialog[open]");
+  function reset() {
+    start = null;
+    distance = 0;
+    ready = false;
+    if (loading) return;
+    indicator.style.height = "0px";
+    indicator.dataset.state = "idle";
+    books.classList.add("is-settled");
+    app.classList.remove("pull-tracking");
+  }
+  function draw(amount) {
+    distance = amount;
+    indicator.style.height = amount + "px";
+    const next = amount >= 64;
+    if (next !== ready) {
+      ready = next;
+      label.textContent = ready ? "Solte para atualizar" : "Puxe para atualizar";
+    }
+    indicator.dataset.state = ready ? "ready" : "pulling";
+  }
+  async function finish() {
+    start = null;
+    app.classList.remove("pull-tracking");
+    if (loading) return;
+    if (distance < 64 || blocked()) return reset();
+    clearTimeout(timer);
+    const owner = user.id;
+    loading = true;
+    indicator.style.height = "64px";
+    indicator.dataset.state = "loading";
+    books.classList.remove("is-settled");
+    label.textContent = "Atualizando o acervo…";
+    try {
+      await refresh(false);
+      if (user?.id === owner) {
+        label.textContent = "Acervo atualizado";
+        indicator.dataset.state = "done";
+      }
+    } catch (error) {
+      if (user?.id === owner) {
+        label.textContent = "Não foi possível atualizar";
+        indicator.dataset.state = "error";
+        toast("Não foi possível atualizar. Puxe novamente para tentar.", true);
+      }
+    } finally {
+      loading = false;
+      books.classList.add("is-settled");
+      timer = setTimeout(reset, user?.id === owner ? 1000 : 0);
+    }
+  }
+  app.addEventListener(
+    "touchstart",
+    (event) => {
+      if (loading || blocked() || event.touches.length !== 1 || app.scrollTop > 1) return;
+      if (
+        event.target.closest(
+          "input,textarea,select,button,a,summary,dialog,[contenteditable='true'],.choices",
+        )
+      )
+        return;
+      clearTimeout(timer);
+      reset();
+      label.textContent = "Puxe para atualizar";
+      start = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    },
+    { passive: true },
+  );
+  app.addEventListener(
+    "touchmove",
+    (event) => {
+      if (!start || loading) return;
+      if (event.touches.length !== 1 || blocked()) return reset();
+      const dx = event.touches[0].clientX - start.x;
+      const dy = event.touches[0].clientY - start.y;
+      if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) return reset();
+      if (dy <= 8 || app.scrollTop > 1) {
+        if (distance) reset();
+        return;
+      }
+      if (event.cancelable) event.preventDefault();
+      app.classList.add("pull-tracking");
+      draw(Math.min(88, (dy - 8) * 0.55));
+    },
+    { passive: false },
+  );
+  app.addEventListener("touchend", finish, { passive: true });
+  app.addEventListener("touchcancel", reset, { passive: true });
+  window.addEventListener("resize", reset, { passive: true });
+  reset();
+}
+
+function initMobileAccount() {
+  const dialog = $("mobileAccountDialog");
+  const heading = dialog.querySelector(".mobile-account-heading");
+  const title = $("mobileAccountTitle");
+  const copy = el("div", undefined, "mobile-account-title");
+  copy.append(el("small", "ACERVO · SUA CONTA"), title);
+  heading.prepend(copy);
+  const mark = el("span", undefined, "mobile-account-mark");
+  mark.append(icon("users"));
+  heading.prepend(mark);
+  const status = el("p", undefined, "mobile-account-sync");
+  status.id = "mobileAccountSync";
+  const help = el("div", undefined, "mobile-account-refresh-help");
+  help.append(
+    icon("refresh"),
+    el("p", "Para atualizar, volte à tela e puxe o conteúdo para baixo."),
+  );
+  dialog.querySelector(".mobile-institution-credit").before(status, help);
+  const update = () => {
+    status.textContent = $("live").textContent;
+    status.classList.toggle("is-stale", $("live").classList.contains("stale"));
+  };
+  new MutationObserver(update).observe($("live"), {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  update();
+}
+
 function initMobileJourney() {
   const register = $("register");
   const form = $("itemForm");
@@ -8086,11 +8252,7 @@ function initMobileJourney() {
   }
   art.append(mark);
   const title = el("h1");
-  title.append(
-    document.createTextNode("Mais um item"),
-    el("br"),
-    document.createTextNode("no lugar."),
-  );
+  title.textContent = "Mais um item no lugar.";
   const description = el("p", "Escolha o local. O Acervo guia o restante.");
   description.id = "mobileJourneyDraft";
   const start = button(
@@ -8115,20 +8277,13 @@ function initMobileJourney() {
     "mobile-text-action",
   );
   restart.id = "mobileJourneyRestart";
-  const trail = el("ol", undefined, "mobile-home-trail");
-  ["Local", "Item", "Controle", "Revisão"].forEach((name, i) => {
-    const li = el("li");
-    li.append(el("span", String(i + 1)), document.createTextNode(name));
-    trail.append(li);
-  });
   home.append(
     art,
     title,
     description,
     start,
     restart,
-    trail,
-    el("small", "Seu acervo, organizado passo a passo."),
+    el("small", "Puxe a tela para atualizar o acervo."),
   );
   form.before(home);
   const location = button(
@@ -8910,3 +9065,7 @@ initMobileIdentity();
 initMobileDashboard();
 
 initMobileJourney();
+
+initMobileAccount();
+
+initMobileRefresh();

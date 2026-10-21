@@ -1575,6 +1575,8 @@ function setAcervoSync(
 
 function showAcervoReceipt(record, template) {
   if (mobileAcervo()) return mobileReceipt(record, template);
+  if (document.documentElement.classList.contains("acervo-desktop"))
+    return showDesktopReceipt(record, template);
   const discarded = record.situacao === "BAIXADO",
     saved = $("saved");
   const row = el("div", undefined, "acervo-receipt"),
@@ -2375,7 +2377,12 @@ function syncCode(prefix = "") {
       : "Prévia calculada pelo último registro disponível. O banco confirma o número ao salvar; ele pode mudar se houver outro cadastro ou lacunas na sequência."
     : "PMC e ICI usam seis números. Os zeros à esquerda são preservados.";
   help.tabIndex = 0;
-  if (!edit && mobileAcervo() && none) {
+  if (
+    !edit &&
+    none &&
+    (mobileAcervo() ||
+      document.documentElement.classList.contains("acervo-desktop"))
+  ) {
     $("codeLabel").textContent = "Código previsto";
     help.textContent = "Confirmado ao salvar.";
     help.removeAttribute("data-help");
@@ -3290,7 +3297,7 @@ function renderDetails(r, panel) {
         "Excluir definitivamente",
         () => openItemDeletion(r),
         "danger item-delete-action",
-        "close",
+        "discard",
       ),
     );
   panel.append(actions);
@@ -4208,6 +4215,7 @@ function renderOverviewCharts() {
 }
 
 function renderMetrics() {
+  renderDesktopOverview();
   const individual = rows.filter(
     (r) =>
       r.controle !== "QUANTIDADE" &&
@@ -8849,7 +8857,7 @@ function renderMobileMovement() {
         renderMovementResults();
         $("moveSearch").focus();
       },
-      "mobile-text-action",
+      "mobile-text-action mobile-movement-back",
       "left",
     );
     host.append(back, mobileItemAnchor(selectedRecord));
@@ -8981,6 +8989,7 @@ function openMobileTransfer(record) {
   startEdit(record);
   if (!editor) return;
   $("editDialog").dataset.mode = "transfer";
+  prepareAcervoDialog($("editDialog"));
   $("editDialogTitle").textContent = "Transferir item";
   const origin = el("div", undefined, "mobile-transfer-origin");
   origin.append(
@@ -10817,6 +10826,26 @@ function focusAcervoDialog(dialog, desktopField) {
   }
 }
 
+function syncMobileDialogSymbol(dialog, heading) {
+  if (!["editDialog", "mobileDetail"].includes(dialog.id)) return;
+  let mark = heading.querySelector(":scope > .mobile-dialog-symbol");
+  if (!mark) {
+    mark = el("span", undefined, "mobile-dialog-symbol");
+    mark.setAttribute("aria-hidden", "true");
+    heading.prepend(mark);
+  }
+  const name =
+    dialog.id === "mobileDetail"
+      ? "draft"
+      : dialog.dataset.mode === "transfer"
+        ? "movement"
+        : "edit";
+  if (mark.dataset.symbol !== name) {
+    mark.replaceChildren(icon(name));
+    mark.dataset.symbol = name;
+  }
+}
+
 function prepareAcervoDialog(dialog) {
   if (!mobileAcervo() || dialog.id === "camera") return;
   dialog.classList.add("mobile-dialog");
@@ -10837,6 +10866,7 @@ function prepareAcervoDialog(dialog) {
   const context = heading.querySelector("#operationRecord");
   if (context)
     dialog.querySelector(":scope > .mobile-dialog-body").prepend(context);
+  syncMobileDialogSymbol(dialog, heading);
   for (const control of heading.querySelectorAll("button")) {
     if (control.id === "accessBack") continue;
     control.mobileOriginalMarkup ??= control.innerHTML;
@@ -11045,9 +11075,9 @@ function mobileInventorySnapshot(records, room = "") {
 }
 
 function mobileChromeColor() {
-  if (!mobileAcervo()) return $("login").hidden ? "#e8f1fa" : "#0d61b0";
+  if (!mobileAcervo()) return $("login").hidden ? "#0852b8" : "#0d61b0";
   return document.querySelector("#camera[open]")
-    ? "#063d8f"
+    ? "#0852b8"
     : document.querySelector("body > dialog[open]")
       ? "#033071"
       : "#0852b8";
@@ -11102,7 +11132,11 @@ function initMobileRefinements() {
     const modal =
       mobileAcervo() &&
       !!document.querySelector("body > dialog[open]:not(#camera)");
-    if (modal) animateMobileReceipt.active?.cancel();
+    document.documentElement.classList.toggle(
+      "acervo-camera-open",
+      !!$("camera").open && mobileAcervo(),
+    );
+    if (modal || $("camera").open) animateMobileReceipt.active?.cancel();
     document.documentElement.classList.toggle("acervo-modal-open", modal);
     document
       .querySelectorAll('meta[name="theme-color"]')
@@ -11258,7 +11292,7 @@ function initMobilePlayfulNavigation() {
       document.querySelector(".institution-footer .institution-logo").src,
     );
   municipality.append(svg);
-  $("mobileAccountMenu").prepend(municipality);
+  $("mobileAccountMenu").append(municipality);
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   motion.addEventListener("change", () => {
     if (motion.matches) {
@@ -11288,3 +11322,498 @@ function initMobilePlayfulNavigation() {
 }
 
 initMobilePlayfulNavigation();
+
+const desktopAcervoState = { room: "", chart: "ambiente" };
+
+function desktopInventoryQuery(preset = {}) {
+  query({
+    ...preset,
+    ...(desktopAcervoState.room ? { ambiente: desktopAcervoState.room } : {}),
+  });
+}
+
+function renderDesktopOverview() {
+  const root = $("desktopOverview");
+  if (!root || mobileAcervo()) return;
+  const data = mobileInventorySnapshot(rows, desktopAcervoState.room);
+  const scope = desktopAcervoState.room || "Todos os ambientes";
+  $("desktopOverviewUpdated").textContent = lastSuccess
+    ? "Atualizado " +
+      new Intl.DateTimeFormat("pt-BR", {
+        timeZone: ZONE,
+        timeStyle: "short",
+      }).format(lastSuccess)
+    : "Aguardando atualização";
+  const metrics = [
+    [
+      data.goods.length,
+      "Bens acompanhados",
+      "Ativos e emprestados",
+      "draft",
+      { controle: "INDIVIDUAL", situacao: "EM_USO" },
+    ],
+    [
+      data.loans.length,
+      "Empréstimos abertos",
+      "Bens fora do local de origem",
+      "loan",
+      { situacao: "EMPRESTADO" },
+    ],
+    [
+      data.stocks.length,
+      "Materiais em estoque",
+      "Cadastros por quantidade",
+      "stock",
+      { controle: "QUANTIDADE", situacao: "ATIVO" },
+    ],
+    [
+      data.low.length,
+      "Precisam de reposição",
+      "No mínimo ou abaixo dele",
+      "stock-alert",
+      { controle: "QUANTIDADE", situacao: "ATIVO" },
+    ],
+  ];
+  $("desktopOverviewMetrics").replaceChildren(
+    ...metrics.map(([n, title, help, mark, preset], i) => {
+      const node = button(
+        "",
+        () =>
+          i === 3
+            ? $("desktopOverviewPriority").scrollIntoView({
+                behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+                block: "center",
+              })
+            : desktopInventoryQuery(preset),
+        "desktop-metric" +
+          (i === 0 ? " is-main" : "") +
+          (i === 3 && n ? " needs-attention" : ""),
+      );
+      node.append(
+        icon(mark),
+        el("b", n.toLocaleString("pt-BR")),
+        el("strong", title),
+        el("small", help),
+      );
+      return node;
+    }),
+  );
+  const distribution = $("desktopOverviewDistribution");
+  const field = desktopAcervoState.chart;
+  $("desktopOverviewTabs")
+    .querySelectorAll("button")
+    .forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.field === field)),
+    );
+  const labels = field === "ambiente" ? ROOMS : CATEGORIES;
+  const max = Math.max(
+    1,
+    ...labels.map(
+      (name) => data.current.filter((r) => r.dados[field] === name).length,
+    ),
+  );
+  distribution.replaceChildren(
+    ...labels.map((name) => {
+      const count = data.current.filter((r) => r.dados[field] === name).length;
+      const row = button(
+        "",
+        () => desktopInventoryQuery({ [field]: name, situacao: "EM_USO" }),
+        "desktop-distribution-row",
+      );
+      const line = el("span", undefined, "desktop-distribution-copy");
+      line.append(
+        el("strong", name),
+        el("span", count.toLocaleString("pt-BR") + " registros"),
+      );
+      const track = el("span", undefined, "desktop-distribution-track"),
+        bar = el("i");
+      bar.style.width = (count / max) * 100 + "%";
+      track.append(bar);
+      row.append(line, track);
+      return row;
+    }),
+  );
+  $("desktopDistributionNote").textContent =
+    data.current.length + " registros ativos ou emprestados · " + scope;
+  const priority = $("desktopOverviewPriorityList");
+  if (!data.low.length)
+    priority.replaceChildren(
+      icon("check"),
+      el(
+        "strong",
+        data.stocks.length
+          ? "Estoque dentro dos mínimos"
+          : "Nenhum material por quantidade neste ambiente",
+      ),
+      el(
+        "p",
+        data.stocks.length
+          ? "Os materiais acompanhados estão acima do estoque mínimo."
+          : "Os saldos e as prioridades aparecem aqui após cadastrar materiais.",
+      ),
+    );
+  else
+    priority.replaceChildren(
+      ...data.low.map((record) => {
+        const row = button(
+          "",
+          () => {
+            query({ situacao: "TODOS" });
+            $("search").value = internal(record.id);
+            expanded = record.id;
+            renderList();
+          },
+          "desktop-stock-row",
+        );
+        const graphic = el("span", undefined, "desktop-item-symbol");
+        graphic.append(itemIcon(record));
+        const copy = el("span");
+        copy.append(
+          el("strong", record.dados.item),
+          el(
+            "small",
+            record.dados.ambiente +
+              " · mínimo " +
+              quantityText(record.minimo, record.unidade),
+          ),
+        );
+        const balance = el("b", quantityText(record.saldo, record.unidade));
+        row.append(graphic, copy, balance, icon("right"));
+        return row;
+      }),
+    );
+  const pct = data.goods.length
+    ? Math.round((data.identified.length / data.goods.length) * 100)
+    : 0;
+  const identification = $("desktopOverviewIdentification");
+  identification.style.setProperty("--identified", pct + "%");
+  identification.replaceChildren(
+    el("b", pct + "%"),
+    el("small", "com PMC ou ICI"),
+  );
+  $("desktopOverviewIdentificationText").textContent =
+    `${data.identified.length} de ${data.goods.length} bens com identificação externa.`;
+  const balances = $("desktopOverviewBalances");
+  balances.replaceChildren(
+    ...[...data.units].map(([unit, total]) => {
+      const line = el("div");
+      line.append(el("span", unit), el("strong", quantityText(total, unit)));
+      return line;
+    }),
+  );
+  if (!data.units.size)
+    balances.append(
+      el("p", "Ainda não há saldo por quantidade neste ambiente."),
+    );
+  const facts = $("desktopOverviewFacts");
+  facts.replaceChildren();
+  const fact = (value, label) => {
+    const line = el("div");
+    line.append(el("b", String(value)), el("span", label));
+    facts.append(line);
+  };
+  fact(data.models.size, "nomes diferentes entre os bens");
+  fact(data.discarded.length, "registros no histórico de descartados");
+  fact(data.empty.length, "materiais com saldo zerado");
+}
+
+function initDesktopExperience() {
+  const desktop = matchMedia(
+    "(min-width: 641px) and (hover: hover), (min-width: 1025px)",
+  );
+  const register = $("register"),
+    workspace = register.querySelector(".workspace"),
+    side = workspace.querySelector(".side");
+  const savebar = $("registrationSave"),
+    saveParent = savebar.parentNode;
+  const originalSide = [...side.childNodes];
+  const legacySummary = el("div", undefined, "desktop-legacy-summary");
+  legacySummary.hidden = true;
+  const hero = el("section", undefined, "desktop-register-intro desktop-only");
+  const copy = el("div");
+  copy.append(
+    el("small", "SEU ACERVO, ORGANIZADO"),
+    el("h1", "Cadastre um item."),
+    el(
+      "p",
+      "Escolha o local, preencha a identificação e confira o registro ao lado.",
+    ),
+  );
+  const art = el("div", undefined, "desktop-hero-art");
+  art.setAttribute("aria-hidden", "true");
+  for (const name of ["Cadeira", "Monitor", "Armário"]) {
+    const card = el("span", undefined, "desktop-art-card");
+    card.append(itemIcon(name));
+    art.append(card);
+  }
+  const emblem = el("span", undefined, "desktop-hero-emblem");
+  emblem.append(mobileBooksMark());
+  art.append(emblem);
+  hero.append(copy, art);
+  workspace.before(hero);
+  const sideHead = el("div", undefined, "desktop-preview-heading");
+  const sideMark = el("span");
+  sideMark.append(mobileBooksMark());
+  sideHead.append(sideMark, el("div"));
+  sideHead.lastChild.append(
+    el("small", "PRÉVIA DO REGISTRO"),
+    el("h2", "Confira e conclua"),
+  );
+  const guide = el("div", undefined, "desktop-register-guide");
+  guide.append(
+    el(
+      "p",
+      "O resumo acompanha o que você preenche. Ao finalizar, o novo item entra no acervo.",
+    ),
+  );
+  for (const [name, description, mark] of [
+    ["Local", "Ambiente e posição do item", "pin"],
+    ["Item", "Nome e categoria", "draft"],
+    ["Controle", "Identificação e quantidade", "stock"],
+    ["Conferência", "Revise os dados e cadastre", "check"],
+  ]) {
+    const step = el("div");
+    step.append(icon(mark), el("span"));
+    step.lastChild.append(el("strong", name), el("small", description));
+    guide.append(step);
+  }
+  $("save").setAttribute("form", "itemForm");
+  const dashboard = el("div", undefined, "desktop-overview desktop-only");
+  dashboard.id = "desktopOverview";
+  const heading = el("div", undefined, "desktop-section-heading");
+  const title = el("div");
+  title.append(
+    el("small", "O ACERVO EM PERSPECTIVA"),
+    el("h1", "Visão geral"),
+    el("p", "Bens, materiais e prioridades para decidir o próximo passo."),
+  );
+  const scope = el("label", undefined, "desktop-scope");
+  scope.append(el("span", "Ambiente"));
+  const room = el("select");
+  room.id = "desktopOverviewRoom";
+  for (const [value, label] of [
+    ["", "Todos os ambientes"],
+    ...ROOMS.map((r) => [r, r]),
+  ]) {
+    const option = el("option", label);
+    option.value = value;
+    room.append(option);
+  }
+  room.onchange = () => {
+    desktopAcervoState.room = room.value;
+    renderDesktopOverview();
+  };
+  const updated = el("small");
+  updated.id = "desktopOverviewUpdated";
+  scope.append(room, updated);
+  heading.append(title, scope);
+  const metrics = el("div", undefined, "desktop-metrics");
+  metrics.id = "desktopOverviewMetrics";
+  const grid = el("div", undefined, "desktop-overview-grid");
+  const card = (title, mark, cls = "") => {
+    const node = el("section", undefined, "card desktop-overview-card " + cls);
+    const h = el("h2");
+    h.append(icon(mark), document.createTextNode(title));
+    node.append(h);
+    return node;
+  };
+  const distribution = card(
+    "Como o acervo está distribuído",
+    "composition",
+    "desktop-distribution",
+  );
+  const tabs = el("div", undefined, "desktop-chart-tabs");
+  tabs.id = "desktopOverviewTabs";
+  for (const [field, label] of [
+    ["ambiente", "Ambientes"],
+    ["categoria", "Categorias"],
+  ]) {
+    const tab = button(label, () => {
+      desktopAcervoState.chart = field;
+      renderDesktopOverview();
+    });
+    tab.dataset.field = field;
+    tabs.append(tab);
+  }
+  const bars = el("div");
+  bars.id = "desktopOverviewDistribution";
+  const note = el("p", undefined, "desktop-small");
+  note.id = "desktopDistributionNote";
+  distribution.append(tabs, bars, note);
+  const priority = card(
+    "Prioridades do estoque",
+    "stock-alert",
+    "desktop-priority",
+  );
+  priority.id = "desktopOverviewPriority";
+  const stockRows = el("div");
+  stockRows.id = "desktopOverviewPriorityList";
+  priority.append(stockRows);
+  const identity = card(
+    "Identificação dos bens",
+    "code",
+    "desktop-identification",
+  );
+  const ring = el("div", undefined, "desktop-identification-ring");
+  ring.id = "desktopOverviewIdentification";
+  const identityText = el("p");
+  identityText.id = "desktopOverviewIdentificationText";
+  identity.append(
+    ring,
+    identityText,
+    button(
+      "Consultar bens",
+      () =>
+        desktopInventoryQuery({ controle: "INDIVIDUAL", situacao: "EM_USO" }),
+      "desktop-card-link",
+      "right",
+    ),
+  );
+  const balances = card("Saldos por unidade", "stock", "desktop-balances");
+  const balanceList = el("div");
+  balanceList.id = "desktopOverviewBalances";
+  balances.append(
+    balanceList,
+    el("small", "As unidades de medida são apresentadas separadamente."),
+  );
+  const facts = card("Por dentro do acervo", "chart", "desktop-facts");
+  const factList = el("div");
+  factList.id = "desktopOverviewFacts";
+  facts.append(
+    factList,
+    button(
+      "Ver descartados",
+      () => desktopInventoryQuery({ situacao: "BAIXADO" }),
+      "desktop-card-link",
+      "right",
+    ),
+  );
+  grid.append(distribution, identity, priority, balances, facts);
+  dashboard.append(heading, metrics, grid);
+  $("dashboard").prepend(dashboard);
+  const movementNote = el(
+    "aside",
+    undefined,
+    "desktop-movement-guide desktop-only",
+  );
+  const movementMark = el("span");
+  movementMark.append(mobileBooksMark());
+  movementNote.append(
+    movementMark,
+    el("h2", "Encontre. Escolha. Confirme."),
+    el(
+      "p",
+      "Busque pelo nome ou código do item. As ações disponíveis acompanham o tipo de controle e a situação do registro.",
+    ),
+    el("small", "Cada movimentação fica vinculada ao histórico do item."),
+  );
+  $("movements").append(movementNote);
+  const about = button(
+    "Sobre o Acervo",
+    () => showAcervoDialog($("mobileAboutDialog")),
+    "desktop-about-link desktop-only",
+  );
+  document.querySelector(".institution-footer").append(about);
+  const layout = () => {
+    const active = desktop.matches && !mobileAcervo();
+    document.documentElement.classList.toggle("acervo-desktop", active);
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((meta) => (meta.content = mobileChromeColor()));
+    if (active) {
+      legacySummary.append(...originalSide);
+      side.replaceChildren(legacySummary, sideHead, guide, savebar);
+      syncMobileDialogSymbol(
+        $("editDialog"),
+        $("editDialog").querySelector(".dialog-heading"),
+      );
+    } else {
+      saveParent.append(savebar);
+      side.replaceChildren(...originalSide);
+    }
+    updateRegistrationSummary();
+    renderDesktopOverview();
+    updateNavIndicator(false);
+  };
+  desktop.addEventListener("change", layout);
+  window.addEventListener("resize", () => {
+    if (desktop.matches && !mobileAcervo()) updateNavIndicator(false);
+  });
+  layout();
+}
+
+initDesktopExperience();
+
+function showDesktopReceipt(record, template) {
+  const saved = $("saved"),
+    stock = record.controle === "QUANTIDADE",
+    discarded = record.situacao === "BAIXADO";
+  saved.className =
+    "notice desktop-receipt" + (discarded ? " is-discarded" : "");
+  const seal = el("div", undefined, "desktop-completion-mark");
+  seal.setAttribute("aria-hidden", "true");
+  seal.append(mobileBooksMark(), icon(discarded ? "discard" : "check"));
+  const heading = el(
+    "h2",
+    discarded
+      ? "Descarte registrado"
+      : stock
+        ? "Estoque cadastrado"
+        : "Item cadastrado",
+  );
+  const item = el("div", undefined, "desktop-completion-item");
+  item.append(itemIcon(record), el("div"));
+  item.lastChild.append(
+    el("strong", record.dados.item),
+    el(
+      "span",
+      stock
+        ? quantityText(record.saldo, record.unidade) + " · " + template.ambiente
+        : template.ambiente,
+    ),
+  );
+  const code = el("div", undefined, "desktop-completion-code");
+  code.append(
+    el("span", "Código do registro"),
+    el("strong", internal(record.id)),
+  );
+  const actions = el("div", undefined, "desktop-completion-actions");
+  const continueHere = button(
+    "Cadastrar outro neste local",
+    () => {
+      resetForm();
+      for (const [name, field] of [
+        ["room", "ambiente"],
+        ["shelf", "estante"],
+        ["level", "prateleira"],
+      ])
+        setChoice(name, template[field]);
+      syncForm();
+      saveDraft();
+      $("item").focus();
+    },
+    "primary",
+    "record-add",
+  );
+  const restart = button(
+    "Voltar ao início",
+    () => {
+      resetForm();
+      for (const name of ["room", "shelf", "level"]) setChoice(name, "");
+      syncForm();
+      saveDraft();
+      $("rooms").querySelector("input")?.focus();
+    },
+    "",
+    "left",
+  );
+  actions.append(continueHere, restart);
+  saved.replaceChildren(seal, heading, item, code, actions);
+  saved.hidden = false;
+  saved.setAttribute("role", "status");
+  requestAnimationFrame(() =>
+    saved.scrollIntoView({ block: "center", behavior: "auto" }),
+  );
+}

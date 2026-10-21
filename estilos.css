@@ -27144,3 +27144,579 @@ body::before {
     animation: none;
   }
 }
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop .desktop-registration-progress {
+    margin: 17px 0 18px;
+  }
+  .desktop-registration-progress > div:first-child {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 9px;
+  }
+  .desktop-registration-progress strong {
+    color: #234f7b;
+    font: 650 12px/1.45 var(--pc-font);
+  }
+  #desktopProgressCount {
+    flex: 0 0 auto;
+    color: #075bc3;
+    font: 750 11px/1.4 var(--pc-font);
+    font-variant-numeric: tabular-nums;
+  }
+  .desktop-progress-track {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .desktop-progress-track > i {
+    position: relative;
+    height: 5px;
+    overflow: hidden;
+    border-radius: 5px;
+    background: #c9deef;
+  }
+  .desktop-progress-track > i::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #00cddd, #006ce0);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .desktop-progress-track > .is-complete::before {
+    transform: scaleX(1);
+  }
+  .desktop-preview-heading > span {
+    position: relative;
+  }
+  .desktop-preview-heading > span::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    padding: 2px;
+    border-radius: 15px;
+    background: conic-gradient(
+      from -60deg,
+      #00d2e7 var(--register-progress, 0%),
+      #bfd5e8 0
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .desktop-art-card {
+    transition:
+      border-color 350ms,
+      box-shadow 350ms;
+  }
+  .desktop-art-card::after {
+    content: "✓";
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #8dfaff;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--pc-action);
+    box-shadow: 0 0 12px #00ddef80;
+    font: 750 10px/1 var(--pc-font);
+    scale: 0;
+    transition: scale 400ms cubic-bezier(0.2, 1.5, 0.4, 1);
+  }
+  .desktop-art-card.is-collected {
+    border-color: #63f0f5;
+    box-shadow:
+      0 4px 0 #9ae6f4,
+      0 0 20px #00e6ff60;
+  }
+  .desktop-art-card.is-collected::after {
+    scale: 1;
+  }
+  .acervo-desktop #app #register .choice > span {
+    transition:
+      translate 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+  .acervo-desktop #app #register .choice:hover > span {
+    translate: 0 -1px;
+  }
+  .acervo-desktop
+    #app
+    #register[data-desktop-ready="true"]
+    #save:not(:disabled) {
+    box-shadow: 0 4px 18px #008edb45;
+  }
+  #register[data-desktop-ready="true"] #desktopProgressMessage {
+    color: #005cbf;
+  }
+  .desktop-collectible {
+    position: fixed;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #8afaff;
+    border-radius: 10px;
+    color: #fff;
+    background: var(--pc-action);
+    box-shadow: 0 0 18px #00dfff8c;
+    pointer-events: none;
+  }
+  .desktop-collectible .icon {
+    width: 21px;
+    height: 21px;
+    color: inherit;
+  }
+  .desktop-completion-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+    width: 260px;
+    height: 146px;
+    margin: -85px auto 12px;
+  }
+  .desktop-completion-stage::before,
+  .desktop-completion-stage::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 145px;
+    height: 145px;
+    margin: -72.5px 0 0 -72.5px;
+    border: 2px solid #00cde9;
+    border-radius: 38%;
+    opacity: 0;
+    animation: desktop-register-wave 1.4s 0.6s ease-out both;
+  }
+  .desktop-completion-stage::after {
+    animation-delay: 0.85s;
+  }
+  .desktop-completion-stage .desktop-completion-mark {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 106px;
+    margin: 0;
+    border-radius: 27px;
+    background:
+      radial-gradient(circle at 20% 0, #10d5ef, transparent 75%),
+      var(--pc-action);
+    box-shadow:
+      inset 0 1px 5px #caffff,
+      0 0 28px #00d5f67a;
+    animation: desktop-register-unlock 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .desktop-completion-stage .mobile-books-mark {
+    width: 76px;
+    height: 76px;
+  }
+  .desktop-completion-badge {
+    position: absolute;
+    right: -9px;
+    bottom: -7px;
+    display: grid;
+    place-items: center;
+    width: 31px;
+    height: 31px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--pc-action);
+    box-shadow: 0 2px 10px #005bb84d;
+    animation: desktop-register-badge 500ms 0.75s cubic-bezier(0.2, 1.4, 0.3, 1)
+      both;
+  }
+  .desktop-completion-badge .icon {
+    width: 19px;
+    height: 19px;
+  }
+  .desktop-completion-incoming {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 53px;
+    margin: -26px 0 0 -22px;
+    border: 2px solid #66eff4;
+    border-radius: 11px;
+    color: #005fc9;
+    background: #fff;
+    box-shadow: 0 0 16px #00e4f28c;
+    opacity: 0;
+    animation: desktop-register-file 1.05s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+  }
+  .desktop-completion-incoming .icon {
+    width: 30px;
+    height: 30px;
+    color: inherit;
+  }
+  .desktop-completion-fragment {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 7px;
+    height: 10px;
+    margin: -5px 0 0 -3.5px;
+    border: 1px solid #7afaff;
+    border-radius: 2px;
+    background: #00c9e4;
+    opacity: 0;
+    animation: desktop-register-burst 900ms 0.8s ease-out both;
+  }
+  .desktop-completion-fragment:nth-of-type(even) {
+    background: #076ae0;
+  }
+  .desktop-receipt.is-discarded .desktop-completion-mark,
+  .desktop-receipt.is-discarded .desktop-completion-badge {
+    background: var(--pc-danger);
+    border-color: #ffbfda;
+    box-shadow: 0 0 24px #e0004b33;
+  }
+  .desktop-receipt.is-discarded .desktop-completion-stage::before,
+  .desktop-receipt.is-discarded .desktop-completion-stage::after {
+    display: none;
+  }
+}
+@keyframes desktop-register-unlock {
+  0% {
+    transform: translateY(18px) scale(0.8) rotate(-9deg);
+  }
+  48% {
+    transform: translateY(-4px) scale(1.06) rotate(2deg);
+  }
+  72% {
+    transform: translateY(1px) scale(0.98) rotate(-1deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+@keyframes desktop-register-wave {
+  0% {
+    transform: scale(0.65) rotate(-12deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.55) rotate(12deg);
+    opacity: 0;
+  }
+}
+@keyframes desktop-register-file {
+  0% {
+    transform: translate(90px, -72px) rotate(18deg) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  55% {
+    transform: translate(18px, -60px) rotate(-12deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 14px) rotate(0) scale(0.15);
+    opacity: 0;
+  }
+}
+@keyframes desktop-register-badge {
+  0% {
+    scale: 0;
+  }
+  70% {
+    scale: 1.18;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes desktop-register-burst {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--burst-x), var(--burst-y))
+      rotate(var(--burst-turn));
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desktop-completion-stage .desktop-completion-mark,
+  .desktop-completion-stage::before,
+  .desktop-completion-stage::after,
+  .desktop-completion-badge,
+  .desktop-completion-incoming,
+  .desktop-completion-fragment {
+    animation: none;
+  }
+  .desktop-progress-track > i::before,
+  .desktop-art-card,
+  .desktop-art-card::after,
+  .acervo-desktop #app #register .choice > span {
+    transition: none;
+  }
+}
+
+.desktop-account-caption {
+  display: none;
+}
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop .header-meta:empty {
+    display: none;
+  }
+  .acervo-desktop #mobileAccountMenu {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+  }
+  .acervo-desktop #mobileAccountTrigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 7px 13px 7px 7px;
+    border: 1px solid #ffffff77;
+    border-radius: 26px;
+    color: #094b9c;
+    background: linear-gradient(130deg, #f3fdff, #b5e4ff);
+    box-shadow: 0 4px 16px #003c9120;
+  }
+  .acervo-desktop #mobileAccountTrigger .mobile-account-avatar {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--pc-action);
+    font: 750 13px/1 var(--pc-font);
+  }
+  .acervo-desktop #mobileAccountTrigger .desktop-account-caption {
+    display: block;
+    flex: 0 0 auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    white-space: nowrap;
+    order: 1;
+    font: 650 12px/1.3 var(--pc-font);
+  }
+  .acervo-desktop #mobileAccountTrigger > .icon {
+    order: 2;
+    width: 14px;
+    height: 14px;
+    rotate: 90deg;
+    color: inherit;
+  }
+  .acervo-desktop #mobileAccountDialog {
+    width: 380px;
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 20px;
+    background: var(--pc-action);
+    color: #fff;
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-mark .icon {
+    width: 28px;
+    height: 28px;
+    color: inherit;
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-title {
+    flex: 1;
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-title > small {
+    display: none;
+  }
+  .acervo-desktop #mobileAccountDialog h2 {
+    margin: 0;
+    color: #fff;
+    font: 750 22px/1.2 var(--pc-font);
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-heading button {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border: 1px solid #ffffff70;
+    border-radius: 50%;
+    background: #ffffff0d;
+    color: #fff;
+    box-shadow: none;
+  }
+  .acervo-desktop #mobileAccountDialog .account-toolbar {
+    display: block;
+    padding: 22px;
+    border: 0;
+    background: #fff;
+  }
+  .acervo-desktop #mobileAccountDialog .header-person {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 0 20px;
+    border: 0;
+    border-bottom: 1px solid #c9dfef;
+  }
+  .acervo-desktop #mobileAccountDialog .header-account-text {
+    min-width: 0;
+  }
+  .acervo-desktop #mobileAccountDialog .account {
+    color: #173f70;
+    font: 750 15px/1.4 var(--pc-font);
+    overflow-wrap: anywhere;
+  }
+  .acervo-desktop #mobileAccountDialog .account-role {
+    color: #5e7891;
+    font: 400 12px/1.5 var(--pc-font);
+  }
+  .acervo-desktop #mobileAccountDialog #syncTools {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 18px;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .acervo-desktop #mobileAccountDialog :is(#manageAccess, #refresh, #logout) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 11px;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 12px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    background: var(--pc-action);
+    box-shadow: none;
+    font: 600 13px/1.4 var(--pc-font);
+  }
+  .acervo-desktop #mobileAccountDialog #logout {
+    background: var(--pc-danger);
+  }
+  .acervo-desktop #mobileAccountDialog .mobile-account-arrow {
+    margin-left: auto;
+  }
+  .acervo-desktop
+    #mobileAccountDialog
+    :is(.mobile-institution-credit, .mobile-account-refresh-help, .live) {
+    display: none;
+  }
+  .acervo-desktop #mobileAccountDialog #mobileAccountSync {
+    margin: -4px 22px 20px;
+    color: #607c99;
+    font: 400 10px/1.4 var(--pc-font);
+    text-align: right;
+  }
+  .acervo-desktop .institution-footer {
+    border: 0;
+    padding: 16px 0 22px;
+  }
+  .acervo-desktop .desktop-footer-line {
+    gap: 8px;
+    min-height: 32px;
+    color: #dfedff;
+    font: 400 12px/1.5 var(--pc-font);
+  }
+  .acervo-desktop .desktop-about-link {
+    font: inherit;
+  }
+  .acervo-desktop #mobileAboutDialog > .mobile-about-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .acervo-desktop #mobileAboutDialog .mobile-about-heading h2 {
+    margin: 0;
+    color: #fff;
+    font: 750 22px/1.2 var(--pc-font);
+  }
+  .acervo-desktop #mobileAboutDialog .mobile-about-heading button {
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border: 1px solid #ffffff70;
+    border-radius: 50%;
+    background: #ffffff0d;
+    color: #fff;
+    box-shadow: none;
+  }
+}
+
+body > #camera.is-unavailable .preview {
+  display: grid;
+  place-items: center;
+  height: clamp(180px, 34dvh, 320px);
+  min-height: 180px;
+  aspect-ratio: auto;
+  background:
+    radial-gradient(ellipse at 50% 30%, #00b8ec66, transparent 70%),
+    linear-gradient(135deg, #0754b2, #003c98);
+}
+#camera.is-unavailable :is(video, .guide, .ocrguide, #torch),
+#camera.is-unavailable .camerafoot > p,
+#camera.is-unavailable .mobile-camera-loading > .mobile-books-mark,
+#camera.is-unavailable .mobile-camera-dots {
+  display: none;
+}
+.camera-unavailable {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: 26px;
+  color: #fff;
+  text-align: center;
+}
+.camera-unavailable .mobile-books-mark {
+  width: 76px;
+  height: 76px;
+  color: inherit;
+  filter: drop-shadow(0 0 16px #00eaff66);
+}
+.camera-unavailable strong {
+  color: inherit;
+  font:
+    650 16px/1.45 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}

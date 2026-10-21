@@ -2017,6 +2017,9 @@ function syncControl(prefix = "") {
   const box = $(id("stockFields"));
   if (!box) return;
   const stock = value(e ? "editControl" : "control") === "QUANTIDADE";
+  const wholeUnits = ["unidade", "rolo", "caixa"].includes($(id("unit")).value);
+  for (const field of ["quantity", "minimum"])
+    $(id(field)).step = wholeUnits ? "1" : "0.001";
   box.hidden = !stock;
   box.querySelectorAll("input").forEach((n) => {
     n.disabled = !stock;
@@ -2816,10 +2819,22 @@ async function refresh(visual = false) {
       role = data.perfil || "leitor";
       $("accountRole").textContent = PEOPLE_ROLES[role] || "Leitor";
       $("manageAccess").hidden = role !== "admin";
-      if (role !== "admin" && $("userAccessDialog").open) {
+      if (
+        role !== "admin" &&
+        ($("userAccessDialog").open ||
+          $("deletePersonDialog").open ||
+          profileTarget ||
+          deleteTarget)
+      ) {
         $("userAccessDialog").close();
+        $("deletePersonDialog").close();
         resetPeopleManagement();
       }
+      if (role !== "admin" && $("deleteItemDialog").open && !deletionSaving) {
+        $("deleteItemDialog").close();
+        deletionTarget = deletionKey = null;
+      }
+      if (role === "leitor" && $("operation").open) $("operation").close();
       renderMovementResults();
       lastSuccess = new Date();
       $("live").className = "live";
@@ -3527,6 +3542,10 @@ function closeEdit() {
 }
 
 function startEdit(r) {
+  if (role === "leitor")
+    return toast("Seu perfil permite apenas consultar os itens.", true);
+  if (r?.situacao !== "ATIVO")
+    return toast("Apenas itens ativos podem ser editados.", true);
   if (busy || pending)
     return toast("Conclua a operação pendente primeiro.", true);
   delete $("editDialog").dataset.mode;
@@ -3603,6 +3622,7 @@ function startEdit(r) {
     labelButton($("editSave"), "Salvar alterações", "save");
     labelButton($("editCancel"), "Cancelar", "left");
   }
+  return true;
 }
 
 function validateRecord(d, id = null) {
@@ -3682,6 +3702,19 @@ function saveRecord(prefix = "", discard = false) {
 }
 
 function openOperation(a, r) {
+  if (role === "leitor")
+    return toast("Seu perfil permite apenas consultar os itens.", true);
+  const allowed =
+    r &&
+    (movementActions(r).includes(a) ||
+      (role === "admin" &&
+        ((a === "estornar" && r.situacao === "BAIXADO") ||
+          (a === "restaurar" && r.situacao === "ARQUIVADO"))));
+  if (!allowed)
+    return toast(
+      "Essa ação não está disponível para este item e perfil.",
+      true,
+    );
   if (busy || pending)
     return toast("Conclua a operação pendente primeiro.", true);
   selected = r;
@@ -3732,6 +3765,11 @@ function openOperation(a, r) {
 
 async function commit(body, origin = "operation") {
   if (busy || role === "leitor") return;
+  if (
+    ["estornar", "restaurar", "arquivar"].includes(body.acao) &&
+    role !== "admin"
+  )
+    return toast("Somente administradores podem realizar essa ação.", true);
   if (pending)
     return toast("Use Verificar e concluir antes de outra operação.", true);
   pending = {
@@ -7049,6 +7087,7 @@ async function openScanner(target = "code") {
   if (!mobileCamera()) return;
   if (
     scene ||
+    $("camera").open ||
     busy ||
     pending ||
     (!["moveSearch", "search"].includes(target) &&
@@ -7063,6 +7102,8 @@ async function openScanner(target = "code") {
   };
   scanTarget = target;
   scene = s;
+  $("camera").classList.remove("is-unavailable");
+  $("cameraUnavailable")?.remove();
   $("cameraTitle").textContent = "Ler etiqueta";
   $("cameraStatus").textContent = "Procurando etiqueta…";
   $("candidates").replaceChildren();
@@ -7135,8 +7176,26 @@ async function openScanner(target = "code") {
     }
   } catch (e) {
     if (scene === s) {
-      closeScanner();
-      toast("Câmera: " + e.message, true);
+      scene = null;
+      s.stream?.getTracks().forEach((track) => track.stop());
+      $("video").pause();
+      $("video").srcObject = null;
+      $("torch").disabled = true;
+      $("zoomLabel").hidden = true;
+      $("camera").classList.add("is-unavailable");
+      const fallback = el("div", undefined, "camera-unavailable");
+      fallback.id = "cameraUnavailable";
+      fallback.append(
+        mobileBooksMark(),
+        el(
+          "strong",
+          e.name === "NotAllowedError"
+            ? "A câmera não foi liberada"
+            : "Não foi possível abrir a câmera",
+        ),
+      );
+      $("camera").querySelector(".preview").append(fallback);
+      $("cameraStatus").textContent = "Toque em Digitar código para continuar.";
     }
   }
 }
@@ -7646,7 +7705,10 @@ function validateRegistrationStage(step) {
     toast("Selecione o ambiente e a posição do item.", true);
     return false;
   }
-  if (step === 2 && (d.item.length < 2 || !d.categoria)) {
+  if (
+    step === 2 &&
+    (d.item.length < 2 || d.item.length > 120 || !d.categoria)
+  ) {
     toast("Informe o nome do item e escolha a categoria.", true);
     return false;
   }
@@ -7674,7 +7736,11 @@ function validateRegistrationStage(step) {
 }
 
 function mobileRegistrationValidity() {
-  if (!mobileAcervo()) return $("itemForm").reportValidity();
+  if (!mobileAcervo()) {
+    for (let stage = 1; stage <= 3; stage++)
+      if (!validateRegistrationStage(stage)) return false;
+    return $("itemForm").reportValidity();
+  }
   for (let stage = 1; stage <= 3; stage++) {
     registrationStage(stage, false);
     if (!validateRegistrationStage(stage)) {
@@ -8989,8 +9055,7 @@ function renderMobileMovement() {
 }
 
 function openMobileTransfer(record) {
-  startEdit(record);
-  if (!editor) return;
+  if (!startEdit(record)) return;
   $("editDialog").dataset.mode = "transfer";
   prepareAcervoDialog($("editDialog"));
   $("editDialogTitle").textContent = "Transferir item";
@@ -11279,23 +11344,6 @@ function initMobilePlayfulNavigation() {
   home.title = "Voltar ao início";
   home.append(...brand.childNodes);
   brand.replaceWith(home);
-  const municipality = el("span", undefined, "mobile-municipality-mark");
-  municipality.setAttribute("role", "img");
-  municipality.setAttribute("aria-label", "Prefeitura de Curitiba");
-  municipality.title = "Prefeitura de Curitiba";
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 185 167");
-  svg.setAttribute("aria-hidden", "true");
-  svg.innerHTML =
-    '<defs><filter id="acervoMunicipalityLight" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".9 1.77 .33 0 0 .9 1.77 .33 0 0 .9 1.77 .33 0 0 0 0 0 1 0"/></filter><mask id="acervoMunicipalityMask" x="0" y="0" width="185" height="167" maskUnits="userSpaceOnUse" style="mask-type:luminance"><image width="480" height="167" filter="url(#acervoMunicipalityLight)"/></mask></defs><rect width="185" height="167" fill="white" mask="url(#acervoMunicipalityMask)"/>';
-  svg
-    .querySelector("image")
-    .setAttribute(
-      "href",
-      document.querySelector(".institution-footer .institution-logo").src,
-    );
-  municipality.append(svg);
-  $("mobileAccountMenu").append(municipality);
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   motion.addEventListener("change", () => {
     if (motion.matches) {
@@ -11530,7 +11578,7 @@ function initDesktopExperience() {
   const introCopy = el("div", undefined, "desktop-register-copy");
   introCopy.append(
     el("h1", "Cadastre um item."),
-    el("p", "Escolha o local, preencha os dados e acompanhe a prévia."),
+    el("p", "Escolha o local e veja seu cadastro ganhar forma."),
   );
   const art = el("div", undefined, "desktop-hero-art");
   art.setAttribute("aria-hidden", "true");
@@ -11546,6 +11594,10 @@ function initDesktopExperience() {
   $("register").querySelector(".workspace").before(intro);
   const savebar = $("registrationSave");
   const saveParent = savebar.parentNode;
+  const accountToolbar = document.querySelector(".account-toolbar");
+  $("mobileAccountTrigger").append(
+    el("span", "Sua conta", "desktop-account-caption"),
+  );
   const side = $("register").querySelector(".side");
   side.id = "desktopRegistrationPreview";
   const originalSide = [...side.childNodes];
@@ -11556,12 +11608,39 @@ function initDesktopExperience() {
   previewMark.setAttribute("aria-hidden", "true");
   previewMark.append(mobileBooksMark());
   previewHeading.append(previewMark, el("h2", "Prévia do item"));
+  const progress = el("div", undefined, "desktop-registration-progress");
+  const progressCopy = el("div");
+  const progressMessage = el("strong");
+  progressMessage.id = "desktopProgressMessage";
+  progressMessage.setAttribute("role", "status");
+  const progressCount = el("span");
+  progressCount.id = "desktopProgressCount";
+  progressCopy.append(progressMessage, progressCount);
+  const progressTrack = el("div", undefined, "desktop-progress-track");
+  progressTrack.id = "desktopProgressTrack";
+  progressTrack.setAttribute("role", "progressbar");
+  progressTrack.setAttribute("aria-label", "Preenchimento do cadastro");
+  progressTrack.setAttribute("aria-valuemin", "0");
+  progressTrack.setAttribute("aria-valuemax", "3");
+  for (let i = 0; i < 3; i++) progressTrack.append(el("i"));
+  progress.append(progressCopy, progressTrack);
   const previewEmpty = el("div", undefined, "desktop-preview-empty");
   previewEmpty.append(
     icon("draft"),
-    el("strong", "Seu item aparece aqui"),
-    el("p", "Preencha o nome para acompanhar o resumo."),
+    el("strong", "Seu próximo item começa aqui"),
+    el("p", "A prévia ganha forma com suas escolhas."),
   );
+  $("itemForm").addEventListener("change", (event) => {
+    if (
+      !desktopAcervoMotion() ||
+      !event.target.matches('input[type="radio"]:checked')
+    )
+      return;
+    event.target.nextElementSibling?.animate(
+      [{ scale: "1" }, { scale: "1.045", offset: 0.45 }, { scale: "1" }],
+      { duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" },
+    );
+  });
   $("save").setAttribute("form", "itemForm");
   const dashboard = el("div", undefined, "desktop-overview desktop-only");
   dashboard.id = "desktopOverview";
@@ -11688,7 +11767,12 @@ function initDesktopExperience() {
   footerLine.append(
     about,
     el("span", "·", "desktop-footer-separator"),
-    el("span", "© " + new Date().getFullYear() + " Gabriel Santiago Cândido"),
+    el(
+      "span",
+      "© " +
+        new Date().getFullYear() +
+        " Gabriel Santiago Cândido. Todos os direitos reservados.",
+    ),
   );
   footer.append(footerLine);
   const queryTitle = $("browse").querySelector(".workspace-title");
@@ -11704,15 +11788,24 @@ function initDesktopExperience() {
 
   const layout = () => {
     const active = desktop.matches && !mobileAcervo();
+    syncDesktopRegistrationGame.state = null;
     document.documentElement.classList.toggle("acervo-desktop", active);
     document
       .querySelectorAll('meta[name="theme-color"]')
       .forEach((meta) => (meta.content = mobileChromeColor()));
     if (active) {
+      const accountDialog = $("mobileAccountDialog");
+      const accountBody = accountDialog.querySelector(".mobile-dialog-body");
+      if (accountBody) accountBody.prepend(accountToolbar);
+      else
+        accountDialog
+          .querySelector(".mobile-account-heading")
+          .after(accountToolbar);
       legacySummary.append(...originalSide);
       side.replaceChildren(
         legacySummary,
         previewHeading,
+        progress,
         previewEmpty,
         savebar,
       );
@@ -11744,14 +11837,36 @@ function initDesktopExperience() {
 initDesktopExperience();
 
 function showDesktopReceipt(record, template) {
+  document
+    .querySelectorAll(".desktop-collectible")
+    .forEach((node) =>
+      node.getAnimations().forEach((effect) => effect.cancel()),
+    );
   const saved = $("saved"),
     stock = record.controle === "QUANTIDADE",
     discarded = record.situacao === "BAIXADO";
   saved.className =
     "notice desktop-receipt" + (discarded ? " is-discarded" : "");
+  const stage = el("div", undefined, "desktop-completion-stage");
+  stage.setAttribute("aria-hidden", "true");
   const seal = el("div", undefined, "desktop-completion-mark");
-  seal.setAttribute("aria-hidden", "true");
-  seal.append(mobileBooksMark(), icon(discarded ? "discard" : "check"));
+  const badge = el("span", undefined, "desktop-completion-badge");
+  badge.append(icon(discarded ? "discard" : "check"));
+  seal.append(mobileBooksMark(), badge);
+  stage.append(seal);
+  if (!discarded) {
+    const incoming = el("span", undefined, "desktop-completion-incoming");
+    incoming.append(itemIcon(record));
+    stage.append(incoming);
+    for (let i = 0; i < 8; i++) {
+      const fragment = el("i", undefined, "desktop-completion-fragment");
+      const angle = (i / 8) * Math.PI * 2;
+      fragment.style.setProperty("--burst-x", Math.cos(angle) * 104 + "px");
+      fragment.style.setProperty("--burst-y", Math.sin(angle) * 66 + "px");
+      fragment.style.setProperty("--burst-turn", i * 48 + "deg");
+      stage.append(fragment);
+    }
+  }
   const heading = el(
     "h2",
     discarded
@@ -11807,7 +11922,7 @@ function showDesktopReceipt(record, template) {
     "left",
   );
   actions.append(continueHere, restart);
-  saved.replaceChildren(seal, heading, item, code, actions);
+  saved.replaceChildren(stage, heading, item, code, actions);
   saved.hidden = false;
   saved.setAttribute("role", "status");
   requestAnimationFrame(() =>
@@ -11840,7 +11955,11 @@ function renderDesktopRegistrationPreview() {
       stock ? "Cadastrar material" : "Cadastrar item",
       "save",
     );
-  if (!clean(d.item)) return summary.replaceChildren();
+  if (!clean(d.item)) {
+    summary.replaceChildren();
+    syncDesktopRegistrationGame(d);
+    return;
+  }
   const anchor = el("div", undefined, "desktop-preview-item");
   const mark = el("span", undefined, "desktop-preview-symbol");
   mark.setAttribute("aria-hidden", "true");
@@ -11884,4 +12003,177 @@ function renderDesktopRegistrationPreview() {
   );
   if (stock) fact("Estoque mínimo", quantityText(d.minimo, d.unidade));
   summary.replaceChildren(anchor, facts);
+  syncDesktopRegistrationGame(d);
+}
+
+function desktopAcervoMotion() {
+  return (
+    document.documentElement.classList.contains("acervo-desktop") &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function syncDesktopRegistrationGame(d) {
+  const root = $("register"),
+    track = $("desktopProgressTrack");
+  if (!track || !document.documentElement.classList.contains("acervo-desktop"))
+    return;
+  const stock = d.controle === "QUANTIDADE";
+  const local =
+    ROOMS.includes(d.ambiente) &&
+    (d.ambiente !== "Almoxarifado" || (!!d.estante && !!d.prateleira));
+  const item =
+    d.item.length >= 2 &&
+    $("item").validity.valid &&
+    CATEGORIES.includes(d.categoria);
+  const duplicate =
+    !!d.codigo &&
+    rows.some((r) => r.dados.tipo === d.tipo && r.dados.codigo === d.codigo);
+  const identity =
+    !!TYPE[d.tipo] &&
+    (d.tipo === "SEM_IDENTIFICACAO" || /^\d{6}$/.test(d.codigo));
+  const quantity = $("quantity").value !== "" && $("quantity").validity.valid;
+  const minimum = $("minimum").validity.valid;
+  const control =
+    identity &&
+    !duplicate &&
+    (!stock ||
+      (d.ambiente === "Almoxarifado" &&
+        d.tipo === "SEM_IDENTIFICACAO" &&
+        quantity &&
+        minimum));
+  const complete = [local, item, control];
+  const total = complete.filter(Boolean).length;
+  const ready =
+    total === 3 && $("note").validity.valid && !pending && role !== "leitor";
+  let message = ready
+    ? "Pronto para cadastrar"
+    : "Seu cadastro está ganhando forma";
+  if (role === "leitor") message = "Seu perfil permite apenas consultar";
+  else if (pending) message = "Verifique a operação pendente";
+  else if (!local)
+    message =
+      d.ambiente === "Almoxarifado"
+        ? "Defina a posição do item"
+        : "Escolha onde ele fica";
+  else if (!item)
+    message = d.item.length < 2 ? "Dê um nome ao item" : "Escolha a categoria";
+  else if (!control)
+    message = duplicate
+      ? "Este código já está no acervo"
+      : !identity
+        ? "Complete a identificação"
+        : !quantity && stock
+          ? "Ajuste o saldo inicial"
+          : !minimum && stock
+            ? "Revise o estoque mínimo"
+            : "Revise o tipo de controle";
+  else if (!$("note").validity.valid) message = "Revise a observação";
+  const previous = syncDesktopRegistrationGame.state;
+  const state = {
+    complete,
+    ready,
+    item: item,
+    icon: $("registrationSummary").querySelector("use")?.getAttribute("href"),
+  };
+  syncDesktopRegistrationGame.state = state;
+  root.dataset.desktopReady = String(ready);
+  root.style.setProperty("--register-progress", (total / 3) * 100 + "%");
+  const status = $("desktopProgressMessage");
+  if (status.textContent !== message) status.textContent = message;
+  $("desktopProgressCount").textContent = total + "/3";
+  track.setAttribute("aria-valuenow", String(total));
+  track.setAttribute(
+    "aria-valuetext",
+    total + " de 3 partes preenchidas. " + message,
+  );
+  [...track.children].forEach((part, i) =>
+    part.classList.toggle("is-complete", complete[i]),
+  );
+  const cards = root.querySelectorAll(".desktop-art-card");
+  cards.forEach((card, i) =>
+    card.classList.toggle("is-collected", complete[i]),
+  );
+  if (!previous || root.hidden || busy || !desktopAcervoMotion()) return;
+  const gained = complete
+    .map((done, i) => (done && !previous.complete[i] ? i : -1))
+    .filter((i) => i >= 0);
+  for (const i of gained)
+    cards[i]?.animate(
+      [{ scale: "1" }, { scale: "1.12", offset: 0.45 }, { scale: "1" }],
+      { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)" },
+    );
+  if (gained.length) collectDesktopRegistrationPart(gained.at(-1));
+  if (!previous.item && item)
+    $("formRest").animate(
+      [
+        { opacity: 0, translate: "0 9px" },
+        { opacity: 1, translate: "0 0" },
+      ],
+      { duration: 300, easing: "ease-out" },
+    );
+  if (state.icon && state.icon !== previous.icon)
+    $("registrationSummary")
+      .querySelector(".desktop-preview-symbol")
+      ?.animate(
+        [
+          { scale: ".8", rotate: "-8deg" },
+          { scale: "1.08", rotate: "3deg", offset: 0.65 },
+          { scale: "1", rotate: "0deg" },
+        ],
+        { duration: 380, easing: "ease-out" },
+      );
+  if (ready && !previous.ready)
+    $("save").animate(
+      [
+        { boxShadow: "0 0 0 0 #00cce900" },
+        { boxShadow: "0 0 0 7px #00cce940", offset: 0.5 },
+        { boxShadow: "0 0 0 11px #00cce900" },
+      ],
+      { duration: 850, easing: "ease-out" },
+    );
+}
+
+function collectDesktopRegistrationPart(part) {
+  const sources = [
+    $("location").hidden
+      ? $("rooms").querySelector("input:checked + span")
+      : $("levels").querySelector("input:checked + span"),
+    $("categories").querySelector("input:checked + span"),
+    value("control") === "QUANTIDADE"
+      ? $("quantity")
+      : $("types").querySelector("input:checked + span"),
+  ];
+  const visible = (node) => {
+    const box = node?.getBoundingClientRect();
+    return box?.width && box.top >= 0 && box.bottom <= innerHeight ? box : null;
+  };
+  const origin = visible(sources[part]);
+  const target =
+    visible(document.querySelector(".desktop-hero-emblem")) ||
+    visible(document.querySelector(".desktop-preview-heading > span"));
+  if (!origin || !target) return;
+  const token = el("span", undefined, "desktop-collectible");
+  token.setAttribute("aria-hidden", "true");
+  token.append(icon(["pin", "draft", "code"][part]));
+  const startX = origin.left + origin.width / 2 - 16;
+  const startY = origin.top + origin.height / 2 - 16;
+  token.style.left = startX + "px";
+  token.style.top = startY + "px";
+  document.body.append(token);
+  const x = target.left + target.width / 2 - 16 - startX;
+  const y = target.top + target.height / 2 - 16 - startY;
+  const flight = token.animate(
+    [
+      { transform: "translate(0,0) scale(.7)", opacity: 0 },
+      {
+        transform: `translate(${x * 0.4}px,${y * 0.4 - 44}px) scale(1.1)`,
+        opacity: 1,
+        offset: 0.45,
+      },
+      { transform: `translate(${x}px,${y}px) scale(.35)`, opacity: 0 },
+    ],
+    { duration: 650, easing: "cubic-bezier(.2,.7,.3,1)" },
+  );
+  flight.onfinish = flight.oncancel = () => token.remove();
 }

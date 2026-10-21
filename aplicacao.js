@@ -2556,6 +2556,8 @@ function updateRegistrationSummary() {
   }
   const d = formData();
   const stock = d.controle === "QUANTIDADE";
+  if (document.documentElement.classList.contains("acervo-desktop"))
+    return renderDesktopRegistrationPreview();
   const summary = $("registrationSummary");
   if (!clean(d.item)) {
     summary.replaceChildren(
@@ -3037,6 +3039,7 @@ function query(preset) {
 }
 
 function renderList() {
+  syncDesktopBrowseTools();
   if (editor) return;
   const found = filtered(),
     pages = Math.max(1, Math.ceil(found.length / 25));
@@ -11523,72 +11526,35 @@ function initDesktopExperience() {
   const desktop = matchMedia(
     "(min-width: 641px) and (hover: hover), (min-width: 1025px)",
   );
-  const register = $("register"),
-    workspace = register.querySelector(".workspace"),
-    side = workspace.querySelector(".side");
-  const savebar = $("registrationSave"),
-    saveParent = savebar.parentNode;
+  const savebar = $("registrationSave");
+  const saveParent = savebar.parentNode;
+  const side = $("register").querySelector(".side");
+  side.id = "desktopRegistrationPreview";
   const originalSide = [...side.childNodes];
-  const legacySummary = el("div", undefined, "desktop-legacy-summary");
+  const legacySummary = el("div");
   legacySummary.hidden = true;
-  const hero = el("section", undefined, "desktop-register-intro desktop-only");
-  const copy = el("div");
-  copy.append(
-    el("small", "SEU ACERVO, ORGANIZADO"),
-    el("h1", "Cadastre um item."),
-    el(
-      "p",
-      "Escolha o local, preencha a identificação e confira o registro ao lado.",
-    ),
+  const previewHeading = el("div", undefined, "desktop-preview-heading");
+  const previewMark = el("span");
+  previewMark.setAttribute("aria-hidden", "true");
+  previewMark.append(mobileBooksMark());
+  previewHeading.append(previewMark, el("h2", "Prévia do item"));
+  const previewEmpty = el("div", undefined, "desktop-preview-empty");
+  previewEmpty.append(
+    icon("draft"),
+    el("strong", "Seu item aparece aqui"),
+    el("p", "Preencha o nome para acompanhar o resumo."),
   );
-  const art = el("div", undefined, "desktop-hero-art");
-  art.setAttribute("aria-hidden", "true");
-  for (const name of ["Cadeira", "Monitor", "Armário"]) {
-    const card = el("span", undefined, "desktop-art-card");
-    card.append(itemIcon(name));
-    art.append(card);
-  }
-  const emblem = el("span", undefined, "desktop-hero-emblem");
-  emblem.append(mobileBooksMark());
-  art.append(emblem);
-  hero.append(copy, art);
-  workspace.before(hero);
-  const sideHead = el("div", undefined, "desktop-preview-heading");
-  const sideMark = el("span");
-  sideMark.append(mobileBooksMark());
-  sideHead.append(sideMark, el("div"));
-  sideHead.lastChild.append(
-    el("small", "PRÉVIA DO REGISTRO"),
-    el("h2", "Confira e conclua"),
-  );
-  const guide = el("div", undefined, "desktop-register-guide");
-  guide.append(
-    el(
-      "p",
-      "O resumo acompanha o que você preenche. Ao finalizar, o novo item entra no acervo.",
-    ),
-  );
-  for (const [name, description, mark] of [
-    ["Local", "Ambiente e posição do item", "pin"],
-    ["Item", "Nome e categoria", "draft"],
-    ["Controle", "Identificação e quantidade", "stock"],
-    ["Conferência", "Revise os dados e cadastre", "check"],
-  ]) {
-    const step = el("div");
-    step.append(icon(mark), el("span"));
-    step.lastChild.append(el("strong", name), el("small", description));
-    guide.append(step);
-  }
   $("save").setAttribute("form", "itemForm");
   const dashboard = el("div", undefined, "desktop-overview desktop-only");
   dashboard.id = "desktopOverview";
-  const heading = el("div", undefined, "desktop-section-heading");
+  const heading = el("div", undefined, "desktop-section-heading card");
   const title = el("div");
-  title.append(
-    el("small", "O ACERVO EM PERSPECTIVA"),
-    el("h1", "Visão geral"),
-    el("p", "Bens, materiais e prioridades para decidir o próximo passo."),
-  );
+  const dashboardTitle = el("h2", undefined, "workspace-title");
+  const dashboardMark = el("span", undefined, "title-mark");
+  dashboardMark.setAttribute("aria-hidden", "true");
+  dashboardMark.append(icon("chart"));
+  dashboardTitle.append(dashboardMark, document.createTextNode("Visão geral"));
+  title.append(dashboardTitle);
   const scope = el("label", undefined, "desktop-scope");
   scope.append(el("span", "Ambiente"));
   const room = el("select");
@@ -11607,6 +11573,7 @@ function initDesktopExperience() {
   };
   const updated = el("small");
   updated.id = "desktopOverviewUpdated";
+  updated.hidden = true;
   scope.append(room, updated);
   heading.append(title, scope);
   const metrics = el("div", undefined, "desktop-metrics");
@@ -11693,29 +11660,30 @@ function initDesktopExperience() {
   grid.append(distribution, identity, priority, balances, facts);
   dashboard.append(heading, metrics, grid);
   $("dashboard").prepend(dashboard);
-  const movementNote = el(
-    "aside",
-    undefined,
-    "desktop-movement-guide desktop-only",
-  );
-  const movementMark = el("span");
-  movementMark.append(mobileBooksMark());
-  movementNote.append(
-    movementMark,
-    el("h2", "Encontre. Escolha. Confirme."),
-    el(
-      "p",
-      "Busque pelo nome ou código do item. As ações disponíveis acompanham o tipo de controle e a situação do registro.",
-    ),
-    el("small", "Cada movimentação fica vinculada ao histórico do item."),
-  );
-  $("movements").append(movementNote);
   const about = button(
     "Sobre o Acervo",
     () => showAcervoDialog($("mobileAboutDialog")),
     "desktop-about-link desktop-only",
   );
-  document.querySelector(".institution-footer").append(about);
+  const footer = document.querySelector(".institution-footer");
+  const footerLine = el("div", undefined, "desktop-footer-line desktop-only");
+  footerLine.append(
+    about,
+    el("span", "·", "desktop-footer-separator"),
+    el("span", "© " + new Date().getFullYear() + " Gabriel Santiago Cândido"),
+  );
+  footer.append(footerLine);
+  const queryTitle = $("browse").querySelector(".workspace-title");
+  const queryText = [...queryTitle.childNodes].find(
+    (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+  );
+  const originalQueryText = queryText.textContent;
+  const exportSummary = $("browse").querySelector(".export-menu > summary");
+  const exportText = [...exportSummary.childNodes].find(
+    (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+  );
+  const originalExportText = exportText.textContent;
+
   const layout = () => {
     const active = desktop.matches && !mobileAcervo();
     document.documentElement.classList.toggle("acervo-desktop", active);
@@ -11724,7 +11692,14 @@ function initDesktopExperience() {
       .forEach((meta) => (meta.content = mobileChromeColor()));
     if (active) {
       legacySummary.append(...originalSide);
-      side.replaceChildren(legacySummary, sideHead, guide, savebar);
+      side.replaceChildren(
+        legacySummary,
+        previewHeading,
+        previewEmpty,
+        savebar,
+      );
+      queryText.textContent = "Inventário";
+      exportText.textContent = "Baixar Excel";
       syncMobileDialogSymbol(
         $("editDialog"),
         $("editDialog").querySelector(".dialog-heading"),
@@ -11732,7 +11707,11 @@ function initDesktopExperience() {
     } else {
       saveParent.append(savebar);
       side.replaceChildren(...originalSide);
+      queryText.textContent = mobileAcervo() ? "Consultar" : originalQueryText;
+      exportText.textContent = originalExportText;
+      labelButton($("moreFilters"), "Mais filtros", "filter");
     }
+    syncDesktopBrowseTools();
     updateRegistrationSummary();
     renderDesktopOverview();
     updateNavIndicator(false);
@@ -11816,4 +11795,75 @@ function showDesktopReceipt(record, template) {
   requestAnimationFrame(() =>
     saved.scrollIntoView({ block: "center", behavior: "auto" }),
   );
+}
+
+function syncDesktopBrowseTools() {
+  const browse = $("browse");
+  const active = Object.entries(filters).filter(([, value]) => !!value);
+  browse.dataset.hasCriteria = String(
+    active.length > 0 || !!$("search").value.trim(),
+  );
+  if (!document.documentElement.classList.contains("acervo-desktop")) return;
+  const extra = active.filter(([field]) => field !== "ambiente").length;
+  labelButton(
+    $("moreFilters"),
+    "Filtros" + (extra ? " (" + extra + ")" : ""),
+    "filter",
+  );
+}
+
+function renderDesktopRegistrationPreview() {
+  const summary = $("registrationSummary");
+  const d = formData(),
+    stock = d.controle === "QUANTIDADE";
+  if (!busy)
+    labelButton(
+      $("save"),
+      stock ? "Cadastrar material" : "Cadastrar item",
+      "save",
+    );
+  if (!clean(d.item)) return summary.replaceChildren();
+  const anchor = el("div", undefined, "desktop-preview-item");
+  const mark = el("span", undefined, "desktop-preview-symbol");
+  mark.setAttribute("aria-hidden", "true");
+  mark.append(itemIcon(d.item, d.categoria));
+  const copy = el("div");
+  copy.append(
+    el("strong", d.item),
+    el("small", d.categoria || "Categoria a escolher"),
+  );
+  anchor.append(mark, copy);
+  const facts = el("dl", undefined, "desktop-preview-facts");
+  const fact = (label, value, detail) => {
+    const group = el("div"),
+      valueNode = el("dd", value);
+    if (detail) valueNode.append(el("small", detail));
+    group.append(el("dt", label), valueNode);
+    facts.append(group);
+  };
+  fact(
+    stock ? "Quantidade inicial" : "Controle",
+    stock ? quantityText(d.quantidade, d.unidade) : "Individual",
+  );
+  const automatic = stock || d.tipo === "SEM_IDENTIFICACAO";
+  fact(
+    automatic ? "Código previsto" : "Identificação",
+    automatic
+      ? nextInternalPreview() || "Confirmado ao cadastrar"
+      : d.tipo
+        ? [d.tipo, d.codigo || "a informar"].join(" · ")
+        : "A escolher",
+  );
+  fact(
+    "Local",
+    d.ambiente || "A escolher",
+    d.ambiente === "Almoxarifado"
+      ? "Estante " +
+          (d.estante || "—") +
+          " · Prateleira " +
+          (d.prateleira ? d.prateleira.padStart(2, "0") : "—")
+      : "",
+  );
+  if (stock) fact("Estoque mínimo", quantityText(d.minimo, d.unidade));
+  summary.replaceChildren(anchor, facts);
 }

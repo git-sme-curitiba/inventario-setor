@@ -24598,110 +24598,120 @@ body::before {
 }
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
   html.acervo-desktop {
-    --desktop-font:
-      Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --blue-action: linear-gradient(125deg, #0085e4, #0054d0 62%, #0640aa);
-    --blue-deep: linear-gradient(135deg, #0759c7, #033b8d);
-    --ink: #14365f;
-    --muted: #587493;
-    --surface-line: #c6d8ec;
+    --pc-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif: var(--pc-font);
+    --pc-action: linear-gradient(120deg, #0089e6, #0054d0 65%, #063ca4);
+    --pc-danger: linear-gradient(120deg, #ed0048, #ad003b);
+    --blue-action: var(--pc-action);
+    --blue-heading: var(--pc-action);
+    --blue-deep: #124879;
+    --blue-strong: #0068ca;
+    --ink: #173d67;
+    --muted: #597592;
+    --surface: #fff;
+    --surface-soft: #fff;
     --surface-raised: #fff;
-    background: #0752b7;
+    --surface-line: #c6dced;
+    background: #0852b8;
     background-image:
-      radial-gradient(ellipse at 100% 34%, #007be4a6, transparent 60%),
-      linear-gradient(145deg, #0852b8, #005dcb 60%, #033d90);
+      radial-gradient(ellipse at 95% 15%, #007ce499, transparent 60%),
+      linear-gradient(145deg, #0852b8, #005dcb 60%, #033f94);
     background-attachment: fixed;
-    color: #14365f;
   }
   .acervo-desktop body:not(.auth-screen) {
     background: transparent;
-    font-family: var(--desktop-font);
+    font-family: var(--pc-font);
   }
   .acervo-desktop body:not(.auth-screen) .shell {
-    max-width: 1460px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1390px;
     min-height: 100dvh;
     padding: 24px 34px 0;
   }
-  .acervo-desktop body:not(.auth-screen) .shell > header {
+  .acervo-desktop body:not(.auth-screen) .shell > header.bar {
     display: flex;
     justify-content: flex-start;
+    flex-wrap: nowrap;
     gap: 20px;
-    min-height: 82px;
+    min-height: 76px;
     margin: 0 0 18px;
     padding: 0 0 20px;
-    border-bottom: 1px solid #ffffff26;
+    border-bottom: 1px solid #ffffff2b;
     background: transparent;
     color: #fff;
   }
   .acervo-desktop .brand {
-    gap: 14px;
+    gap: 13px;
   }
   .acervo-desktop .brand b {
-    color: #fff;
-    font: 800 30px/1.05 var(--desktop-font);
+    font: 800 29px/1.05 var(--pc-font);
     letter-spacing: -0.8px;
+    color: #fff;
   }
   .acervo-desktop .brand small {
-    white-space: nowrap;
-    color: #d7efff;
-    font: 400 11px/1.4 var(--desktop-font);
-    letter-spacing: 0.3px;
     margin-top: 5px;
+    color: #deefff;
+    font: 400 11px/1.3 var(--pc-font);
+    letter-spacing: 0.2px;
+    white-space: nowrap;
   }
   .acervo-desktop .brand .brand-logo {
-    width: 52px;
-    height: 54px;
+    width: 51px;
+    height: 53px;
+    flex-basis: 51px;
   }
   .acervo-desktop .header-meta {
     margin-left: auto;
+  }
+  .acervo-desktop .account-toolbar {
     display: flex;
     align-items: center;
-    gap: 17px;
+    gap: 14px;
+    padding: 7px 10px;
+    border: 1px solid #ffffff36;
+    border-radius: 14px;
+    background: #ffffff09;
+    box-shadow: none;
   }
-  .acervo-desktop .header-person {
+  .acervo-desktop .header-person :is(.account, .account-role) {
     color: #fff;
-  }
-  .acervo-desktop .header-person :is(strong, small, .account, .account-role) {
-    color: inherit;
-  }
-  .acervo-desktop .header-person small {
-    opacity: 0.8;
   }
   .acervo-desktop .header-person .account-avatar {
     color: #0750a6;
-    background: linear-gradient(135deg, #e1f7ff, #9dd3fb);
-    border-color: #a7ddff;
+    background: linear-gradient(135deg, #d7f6ff, #96d1fa);
+    border: 0;
     border-radius: 50%;
   }
-  .acervo-desktop .account-toolbar {
-    background: #ffffff0c;
-    border: 1px solid #ffffff2e;
-    border-radius: 14px;
-    padding: 8px;
-    box-shadow: none;
+  .acervo-desktop .header-meta #syncTools {
+    padding: 0 0 0 12px;
+    border: 0;
+    border-left: 1px solid #ffffff30;
+    border-radius: 0;
+    background: none;
   }
   .acervo-desktop .header-meta :is(#manageAccess, #refresh, #logout) {
-    min-height: 40px;
+    min-height: 39px;
     border: 0;
-    background: transparent;
-    color: #fff;
+    padding: 8px 10px;
     border-radius: 9px;
-    padding: 8px 11px;
+    background: none;
+    color: #fff;
+    box-shadow: none;
+    font: 500 12px/1.35 var(--pc-font);
   }
   .acervo-desktop .header-meta :is(#manageAccess, #refresh, #logout):hover {
-    background: #ffffff1c;
+    background: #ffffff18;
   }
   .acervo-desktop .header-meta #refresh .live {
-    color: #d7eaff;
-    font-size: 9px;
-  }
-  .acervo-desktop .header-meta #refresh .live.stale {
-    color: #ffe3ad;
+    color: #deefff;
+    font: 400 9px/1.3 var(--pc-font);
   }
   .acervo-desktop #mobileAccountMenu {
     display: flex;
-    padding-left: 13px;
-    border-left: 1px solid #ffffff2e;
+    align-items: center;
+    padding-left: 16px;
+    border-left: 1px solid #ffffff30;
   }
   .acervo-desktop #mobileAccountTrigger {
     display: none;
@@ -24709,869 +24719,1089 @@ body::before {
   .acervo-desktop #mobileAccountMenu .mobile-municipality-mark {
     display: block;
     width: 33px;
-    height: 34px;
+    height: 35px;
+  }
+  .acervo-desktop .shell > #app {
+    flex: 1;
   }
   .acervo-desktop #app > .intro {
     display: none;
   }
   .acervo-desktop #app > .nav {
-    position: sticky;
-    top: 12px;
-    z-index: 35;
+    position: relative;
+    top: auto;
+    z-index: 5;
     display: inline-grid;
-    grid-template-columns: repeat(4, minmax(138px, 1fr));
+    grid-template-columns: repeat(4, minmax(132px, 1fr));
     width: max-content;
     max-width: 100%;
-    min-height: 58px;
-    margin: 0 0 24px;
+    min-height: 56px;
+    margin: 0 0 22px;
     padding: 5px;
     gap: 3px;
     border: 1px solid #ffffff42;
-    border-radius: 17px;
-    background: #0652b4ec;
-    box-shadow: 0 9px 26px #00296333;
-    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    background: #074fac55;
+    box-shadow: none;
   }
   .acervo-desktop #app > .nav button {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
-    min-height: 46px;
-    padding: 11px 18px;
+    min-height: 44px;
+    padding: 10px 19px;
     border: 0;
-    border-radius: 12px;
+    border-radius: 11px;
+    color: #eaf7ff;
     background: transparent;
-    color: #e4f3ff;
     box-shadow: none;
-    font: 600 13px/1.3 var(--desktop-font);
+    font: 600 13px/1.3 var(--pc-font);
   }
   .acervo-desktop #app > .nav button:hover {
     background: #ffffff13;
   }
   .acervo-desktop #app > .nav button[aria-current] {
-    color: #064ca9;
+    color: #0751ac;
     background: #fff;
   }
   .acervo-desktop #app > .nav.has-lens button[aria-current] {
     background: transparent;
   }
   .acervo-desktop #app > .nav .nav-lens {
-    background: #fff;
-    border: 0;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px #00366c25;
-  }
-  .acervo-desktop #app .nav button::after {
-    display: none;
-  }
-  .acervo-desktop .desktop-register-intro {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 25px;
-    align-items: center;
-    min-height: 145px;
-    margin: 0 0 22px;
-    padding: 3px 10px 9px;
-    color: #fff;
-  }
-  .desktop-register-intro small,
-  .desktop-section-heading > div > small {
-    color: #acefff;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.7px;
-  }
-  .desktop-register-intro h1 {
-    margin: 8px 0 10px;
-    color: #fff;
-    font: 800 36px/1.1 var(--desktop-font);
-    letter-spacing: -1px;
-  }
-  .desktop-register-intro p {
-    color: #e0f2ff;
-    margin: 0;
-    max-width: 550px;
-    font: 400 14px/1.55 var(--desktop-font);
-  }
-  .desktop-hero-art {
-    position: relative;
-    height: 145px;
-    width: 280px;
-    justify-self: end;
-  }
-  .desktop-art-card {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    width: 63px;
-    height: 80px;
-    border-radius: 12px;
-    background: #fff;
-    border-left: 4px solid #07dcf2;
-    color: #0453b5;
-    box-shadow:
-      0 4px 0 #afd9f4,
-      0 10px 25px #002f8d35;
-  }
-  .desktop-art-card .icon {
-    width: 35px;
-    height: 35px;
-  }
-  .desktop-art-card:nth-child(1) {
-    left: 16px;
-    top: 33px;
-    rotate: -17deg;
-  }
-  .desktop-art-card:nth-child(2) {
-    left: 103px;
-    top: 7px;
-  }
-  .desktop-art-card:nth-child(3) {
-    right: 16px;
-    top: 33px;
-    rotate: 17deg;
-  }
-  .desktop-hero-emblem {
-    position: absolute;
-    left: 94px;
-    top: 51px;
-    display: grid;
-    place-items: center;
-    width: 88px;
-    height: 88px;
-    border: 1px solid #94faff;
-    border-radius: 23px;
-    background:
-      radial-gradient(circle at 20% 0, #0cddf5, transparent 75%),
-      linear-gradient(140deg, #0085df, #004cb9);
-    box-shadow:
-      inset 0 1px 4px #d6ffff,
-      0 0 22px #00e6ff88;
-    color: #fff;
-    animation: desktop-emblem-float 5s ease-in-out infinite;
-  }
-  .desktop-hero-emblem svg {
-    width: 64px;
-    height: 64px;
-  }
-  .acervo-desktop #register > .workspace {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 305px;
-    align-items: start;
-    gap: 22px;
-  }
-  .acervo-desktop #app .card {
-    border: 1px solid #d2e5f5;
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 12px 30px #002d7430;
-    color: #14365f;
-    padding: 23px;
-  }
-  .acervo-desktop #register .side {
-    display: block;
-    position: sticky;
-    top: 94px;
-    padding: 21px;
-  }
-  .acervo-desktop #register #registrationHeader {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 0 0 20px;
-    margin: 0 0 20px;
-    border-bottom: 1px solid #cbdff0;
-  }
-  .acervo-desktop h2.workspace-title {
-    margin: 0;
-    color: #113f76;
-    font: 750 23px/1.2 var(--desktop-font);
-    letter-spacing: -0.5px;
-  }
-  .acervo-desktop .workspace-title .title-mark {
-    width: 36px;
-    height: 36px;
-    flex-basis: 36px;
     border: 0;
     border-radius: 11px;
-    background: var(--blue-action);
+    background: #fff;
+    box-shadow: 0 3px 12px #00316b29;
+  }
+  .acervo-desktop #app > .nav button::after {
+    display: none;
+  }
+  .acervo-desktop #app .card {
+    padding: 24px;
+    border: 1px solid #c9e3f5;
+    border-radius: 20px;
+    color: var(--ink);
+    background: #fff;
+    box-shadow: 0 12px 30px #002d7429;
+  }
+  .acervo-desktop #app h2.workspace-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: #123e71;
+    font: 750 26px/1.2 var(--pc-font);
+    letter-spacing: -0.55px;
+  }
+  .acervo-desktop #app .workspace-title .title-mark {
+    display: grid;
+    place-items: center;
+    width: 37px;
+    height: 39px;
+    flex: 0 0 37px;
+    border: 0;
+    border-radius: 11px;
+    background: var(--pc-action);
     color: #fff;
-    box-shadow: 0 5px 15px #0073d72b;
+    box-shadow: 0 5px 14px #0081d72b;
   }
-  .acervo-desktop .workspace-title .title-mark .icon {
-    width: 22px;
-    height: 22px;
+  .acervo-desktop #app .workspace-title .title-mark .icon {
+    width: 23px;
+    height: 23px;
   }
-  .acervo-desktop #registrationRooms .choices {
+  .acervo-desktop
+    #app
+    :is(input:not([type="radio"]):not([type="checkbox"]), textarea, select),
+  .acervo-desktop #app #register :is(input, textarea)[data-acervo-filled] {
+    min-width: 0;
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 1px solid #b5cee5;
+    border-radius: 10px;
+    background: #fff;
+    color: #173d67;
+    font: 400 14px/1.45 var(--pc-font);
+    box-shadow: none;
+  }
+  .acervo-desktop #app #register :is(input, textarea):focus,
+  .acervo-desktop #app :is(input, textarea, select):focus {
+    outline: 0;
+    border-color: #0076d9;
+    box-shadow: 0 0 0 2px #0089e625;
+  }
+  .acervo-desktop #app button.primary {
+    color: #fff;
+    border-color: transparent;
+    border-radius: 10px;
+    background: var(--pc-action);
+    box-shadow: 0 4px 12px #0062bf20;
+  }
+  .acervo-desktop #app :is(button, input, textarea, select) {
+    font-family: var(--pc-font);
+  }
+  .acervo-desktop #app .choice > span {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #b7d0e8;
+    border-radius: 10px;
+    background: #fff;
+    color: #174c88;
+    box-shadow: none;
+    font: 500 13px/1.3 var(--pc-font);
+  }
+  .acervo-desktop #app .choice > input:checked + span {
+    border-color: #0063cb;
+    background: var(--pc-action);
+    color: #fff;
+    box-shadow: 0 4px 10px #0068cf20;
+  }
+  .acervo-desktop
+    #app
+    .choice
+    > input:checked
+    + span
+    :is(.icon, small, b, strong) {
+    color: inherit;
+  }
+  .acervo-desktop #app .choice > span:hover {
+    border-color: #318bd6;
+  }
+
+  /* Cadastro direto: um título, os campos e as ações dentro do formulário. */
+  .acervo-desktop #app #register > .workspace {
+    display: block;
+  }
+  .acervo-desktop #app #register .card.side {
+    display: none;
+  }
+  .acervo-desktop #app #register #registrationHeader {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 0 0 20px;
+    margin: 0 0 20px;
+    border-bottom: 1px solid #d1e1ee;
+  }
+  .acervo-desktop #app #register #registrationRooms {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .acervo-desktop #app #register #registrationRooms > legend {
+    display: block;
+    position: static;
+    float: none;
+    width: auto;
+    height: auto;
+    margin: 0 0 9px;
+    padding: 0;
+    clip-path: none;
+    overflow: visible;
+    color: #234b73;
+    font: 650 13px/1.4 var(--pc-font);
+  }
+  .acervo-desktop #app #register #registrationRooms .mobile-card-heading {
+    display: none;
+  }
+  .acervo-desktop #app #register #rooms {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+  }
+  .acervo-desktop #app #register #rooms .choice > span {
+    justify-content: flex-start;
+    min-height: 44px;
+    gap: 9px;
+    padding: 11px 14px;
+  }
+  .acervo-desktop #app #register #rooms b {
+    display: none;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationBody {
+    display: block;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationMain {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 20px 22px;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationItem {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationCategory {
+    grid-column: 2;
+    grid-row: auto;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(
+      #registrationItem,
+      #registrationCategory,
+      #identityBlock,
+      #controlHost
+    ) {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationItem > label,
+  html.acervo-desktop #app #register #itemForm #registrationCategory > legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: static;
+    float: none;
+    width: 100%;
+    min-height: 25px;
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: #1c4672;
+    background: none;
+    font: 650 13px/1.3 var(--pc-font);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #registrationCategory
+    > legend
+    .icon,
+  html.acervo-desktop #app #register #itemForm #registrationItem > label .icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: #006fce;
+    background: none;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationCategory .choices {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
-  }
-  .acervo-desktop #register #registrationBody,
-  .acervo-desktop #itemForm.warehouse-layout #registrationBody {
-    display: block;
-  }
-  .acervo-desktop #registrationMain,
-  .acervo-desktop #itemForm.warehouse-layout #registrationMain {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 18px;
-  }
-  .acervo-desktop #register #formRest {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 18px;
-  }
-  .acervo-desktop #registrationItem,
-  .acervo-desktop #registrationCategory,
-  .acervo-desktop #register #identityBlock,
-  .acervo-desktop #register #controlHost {
     margin: 0;
     padding: 0;
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
   }
-  .acervo-desktop #register #registrationItem > label,
-  .acervo-desktop #registrationCategory > legend {
-    color: #143c6c;
-    font: 650 12px/1.4 var(--desktop-font);
-    margin-bottom: 9px;
-  }
-  .acervo-desktop #register #item {
-    min-height: 47px;
-    font-size: 15px;
-    border-radius: 11px;
-    background: #fff;
-    border-color: #a9c8e8;
-  }
-  .acervo-desktop .choice > span {
-    color: #154d8f;
-    background: #fff;
-    border: 1px solid #b7cfe9;
-    box-shadow: none;
-    border-radius: 11px;
-    font-size: 12px;
-  }
-  .acervo-desktop #register .choice > input:checked + span,
-  .acervo-desktop #editDialog .choice > input:checked + span {
-    color: #fff;
-    background: var(--blue-action);
-    border-color: #0060ce;
-    box-shadow: 0 4px 12px #0067cc20;
-  }
-  .acervo-desktop #register .choice > input:checked + span :is(.icon, small),
-  .acervo-desktop #editDialog .choice > input:checked + span .icon {
-    color: inherit;
-  }
-  .acervo-desktop #register #registrationCategory .choice > span {
-    min-height: 47px;
-    gap: 6px;
-    font-size: 11px;
-    padding: 8px 4px;
-  }
-  .acervo-desktop #register #types,
-  .acervo-desktop #register #controlHost .choices {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #registrationCategory
+    .choice
+    > span {
+    min-height: 43px;
+    padding: 9px 7px;
     gap: 7px;
-  }
-  .acervo-desktop #register #controlHost .choices {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .acervo-desktop #register #types .choice > span,
-  .acervo-desktop #register #controlHost .choice > span {
-    min-height: 57px;
-    padding: 9px 6px;
-    font-size: 11px;
-    gap: 6px;
-    flex-direction: column;
-  }
-  .acervo-desktop #register #controlHost .choice > span {
-    flex-direction: row;
-  }
-  .acervo-desktop #register #notesBlock {
-    padding-top: 17px;
-    border-top: 1px solid #d7e5f1;
-  }
-  .acervo-desktop #register #codeWrap {
-    background: linear-gradient(135deg, #e8faff, #b5deff);
-    border: 1px solid #85bcec;
-  }
-  .acervo-desktop #register #location {
-    margin: 0 0 20px;
-    padding: 15px;
-    border: 1px solid #bed8f1;
-    border-radius: 13px;
-    background: #fff;
-  }
-  .acervo-desktop .desktop-preview-heading {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding-bottom: 17px;
-    border-bottom: 1px solid #cee0f0;
-  }
-  .desktop-preview-heading > span {
-    display: grid;
-    place-items: center;
-    width: 42px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--blue-action);
-    color: #fff;
-  }
-  .desktop-preview-heading svg {
-    width: 33px;
-    height: 33px;
-  }
-  .desktop-preview-heading small {
-    color: #587797;
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-  .desktop-preview-heading h2 {
-    font: 700 17px/1.3 var(--desktop-font);
-    color: #123b6e;
-    margin: 4px 0 0;
-  }
-  .desktop-register-guide > p {
     font-size: 12px;
-    line-height: 1.6;
-    color: #587493;
-    margin: 17px 0;
   }
-  .desktop-register-guide > div {
+  html.acervo-desktop #app #register #itemForm #formRest {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    grid-column: 1/-1;
+    gap: 22px;
+  }
+  html.acervo-desktop #app #register #itemForm #identityBlock {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  html.acervo-desktop #app #register #itemForm #controlHost {
+    grid-column: 2;
+    grid-row: auto;
+    overflow: visible;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#identityHeading, #controlHeading) {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 15px 0;
+    gap: 8px;
+    min-height: 25px;
+    padding: 0;
+    margin: 0 0 10px;
+    border: 0;
+    border-left: 0;
+    color: #1c4672;
+    background: none;
+    box-shadow: none;
   }
-  .desktop-register-guide .icon {
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#identityHeading, #controlHeading)::before,
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#identityHeading, #controlHeading)::after {
+    content: none;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#identityHeading, #controlHeading)
+    > .icon {
     width: 20px;
     height: 20px;
-    color: #0461c5;
+    flex: 0 0 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: #006fce;
+    background: none;
   }
-  .desktop-register-guide strong {
-    display: block;
-    font-size: 12px;
-    color: #173f71;
-  }
-  .desktop-register-guide small {
-    display: block;
-    font-size: 10px;
-    color: #587493;
-    margin-top: 3px;
-  }
-  .acervo-desktop
+  html.acervo-desktop
+    #app
     #register
-    .side:has(#registrationSave:not([hidden]))
-    .desktop-register-guide {
+    #itemForm
+    :is(#identityHeading, #controlHeading)
+    strong {
+    font: 650 13px/1.3 var(--pc-font);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#identityHeading, #controlHeading)
+    p,
+  html.acervo-desktop #app #register #itemForm #controlHint {
     display: none;
   }
-  .acervo-desktop #register .side #registrationSave {
+  html.acervo-desktop #app #register #itemForm #types,
+  html.acervo-desktop #app #register #itemForm #controlHost .choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+  }
+  html.acervo-desktop #app #register #itemForm #controlHost .choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#types, #controlHost)
+    .choice
+    > span {
+    min-height: 53px;
+    padding: 9px 8px;
+    gap: 8px;
+    flex-direction: row;
+    font-size: 12px;
+  }
+  html.acervo-desktop #app #register #itemForm #types .icon,
+  html.acervo-desktop #app #register #itemForm #controlHost .choices .icon {
+    width: 21px;
+    height: 21px;
+    flex-basis: 21px;
+  }
+  html.acervo-desktop #app #register #itemForm #codeWrap {
+    display: block;
+    position: static;
     width: 100%;
+    padding: 12px;
+    margin: 12px 0 0;
+    border: 1px solid #93c5ec;
+    border-radius: 11px;
+    background: linear-gradient(120deg, #e9f8ff, #bfe3ff);
+    box-shadow: none;
+  }
+  html.acervo-desktop #app #register #itemForm #codeWrap::before,
+  html.acervo-desktop #app #register #itemForm #codeWrap::after {
+    content: none;
+  }
+  html.acervo-desktop #app #register #itemForm #codeLabel {
+    display: block;
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+    overflow: visible;
+    margin: 0 0 7px;
+    padding: 0;
+    color: #234e7d;
+    background: none;
+    font: 500 11px/1.3 var(--pc-font);
+  }
+  html.acervo-desktop #app #register #itemForm #codeWrap .scanrow {
+    display: flex;
+    width: 100%;
+  }
+  html.acervo-desktop #app #register #itemForm #code {
+    width: 100%;
+    max-width: none;
+    min-height: 40px;
+    height: auto;
+    padding: 9px 11px;
+    color: #153f71;
+    background: #fff;
+    font: 600 14px/1.4 var(--pc-font);
+    box-shadow: none;
+  }
+  html.acervo-desktop #app #register #itemForm #codeHint {
+    display: block;
+    margin: 7px 0 0;
+    color: #456b91;
+    font-size: 11px;
+  }
+  html.acervo-desktop #app #register #itemForm #location {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 22px;
+    margin: 0 0 20px;
+    padding: 0 0 20px;
+    border: 0;
+    border-bottom: 1px solid #d1e1ee;
+    border-radius: 0;
+    background: none;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #location
+    > :is(.mobile-card-heading, .position) {
+    display: none;
+  }
+  html.acervo-desktop #app #register #itemForm #location fieldset {
+    margin: 0;
+    padding: 0;
+  }
+  html.acervo-desktop #app #register #itemForm #location legend {
+    color: #234b73;
+    font: 650 13px/1.4 var(--pc-font);
+    margin-bottom: 8px;
+  }
+  html.acervo-desktop #app #register #itemForm #shelves {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+  }
+  html.acervo-desktop #app #register #itemForm #levels {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 7px;
+  }
+  html.acervo-desktop #app #register #itemForm #location .choice > span {
+    justify-content: center;
+    min-height: 39px;
+    padding: 8px 5px;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #controlHost {
+    grid-column: 1/-1;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #formRest {
+    grid-template-columns: 1fr;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout .stock-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 16px 22px;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    .stock-control
+    > fieldset {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #identityBlock {
+    grid-column: 1/-1;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #identityBlock
+    > :is(legend, #identityHeading) {
+    display: none;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #codeWrap {
+    margin: 0;
+  }
+  html.acervo-desktop #app #register #itemForm #notesBlock {
+    grid-column: 1/-1;
+    grid-row: auto;
     padding: 17px 0 0;
     margin: 0;
     border: 0;
-    background: transparent;
-    box-shadow: none;
+    border-top: 1px solid #d1e1ee;
   }
-  .acervo-desktop #registrationSave .summary-heading {
-    display: flex;
-    gap: 9px;
-    padding: 0 0 14px;
-    border-bottom: 1px solid #d2e2f0;
-  }
-  .acervo-desktop #registrationSave .summary-title {
-    min-width: 0;
-  }
-  .acervo-desktop #registrationSave .summary-title strong {
-    font: 700 16px/1.35 var(--desktop-font);
-  }
-  .acervo-desktop #registrationSave .summary-status {
-    background: var(--blue-action);
-    color: #fff;
-    border: 0;
-    font-size: 9px;
-    white-space: nowrap;
-    padding: 5px 7px;
-  }
-  .acervo-desktop #registrationSave .summary-facts {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin: 10px 0 18px;
-  }
-  .acervo-desktop #registrationSave .summary-facts > div {
+  html.acervo-desktop #app #register #itemForm #note {
     display: block;
-    padding: 10px 0;
-    border-bottom: 1px solid #e0ebf4;
+    min-height: 65px;
+    margin-top: 8px;
+    font-size: 14px;
   }
-  .acervo-desktop #registrationSave .summary-facts dt {
-    color: #587493;
-    font-size: 10px;
-    margin: 0 0 4px;
-  }
-  .acervo-desktop #registrationSave .summary-facts dd {
-    margin: 0;
-    color: #153f73;
+  html.acervo-desktop #app #register #itemForm #notesBlock > label {
     font-size: 12px;
-    font-weight: 600;
-    line-height: 1.45;
   }
-  .acervo-desktop #registrationSave .location-ticket {
-    background: none;
-    border: 0;
-    padding: 0;
-    box-shadow: none;
-  }
-  .acervo-desktop #registrationSave .location-ticket .icon {
-    width: 15px;
-    height: 15px;
-  }
-  .acervo-desktop #registrationSave .registration-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 9px;
-  }
-  .acervo-desktop #registrationSave .registration-actions button {
-    min-height: 44px;
-    width: 100%;
-    justify-content: center;
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-  .acervo-desktop button.primary {
-    background: var(--blue-action);
-    border-color: transparent;
-    color: #fff;
-    box-shadow: 0 4px 12px #005dcb1c;
-  }
-  .acervo-desktop #registrationSave #discardRegistration {
-    background: #fff;
-    border: 1px solid #c42952;
-    color: #b6003d;
-    box-shadow: none;
-  }
-  .acervo-desktop #registrationSave #discardRegistration:hover {
-    background: linear-gradient(120deg, #ec004b, #a60035);
-    color: #fff;
-  }
-  .acervo-desktop #registrationSave #discardRegistration > .icon {
-    display: inline-block;
-  }
-  .acervo-desktop .eyebrow {
-    font-family: var(--desktop-font);
-  }
-  .acervo-desktop :is(input, textarea, select) {
-    color: #173f6e;
-    background-color: #fff;
-    border-color: #b7cfe6;
-    font-family: var(--desktop-font);
-  }
-  .acervo-desktop :is(input, textarea, select):focus {
-    border-color: #0077df;
-    box-shadow: 0 0 0 3px #0088e51c;
-  }
-  .acervo-desktop #movements {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 22px;
-    align-items: start;
-  }
-  .acervo-desktop #movements > .card {
-    min-height: 390px;
-  }
-  .acervo-desktop #movements > .card > h2 {
-    margin-bottom: 22px;
-  }
-  .acervo-desktop .movement-steps {
+  html.acervo-desktop #app #register #registrationSave {
+    position: static;
+    z-index: 4;
     display: flex;
-    gap: 22px;
-    margin: 0 0 25px;
-    color: #55789a;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 15px 0 0;
+    margin: 17px 0 0;
+    border: 0;
+    border-top: 1px solid #d1e1ee;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #registrationSave > .spaced,
+  .acervo-desktop #app #registrationSummary,
+  .acervo-desktop #app #registrationSave > .mobile-review-back {
+    display: none;
+  }
+  .acervo-desktop #app #registrationSave #draftInfo {
+    margin: 0;
+    min-width: 0;
+    color: #5a7692;
     font-size: 11px;
   }
-  .acervo-desktop .movement-steps b {
-    border-radius: 50%;
-    background: var(--blue-action);
+  .acervo-desktop #app #registrationSave .registration-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: auto;
+  }
+  .acervo-desktop #app #registrationSave .registration-actions button {
+    width: auto;
+    min-width: 150px;
+    min-height: 43px;
+    padding: 10px 17px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .acervo-desktop #app #registrationSave #save {
+    order: 2;
+  }
+  .acervo-desktop #app #registrationSave #discardRegistration {
+    order: 1;
+    min-width: 120px;
+    border: 1px solid #c32350;
+    color: #b6003a;
+    background: #fff;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #registrationSave #discardRegistration:hover {
+    background: var(--pc-danger);
+    color: #fff;
+  }
+  .acervo-desktop #app #registrationSave button .icon {
+    color: inherit;
+  }
+
+  /* Consulta: ambiente direto, demais critérios em Filtros, Excel separado. */
+  .acervo-desktop #app #browse > .card > .bar:first-child {
+    min-height: 40px;
+    margin-bottom: 22px;
+  }
+  .acervo-desktop #app #browse > .card > .bar:first-child .eyebrow,
+  .acervo-desktop #app #browse #viewDiscarded,
+  .acervo-desktop #app #browse .query-tools > .mobile-export-heading {
+    display: none;
+  }
+  .acervo-desktop #app #browse .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+  }
+  .acervo-desktop #app #browse .toolbar > input {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 14px;
+  }
+  .acervo-desktop #app #browse .toolbar > button {
+    min-height: 43px;
+    padding: 9px 14px;
+    border: 1px solid #3686cc;
+    border-radius: 10px;
+    color: #075db6;
+    background: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #browse #moreFilters[aria-expanded="true"] {
     color: #fff;
     border-color: transparent;
+    background: var(--pc-action);
   }
-  .acervo-desktop #moveSearch {
-    min-height: 48px;
+  .acervo-desktop #app #browse[data-has-criteria="false"] #clearFilters {
+    display: none;
+  }
+  .acervo-desktop #app #browse .quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0 0 16px;
+  }
+  .acervo-desktop #app #browse :is(.quick, .filter-panel) button {
+    min-height: 34px;
+    padding: 7px 12px;
+    border: 1px solid #b4cfe7;
+    border-radius: 9px;
+    color: #0c5ba9;
+    background: #fff;
+    font-size: 12px;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #browse :is(.quick, .filter-panel) button.active {
+    color: #fff;
+    border-color: transparent;
+    background: var(--pc-action);
+  }
+  .acervo-desktop #app #browse .filter-panel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    padding: 18px;
+    margin: 0 0 18px;
+    border: 1px solid #a9cfee;
     border-radius: 12px;
-    font-size: 15px;
+    background: #fff;
   }
-  .acervo-desktop .movement-empty {
+  .acervo-desktop #app #browse .filter-panel legend {
+    color: #204c78;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .acervo-desktop #app #browse .filter-panel .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .acervo-desktop #app #browse #warehouseFilters {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .acervo-desktop #app #browse #warehouseFilters .spaced {
+    margin: 0;
+  }
+  .acervo-desktop #app #browse .applied:empty {
+    display: none;
+  }
+  .acervo-desktop #app #browse .applied .chip {
+    padding: 5px 10px;
+    min-height: 30px;
+    border: 1px solid #9bc5e7;
+    color: #075bae;
+    background: #fff;
+    font-size: 11px;
+  }
+  .acervo-desktop #app #browse .query-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .acervo-desktop #app #browse .export-menu > summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 41px;
+    padding: 9px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--pc-action);
+    color: #fff;
+    font: 600 12px/1.35 var(--pc-font);
+  }
+  .acervo-desktop #app #browse .export-options {
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 235px;
+    padding: 8px;
+    border: 1px solid #a3c8e8;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 12px 25px #003b7429;
+  }
+  .acervo-desktop #app #browse .export-options button {
+    justify-content: flex-start;
+    width: 100%;
+    padding: 11px;
+    border: 0;
+    border-radius: 8px;
+    color: #175089;
+    background: #fff;
+    font-size: 12px;
+  }
+  .acervo-desktop #app #browse .export-options button:hover {
+    background: var(--pc-action);
+    color: #fff;
+  }
+  .acervo-desktop #app #browse :is(#resultCount, .pager, .bar > .muted) {
+    color: #597792;
+    font-size: 11px;
+  }
+  .acervo-desktop #app #browse .tablewrap {
+    margin-top: 12px;
+    border: 1px solid #bfd7eb;
+    border-radius: 12px;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #browse table {
+    font: 400 12px/1.45 var(--pc-font);
+  }
+  .acervo-desktop #app #browse thead th {
+    padding: 13px 12px;
+    border: 0;
+    background: linear-gradient(120deg, #0759c5, #063f9d);
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 0.55px;
+  }
+  .acervo-desktop #app #browse tbody td {
+    padding: 13px 12px;
+    border: 0;
+    border-bottom: 1px solid #d6e6f2;
+    vertical-align: middle;
+  }
+  .acervo-desktop #app #browse .record-row {
+    background: #fff;
+  }
+  .acervo-desktop #app #browse .record-row:nth-child(even) {
+    background: #f8fbfe;
+  }
+  .acervo-desktop #app #browse .record-row:hover {
+    background: #edf7ff;
+  }
+  .acervo-desktop #app #browse .record-row td:first-child {
+    font-weight: 650;
+  }
+  .acervo-desktop #app #browse .badge {
+    border: 0;
+    background: #0067c9;
+    color: #fff;
+    font-size: 10px;
+  }
+  .acervo-desktop #app #browse .badge.down {
+    background: #b5003e;
+  }
+  .acervo-desktop #app #browse .record-row td:last-child button {
+    min-height: 35px;
+    padding: 8px 11px;
+    border: 1px solid #a3c6e7;
+    border-radius: 9px;
+    color: #075aae;
+    background: #fff;
+    font-size: 12px;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #browse .detail-row > td {
+    padding: 17px;
+    background: #fff;
+  }
+  .acervo-desktop #app #browse .detail-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px 24px;
+    padding: 20px;
+    border: 1px solid #a8cee9;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: none;
+  }
+  .acervo-desktop #app #browse .detail-panel > * {
+    grid-column: 1;
+    min-width: 0;
+  }
+  .acervo-desktop #app #browse .detail-panel > h3 {
+    grid-column: 1/-1;
+    margin: 0;
+    font: 700 19px/1.35 var(--pc-font);
+    color: #173f70;
+  }
+  .acervo-desktop #app #browse .detail-panel > dl {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 10px 14px;
+    margin: 0;
+    font-size: 12px;
+  }
+  .acervo-desktop #app #browse .detail-panel :is(dt, dd) {
+    margin: 0;
+  }
+  .acervo-desktop #app #browse .detail-panel > .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 15px 0 0;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #c9e0f0;
+    border-radius: 0;
+    background: none;
+  }
+  .acervo-desktop #app #browse .detail-panel .actions button {
+    min-height: 36px;
+    padding: 9px 11px;
+    border: 0;
+    border-radius: 9px;
+    color: #fff;
+    background: var(--pc-action);
+    font-size: 11px;
+  }
+  .acervo-desktop #app #browse .detail-panel .actions button.danger {
+    background: var(--pc-danger);
+  }
+  .acervo-desktop #app #browse .detail-panel .item-delete-action {
+    margin-left: 0;
+  }
+  .acervo-desktop #app #browse .detail-panel > .history {
+    grid-column: 2;
+    grid-row: 2 / span 3;
+    margin: 0;
+    padding: 0 0 0 23px;
+    border: 0;
+    border-left: 1px solid #c6ddef;
+  }
+  .acervo-desktop #app #browse .detail-panel .history h3 {
+    margin: 0 0 14px;
+    font: 700 17px/1.35 var(--pc-font);
+    color: #173f70;
+  }
+  .acervo-desktop #app #browse .detail-panel .history article {
+    background: #fff;
+  }
+
+  /* Movimentações usa o mesmo card; a busca mostra ações diretamente. */
+  .acervo-desktop #app #movements {
+    display: block;
+  }
+  .acervo-desktop #app #movements .workspace-title {
+    margin-bottom: 22px;
+  }
+  .acervo-desktop #app #movements .movement-steps {
+    display: none;
+  }
+  .acervo-desktop #app #movements #moveSearch {
+    min-height: 44px;
+    font-size: 14px;
+  }
+  .acervo-desktop #app #movements #moveResults {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+    margin: 18px 0 0;
+  }
+  .acervo-desktop #app #movements .movement-empty {
+    grid-column: 1/-1;
     display: grid;
     place-items: center;
     gap: 12px;
-    min-height: 160px;
-    margin-top: 20px;
-    border: 1px dashed #9dbfe4;
-    border-radius: 14px;
+    min-height: 170px;
+    margin: 0;
+    padding: 25px;
+    border: 1px dashed #a9cae8;
+    border-radius: 12px;
     background: #fff;
+    color: #597592;
     font-size: 12px;
   }
-  .acervo-desktop .movement-empty .icon {
-    width: 30px;
-    height: 30px;
-    color: #0673d0;
+  .acervo-desktop #app #movements .movement-empty > .icon {
+    width: 31px;
+    height: 31px;
+    color: #0076d5;
   }
-  .acervo-desktop .desktop-movement-guide {
-    display: block;
-    padding: 26px;
-    border: 1px solid #8cd8ff60;
-    border-radius: 20px;
-    color: #fff;
-    background: linear-gradient(140deg, #0879d7, #044ca9);
-    box-shadow: 0 9px 24px #00378426;
-  }
-  .desktop-movement-guide > span {
-    display: grid;
-    place-items: center;
-    width: 60px;
-    height: 64px;
-    margin-bottom: 20px;
-    border: 1px solid #91f4ff;
-    border-radius: 17px;
-    background: #0071ce;
-    box-shadow: 0 0 22px #00dfff35;
-  }
-  .desktop-movement-guide svg {
-    width: 45px;
-    height: 45px;
-  }
-  .desktop-movement-guide h2 {
-    color: #fff;
-    font: 750 23px/1.2 var(--desktop-font);
-    letter-spacing: -0.5px;
-    margin: 0 0 14px;
-  }
-  .desktop-movement-guide p {
-    color: #e2f4ff;
-    font-size: 12px;
-    line-height: 1.65;
-  }
-  .desktop-movement-guide small {
-    color: #bae8ff;
-    font-size: 10px;
-    line-height: 1.5;
-    display: block;
-    border-top: 1px solid #ffffff2e;
-    padding-top: 17px;
-  }
-  .acervo-desktop .movement-result {
+  .acervo-desktop #app #movements .movement-result {
     padding: 17px;
-    border: 1px solid #b3d1ed;
-    border-radius: 13px;
+    margin: 0;
+    min-width: 0;
+    border: 1px solid #bad5ec;
+    border-radius: 12px;
     background: #fff;
-    margin-top: 13px;
+    box-shadow: none;
   }
-  .acervo-desktop .movement-result h3 {
-    color: #153d6f;
-    font: 700 16px/1.3 var(--desktop-font);
+  .acervo-desktop #app #movements .movement-result h3 {
+    color: #173f70;
+    font: 700 16px/1.35 var(--pc-font);
     margin: 0;
   }
-  .acervo-desktop .movement-result .actions {
-    margin-top: 13px;
+  .acervo-desktop #app #movements .movement-result .actions {
+    margin-top: 14px;
+    gap: 8px;
   }
-  .acervo-desktop .movement-result .actions button {
-    min-height: 39px;
-    border: 1px solid #0064d3;
+  .acervo-desktop #app #movements .movement-result .actions button {
+    min-height: 36px;
+    padding: 9px 11px;
+    border: 0;
+    border-radius: 9px;
     color: #fff;
-    background: var(--blue-action);
-    border-radius: 10px;
+    background: var(--pc-action);
     font-size: 12px;
   }
-  .acervo-desktop .movement-result .actions button.danger {
-    background: linear-gradient(125deg, #ef004a, #a50035);
-    border-color: transparent;
+  .acervo-desktop #app #movements .movement-result .actions button.danger {
+    background: var(--pc-danger);
   }
-  .acervo-desktop #browse .workspace-title {
-    font-size: 26px;
-  }
-  .acervo-desktop #browse .eyebrow {
-    color: #517699;
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-  }
-  .acervo-desktop #browse > .card > .bar:first-child {
-    margin-bottom: 23px;
-  }
-  .acervo-desktop #browse .toolbar {
-    gap: 10px;
-    margin-bottom: 13px;
-  }
-  .acervo-desktop #browse .toolbar > input {
-    min-height: 47px;
-    font-size: 15px;
-  }
-  .acervo-desktop #browse .toolbar > button {
-    min-height: 44px;
-    background: #fff;
-    border: 1px solid #0864c8;
-    color: #0755b1;
-    border-radius: 11px;
-    padding-inline: 15px;
-  }
-  .acervo-desktop #browse .toolbar #moreFilters[aria-expanded="true"] {
-    background: var(--blue-action);
-    color: #fff;
-  }
-  .acervo-desktop #browse .quick button,
-  .acervo-desktop #browse .filter-panel button {
-    min-height: 36px;
-    color: #0752a8;
-    background: #fff;
-    border: 1px solid #abc9e7;
-    border-radius: 9px;
-    padding: 8px 12px;
-    font-size: 11px;
-  }
-  .acervo-desktop #browse .quick button.active,
-  .acervo-desktop #browse .filter-panel button.active {
-    background: var(--blue-action);
-    color: #fff;
-    border-color: transparent;
-  }
-  .acervo-desktop #browse .filter-panel {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    padding: 18px;
-    border: 1px solid #a3caef;
-    border-radius: 13px;
-    background: #fff;
-  }
-  .acervo-desktop #browse .filter-panel legend {
-    color: #13437b;
-    font-weight: 700;
-    font-size: 11px;
-  }
-  .acervo-desktop #browse .export-menu > summary {
-    background: var(--blue-action);
-    color: #fff;
-    border-color: transparent;
-    border-radius: 10px;
-  }
-  .acervo-desktop #browse #viewDiscarded {
-    background: #fff;
-    border-color: #c52953;
-    color: #ba003b;
-  }
-  .acervo-desktop #browse #results tr {
-    background: #fff;
-  }
-  .acervo-desktop #browse #results .record-row:nth-child(even) {
-    background: #f5faff;
-  }
-  .acervo-desktop #browse #results .record-row:hover {
-    background: #e4f3ff;
-  }
-  .acervo-desktop #browse table {
-    font-size: 12px;
-    border-color: #bfd6ec;
-  }
-  .acervo-desktop #browse thead th {
-    padding-block: 14px;
-    background: var(--blue-deep);
+  .acervo-desktop #app #movements .badge {
     color: #fff;
     border: 0;
-    font-size: 10px;
-    letter-spacing: 0.8px;
+    background: #0069cc;
   }
-  .acervo-desktop #browse tbody td {
-    padding: 13px 12px;
-    border-bottom: 1px solid #d8e6f2;
-    vertical-align: middle;
-  }
-  .acervo-desktop #browse .record-row > td:first-child {
-    font-weight: 650;
-  }
-  .acervo-desktop #browse .badge {
-    background: #0765c9;
-    color: #fff;
-    border: 0;
-  }
-  .acervo-desktop #browse .badge.down {
-    background: #b90043;
-    color: #fff;
-  }
-  .acervo-desktop #browse .record-row td:last-child button {
-    min-height: 36px;
-    padding: 8px 12px;
-    color: #0758b1;
-    border-color: #98bee6;
-    background: #fff;
-    border-radius: 9px;
-  }
-  .acervo-desktop #dashboard > :not(#desktopOverview) {
+
+  /* Painel: uma única visão, respeitando o recorte de ambiente. */
+  .acervo-desktop #app #dashboard > :not(#desktopOverview) {
     display: none;
   }
   .acervo-desktop #desktopOverview {
     display: block;
   }
-  .desktop-section-heading {
+  .acervo-desktop #desktopOverview .desktop-section-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 25px;
-    margin: 0 0 22px;
-    color: #fff;
+    gap: 22px;
+    margin: 0 0 18px;
   }
-  .desktop-section-heading h1 {
-    margin: 7px 0 8px;
-    font: 800 32px/1.15 var(--desktop-font);
-    color: #fff;
-    letter-spacing: -0.7px;
-  }
-  .desktop-section-heading p {
-    color: #d4efff;
-    font-size: 13px;
-    margin: 0;
-  }
-  .desktop-scope {
+  .acervo-desktop #desktopOverview .desktop-scope {
     display: grid;
-    gap: 6px;
-    min-width: 220px;
-    color: #fff;
-    font-size: 10px;
+    gap: 5px;
+    min-width: 215px;
     margin: 0;
+    color: #537393;
+    font: 500 11px/1.3 var(--pc-font);
   }
-  .desktop-scope select {
-    min-height: 42px;
-    padding: 10px 35px 10px 13px;
-    border: 1px solid #82caff;
-    border-radius: 11px;
+  .acervo-desktop #desktopOverview .desktop-scope select {
+    min-height: 41px;
+    padding: 9px 30px 9px 11px;
+    border: 1px solid #aac9e5;
+    border-radius: 10px;
     background: #fff;
-    color: #0755b1;
-    font: 600 12px/1.4 var(--desktop-font);
-  }
-  .desktop-scope small {
-    color: #d9edff;
-    text-align: right;
-    font-size: 9px;
+    color: #174c84;
+    font: 500 12px/1.4 var(--pc-font);
   }
   .desktop-metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
-    margin: 0 0 20px;
+    margin-bottom: 18px;
   }
   .desktop-metric {
-    display: flex;
     position: relative;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-height: 146px;
-    padding: 20px;
-    border: 1px solid #c2ddf4;
-    border-radius: 17px;
+    min-height: 132px;
+    padding: 19px;
+    border: 1px solid #c6e0f3;
+    border-radius: 16px;
+    color: #174478;
     background: #fff;
-    color: #13427c;
-    box-shadow: 0 8px 21px #002e7b26;
+    box-shadow: 0 8px 22px #003c7626;
     text-align: left;
   }
   .desktop-metric > .icon {
     position: absolute;
-    right: 18px;
+    right: 17px;
     top: 20px;
+    color: #0070ce;
     width: 22px;
     height: 22px;
-    color: #006bce;
   }
   .desktop-metric b {
-    font: 750 38px/1.05 var(--desktop-font);
+    font: 750 35px/1.1 var(--pc-font);
+    color: inherit;
+    margin: 0 0 9px;
     letter-spacing: -1px;
-    margin: 0 0 11px;
   }
   .desktop-metric strong {
+    color: inherit;
     font-size: 12px;
-    font-weight: 650;
   }
   .desktop-metric small {
+    color: #66829b;
     font-size: 10px;
     margin-top: 5px;
-    color: #5f7b98;
   }
   .desktop-metric.is-main {
-    background: var(--blue-action);
     color: #fff;
-    border-color: #70ceff;
+    border-color: #7dd6ff;
+    background: var(--pc-action);
   }
   .desktop-metric.is-main :is(.icon, small) {
-    color: #def7ff;
+    color: #e5f7ff;
   }
   .desktop-metric.needs-attention > .icon {
-    color: #c30040;
-  }
-  .acervo-desktop .header-meta #syncTools {
-    background: transparent;
-    border: 0;
-    border-left: 1px solid #ffffff30;
-    border-radius: 0;
-    padding-left: 10px;
-  }
-  .desktop-facts {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 0 20px;
-  }
-  .desktop-facts h2 {
-    grid-column: 1 / -1;
-  }
-  .desktop-facts #desktopOverviewFacts {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    color: #c90042;
   }
   .desktop-overview-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-    gap: 20px;
+    gap: 18px;
     align-items: start;
   }
   .desktop-overview-card h2 {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 0 0 19px;
-    font: 750 17px/1.35 var(--desktop-font);
-    color: #143d72;
-    letter-spacing: -0.2px;
+    margin: 0 0 18px;
+    color: #173f70;
+    font: 700 17px/1.35 var(--pc-font);
   }
   .desktop-overview-card h2 .icon {
-    color: #0570ce;
+    color: #0074d1;
     width: 20px;
     height: 20px;
   }
   .desktop-chart-tabs {
-    display: inline-flex;
+    display: flex;
     gap: 7px;
-    margin-bottom: 13px;
+    margin: 0 0 12px;
   }
   .desktop-chart-tabs button {
     min-height: 33px;
     padding: 7px 12px;
-    background: #fff;
-    border: 1px solid #8db6e2;
+    border: 1px solid #a0c2e2;
     border-radius: 9px;
-    color: #075bb9;
-    font-size: 10px;
+    color: #085aaf;
+    background: #fff;
+    font-size: 11px;
   }
   .desktop-chart-tabs button[aria-pressed="true"] {
-    background: var(--blue-action);
     color: #fff;
     border-color: transparent;
+    background: var(--pc-action);
   }
   .desktop-distribution-row {
     display: block;
@@ -25579,83 +25809,81 @@ body::before {
     padding: 12px 0;
     border: 0;
     border-radius: 0;
+    background: none;
+    color: #1e507f;
     box-shadow: none;
-    background: transparent;
-    color: #16477e;
   }
   .desktop-distribution-copy {
     display: flex;
     justify-content: space-between;
-    gap: 14px;
+    gap: 15px;
     margin-bottom: 8px;
     font-size: 12px;
   }
   .desktop-distribution-copy > span {
-    color: #587493;
+    color: #5b7a97;
     font-size: 11px;
   }
   .desktop-distribution-track {
     display: block;
-    width: 100%;
-    height: 9px;
-    background: #e3eef8;
-    border-radius: 5px;
+    height: 8px;
     overflow: hidden;
+    border-radius: 5px;
+    background: #e0edf7;
   }
-  .desktop-distribution-track i {
+  .desktop-distribution-track > i {
     display: block;
     height: 100%;
-    min-width: 0;
     border-radius: inherit;
-    background: var(--blue-action);
+    background: var(--pc-action);
   }
   .desktop-small {
+    margin: 13px 0 0;
+    color: #6a839b;
     font-size: 10px;
     line-height: 1.5;
-    color: #63809c;
-    margin: 14px 0 0;
   }
   .desktop-identification {
     text-align: center;
   }
   .desktop-identification-ring {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     position: relative;
     isolation: isolate;
-    margin: 8px auto 17px;
-    width: 150px;
-    height: 150px;
+    flex-direction: column;
+    justify-content: center;
+    width: 137px;
+    height: 137px;
+    margin: 9px auto 16px;
     border-radius: 50%;
-    background: conic-gradient(#0069cf var(--identified), #e0edf7 0);
+    background: conic-gradient(#006bd0 var(--identified), #dfedf7 0);
   }
   .desktop-identification-ring::before {
-    content: "";
     position: absolute;
-    inset: 13px;
+    z-index: -1;
+    content: "";
+    inset: 12px;
     border-radius: 50%;
     background: #fff;
-    z-index: -1;
   }
   .desktop-identification-ring b {
-    font-size: 32px;
-    color: #0750a4;
+    color: #0754ac;
+    font-size: 30px;
     line-height: 1.2;
   }
   .desktop-identification-ring small {
-    color: #66829d;
+    color: #6b879e;
     font-size: 10px;
   }
   .desktop-identification > p {
+    color: #63809b;
     font-size: 11px;
-    color: #587493;
   }
   .desktop-card-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    min-height: 36px;
+    min-height: 35px;
     padding: 8px 0;
     border: 0;
     background: none;
@@ -25671,39 +25899,39 @@ body::before {
   #desktopOverviewPriorityList:has(> p) {
     display: grid;
     justify-items: center;
-    text-align: center;
     padding: 18px 12px;
-    color: #557391;
+    color: #5c7995;
+    text-align: center;
   }
   #desktopOverviewPriorityList > .icon {
     width: 28px;
     height: 28px;
-    color: #0064cb;
     margin-bottom: 11px;
+    color: #0067cf;
   }
   #desktopOverviewPriorityList > strong {
+    color: #174a7a;
     font-size: 12px;
-    color: #164577;
   }
   #desktopOverviewPriorityList > p {
+    max-width: 350px;
     font-size: 11px;
     line-height: 1.6;
-    max-width: 350px;
   }
   .desktop-stock-row {
     display: grid;
     grid-template-columns: 39px minmax(0, 1fr) auto 17px;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
     width: 100%;
     padding: 13px 0;
     border: 0;
+    border-bottom: 1px solid #d9e8f2;
     border-radius: 0;
     background: none;
-    color: #143c6c;
-    text-align: left;
+    color: #174274;
     box-shadow: none;
-    border-bottom: 1px solid #dce8f2;
+    text-align: left;
   }
   .desktop-stock-row strong {
     display: block;
@@ -25711,12 +25939,12 @@ body::before {
   }
   .desktop-stock-row small {
     display: block;
-    font-size: 10px;
-    color: #63809b;
     margin-top: 4px;
+    color: #64809b;
+    font-size: 10px;
   }
   .desktop-stock-row b {
-    color: #b5003a;
+    color: #bd003f;
     font-size: 11px;
   }
   .desktop-item-symbol {
@@ -25725,8 +25953,8 @@ body::before {
     width: 36px;
     height: 39px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #e8faff, #b5deff);
-    color: #0061b9;
+    background: linear-gradient(135deg, #e3faff, #a3d8ff);
+    color: #0065c2;
   }
   .desktop-item-symbol .icon {
     width: 25px;
@@ -25737,47 +25965,66 @@ body::before {
     justify-content: space-between;
     gap: 15px;
     padding: 13px 0;
+    border-bottom: 1px solid #dce8f2;
     font-size: 12px;
-    border-bottom: 1px solid #dae6f1;
   }
   #desktopOverviewBalances :is(span, p) {
-    color: #587493;
+    color: #5f7c96;
     font-size: 11px;
   }
   .desktop-balances > small {
     display: block;
-    color: #6a849d;
-    font-size: 9px;
     margin-top: 14px;
+    color: #6b849b;
+    font-size: 10px;
     line-height: 1.5;
+  }
+  .desktop-facts {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0 20px;
+  }
+  .desktop-facts h2 {
+    grid-column: 1/-1;
+  }
+  #desktopOverviewFacts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
   }
   #desktopOverviewFacts > div {
     display: flex;
-    gap: 14px;
     align-items: center;
+    gap: 14px;
     padding: 9px 0;
   }
   #desktopOverviewFacts b {
     width: 32px;
-    color: #0062bf;
+    color: #0066c5;
     font-size: 24px;
   }
   #desktopOverviewFacts span {
-    color: #537494;
+    color: #5d7a96;
     font-size: 11px;
   }
+
+  /* Janelas e confirmação compartilham as mesmas medidas e tipografia. */
   .acervo-desktop body > dialog:not(#camera) {
-    max-width: min(760px, calc(100vw - 64px));
-    border: 1px solid #9bd9ff;
-    border-radius: 20px;
+    max-width: min(760px, calc(100vw - 48px));
+    max-height: calc(100dvh - 48px);
     padding: 0;
     overflow: hidden auto;
-    color: #143d6f;
+    border: 1px solid #a6dcfc;
+    border-radius: 19px;
     background: #fff;
-    box-shadow: 0 28px 90px #001e6066;
+    color: #173f70;
+    box-shadow: 0 25px 85px #001b6066;
+    font-family: var(--pc-font);
   }
   .acervo-desktop body > dialog:not(#camera)::backdrop {
-    background: #001d5a9c;
+    background: #00245c99;
     backdrop-filter: blur(3px);
   }
   .acervo-desktop
@@ -25790,32 +26037,45 @@ body::before {
       .delete-person-heading,
       .mobile-about-heading
     ) {
-    color: #fff;
-    background: var(--blue-action);
+    margin: 0;
+    padding: 22px 24px;
     border: 0;
     border-radius: 0;
-    margin: 0;
-    padding: 22px 25px;
+    background: var(--pc-action);
+    color: #fff;
   }
   .acervo-desktop
     body
     > dialog
     :is(
-      .dialog-heading h2,
-      .operation-heading h2,
-      .access-dialog-title h2,
+      #editDialogTitle,
+      #operationTitle,
+      #userAccessTitle,
       .delete-person-heading h2,
       .mobile-about-heading h2
     ) {
-    color: #fff;
-    font: 750 22px/1.25 var(--desktop-font);
-    letter-spacing: -0.4px;
     margin: 0;
+    color: #fff;
+    font: 750 23px/1.25 var(--pc-font);
+    letter-spacing: -0.35px;
   }
-  .acervo-desktop body > dialog > .dialog-heading {
+  .acervo-desktop body > #editDialog[open] {
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    max-width: calc(100vw - 48px);
+    max-height: calc(100dvh - 48px);
+  }
+  .acervo-desktop body > #editDialog > .dialog-heading {
     display: flex;
     flex-wrap: nowrap;
-    gap: 13px;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+    background: var(--pc-action);
+  }
+  .acervo-desktop #editDialog .dialog-heading > div {
+    flex: 1;
   }
   .acervo-desktop body > dialog .mobile-dialog-symbol {
     display: grid;
@@ -25829,11 +26089,8 @@ body::before {
     width: 27px;
     height: 27px;
   }
-  .acervo-desktop #editDialog .dialog-heading > div {
-    flex: 1;
-  }
   .acervo-desktop #editDialog .dialog-heading .eyebrow {
-    color: #c9f3ff;
+    color: #d0f2ff;
     font-size: 9px;
     margin-bottom: 5px;
   }
@@ -25841,31 +26098,96 @@ body::before {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    border-color: #ffffff70;
-    background: #ffffff0a;
+    min-height: 37px;
+    padding: 9px 12px;
+    border: 1px solid #ffffff55;
+    border-radius: 10px;
     color: #fff;
-    min-height: 38px;
+    background: #ffffff09;
+    box-shadow: none;
   }
-  .acervo-desktop #editDialog {
-    width: 900px;
-    max-width: min(900px, calc(100vw - 64px));
-  }
-  .acervo-desktop #editDialogContent {
-    padding: 24px;
+  .acervo-desktop body > #editDialog > #editDialogContent {
+    min-height: 0;
+    overflow: auto;
+    padding: 22px;
   }
   .acervo-desktop #editForm {
     background: #fff;
     border: 0;
   }
-  .acervo-desktop #operation.destructive > .operation-hero,
-  .acervo-desktop #registrationDiscardDialog > .dialog-heading,
-  .acervo-desktop #deleteItemDialog > .operation-hero {
-    background: linear-gradient(125deg, #f00047, #a10035);
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(
+      .editor-name-card,
+      .editor-category-card,
+      #editIdentityGroup,
+      #editControlHost
+    ) {
+    border: 1px solid #c2d9ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: none;
   }
-  .acervo-desktop #operation > form,
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading) {
+    border: 0;
+    border-bottom: 1px solid #d1e3f1;
+    background: none;
+    color: #194877;
+  }
+  .acervo-desktop #editDialog .choice input:checked + span {
+    background: var(--pc-action);
+    border-color: transparent;
+    color: #fff;
+  }
+  .acervo-desktop #editDialog .choice input:checked + span .icon {
+    color: inherit;
+  }
+  .acervo-desktop body > #operation #operationForm,
   .acervo-desktop #registrationDiscardDialog > form,
   .acervo-desktop #deleteItemDialog > form {
     padding: 23px;
+    background: #fff;
+  }
+  .acervo-desktop #operation.destructive > .operation-hero,
+  .acervo-desktop #registrationDiscardDialog > .dialog-heading,
+  .acervo-desktop #deleteItemDialog > .operation-hero {
+    background: var(--pc-danger);
+  }
+  .acervo-desktop #operation.destructive #confirmOperation {
+    background: var(--pc-danger);
+    color: #fff;
+  }
+  .acervo-desktop body > #userAccessDialog .access-dialog-hero {
+    background: var(--pc-action);
+    border-bottom: 0;
+  }
+  .acervo-desktop body > #userAccessDialog .people-row {
+    background: #fff;
+  }
+  .acervo-desktop body > #userAccessDialog .people-avatar {
+    border: 0;
+    color: #fff;
+    background: var(--pc-action);
+  }
+  .acervo-desktop
+    body
+    > #userAccessDialog
+    .people-actions
+    button:not(:disabled) {
+    border-color: transparent;
+    color: #fff;
+    background: var(--pc-action);
+  }
+  .acervo-desktop
+    body
+    > #userAccessDialog
+    .people-actions
+    button.danger:not(:disabled) {
+    background: var(--pc-danger);
   }
   .acervo-desktop #mobileAboutDialog {
     width: 430px;
@@ -25874,8 +26196,8 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
     padding: 25px;
+    text-align: center;
   }
   .acervo-desktop #mobileAboutDialog .mobile-about-mark {
     display: grid;
@@ -25883,7 +26205,7 @@ body::before {
     width: 70px;
     height: 72px;
     border-radius: 19px;
-    background: var(--blue-action);
+    background: var(--pc-action);
     color: #fff;
   }
   .acervo-desktop #mobileAboutDialog .mobile-about-mark svg {
@@ -25896,348 +26218,42 @@ body::before {
     margin: 22px 0;
   }
   .acervo-desktop #mobileAboutDialog .mobile-about-copyright {
+    color: #66809b;
     font-size: 10px;
     line-height: 1.5;
-    color: #66809b;
   }
-  .acervo-desktop .institution-footer {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-top: 1px solid #ffffff26;
-    padding: 22px 0;
-    margin-top: 35px;
-    color: #d9edff;
-  }
-  .acervo-desktop .institution-footer :is(span, strong, small) {
-    color: inherit;
-  }
-  .acervo-desktop .institution-footer .institution-logo {
-    filter: grayscale(1) brightness(0) invert(1);
-  }
-  .acervo-desktop .desktop-about-link {
-    display: inline-flex;
-    min-height: 34px;
-    padding: 7px 10px;
-    margin-left: auto;
-    border: 1px solid #ffffff3b;
-    border-radius: 8px;
-    background: transparent;
-    color: #e2f3ff;
-    font-size: 10px;
-  }
-  .acervo-desktop #pendingBox {
+  .acervo-desktop #app #pendingBox {
+    border: 1px solid #ffd494;
     color: #fff;
-    background: linear-gradient(120deg, #b65d00, #894300);
-    border: 1px solid #ffd28e;
-  }
-  .acervo-desktop #saved {
-    background: transparent;
-    border: 0;
-    padding: 0;
-  }
-  .acervo-desktop #saved .receipt-card {
-    color: #123e76;
-    border: 1px solid #82ccff;
-    background: #fff;
-    border-radius: 18px;
-  }
-}
-@media (min-width: 641px) and (max-width: 1100px) and (hover: hover) {
-  .acervo-desktop body:not(.auth-screen) .shell {
-    padding-inline: 22px;
-  }
-  .acervo-desktop #register > .workspace {
-    grid-template-columns: minmax(0, 1fr) 275px;
-    gap: 17px;
-  }
-  .acervo-desktop #registrationMain {
-    grid-template-columns: 1fr;
-  }
-  .acervo-desktop #registrationCategory {
-    grid-column: 1;
-  }
-  .acervo-desktop #register #formRest {
-    grid-template-columns: 1fr;
-  }
-  .acervo-desktop #register #identityBlock,
-  .acervo-desktop #register #controlHost {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  .acervo-desktop .brand b {
-    font-size: 25px;
-  }
-  .acervo-desktop .header-person {
-    display: none;
-  }
-  .acervo-desktop #movements {
-    grid-template-columns: minmax(0, 1fr) 260px;
-  }
-  .desktop-metric {
-    padding: 16px;
-  }
-  .desktop-metric strong {
-    max-width: 140px;
-  }
-}
-@keyframes desktop-emblem-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .desktop-hero-emblem {
-    animation: none;
-  }
-}
-@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
-  html.acervo-desktop #app #register #itemForm #registrationMain {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 18px;
-  }
-  html.acervo-desktop #app #register #itemForm :is(#formRest, #notesBlock) {
-    grid-column: 1/-1;
-    grid-row: auto;
-  }
-  html.acervo-desktop #app #register #itemForm #formRest {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 20px;
-  }
-  html.acervo-desktop #app #register #itemForm #identityBlock {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  html.acervo-desktop #app #register #itemForm #controlHost {
-    grid-column: 2;
-    grid-row: auto;
-  }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #controlHost {
-    grid-column: 1/-1;
-  }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #formRest {
-    grid-template-columns: 1fr;
-  }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #identityBlock {
-    grid-column: auto;
-    padding: 0;
-    margin: 12px 0 0;
-    border: 0;
-    width: 100%;
-  }
-  html.acervo-desktop
-    #app
-    #register
-    #itemForm.quantity-layout
-    #identityBlock
-    > :is(legend, #identityHeading) {
-    display: none;
-  }
-  .acervo-desktop #app #register #location {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: 16px;
-    padding: 15px;
-    margin-bottom: 22px;
-  }
-  .acervo-desktop #app #register #location .position {
-    grid-column: 1/-1;
-    margin: 0;
-    padding: 8px 0 0;
-  }
-  .acervo-desktop #app #register #location :is(#shelves, #levels) {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .acervo-desktop #app #register #location #levels {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-  .acervo-desktop #app #register #location .choice > span {
-    min-height: 38px;
-    padding: 8px 5px;
-    justify-content: center;
-  }
-  .acervo-desktop #app #register :is(#identityHeading, #controlHeading) {
-    background: none;
-    padding: 0 0 10px;
-    margin: 0 0 10px;
-    border: 0;
-    border-bottom: 1px solid #d1e3f3;
-  }
-  .acervo-desktop #app #register :is(#identityHeading, #controlHeading) .icon {
-    color: #0067ce;
-    background: none;
-  }
-  .acervo-desktop #app #register #registrationSummary {
-    background: none;
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-    box-shadow: none;
-  }
-  .acervo-desktop #app #registrationSave .summary-heading {
-    margin: 0;
-  }
-  .acervo-desktop #app #registrationSave .summary-facts dd small {
-    display: block;
-    color: #5b7797;
-    font-size: 10px;
-    margin-top: 4px;
+    background: linear-gradient(120deg, #b66400, #884200);
   }
   .acervo-desktop
     #app
-    #registrationSave
-    :is(button .icon, .location-ticket .icon) {
-    color: inherit;
-  }
-  html.acervo-desktop #app #register #itemForm #codeWrap {
-    display: block;
-    width: 100%;
-    margin: 12px 0 0;
-    padding: 12px;
-    border: 1px solid #91c6f2;
-    border-radius: 11px;
-    background: linear-gradient(125deg, #e7f8ff, #b9e0ff);
-  }
-  html.acervo-desktop #app #register #itemForm #codeLabel {
-    display: block;
-    color: #1b4774;
-    font-size: 11px;
-    margin: 0 0 7px;
-  }
-  html.acervo-desktop #app #register #itemForm #codeWrap .scanrow {
-    display: flex;
-    width: 100%;
-  }
-  html.acervo-desktop #app #register #itemForm #code {
-    width: 100%;
-    max-width: none;
-    height: 40px;
-    min-height: 40px;
-    font: 600 15px/1.3 var(--desktop-font);
-    padding: 9px 11px;
-    background: #fff;
-    color: #103e75;
-  }
-  html.acervo-desktop #app #register #itemForm #codeHint {
-    display: block;
-    color: #355d86;
-    font-size: 10px;
-    margin: 7px 0 0;
-  }
-  .acervo-desktop
-    #register:has(#registrationSave:not([hidden]))
-    .desktop-register-intro {
-    min-height: 115px;
-    margin-bottom: 18px;
-  }
-  .acervo-desktop body > #editDialog[open] {
-    display: flex;
-    flex-direction: column;
-    width: 900px;
-    max-width: calc(100vw - 64px);
-    max-height: calc(100dvh - 48px);
-  }
-  .acervo-desktop body > #editDialog > .dialog-heading {
-    flex: 0 0 auto;
-    background: var(--blue-action);
-  }
-  .acervo-desktop body > #editDialog > #editDialogContent {
-    min-height: 0;
-    overflow: auto;
-    padding: 22px;
-  }
-  .acervo-desktop
-    body
-    > #editDialog
-    :is(#editDialogTitle, #editDialogTitle h2) {
-    font: 750 23px/1.25 var(--desktop-font);
-    color: #fff;
-  }
-  .acervo-desktop
-    body
-    > #editDialog
-    :is(
-      .editor-name-card,
-      .editor-category-card,
-      #editIdentityGroup,
-      #editControlHost
-    ) {
-    background: #fff;
-    border: 1px solid #c2d9ef;
-    border-radius: 12px;
-    box-shadow: none;
-  }
-  .acervo-desktop
-    body
-    > #editDialog
-    :is(#editIdentityHeading, #editControlHeading) {
-    background: none;
-    border: 0;
-    border-bottom: 1px solid #c9dff2;
-  }
-  .acervo-desktop body > #operation #operationTitle {
-    font: 750 23px/1.25 var(--desktop-font);
-    color: #fff;
-  }
-  .acervo-desktop body > #operation #operationForm {
-    background: #fff;
-  }
-  .acervo-desktop body > #operation.destructive #confirmOperation {
-    background: linear-gradient(125deg, #ef0049, #aa0038);
-    color: #fff;
-  }
-}
-@media (min-width: 641px) and (max-width: 1100px) and (hover: hover) {
-  html.acervo-desktop #app #register #itemForm #registrationMain,
-  html.acervo-desktop #app #register #itemForm #formRest {
-    grid-template-columns: 1fr;
-  }
-  html.acervo-desktop
-    #app
-    #register
-    #itemForm
-    :is(#controlHost, #identityBlock) {
-    grid-column: 1;
-  }
-  .acervo-desktop #app #register #location {
-    grid-template-columns: 1fr;
-  }
-}
-@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
-  .acervo-desktop
     #register:has(#saved.desktop-receipt:not([hidden]))
-    > .desktop-register-intro,
-  .acervo-desktop
-    #register:has(#saved.desktop-receipt:not([hidden]))
-    :is(#itemForm, #draftInfo, .side) {
+    :is(#itemForm, #draftInfo) {
     display: none;
   }
   .acervo-desktop
+    #app
     #register:has(#saved.desktop-receipt:not([hidden]))
     > .workspace {
-    display: block;
     max-width: 720px;
     margin: 65px auto;
   }
   .acervo-desktop
+    #app
     #register:has(#saved.desktop-receipt:not([hidden]))
     .workspace
     > .card {
     padding: 32px;
   }
-  .acervo-desktop #register #saved.desktop-receipt {
+  .acervo-desktop #app #register #saved.desktop-receipt {
     display: block;
-    text-align: center;
+    padding: 0;
     overflow: visible;
+    border: 0;
+    background: none;
+    text-align: center;
   }
   .desktop-completion-mark {
     display: flex;
@@ -26247,9 +26263,9 @@ body::before {
     width: 92px;
     height: 94px;
     margin: -65px auto 25px;
-    border: 2px solid #9ff8ff;
+    border: 2px solid #a0f8ff;
     border-radius: 25px;
-    background: var(--blue-action);
+    background: var(--pc-action);
     color: #fff;
     box-shadow: 0 0 24px #00d5f66b;
     animation: desktop-completion 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -26262,35 +26278,35 @@ body::before {
     width: 22px;
     height: 22px;
   }
-  .acervo-desktop #saved.desktop-receipt h2 {
-    font: 750 28px/1.2 var(--desktop-font);
-    color: #123d70;
+  .acervo-desktop #app #saved.desktop-receipt h2 {
     margin: 0 0 25px;
+    color: #173f70;
+    font: 750 28px/1.2 var(--pc-font);
   }
   .desktop-completion-item {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    text-align: left;
     margin: 0 0 25px;
+    text-align: left;
   }
   .desktop-completion-item > .icon {
     flex: 0 0 42px;
     width: 42px;
     height: 42px;
-    color: #0065c7;
+    color: #0067c9;
   }
   .desktop-completion-item strong {
     display: block;
+    color: #17416f;
     font-size: 17px;
-    color: #163f70;
   }
   .desktop-completion-item span {
     display: block;
-    font-size: 12px;
-    color: #547596;
     margin-top: 5px;
+    color: #5a7896;
+    font-size: 12px;
   }
   .desktop-completion-code {
     display: flex;
@@ -26298,12 +26314,12 @@ body::before {
     justify-content: space-between;
     gap: 20px;
     padding: 19px 0;
-    border-top: 1px solid #c4daed;
-    color: #577494;
+    border-top: 1px solid #c4dbed;
+    color: #5d7893;
     font-size: 12px;
   }
   .desktop-completion-code strong {
-    color: #103d70;
+    color: #173f70;
     font-size: 20px;
   }
   .desktop-completion-actions {
@@ -26312,14 +26328,155 @@ body::before {
     margin-top: 8px;
   }
   .desktop-completion-actions button {
-    min-height: 46px;
     flex: 1;
-    justify-content: center;
-    font-size: 12px;
-    border-radius: 11px;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid #89b7e1;
+    border-radius: 10px;
     background: #fff;
-    border-color: #83b5e2;
-    color: #0056b8;
+    color: #005cba;
+    font-size: 12px;
+  }
+  .acervo-desktop .institution-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+    padding: 18px 0;
+    border-top: 1px solid #ffffff25;
+    color: #dcefff;
+  }
+  .acervo-desktop .institution-footer > :not(.desktop-footer-line) {
+    display: none;
+  }
+  .acervo-desktop .desktop-footer-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 24px;
+    color: inherit;
+    font-size: 11px;
+  }
+  .acervo-desktop .desktop-footer-line > span {
+    color: inherit;
+    font-size: inherit;
+  }
+  .acervo-desktop .desktop-about-link {
+    display: inline-flex;
+    min-height: 28px;
+    padding: 3px 0;
+    border: 0;
+    border-radius: 0;
+    color: #e9f6ff;
+    background: none;
+    box-shadow: none;
+    font-size: 11px;
+  }
+  .acervo-desktop .desktop-about-link:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+}
+@media (min-width: 641px) and (max-width: 1050px) and (hover: hover) {
+  .acervo-desktop body:not(.auth-screen) .shell {
+    padding-inline: 22px;
+  }
+  .acervo-desktop .header-person {
+    display: none;
+  }
+  .acervo-desktop .brand b {
+    font-size: 25px;
+  }
+  html.acervo-desktop #app #register #itemForm #registrationMain,
+  html.acervo-desktop #app #register #itemForm #formRest {
+    grid-template-columns: 1fr;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#registrationCategory, #controlHost, #identityBlock) {
+    grid-column: 1;
+  }
+  html.acervo-desktop #app #register #itemForm #location,
+  html.acervo-desktop #app #register #itemForm.quantity-layout .stock-control {
+    grid-template-columns: 1fr;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .acervo-desktop #app #browse .filter-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+  .acervo-desktop #app #browse .detail-panel {
+    grid-template-columns: 1fr;
+  }
+  .acervo-desktop #app #browse .detail-panel > .history {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 3px;
+    padding: 18px 0 0;
+    border-left: 0;
+    border-top: 1px solid #c6ddef;
+  }
+  .acervo-desktop #app #movements #moveResults {
+    grid-template-columns: 1fr;
+  }
+  .desktop-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .desktop-overview-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+  .desktop-facts #desktopOverviewFacts {
+    gap: 12px;
+  }
+}
+@media (min-width: 641px) and (max-width: 760px) and (hover: hover) {
+  .acervo-desktop .brand small {
+    font-size: 10px;
+  }
+  .acervo-desktop .account-toolbar {
+    padding: 4px;
+  }
+  .acervo-desktop .header-meta #syncTools {
+    padding-left: 0;
+    border: 0;
+  }
+  .acervo-desktop .header-meta :is(#manageAccess, #refresh, #logout) {
+    padding: 8px 7px;
+  }
+  .acervo-desktop #mobileAccountMenu {
+    padding-left: 8px;
+  }
+  .acervo-desktop #app > .nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+  }
+  .acervo-desktop #app > .nav button {
+    padding: 10px 11px;
+    font-size: 12px;
+  }
+  .acervo-desktop #app #registrationSave {
+    flex-wrap: wrap;
+  }
+  .acervo-desktop #app #registrationSave .registration-actions {
+    margin-left: auto;
+  }
+  .desktop-overview-grid {
+    grid-template-columns: 1fr;
+  }
+  .desktop-priority,
+  .desktop-facts {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .desktop-facts {
+    display: block;
+  }
+  #desktopOverviewFacts {
+    grid-template-columns: 1fr;
   }
 }
 @keyframes desktop-completion {
@@ -26341,208 +26498,491 @@ body::before {
     animation: none;
   }
 }
+
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
-  html.acervo-desktop #app #register #itemForm #registrationItem {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  html.acervo-desktop #app #register #itemForm #registrationCategory {
-    grid-column: 2;
-    grid-row: auto;
-  }
-  html.acervo-desktop
-    #app
-    #register
-    #itemForm.quantity-layout
-    #controlHost
-    .stock-control {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 0 22px;
-  }
-  html.acervo-desktop
-    #app
-    #register
-    #itemForm.quantity-layout
-    #controlHost
-    .stock-control
-    > fieldset:first-child {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #controlHint {
-    grid-column: 1;
-    grid-row: 2;
-    margin: 10px 0;
-    align-self: start;
-  }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
-    grid-column: 2;
-    grid-row: 1 / span 2;
+  html.acervo-desktop #app #register #itemForm .stock-control,
+  html.acervo-desktop #app #register #itemForm .stock-control > fieldset {
     margin: 0;
     padding: 0;
     border: 0;
-  }
-  html.acervo-desktop
-    #app
-    #register
-    #itemForm.quantity-layout
-    #controlHost
-    #identityBlock {
-    grid-column: 1/-1;
+    background: none;
   }
   .acervo-desktop
-    #register:has(#registrationSave:not([hidden]))
-    .desktop-hero-art {
-    height: 115px;
-    transform: scale(0.85);
-    transform-origin: right center;
-  }
-}
-@media (min-width: 641px) and (max-width: 1100px) and (hover: hover) {
-  html.acervo-desktop #app #register #itemForm #registrationCategory {
-    grid-column: 1;
-  }
-  html.acervo-desktop
     #app
-    #register
-    #itemForm.quantity-layout
-    #controlHost
-    .stock-control {
-    display: block;
+    #register:has(#registrationSave[hidden])
+    :is(#draftInfo, #learningHint) {
+    display: none;
   }
-  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
-    margin-top: 12px;
+  .acervo-desktop #app #register #draftInfo {
+    margin: 12px 0 0;
+    font-size: 11px;
   }
 }
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
-  .acervo-desktop body > #userAccessDialog .access-dialog-hero {
-    background: var(--blue-action);
-    border-bottom: 0;
-  }
-  .acervo-desktop body > #userAccessDialog #userAccessTitle {
-    font: 750 25px/1.25 var(--desktop-font);
-    color: #fff;
-  }
-  .acervo-desktop body > #userAccessDialog .people-row {
-    background: #fff;
-  }
-  .acervo-desktop body > #userAccessDialog .people-avatar {
-    background: var(--blue-action);
-    color: #fff;
-    border: 0;
-  }
-  .acervo-desktop
-    body
-    > #userAccessDialog
-    .people-actions
-    button:not(:disabled) {
-    background: var(--blue-action);
-    color: #fff;
-    border-color: transparent;
-  }
-  .acervo-desktop
-    body
-    > #userAccessDialog
-    .people-actions
-    button.danger:not(:disabled) {
-    background: linear-gradient(125deg, #ec0046, #a70038);
-    color: #fff;
-  }
-  .acervo-desktop #browse #results .detail-row > td {
-    background: #fff;
-    padding: 18px;
-  }
-  .acervo-desktop #browse #results .detail-panel {
+  html.acervo-desktop #app #register #itemForm #codeWrap:has(#code[readonly]) {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
-    gap: 18px 24px;
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #a7cdec;
-    border-radius: 13px;
-    color: #163f70;
-    box-shadow: none;
+    grid-template-columns: auto 160px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
   }
-  .acervo-desktop #browse #results .detail-panel > * {
-    grid-column: 1;
-    min-width: 0;
-  }
-  .acervo-desktop #browse #results .detail-panel > h3 {
-    grid-column: 1/-1;
-    font: 750 20px/1.35 var(--desktop-font);
-    color: #153f75;
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #codeWrap:has(#code[readonly])
+    :is(#codeLabel, #codeHint) {
     margin: 0;
   }
-  .acervo-desktop #browse #results .detail-panel > dl {
-    display: grid;
-    grid-template-columns: 110px minmax(0, 1fr);
-    gap: 10px 14px;
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #codeWrap:has(#code[readonly])
+    #codeHint {
+    text-align: right;
+  }
+  .acervo-desktop #app #register .workspace > .card {
+    position: relative;
+  }
+  .acervo-desktop #app #register #draftInfo {
+    position: absolute;
+    left: 24px;
+    bottom: 37px;
     margin: 0;
-    font-size: 12px;
-  }
-  .acervo-desktop #browse #results .detail-panel :is(dd, dt) {
-    margin: 0;
-  }
-  .acervo-desktop #browse #results .detail-panel > .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    padding: 17px 0 0;
-    margin: 0;
-    background: none;
-    border: 0;
-    border-top: 1px solid #c5ddf0;
-    border-radius: 0;
-  }
-  .acervo-desktop #browse #results .detail-panel .actions > button {
-    flex: 0 1 auto;
-    min-height: 37px;
-    background: var(--blue-action);
-    color: #fff;
-    border: 0;
-    padding: 9px 11px;
-    border-radius: 9px;
-    font-size: 11px;
-  }
-  .acervo-desktop #browse #results .detail-panel .actions > button.danger {
-    background: linear-gradient(125deg, #ef0048, #ab003a);
-    color: #fff;
-  }
-  .acervo-desktop
-    #browse
-    #results
-    .detail-panel
-    .actions
-    > .item-delete-action {
-    margin-left: 0;
-  }
-  .acervo-desktop #browse #results .detail-panel > .history {
-    grid-column: 2;
-    grid-row: 2 / span 3;
-    border: 0;
-    border-left: 1px solid #c6ddef;
-    padding: 0 0 0 23px;
-    margin: 0;
-  }
-  .acervo-desktop #browse #results .detail-panel .history h3 {
-    font: 700 17px/1.3 var(--desktop-font);
-    color: #153f75;
-    margin: 0 0 15px;
-  }
-  .acervo-desktop #browse #results .detail-panel .history article {
-    background: #fff;
+    max-width: 40%;
   }
 }
-@media (min-width: 641px) and (max-width: 1100px) and (hover: hover) {
-  .acervo-desktop #browse #results .detail-panel {
+@media (min-width: 641px) and (max-width: 760px) and (hover: hover) {
+  html.acervo-desktop #app #register #itemForm #codeWrap:has(#code[readonly]) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #codeWrap:has(#code[readonly])
+    #codeHint {
+    grid-column: 1/-1;
+    text-align: left;
+  }
+  .acervo-desktop #app #register #draftInfo {
+    position: static;
+    margin: 12px 0 0;
+    max-width: none;
+  }
+}
+@media (min-width: 641px) and (max-width: 760px) and (hover: hover) {
+  .acervo-desktop .header-meta #refresh .live {
+    display: none;
+  }
+  .acervo-desktop body:not(.auth-screen) .shell > header.bar {
+    gap: 14px;
+  }
+}
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop .header-meta {
+    width: auto;
+    flex: 0 0 auto;
+    display: flex;
+  }
+}
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(
+      .editor-name-card,
+      .editor-category-card,
+      #editIdentityGroup,
+      #editControlHost
+    ) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 25px;
+    margin: 0 0 10px;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading)::before,
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading)::after {
+    content: none;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading)
+    > .icon,
+  .acervo-desktop body > #editDialog .editor-category-card > legend > .icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: #006fce;
+    background: none;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading)
+    strong {
+    color: #1c4672;
+    font: 650 13px/1.3 var(--pc-font);
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(#editIdentityHeading, #editControlHeading)
+    p {
+    display: none;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(.editor-name-card > label, .editor-category-card > legend) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 25px;
+    float: none;
+    margin: 0 0 8px;
+    padding: 0;
+    color: #1c4672;
+    font: 650 13px/1.3 var(--pc-font);
+  }
+  .acervo-desktop body > #editDialog .choice > span {
+    min-height: 43px;
+    padding: 9px 10px;
+    border: 1px solid #b7d0e8;
+    border-radius: 10px;
+    color: #174c88;
+    background: #fff;
+    box-shadow: none;
+    font: 500 12px/1.35 var(--pc-font);
+  }
+  .acervo-desktop body > #editDialog .choice > input:checked + span {
+    border-color: #0063cb;
+    color: #fff;
+    background: var(--pc-action);
+    box-shadow: 0 4px 10px #0068cf20;
+  }
+  .acervo-desktop
+    body
+    > #editDialog
+    :is(input:not([type="radio"]):not([type="checkbox"]), textarea) {
+    min-height: 43px;
+    padding: 10px 12px;
+    border: 1px solid #b5cee5;
+    border-radius: 10px;
+    color: #173d67;
+    background: #fff;
+    box-shadow: none;
+    font: 400 14px/1.45 var(--pc-font);
+  }
+  .acervo-desktop body > #editDialog :is(input, textarea):focus {
+    border-color: #0076d9;
+    box-shadow: 0 0 0 2px #0089e625;
+  }
+  .acervo-desktop body > #editDialog #editCodeWrap {
+    margin: 12px 0 0;
+    padding: 12px;
+    border: 1px solid #93c5ec;
+    border-radius: 11px;
+    background: linear-gradient(120deg, #e9f8ff, #bfe3ff);
+    box-shadow: none;
+  }
+  .acervo-desktop body > #editDialog #editCodeWrap::before,
+  .acervo-desktop body > #editDialog #editCodeWrap::after {
+    content: none;
+  }
+  .acervo-desktop body > #editDialog #editCodeLabel {
+    margin: 0 0 7px;
+    color: #234e7d;
+    font-size: 11px;
+  }
+  .acervo-desktop body > #editDialog :is(#editShelves, #editLevels) {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .acervo-desktop body > #editDialog #editLevels {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .acervo-desktop body > #editDialog #editLocation .choice > span {
+    min-height: 38px;
+    justify-content: center;
+    padding: 8px 5px;
+  }
+}
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  html.acervo-desktop #app #register > .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+    gap: 20px;
+  }
+  html.acervo-desktop #app #register #desktopRegistrationPreview {
+    display: block;
+    position: sticky;
+    top: 20px;
+    padding: 21px;
+    min-width: 0;
+    background: #fff;
+  }
+  .desktop-preview-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 0 17px;
+    border-bottom: 1px solid #ccdfef;
+  }
+  .desktop-preview-heading > span {
+    display: grid;
+    place-items: center;
+    width: 37px;
+    height: 39px;
+    flex: 0 0 37px;
+    border: 0;
+    border-radius: 11px;
+    background: var(--pc-action);
+    color: #fff;
+  }
+  .desktop-preview-heading svg {
+    width: 29px;
+    height: 29px;
+  }
+  .desktop-preview-heading h2 {
+    margin: 0;
+    color: #173f70;
+    font: 700 18px/1.3 var(--pc-font);
+  }
+  .desktop-preview-empty {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 28px 4px 12px;
+    color: #567592;
+    text-align: center;
+  }
+  .desktop-preview-empty > .icon {
+    width: 32px;
+    height: 32px;
+    color: #0870ca;
+  }
+  .desktop-preview-empty strong {
+    color: #244e78;
+    font-size: 13px;
+  }
+  .desktop-preview-empty p {
+    margin: 0;
+    max-width: 210px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  #desktopRegistrationPreview:has(#registrationSave:not([hidden]))
+    .desktop-preview-empty {
+    display: none;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    #registrationSave {
+    display: block;
+    position: static;
+    padding: 18px 0 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    #registrationSave
+    > .spaced {
+    display: block;
+    margin: 0;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    #registrationSummary {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .desktop-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding-bottom: 16px;
+  }
+  .desktop-preview-symbol {
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 47px;
+    flex: 0 0 43px;
+    border-radius: 12px;
+    color: #fff;
+    background: var(--pc-action);
+  }
+  .desktop-preview-symbol .icon {
+    width: 29px;
+    height: 29px;
+    color: inherit;
+  }
+  .desktop-preview-item > div {
+    min-width: 0;
+  }
+  .desktop-preview-item strong {
+    display: block;
+    color: #173f70;
+    font: 700 15px/1.4 var(--pc-font);
+    overflow-wrap: anywhere;
+  }
+  .desktop-preview-item small {
+    display: block;
+    margin-top: 4px;
+    color: #64809a;
+    font-size: 11px;
+  }
+  .desktop-preview-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 0 0 17px;
+  }
+  .desktop-preview-facts > div {
+    padding: 11px 0;
+    border-top: 1px solid #d9e7f2;
+  }
+  .desktop-preview-facts dt {
+    margin: 0 0 4px;
+    color: #68819a;
+    font-size: 10px;
+  }
+  .desktop-preview-facts dd {
+    margin: 0;
+    color: #173f70;
+    font: 650 12px/1.45 var(--pc-font);
+    overflow-wrap: anywhere;
+  }
+  .desktop-preview-facts dd small {
+    display: block;
+    margin-top: 4px;
+    color: #65809a;
+    font-size: 10px;
+    font-weight: 400;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    .registration-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+    margin: 0;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    .registration-actions
+    button {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    min-height: 43px;
+  }
+  html.acervo-desktop #app #register #desktopRegistrationPreview #save {
+    order: 1;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    #discardRegistration {
+    order: 2;
+  }
+  html.acervo-desktop #app #register #draftInfo {
+    position: static;
+    margin: 12px 0 0;
+    max-width: none;
+  }
+  html.acervo-desktop #app #register #itemForm #codeWrap:has(#code[readonly]) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    #codeWrap:has(#code[readonly])
+    #codeHint {
+    grid-column: 1/-1;
+    text-align: left;
+  }
+  html.acervo-desktop
+    #app
+    #register:has(#saved.desktop-receipt:not([hidden]))
+    #desktopRegistrationPreview {
+    display: none;
+  }
+  html.acervo-desktop
+    #app
+    #register:has(#saved.desktop-receipt:not([hidden]))
+    > .workspace {
+    display: block;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) and (hover: hover) {
+  html.acervo-desktop #app #register > .workspace {
     grid-template-columns: 1fr;
   }
-  .acervo-desktop #browse #results .detail-panel > .history {
-    grid-column: 1;
-    grid-row: auto;
-    padding: 18px 0 0;
-    border-left: 0;
-    border-top: 1px solid #c6ddef;
+  html.acervo-desktop #app #register #desktopRegistrationPreview {
+    position: static;
+  }
+  .desktop-preview-facts {
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #desktopRegistrationPreview
+    .registration-actions {
+    flex-direction: row;
   }
 }

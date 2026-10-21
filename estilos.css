@@ -26737,6 +26737,122 @@ body::before {
   }
 }
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop #app #register > .desktop-register-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 22px;
+    color: #fff;
+  }
+  .desktop-register-copy {
+    min-width: 0;
+    padding: 0 24px;
+  }
+  .acervo-desktop #app .desktop-register-copy h1 {
+    margin: 0 0 12px;
+    color: #fff;
+    font: 800 36px/1.12 var(--pc-font);
+    letter-spacing: -1px;
+    text-shadow: 0 4px 22px #003b9840;
+  }
+  .desktop-register-copy p {
+    max-width: 560px;
+    margin: 0;
+    color: #e6f5ff;
+    font: 400 14px/1.6 var(--pc-font);
+  }
+  .desktop-hero-art {
+    position: relative;
+    justify-self: center;
+    width: 280px;
+    aspect-ratio: 280 / 156;
+    isolation: isolate;
+    pointer-events: none;
+    user-select: none;
+  }
+  .desktop-hero-art::before {
+    content: "";
+    position: absolute;
+    inset: 29% 13% 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, #00e6ff75, #00baff00 70%);
+    filter: blur(12px);
+  }
+  .desktop-art-card {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 23%;
+    aspect-ratio: 63 / 80;
+    border: 1px solid #d9f3ff;
+    border-left: 4px solid #0ae4ee;
+    border-radius: 12px;
+    color: #0754b3;
+    background: linear-gradient(145deg, #fff 45%, #e4f7ff);
+    box-shadow:
+      0 4px 0 #afd9f4,
+      0 10px 25px #002f8d35;
+    animation: desktop-card-float 5.4s ease-in-out infinite;
+  }
+  .desktop-art-card .icon {
+    width: 58%;
+    height: auto;
+    aspect-ratio: 1;
+    color: inherit;
+  }
+  .desktop-art-card:nth-child(1) {
+    left: 6%;
+    top: 22%;
+    rotate: -17deg;
+    animation-delay: -1.8s;
+  }
+  .desktop-art-card:nth-child(2) {
+    left: 38.5%;
+    top: 3%;
+    animation-delay: -0.6s;
+  }
+  .desktop-art-card:nth-child(3) {
+    right: 6%;
+    top: 22%;
+    rotate: 17deg;
+    animation-delay: -3.2s;
+  }
+  .desktop-hero-emblem {
+    position: absolute;
+    left: 34%;
+    top: 35%;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 32%;
+    aspect-ratio: 1;
+    border: 2px solid #a0faff;
+    border-radius: 25%;
+    color: #fff;
+    background:
+      radial-gradient(circle at 20% 0, #12d9f1, transparent 75%),
+      linear-gradient(145deg, #0085df, #0045b6);
+    box-shadow:
+      inset 0 1px 5px #d6ffff,
+      0 0 24px #00e6ff9c,
+      0 12px 28px #002f8d30;
+    animation: desktop-emblem-float 4.8s ease-in-out infinite;
+  }
+  .desktop-hero-emblem .mobile-books-mark {
+    width: 74%;
+    height: 74%;
+    color: inherit;
+  }
+  .acervo-desktop #app #register #registrationHeader > .workspace-title {
+    display: none;
+  }
+  .acervo-desktop
+    #app
+    #register:has(#saved.desktop-receipt:not([hidden]))
+    > .desktop-register-intro {
+    display: none;
+  }
   html.acervo-desktop #app #register > .workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -26910,9 +27026,10 @@ body::before {
     #register
     #desktopRegistrationPreview
     .registration-actions {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
+    width: 100%;
     gap: 9px;
     margin: 0;
   }
@@ -26968,6 +27085,23 @@ body::before {
   }
 }
 @media (min-width: 641px) and (max-width: 900px) and (hover: hover) {
+  .acervo-desktop #app #register > .desktop-register-intro {
+    grid-template-columns: minmax(0, 1fr) 200px;
+    gap: 12px;
+    min-height: 124px;
+  }
+  .desktop-register-copy {
+    padding: 0 8px;
+  }
+  .acervo-desktop #app .desktop-register-copy h1 {
+    font-size: 30px;
+  }
+  .desktop-register-copy p {
+    font-size: 13px;
+  }
+  .desktop-hero-art {
+    width: 200px;
+  }
   html.acervo-desktop #app #register > .workspace {
     grid-template-columns: 1fr;
   }
@@ -26983,6 +27117,30 @@ body::before {
     #register
     #desktopRegistrationPreview
     .registration-actions {
-    flex-direction: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@keyframes desktop-card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes desktop-emblem-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desktop-art-card,
+  .desktop-hero-emblem {
+    animation: none;
   }
 }

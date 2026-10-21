@@ -11526,6 +11526,24 @@ function initDesktopExperience() {
   const desktop = matchMedia(
     "(min-width: 641px) and (hover: hover), (min-width: 1025px)",
   );
+  const intro = el("section", undefined, "desktop-register-intro desktop-only");
+  const introCopy = el("div", undefined, "desktop-register-copy");
+  introCopy.append(
+    el("h1", "Cadastre um item."),
+    el("p", "Escolha o local, preencha os dados e acompanhe a prévia."),
+  );
+  const art = el("div", undefined, "desktop-hero-art");
+  art.setAttribute("aria-hidden", "true");
+  for (const name of ["Cadeira", "Monitor", "Armário"]) {
+    const card = el("span", undefined, "desktop-art-card");
+    card.append(itemIcon(name));
+    art.append(card);
+  }
+  const emblem = el("span", undefined, "desktop-hero-emblem");
+  emblem.append(mobileBooksMark());
+  art.append(emblem);
+  intro.append(introCopy, art);
+  $("register").querySelector(".workspace").before(intro);
   const savebar = $("registrationSave");
   const saveParent = savebar.parentNode;
   const side = $("register").querySelector(".side");

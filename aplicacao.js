@@ -2415,8 +2415,8 @@ function syncCode(prefix = "") {
     (mobileAcervo() ||
       document.documentElement.classList.contains("acervo-desktop"))
   ) {
-    $("codeLabel").textContent = "Código previsto";
-    help.textContent = "Confirmado ao salvar.";
+    $("codeLabel").textContent = "Código do Acervo";
+    help.textContent = "Prévia · confirmado ao cadastrar.";
     help.removeAttribute("data-help");
     help.removeAttribute("aria-label");
     help.removeAttribute("tabindex");
@@ -3223,8 +3223,22 @@ function renderList() {
 function renderDetails(r, panel) {
   if (mobileAcervo()) return renderMobileRecordDetail(r, panel);
   panel.replaceChildren();
-  panel.append(el("h3", r.dados.item + " · " + internal(r.id)));
-  const dl = el("dl");
+  const heading = el("div", undefined, "desktop-detail-heading");
+  const mark = el("span", undefined, "desktop-detail-symbol");
+  mark.append(itemIcon(r));
+  const identity = el("div");
+  identity.append(el("h3", r.dados.item), el("small", internal(r.id)));
+  heading.append(
+    mark,
+    identity,
+    el(
+      "span",
+      STATUS[r.situacao],
+      "badge" + (r.situacao === "BAIXADO" ? " down" : ""),
+    ),
+  );
+  panel.append(heading);
+  const dl = el("dl", undefined, "desktop-detail-facts");
   for (const [label, text] of [
     ["Categoria", r.dados.categoria],
     [
@@ -3240,8 +3254,11 @@ function renderDetails(r, panel) {
         ? `Por quantidade · ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`
         : "Individual",
     ],
-  ])
-    dl.append(el("dt", label), el("dd", text));
+  ]) {
+    const pair = el("div");
+    pair.append(el("dt", label), el("dd", text));
+    dl.append(pair);
+  }
   panel.append(dl);
   if (r.emprestimo)
     panel.append(
@@ -3301,7 +3318,12 @@ function renderDetails(r, panel) {
     for (const a of movementActions(r)) {
       if (a !== "baixar")
         actions.append(
-          button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]),
+          button(
+            ACTION[a],
+            () => openOperation(a, r),
+            "detail-action action-" + a,
+            ACTION_ICON[a],
+          ),
         );
     }
     if (r.situacao === "EMPRESTADO")
@@ -3316,7 +3338,7 @@ function renderDetails(r, panel) {
   }
   if (role !== "leitor" && r.situacao === "ATIVO")
     actions.append(
-      button("Editar", () => startEdit(r), "", "edit"),
+      button("Editar", () => startEdit(r), "detail-edit", "edit"),
       button(
         "Registrar descarte",
         () => openOperation("baixar", r),
@@ -3327,7 +3349,12 @@ function renderDetails(r, panel) {
   if (role === "admin" && ["BAIXADO", "ARQUIVADO"].includes(r.situacao)) {
     const a = r.situacao === "BAIXADO" ? "estornar" : "restaurar";
     actions.append(
-      button(ACTION[a], () => openOperation(a, r), "", ACTION_ICON[a]),
+      button(
+        ACTION[a],
+        () => openOperation(a, r),
+        "detail-action action-" + a,
+        ACTION_ICON[a],
+      ),
     );
     if (a === "restaurar")
       panel.append(
@@ -3338,22 +3365,26 @@ function renderDetails(r, panel) {
         ),
       );
   }
-  if (role === "admin")
-    actions.append(
-      button(
-        "Excluir definitivamente",
-        () => openItemDeletion(r),
-        "danger item-delete-action",
-        "discard",
-      ),
+  if (role === "admin") {
+    const remove = button(
+      "",
+      () => openItemDeletion(r),
+      "danger item-delete-action",
+      "discard",
     );
+    remove.setAttribute("aria-label", "Excluir definitivamente");
+    remove.title = "Excluir definitivamente";
+    actions.append(remove);
+  }
   panel.append(actions);
   const history = el("div", undefined, "history");
   history.append(el("h3", "Histórico"));
   const content = el("div");
   content.append(acervoLoader("Puxando a ficha desta história…", true));
   history.append(content);
-  panel.append(history);
+  const summary = el("div", undefined, "desktop-detail-summary");
+  summary.append(...[...panel.children].filter((node) => node !== heading));
+  panel.replaceChildren(heading, summary, history);
   loadHistory(r.id, content);
 }
 
@@ -5086,6 +5117,7 @@ function initForm() {
   const bar = $("register").querySelector(".workspace > .card > .bar");
   const rooms = $("rooms").closest("fieldset");
   rooms.id = "registrationRooms";
+  rooms.querySelector("legend").prepend(icon("pin"));
   header.append(bar.querySelector("h2"), rooms);
   bar.remove();
   const body = el("div");
@@ -5130,6 +5162,7 @@ function initForm() {
   const notes = $("notesBlock"),
     location = $("location"),
     code = $("codeWrap");
+  notes.querySelector("label").prepend(icon("draft"));
   main.append(item, category, rest, notes);
   identity.append(code);
   rest.replaceChildren(identity, control);
@@ -8871,7 +8904,7 @@ function renderMobileRecordDetail(record, panel) {
   }
   if (role === "admin") {
     const remove = button(
-      "Excluir definitivamente",
+      "",
       () => openItemDeletion(record),
       "danger item-delete-action",
       "discard",
@@ -8880,6 +8913,7 @@ function renderMobileRecordDetail(record, panel) {
       "aria-label",
       "Excluir definitivamente " + record.dados.item,
     );
+    remove.title = "Excluir definitivamente";
     actions.append(remove);
   }
 
@@ -11043,7 +11077,6 @@ function initMobileSurfaces() {
     mark,
     el("h3", "ACERVO"),
     el("p", "Gestão de bens e materiais"),
-    el("small", "Concepção e desenvolvimento"),
     el("strong", author),
     logo,
   );
@@ -11815,20 +11848,13 @@ function initDesktopExperience() {
     "desktop-about-link desktop-only",
   );
   const footer = document.querySelector(".institution-footer");
-  const footerLine = el("div", undefined, "desktop-footer-line desktop-only");
-  footerLine.append(
-    about,
-    el("span", "·", "desktop-footer-separator"),
-    el(
-      "span",
-      "© " +
-        new Date().getFullYear() +
-        " Gabriel Santiago Cândido. Todos os direitos reservados.",
-    ),
-  );
-  footer.append(footerLine);
   const credits = footer.querySelector(".institution-credits");
-  credits.firstChild.textContent = "Concepção e desenvolvimento";
+  const copyright = el(
+    "p",
+    "© 2026 Gabriel Santiago Cândido. Todos os direitos reservados.",
+    "institution-copyright",
+  );
+  credits.replaceChildren(copyright, about);
   footer.querySelector(".institution-signature span").innerHTML =
     "Gestão de bens e materiais<br>Controle e organização do acervo";
   const queryTitle = $("browse").querySelector(".workspace-title");

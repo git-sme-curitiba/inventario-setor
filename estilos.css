@@ -28952,3 +28952,962 @@ body > #camera.is-unavailable .preview {
     transition: none;
   }
 }
+/* 3.5.62 — superfícies, contraste e luminosidade sobre o mesmo fundo Safira. */
+:root {
+  --acervo-action: linear-gradient(125deg, #264979, #1956b5 48%, #3489f2);
+  --acervo-support: linear-gradient(125deg, #2d65a6, #234b80);
+  --acervo-chameleon: linear-gradient(
+    112deg,
+    #264979 0%,
+    #2e7be2 50%,
+    #264979 100%
+  );
+  --acervo-amber: linear-gradient(120deg, #ffd365, #efad29 60%, #dd8d14);
+  --acervo-red: linear-gradient(120deg, #ed1745, #c90039 56%, #a70737);
+}
+
+/* Preserve the crest's internal drawing, including on the sign-in screen. */
+html body .institution-logo {
+  filter: url(#prefeitura-white);
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+html body #userAccessDialog .access-flow-step {
+  background: var(--acervo-action);
+  border: 1px solid #619af2;
+  color: #fff;
+  box-shadow:
+    inset 0 1px #ffffff24,
+    0 5px 14px #1956b51c;
+}
+html body #userAccessDialog .access-flow-step :is(span, strong, small) {
+  color: #fff;
+}
+html body #userAccessDialog .access-flow-step > span {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  min-height: 30px;
+  border: 1px solid #ffffff65;
+  border-radius: 9px;
+  background: #ffffff15;
+}
+html body #userAccessDialog .role-option {
+  background: #fff;
+  color: #18345d;
+  border: 1px solid #8aa8d0;
+  box-shadow: 0 3px 9px #18345d0c;
+  transition:
+    border-color 180ms,
+    box-shadow 180ms,
+    background 180ms;
+}
+html body #userAccessDialog .role-option:has(input:checked) {
+  color: #fff;
+  border-color: #438ef1;
+  background: var(--acervo-action);
+  box-shadow:
+    inset 0 1px #ffffff30,
+    0 5px 16px #1956b52e;
+}
+html body #userAccessDialog .role-option:has(input:checked) :is(strong, small) {
+  color: #fff;
+}
+html body #userAccessDialog .role-option input {
+  accent-color: #1956b5;
+}
+html body #userAccessDialog .role-option:has(input:checked) input {
+  accent-color: #fff;
+}
+html body #userAccessDialog #addPerson {
+  color: #fff;
+  border-color: #5b97e9;
+  background: var(--acervo-action);
+  box-shadow:
+    inset 0 1px #ffffff35,
+    0 5px 15px #1956b524;
+}
+html body #userAccessDialog #addPerson .icon {
+  color: #fff;
+}
+
+/* The automatic identifier is a read-only ticket, never a second editable field. */
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly]) {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  gap: 3px 13px;
+  padding: 14px 16px;
+  border: 1px solid #8ab5ee;
+  border-radius: 13px;
+  background: linear-gradient(115deg, #eef6ff, #d9eaff);
+  box-shadow:
+    inset 0 1px #fff,
+    0 4px 12px #1956b510;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  .mobile-code-symbol {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1 / 4;
+  position: static;
+  place-items: center;
+  width: 52px;
+  height: 56px;
+  padding: 9px;
+  border: 1px solid #71a1e5;
+  border-radius: 11px;
+  background: var(--acervo-action);
+  color: #fff;
+  box-shadow:
+    inset 0 1px #ffffff40,
+    0 3px 12px #1956b52b;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  .mobile-code-symbol
+  svg {
+  width: 32px;
+  height: 32px;
+  color: #fff;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  #codeLabel {
+  display: block;
+  grid-column: 2;
+  grid-row: 1;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  color: #36557b;
+  font-size: 11px;
+  line-height: 1.4;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  > .scanrow {
+  display: block;
+  grid-column: 2;
+  grid-row: 2;
+  width: 100%;
+  min-width: 0;
+}
+html body #app #register #itemForm #identityBlock #codeWrap #code[readonly] {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #143d76;
+  font: 750 22px/1.3 var(--font, system-ui);
+  letter-spacing: 0.02em;
+  pointer-events: auto;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  #codeHint {
+  display: block;
+  grid-column: 2;
+  grid-row: 3;
+  margin: 0;
+  padding: 0;
+  color: #49678c;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: left;
+}
+html
+  body
+  #app
+  #register
+  #itemForm
+  #identityBlock
+  #codeWrap:has(#code[readonly])
+  #codeHint::before {
+  content: none;
+}
+
+/* Shared tactile feedback: preserve each action's meaning and readable labels. */
+html body :is(#app, #login, dialog) :is(button, summary) {
+  transition:
+    color 180ms,
+    border-color 180ms,
+    box-shadow 220ms,
+    translate 180ms,
+    background-position 560ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+html body :is(#app, #login, dialog) :is(button, summary) > .icon {
+  transition:
+    color 180ms,
+    filter 220ms,
+    translate 180ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  html
+    body
+    :is(#app, #login, dialog)
+    :is(button, summary):not(:disabled):not(.desktop-metric):not(
+      .desktop-distribution-row
+    ):not(.desktop-stock-row):hover {
+    box-shadow:
+      inset 0 1px #ffffff35,
+      0 5px 16px #1956b52d;
+  }
+  html
+    body
+    :is(#app, #login, dialog)
+    :is(button, summary):not(:disabled):hover
+    > .icon {
+    filter: drop-shadow(0 0 4px #639fff88);
+  }
+  html
+    body
+    :is(
+      #manageAccess,
+      #refresh,
+      #accessBack,
+      #closeUserAccess,
+      #editDialogClose,
+      #mobileAccountTrigger,
+      #mobileHomeAbout
+    ):not(:disabled):hover,
+  html
+    body
+    :is(
+      .mobile-outline,
+      .detail-edit,
+      .desktop-about-link,
+      .mobile-review-back,
+      .mobile-journey-exit
+    ):not(:disabled):hover {
+    color: #1358c0;
+    border-color: #4d95ed;
+    background: linear-gradient(115deg, #fff, #e1eeff);
+    translate: 0 -1px;
+    text-shadow: 0 0 12px #4e8de045;
+  }
+  html
+    body
+    :is(#manageAccess, #refresh, #accessBack, #editDialogClose):not(
+      :disabled
+    ):hover
+    .icon {
+    color: #176be0;
+  }
+  html
+    body
+    :is(
+      .mobile-dialog-close,
+      .dialog-heading > button,
+      .operation-hero > button,
+      .mobile-account-heading > button
+    ):hover {
+    background: #ffffff26;
+    border-color: #ffffffa6;
+    color: #fff;
+    translate: 0 -1px;
+  }
+  html body #logout:hover {
+    background: var(--acervo-red);
+    color: #fff;
+    border-color: #ff6c8b;
+  }
+  html body #logout:hover .icon {
+    color: #fff;
+  }
+  html body #userAccessDialog .role-option:not(:has(input:checked)):hover {
+    border-color: #2e7be2;
+    box-shadow: 0 4px 14px #1956b529;
+  }
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  /* A single institutional signature, with one copyright and one About link. */
+  html.acervo-desktop body .shell > .institution-footer {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, auto);
+    gap: 18px 30px;
+    padding: 24px 2px;
+  }
+  html.acervo-desktop body .institution-footer .institution-logo {
+    filter: url(#prefeitura-white);
+  }
+  html.acervo-desktop body .institution-footer .institution-credits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    max-width: 430px;
+  }
+  html.acervo-desktop body .institution-copyright {
+    margin: 0;
+    color: #e5efff;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  html.acervo-desktop body .institution-footer .desktop-about-link {
+    display: inline-flex;
+    width: auto;
+    min-height: 30px;
+    padding: 5px 10px;
+    border: 1px solid #ffffff45;
+    border-radius: 8px;
+    color: #fff;
+    background: #ffffff09;
+    font-size: 12px;
+  }
+  html.acervo-desktop body .mobile-home-footer {
+    display: none;
+  }
+
+  html.acervo-desktop #app #register #itemForm [data-desktop-section] {
+    opacity: 0.5;
+  }
+  html.acervo-desktop #app #register #itemForm [data-section-complete="true"] {
+    opacity: 0.6;
+  }
+  html.acervo-desktop #app #register #itemForm [data-desktop-section]:hover {
+    opacity: 0.78;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    [data-desktop-section]:is(.is-current-section, :focus-within) {
+    opacity: 1;
+  }
+  html.acervo-desktop #app #register #itemForm .is-current-section::after {
+    width: 4px;
+    background: linear-gradient(180deg, #54b2ff, #1956b5);
+    box-shadow: 0 0 8px #3189eb55;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#registrationRooms > legend, #notesBlock > label) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #18345d;
+    font: 650 13px/1.4 var(--pc-font);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(#registrationRooms > legend, #notesBlock > label)
+    .icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    color: #2673dc;
+  }
+  html.acervo-desktop #app #register .choice > input:checked + span {
+    border-color: #5393ef;
+    box-shadow:
+      inset 0 1px #ffffff3b,
+      0 4px 12px #1956b52e;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 16px 22px;
+    align-items: start;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control
+    > fieldset {
+    grid-column: 1;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
+    grid-column: 2;
+    margin: 0;
+    gap: 16px;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #identityBlock {
+    grid-column: 1/-1;
+    width: 100%;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #identityHeading {
+    display: none;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #codeWrap {
+    margin-top: 0;
+  }
+
+  .acervo-desktop
+    #app
+    #movements
+    .movement-result
+    .actions
+    .action-descarte_estoque {
+    color: #49300b;
+    background: var(--acervo-amber);
+    border-color: #e6a528;
+    box-shadow:
+      inset 0 1px #ffffff65,
+      0 3px 10px #a96e1620;
+  }
+  .acervo-desktop #app #movements .movement-result .movement-register-discard {
+    padding: 8px 12px;
+    border: 1px solid #e0315a;
+    border-radius: 10px;
+    background: var(--acervo-red);
+    color: #fff;
+    font-weight: 600;
+    box-shadow:
+      inset 0 1px #ffffff25,
+      0 4px 11px #bd0d3824;
+    text-decoration: none;
+  }
+  .acervo-desktop #app #movements .movement-result .actions .action-saida {
+    color: #174c96;
+    border-color: #6594cd;
+    background: linear-gradient(115deg, #fff, #e9f2ff);
+  }
+  .acervo-desktop
+    #app
+    #movements
+    .movement-result
+    .actions
+    :is(.action-emprestar, .action-devolver, .action-entrada) {
+    box-shadow:
+      inset 0 1px #ffffff35,
+      0 4px 12px #1956b526;
+  }
+
+  /* Table: a continuous graphite header, calm alternating rows and distinct data. */
+  .acervo-desktop #app #browse table thead {
+    background: var(--acervo-support);
+  }
+  .acervo-desktop #app #browse table thead th {
+    background: transparent;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.055em;
+    border-right: 1px solid #ffffff20;
+    padding-block: 15px;
+  }
+  .acervo-desktop #app #browse table thead th:last-child {
+    border-right: 0;
+  }
+  .acervo-desktop #app #browse .record-row {
+    background: #fff;
+  }
+  .acervo-desktop #app #browse .record-row:nth-child(even) {
+    background: #edf3fc;
+  }
+  .acervo-desktop #app #browse .record-row:hover {
+    background: #dfedff;
+  }
+  .acervo-desktop #app #browse .record-row > td {
+    border-bottom: 1px solid #cbd9ed;
+    border-right: 1px solid #dce6f366;
+    color: #294466;
+  }
+  .acervo-desktop #app #browse .record-row > td:nth-child(2) {
+    font-weight: 600;
+    color: #1a4e92;
+  }
+  .acervo-desktop #app #browse .record-row .record-item-symbol {
+    background: var(--acervo-action);
+    color: #fff;
+    box-shadow:
+      inset 0 1px #ffffff40,
+      0 3px 9px #1956b522;
+  }
+  .acervo-desktop #app #browse .badge:not(.down):not(.archive) {
+    padding: 4px 8px;
+    color: #1d5092;
+    background: #e2edff;
+    border: 1px solid #b0c9eb;
+  }
+  .acervo-desktop #app #browse .record-row > td:last-child button {
+    color: #21549c;
+    background: linear-gradient(115deg, #fff, #e8f1ff);
+    border-color: #90b0dc;
+  }
+  .acervo-desktop #app #browse .record-row:has(+ .detail-row) {
+    background: #dceaff;
+  }
+
+  .acervo-desktop #app #browse .detail-row > td {
+    padding: 16px;
+    background: #dce7f7;
+  }
+  .acervo-desktop #app #browse .detail-panel {
+    padding: 0;
+    overflow: hidden;
+    gap: 0;
+    border: 1px solid #88ace0;
+    border-radius: 14px;
+    background: #f6f9fe;
+    box-shadow: 0 8px 20px #10316418;
+  }
+  .acervo-desktop #app #browse .detail-panel > .desktop-detail-heading {
+    display: flex;
+    grid-column: 1/-1;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 20px;
+    color: #fff;
+    background: var(--acervo-action);
+  }
+  .desktop-detail-symbol {
+    display: grid;
+    place-items: center;
+    flex: 0 0 43px;
+    height: 46px;
+    border-radius: 11px;
+    border: 1px solid #ffffff50;
+    background: #ffffff14;
+  }
+  .desktop-detail-symbol > .icon {
+    width: 31px;
+    height: 31px;
+    color: #fff;
+  }
+  .acervo-desktop #app #browse .desktop-detail-heading h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+  .desktop-detail-heading small {
+    display: block;
+    margin-top: 3px;
+    color: #dfecff;
+    font-size: 11px;
+  }
+  .desktop-detail-heading > div {
+    min-width: 0;
+  }
+  .acervo-desktop #app #browse .desktop-detail-heading .badge {
+    margin-left: auto;
+    padding: 5px 10px;
+    border: 1px solid #ffffff60;
+    color: #fff;
+    background: #ffffff16;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .acervo-desktop #app #browse .desktop-detail-summary {
+    grid-column: 1;
+    padding: 20px;
+  }
+  .acervo-desktop #app #browse .desktop-detail-summary > .desktop-detail-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+  }
+  .desktop-detail-facts > div {
+    padding: 11px 13px;
+    border: 1px solid #c1d3ec;
+    border-radius: 10px;
+    background: #fff;
+  }
+  .acervo-desktop #app #browse .desktop-detail-facts dt {
+    margin-bottom: 5px;
+    color: #617694;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .acervo-desktop #app #browse .desktop-detail-facts dd {
+    color: #18345d;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .acervo-desktop #app #browse .desktop-detail-summary > .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 17px 0 0;
+    padding: 15px 0 0;
+    border: 0;
+    border-top: 1px solid #c0d2ed;
+    border-radius: 0;
+    background: none;
+  }
+  .acervo-desktop #app #browse .detail-panel .actions .detail-edit {
+    background: #fff;
+    color: #1956b5;
+    border: 1px solid #8eb0e0;
+  }
+  .acervo-desktop #app #browse .detail-panel .actions .action-descarte_estoque {
+    color: #49300b;
+    background: var(--acervo-amber);
+  }
+  .acervo-desktop #app #browse .detail-panel .actions .action-saida {
+    background: #fff;
+    color: #1956b5;
+    border: 1px solid #8eb0e0;
+  }
+  .acervo-desktop #app #browse .detail-panel .actions .item-delete-action {
+    display: grid;
+    place-items: center;
+    flex: 0 0 37px;
+    width: 37px;
+    min-width: 37px;
+    padding: 8px;
+    margin-left: auto;
+    background: linear-gradient(120deg, #b51b42, #8b173a);
+  }
+  .acervo-desktop #app #browse .detail-panel > .history {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 20px;
+    margin: 0;
+    border: 0;
+    border-left: 1px solid #c1d3ec;
+    border-radius: 0;
+    background: #edf3fc;
+  }
+  .acervo-desktop #app #browse .detail-panel .history h3 {
+    color: #18345d;
+    font-size: 15px;
+    margin: 0 0 14px;
+  }
+  .acervo-desktop #app #browse .detail-panel .history-entry {
+    border-color: #bdd0ea;
+    border-left: 3px solid #2e7be2;
+    background: #fff;
+    box-shadow: 0 3px 8px #10316408;
+  }
+
+  /* Dashboard: luminous Safira for the total, graphite for labels, amber only for attention. */
+  .acervo-desktop #app #desktopOverview .desktop-metric {
+    border: 1px solid #c0d2ed;
+    background: #fff;
+    color: #18345d;
+    box-shadow:
+      inset 0 4px #5b8dd4,
+      0 7px 20px #10316416;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric > .icon {
+    box-sizing: content-box;
+    width: 23px;
+    height: 23px;
+    padding: 9px;
+    border-radius: 11px;
+    background: var(--acervo-support);
+    color: #fff;
+    box-shadow:
+      inset 0 1px #ffffff40,
+      0 4px 12px #1956b51c;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric.is-main {
+    color: #fff;
+    border-color: #5799f1;
+    background: linear-gradient(125deg, #254b82, #1956b5 55%, #3489f2);
+    box-shadow:
+      inset 0 1px #ffffff45,
+      0 8px 26px #1956b540;
+  }
+  .acervo-desktop
+    #app
+    #desktopOverview
+    .desktop-metric.is-main
+    :is(b, strong, small) {
+    color: #fff;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric.is-main > .icon {
+    background: #ffffff18;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px #ffffff55;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric:nth-child(4) {
+    box-shadow:
+      inset 0 4px #edb746,
+      0 7px 20px #10316416;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric:nth-child(4) > .icon {
+    background: var(--acervo-amber);
+    color: #49300b;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-metric small {
+    color: #58708e;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-overview-card {
+    background: #f7faff;
+    border-color: #b4ccea;
+    overflow: hidden;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-overview-card > h2 {
+    margin: -24px -24px 19px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #bad0ed;
+    background: #e4edfb;
+    color: #18345d;
+  }
+  .acervo-desktop #app #desktopOverview .desktop-overview-card > h2 > .icon {
+    color: #246bcd;
+  }
+  .desktop-chart-tabs {
+    background: #d6e4f7;
+  }
+  .desktop-chart-tabs button[aria-pressed="true"] {
+    background: var(--acervo-action);
+    color: #fff;
+    box-shadow: 0 3px 9px #1956b526;
+  }
+  .desktop-distribution-track {
+    height: 9px;
+    background: #d5e2f4;
+    box-shadow: inset 0 1px 2px #10316410;
+  }
+  .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #2e7be2, #63a9ff);
+    box-shadow: 0 1px 5px #2e7be233;
+  }
+  .desktop-distribution-row:nth-child(2) .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #275596, #5188ce);
+  }
+  .desktop-distribution-row:nth-child(3) .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #4776b2, #87b4eb);
+  }
+  .desktop-identification-ring {
+    background: conic-gradient(#2e7be2 var(--identified), #ceddf1 0);
+    box-shadow: 0 4px 14px #1956b51a;
+  }
+  .desktop-identification-ring::before {
+    background: #f7faff;
+  }
+  #desktopOverviewBalances > div {
+    padding: 13px;
+    margin-bottom: 8px;
+    border: 1px solid #c1d3ec;
+    border-radius: 9px;
+    background: #fff;
+  }
+  #desktopOverviewFacts > div > b {
+    color: #1956b5;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) and (hover: hover) {
+  html.acervo-desktop body .shell > .institution-footer {
+    grid-template-columns: 1fr;
+  }
+  html.acervo-desktop body .institution-footer .institution-credits {
+    align-items: flex-start;
+    text-align: left;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control {
+    grid-template-columns: 1fr;
+  }
+  html.acervo-desktop #app #register #itemForm.quantity-layout #stockFields {
+    grid-column: 1;
+  }
+  .acervo-desktop #app #browse .detail-panel {
+    grid-template-columns: 1fr;
+  }
+  .acervo-desktop #app #browse .detail-panel > .history {
+    grid-column: 1;
+    grid-row: auto;
+    border-left: 0;
+    border-top: 1px solid #c1d3ec;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  html body #app #register #itemForm #identityBlock #codeWrap #code[readonly] {
+    font-size: 21px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions .item-delete-action {
+    min-width: 43px;
+    width: 43px;
+    padding: 10px;
+  }
+  html
+    body
+    #app
+    #movements
+    .mobile-action-tile[data-action="descarte_estoque"] {
+    background: var(--acervo-amber);
+    color: #49300b;
+  }
+  html
+    body
+    #app
+    #movements
+    .mobile-action-tile[data-action="descarte_estoque"]
+    :is(.icon, strong, small) {
+    color: #49300b;
+  }
+  html
+    body
+    #app
+    #movements
+    .mobile-action-tile:not([data-action="descarte_estoque"]) {
+    box-shadow:
+      inset 0 1px #ffffff35,
+      0 5px 14px #10316425;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body :is(#app, #login, dialog) :is(button, summary, .icon) {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action) {
+    grid-template-columns: minmax(0, 1fr) 43px;
+    align-items: stretch;
+  }
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action):has(
+      > button:nth-child(3)
+    ) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) 43px;
+  }
+  #mobileDetail.mobile-dialog .mobile-detail-actions > .item-delete-action {
+    grid-column: auto;
+    grid-row: auto;
+    margin: 0;
+  }
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action)
+    > button:not(.item-delete-action) {
+    min-width: 0;
+    padding-inline: 6px;
+    gap: 5px;
+    font-size: 12px;
+  }
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action)
+    > button:not(.item-delete-action)
+    > .icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html
+    body
+    #mobileAccountDialog
+    :is(#manageAccess, #refresh):not(:disabled):hover {
+    color: #1358c0;
+    background: linear-gradient(115deg, #fff, #deedff);
+    border-color: #4d95ed;
+    box-shadow:
+      inset 0 1px #fff,
+      0 5px 16px #1956b533;
+    translate: 0 -1px;
+  }
+  html
+    body
+    #mobileAccountDialog
+    :is(#manageAccess, #refresh):not(:disabled):hover
+    > .icon {
+    color: #176be0;
+    filter: drop-shadow(0 0 4px #639fff88);
+  }
+}
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control
+    > #identityBlock {
+    grid-column: 1/-1;
+    display: block;
+    width: 100%;
+    max-width: none;
+  }
+  .acervo-desktop
+    #app
+    #browse
+    .desktop-detail-heading
+    .badge:not(.down):not(.archive) {
+    background: #ffffff1a;
+    color: #fff;
+    border-color: #ffffff70;
+  }
+  .acervo-desktop #desktopOverview .desktop-distribution-row:hover {
+    background: #e5effd;
+    box-shadow: none;
+  }
+}
+@media (max-width: 360px) {
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action):has(
+      > button:nth-child(3)
+    ) {
+    grid-template-columns: 43px minmax(0, 1fr) 43px;
+  }
+  #mobileDetail.mobile-dialog
+    .mobile-detail-actions:has(> .item-delete-action)
+    > button.mobile-outline {
+    font-size: 0;
+  }
+}

@@ -11177,12 +11177,10 @@ function mobileInventorySnapshot(records, room = "") {
 }
 
 function mobileChromeColor() {
-  if (!mobileAcervo()) return "#0b3975";
-  return document.querySelector("#camera[open]")
-    ? "#0852b8"
-    : document.querySelector("body > dialog[open]")
-      ? "#033071"
-      : "#0852b8";
+  return mobileAcervo() &&
+    document.querySelector("body > dialog[open]:not(#camera)")
+    ? "#081f41"
+    : "#103164";
 }
 
 function initMobileRefinements() {
@@ -12402,3 +12400,33 @@ function desktopRoomPicker(select) {
     });
   return picker;
 }
+
+function initAcervoChameleon() {
+  const selector =
+    "#save, #mobileRegistrationNext, #loginButton, #editSave, .desktop-completion-actions > .primary";
+  let pressed = null;
+  const release = () => {
+    pressed?.classList.remove("is-pressed");
+    pressed = null;
+  };
+  document.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
+      release();
+      const button = event.target.closest(selector);
+      if (!button || button.disabled) return;
+      pressed = button;
+      button.classList.add("is-pressed");
+    },
+    { passive: true },
+  );
+  document.addEventListener("pointerup", release, { passive: true });
+  document.addEventListener("pointercancel", release, { passive: true });
+  window.addEventListener("blur", release);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) release();
+  });
+}
+
+initAcervoChameleon();

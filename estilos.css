@@ -27723,13 +27723,37 @@ body > #camera.is-unavailable .preview {
 
 /* 3.5.60 — contraste, hierarquia e adaptação para uso no computador. */
 :root {
-  --acervo-canvas-color: #0b3975;
+  --acervo-sapphire: #1956b5;
+  --acervo-sapphire-light: #2e7be2;
+  --acervo-sapphire-deep: #103164;
+  --acervo-graphite: #264979;
+  --acervo-graphite-deep: #18345d;
+  --acervo-bridge: #235195;
+  --acervo-action: linear-gradient(
+    125deg,
+    var(--acervo-graphite),
+    var(--acervo-bridge) 48%,
+    var(--acervo-sapphire)
+  );
+  --acervo-support: linear-gradient(
+    125deg,
+    var(--acervo-graphite),
+    var(--acervo-graphite-deep)
+  );
+  --acervo-chameleon: linear-gradient(
+    112deg,
+    var(--acervo-graphite) 0%,
+    var(--acervo-sapphire) 50%,
+    var(--acervo-graphite) 100%
+  );
+  --acervo-canvas-color: var(--acervo-sapphire-deep);
   --acervo-canvas:
-    radial-gradient(ellipse at 92% 9%, #087ede66, transparent 56%),
-    radial-gradient(ellipse at 16% 98%, #006fca55, transparent 65%),
-    linear-gradient(145deg, #0b3975, #0952a9 58%, #064389);
+    radial-gradient(ellipse at 95% 8%, #4797f542, transparent 62%),
+    linear-gradient(145deg, #103164, #1956b5 67%, #12326e);
   --app-login-background: var(--acervo-canvas);
   --app-content-background: var(--acervo-canvas);
+  --blue-action: var(--acervo-action);
+  --blue-heading: var(--acervo-action);
 }
 html.auth-viewport,
 html.acervo-desktop,
@@ -27833,9 +27857,9 @@ body.auth-screen {
   html.acervo-desktop {
     --ink: #182d43;
     --muted: #637489;
-    --pc-action: linear-gradient(125deg, #167de7, #215bd4 65%, #1746b3);
+    --pc-action: var(--acervo-action);
     --pc-danger: linear-gradient(125deg, #de1747, #ad1640);
-    --pc-stock: linear-gradient(125deg, #078b84, #006e73);
+    --pc-stock: var(--acervo-support);
     --pc-line: #d9e2eb;
     --pc-font: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --pc-ink: #182d43;
@@ -27910,7 +27934,7 @@ body.auth-screen {
     color: #31536f;
   }
   .acervo-desktop #app #register .choice > input:checked + span {
-    background: linear-gradient(125deg, #1976d4, #214ca4);
+    background: var(--acervo-action);
     border-color: transparent;
     color: #fff;
     box-shadow: 0 3px 9px #10458818;
@@ -27973,7 +27997,7 @@ body.auth-screen {
   .desktop-preview-heading > span {
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #067b84, #075d77);
+    background: var(--acervo-support);
     box-shadow: none;
   }
   .desktop-preview-heading > span > .icon {
@@ -27993,19 +28017,19 @@ body.auth-screen {
     font-weight: 600;
   }
   #register[data-desktop-ready="true"] #desktopProgressMessage {
-    color: #006d72;
+    color: #264979;
   }
   #desktopProgressCount {
-    color: #006d72;
+    color: #264979;
   }
   .desktop-progress-track > i {
     background: #e2e9f0;
   }
   .desktop-progress-track > i::before {
-    background: linear-gradient(90deg, #00aeb7, #087b8c);
+    background: linear-gradient(90deg, #5078b1, #1956b5);
   }
   .desktop-preview-symbol {
-    background: linear-gradient(135deg, #164e72, #136984);
+    background: var(--acervo-support);
   }
   .desktop-preview-facts dt {
     color: #68788b;
@@ -28115,7 +28139,7 @@ body.auth-screen {
   }
   .acervo-desktop #app #movements .badge {
     background: none;
-    color: #1b715e;
+    color: #264979;
     border: 0;
     padding: 1px 0;
     font-size: 10px;
@@ -28138,7 +28162,7 @@ body.auth-screen {
   }
   .movement-stock-balance {
     display: inline-block;
-    color: #006f73;
+    color: #264979;
     font-size: 11px;
     font-weight: 650;
   }
@@ -28243,16 +28267,16 @@ body.auth-screen {
   /* Consulta: cor acompanha a informação, em vez de pintar toda a tabela. */
   .acervo-desktop #app #browse .export-menu > summary {
     color: #fff;
-    background: linear-gradient(125deg, #0c857b, #08636a);
+    background: var(--acervo-support);
     border: 1px solid #ffffff15;
     border-radius: 10px;
     min-height: 41px;
   }
   .acervo-desktop #app #browse .export-options button {
-    color: #21545b;
+    color: #264979;
   }
   .acervo-desktop #app #browse .export-options button:hover {
-    background: linear-gradient(125deg, #0c857b, #08636a);
+    background: var(--acervo-support);
   }
   .acervo-desktop #app #browse table thead {
     background: #f0f4f7;
@@ -28313,7 +28337,7 @@ body.auth-screen {
   }
   .acervo-desktop #app #browse .badge:not(.down):not(.archive) {
     background: none;
-    color: #19715b;
+    color: #264979;
     border: 0;
     font-weight: 650;
   }
@@ -28458,12 +28482,12 @@ body.auth-screen {
     font-size: 11px;
   }
   .desktop-metric.is-main {
-    background: linear-gradient(125deg, #145b70, #087a80);
+    background: var(--acervo-support);
     color: #fff;
-    border-color: #58b0b8;
+    border-color: #5078b1;
   }
   .desktop-metric:not(.is-main) > .icon {
-    color: #256e88;
+    color: #264979;
   }
   .desktop-metric:nth-child(2) > .icon {
     color: #32547b;
@@ -28477,7 +28501,7 @@ body.auth-screen {
     font-weight: 650;
   }
   .desktop-overview-card h2 .icon {
-    color: #376b7c;
+    color: #264979;
   }
   .desktop-chart-tabs {
     display: inline-flex;
@@ -28500,32 +28524,32 @@ body.auth-screen {
     background: #e9eff3;
   }
   .desktop-distribution-track > i {
-    background: linear-gradient(90deg, #288ce0, #2466c0);
+    background: linear-gradient(90deg, #2e7be2, #1956b5);
   }
   .desktop-distribution-row:nth-child(2) .desktop-distribution-track > i {
-    background: linear-gradient(90deg, #08a4ab, #087989);
+    background: linear-gradient(90deg, #5078b1, #264979);
   }
   .desktop-distribution-row:nth-child(3) .desktop-distribution-track > i {
-    background: linear-gradient(90deg, #527c9c, #2c536d);
+    background: linear-gradient(90deg, #38649b, #18345d);
   }
   .desktop-identification-ring {
-    background: conic-gradient(#0b9699 var(--identified), #e5edf1 0);
+    background: conic-gradient(#1956b5 var(--identified), #e5edf1 0);
   }
   .desktop-identification-ring b {
-    color: #136f79;
+    color: #264979;
   }
   .desktop-card-link {
-    color: #1a6c85;
+    color: #264979;
   }
   .desktop-item-symbol {
-    color: #28657a;
+    color: #264979;
     background: #eef5f7;
   }
   #desktopOverviewPriorityList > .icon {
-    color: #14837c;
+    color: #1956b5;
   }
   #desktopOverviewFacts > div > b {
-    color: #215e77;
+    color: #264979;
   }
 
   /* Assinatura institucional completa no PC; rodapé compacto permanece no celular. */
@@ -28635,18 +28659,20 @@ body.auth-screen {
 @media (max-width: 640px),
   (hover: none) and (pointer: coarse) and (max-width: 1024px) {
   :root {
-    --acervo-canvas-color: #0852b8;
     --acervo-canvas:
-      radial-gradient(ellipse at 100% 75%, #0086ed66, transparent 68%),
-      linear-gradient(180deg, #0852b8 0, #0852b8 100px, #005dc7 100%);
+      linear-gradient(180deg, #103164 0px, #103164 96px, #10316400 240px),
+      radial-gradient(ellipse at 100% 65%, #4797f542, transparent 68%),
+      linear-gradient(160deg, #103164, #1956b5 70%, #12326e);
     --app-login-background: var(--acervo-canvas);
     --app-content-background: var(--acervo-canvas);
+    --mobile-blue: var(--acervo-action);
+    --mobile-deep: var(--acervo-support);
   }
   html.auth-viewport,
   body.auth-screen,
   html:not(.acervo-camera-open):not(.app-typing),
   html:not(.app-typing) body:not(.auth-screen) {
-    background-color: #0852b8;
+    background-color: var(--acervo-canvas-color);
     background-image: var(--acervo-canvas);
     background-size: 100vw 100lvh;
     background-attachment: fixed;
@@ -28711,11 +28737,11 @@ body.auth-screen {
   (hover: none) and (pointer: coarse) and (max-width: 1024px) {
   #app #movements .mobile-action-tile[data-action="transfer"],
   #app #movements .mobile-action-tile[data-action="saida"] {
-    background: linear-gradient(125deg, #24506c, #143456);
+    background: var(--acervo-support);
     color: #fff;
   }
   #app #movements .mobile-action-tile[data-action="entrada"] {
-    background: linear-gradient(125deg, #079c9b, #006c7a);
+    background: var(--acervo-action);
     color: #fff;
   }
   #app #movements .mobile-action-tile[data-action="descarte_estoque"] {
@@ -28734,16 +28760,195 @@ body.auth-screen {
     color: #fff;
   }
   #mobileDashboardAttention:not([data-alert="true"]) .mobile-stock-heading {
-    background: linear-gradient(125deg, #087e8e, #07546e);
+    background: var(--acervo-support);
   }
   #mobileDashboardAttributes .mobile-attribute:nth-child(2) > .icon {
-    color: #82ece4;
+    color: #a9d1ff;
   }
   #mobileDashboardAttributes .mobile-attribute:nth-child(3) > .icon {
     color: #ffda92;
   }
   #mobileQueryMenu .mobile-export-heading > .icon,
   #mobileQueryMenu .export-options button {
-    color: #08777a;
+    color: #264979;
+  }
+}
+
+/* 3.5.61 — Safira e grafite azul com inversão suave nas ações principais. */
+html.acervo-desktop {
+  --pc-action: var(--acervo-action);
+  --pc-stock: var(--acervo-support);
+  --blue-action: var(--acervo-action);
+  --blue-heading: var(--acervo-action);
+}
+
+html
+  body
+  #app
+  #register
+  .primary:is(
+    #save,
+    #mobileRegistrationNext,
+    .desktop-completion-actions > button
+  ),
+html body #app #register #itemForm .primary:is(#save, #mobileRegistrationNext),
+html body #login #loginButton,
+html body #editDialog #editSave {
+  color: #fff;
+  background-color: var(--acervo-sapphire);
+  background-image: var(--acervo-chameleon);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  border-color: transparent;
+  transition:
+    background-position 560ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    box-shadow 240ms ease,
+    border-color 240ms ease,
+    transform 180ms ease;
+}
+
+html
+  body
+  #app
+  #register
+  .primary:is(
+    #save,
+    #mobileRegistrationNext,
+    .desktop-completion-actions > button
+  ):not(:disabled):is(:focus-visible, :active, .is-pressed),
+html
+  body
+  #app
+  #register
+  #itemForm
+  .primary:is(#save, #mobileRegistrationNext):not(:disabled):is(
+    :focus-visible,
+    :active,
+    .is-pressed
+  ),
+html
+  body
+  #login
+  #loginButton:not(:disabled):is(:focus-visible, :active, .is-pressed),
+html
+  body
+  #editDialog
+  #editSave:not(:disabled):is(:focus-visible, :active, .is-pressed) {
+  background-position: 100% 50%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html
+    body
+    #app
+    #register
+    .primary:is(
+      #save,
+      #mobileRegistrationNext,
+      .desktop-completion-actions > button
+    ):not(:disabled):hover,
+  html
+    body
+    #app
+    #register
+    #itemForm
+    .primary:is(#save, #mobileRegistrationNext):not(:disabled):hover,
+  html body #login #loginButton:not(:disabled):hover,
+  html body #editDialog #editSave:not(:disabled):hover {
+    background-position: 100% 50%;
+    box-shadow: 0 5px 18px #1956b52b;
+  }
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .desktop-hero-art::before {
+    background: radial-gradient(ellipse, #4bbfff75, #00baff00 70%);
+  }
+  .acervo-desktop #app #register #itemForm #codeWrap {
+    background: linear-gradient(115deg, #f5f9ff, #e8f0fc);
+    border-color: #b8cdec;
+  }
+  .desktop-item-symbol,
+  .record-item-symbol {
+    color: #264979;
+    background: #eff4fa;
+  }
+  .desktop-overview-card h2 .icon,
+  .desktop-metric:not(.is-main) > .icon {
+    color: #264979;
+  }
+  .desktop-metric:nth-child(4) > .icon,
+  .desktop-metric.needs-attention > .icon {
+    color: #ab741f;
+  }
+}
+
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  html:not(.app-typing) body:not(.auth-screen) .shell > header.bar {
+    background: transparent;
+  }
+  html.acervo-camera-open,
+  .acervo-camera-open body:not(.auth-screen) {
+    background-color: #103164;
+    background-image: none;
+  }
+  body > #camera[open] {
+    background-color: #103164;
+    background-image: var(--acervo-canvas);
+  }
+  body > #camera::backdrop {
+    background: #103164;
+  }
+  #mobileDashboardRoomPicker > summary {
+    background: linear-gradient(115deg, #264979a6, #1956b5a6);
+    border-color: #a9c6ef77;
+  }
+  #mobileAccountTrigger > .mobile-account-avatar {
+    color: #264979;
+    background: linear-gradient(145deg, #f6fbff, #bbd6fa);
+  }
+  #mobileDashboardAttributes .mobile-attribute:nth-child(2) > .icon {
+    color: #a9d1ff;
+  }
+  html
+    body
+    #app
+    #register
+    #itemForm
+    .primary:is(#save, #mobileRegistrationNext):not(:disabled):is(
+      :active,
+      .is-pressed
+    ) {
+    transition-duration: 160ms;
+  }
+}
+
+body > #camera.is-unavailable .preview {
+  background:
+    radial-gradient(ellipse at 50% 30%, #2e7be255, transparent 70%),
+    var(--acervo-support);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html
+    body
+    #app
+    #register
+    .primary:is(
+      #save,
+      #mobileRegistrationNext,
+      .desktop-completion-actions > button
+    ),
+  html
+    body
+    #app
+    #register
+    #itemForm
+    .primary:is(#save, #mobileRegistrationNext),
+  html body #login #loginButton,
+  html body #editDialog #editSave {
+    transition: none;
   }
 }

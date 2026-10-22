@@ -18744,9 +18744,6 @@ body::before {
     background: none;
     border: 0;
   }
-  #userAccessDialog:has(#newUserForm:not([hidden])) #accessBack {
-    display: none;
-  }
   #userAccessDialog:has(#newUserForm:not([hidden])) .access-dialog-title {
     padding-left: 0;
   }
@@ -29910,4 +29907,572 @@ html body :is(#app, #login, dialog) :is(button, summary) > .icon {
     > button.mobile-outline {
     font-size: 0;
   }
+}
+/* 3.5.63 — alinhamento do controle, conta no cabeçalho e descarte por significado. */
+:root {
+  --acervo-discard: linear-gradient(115deg, #ff2454, #dc0040 54%, #aa0039);
+  --acervo-discard-chameleon: linear-gradient(
+    112deg,
+    #b6073b 0%,
+    #ff2454 50%,
+    #b6073b 100%
+  );
+  --acervo-amber-chameleon: linear-gradient(
+    112deg,
+    #e59a12 0%,
+    #ffda70 50%,
+    #e59a12 100%
+  );
+}
+
+/* Partial disposal keeps its amber identity throughout the confirmation. */
+html body > #registrationDiscardDialog > .operation-hero,
+html body > #operation.destructive[data-action="baixar"] > .operation-hero {
+  background:
+    radial-gradient(ellipse at 12% 0%, #ffffff24, transparent 62%),
+    var(--acervo-discard);
+  border: 0;
+  border-bottom: 1px solid #ff92af;
+  color: #fff;
+  box-shadow: inset 0 1px #ffffff40;
+}
+html body > #registrationDiscardDialog #registrationDiscardTitle {
+  color: #fff;
+  font-weight: 750;
+  line-height: 1.3;
+}
+html
+  body
+  > #registrationDiscardDialog
+  .operation-hero
+  :is(.eyebrow, .operation-mark),
+html
+  body
+  > #operation.destructive[data-action="baixar"]
+  .operation-hero
+  :is(.eyebrow, .operation-mark) {
+  color: #fff;
+}
+html body > #registrationDiscardDialog #registrationDiscardItem {
+  border-color: #eea7bc;
+  background: #fff;
+  color: #a20735;
+}
+html
+  body
+  > #registrationDiscardDialog
+  #registrationDiscardForm
+  #confirmRegistrationDiscard,
+html
+  body
+  > #operation.destructive[data-action="baixar"]
+  #operationForm
+  #confirmOperation {
+  background-color: #dc0040;
+  background-image: var(--acervo-discard-chameleon);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  border: 1px solid #f63c68;
+  color: #fff;
+  box-shadow:
+    inset 0 1px #ffffff45,
+    0 5px 16px #cd154438;
+  transition:
+    background-position 500ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    box-shadow 220ms,
+    translate 180ms;
+}
+html
+  body
+  > #registrationDiscardDialog
+  #registrationDiscardForm
+  #confirmRegistrationDiscard
+  .icon,
+html
+  body
+  > #operation.destructive[data-action="baixar"]
+  #operationForm
+  #confirmOperation
+  .icon {
+  color: #fff;
+}
+
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  > .operation-hero {
+  background:
+    radial-gradient(ellipse at 12% 0%, #ffffff48, transparent 65%),
+    var(--acervo-amber);
+  color: #49300b;
+  border: 0;
+  border-bottom: 1px solid #dc9419;
+  box-shadow: inset 0 1px #fff9;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  .operation-hero
+  :is(h2, .eyebrow, .operation-mark, .icon),
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  :is(#operationHint, #moveBalance) {
+  color: #49300b;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  .operation-mark {
+  border-color: #6d450b55;
+  background: #ffffff26;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  #operationRecord {
+  color: #49300b;
+  border: 1px solid #70450845;
+  background: #ffffff21;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  #operationRecord
+  :is(strong, small, .operation-code) {
+  color: #49300b;
+}
+html
+  body
+  > #operation.mobile-dialog.destructive[data-action="descarte_estoque"]
+  #operationRecord
+  > .icon {
+  color: #49300b;
+  border-color: #c38418;
+  background: var(--acervo-amber);
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  #operationForm
+  #confirmOperation,
+html
+  body
+  > #operation.mobile-dialog.destructive[data-action="descarte_estoque"]
+  #mobileOperationPreview {
+  color: #49300b;
+  border: 1px solid #dc9419;
+  background-color: #efad29;
+  background-image: var(--acervo-amber-chameleon);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  box-shadow:
+    inset 0 1px #fff9,
+    0 5px 16px #bb7b142d;
+  transition:
+    background-position 500ms cubic-bezier(0.2, 0.75, 0.25, 1),
+    box-shadow 220ms,
+    translate 180ms;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  #operationForm
+  #confirmOperation
+  .icon,
+html
+  body
+  > #operation.mobile-dialog.destructive[data-action="descarte_estoque"]
+  #mobileOperationPreview
+  :is(strong, small, .icon) {
+  color: #49300b;
+}
+html
+  body
+  > #operation.destructive[data-action="descarte_estoque"]
+  .operation-hero
+  > button {
+  color: #49300b;
+  border-color: #70450860;
+  background: #ffffff20;
+}
+
+/* Back-to-people stays legible before hovering, including after a layout change. */
+html body > #userAccessDialog #accessBack:not([hidden]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: max-content;
+  max-width: 100%;
+  height: 34px;
+  min-height: 34px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  padding: 8px 11px;
+  border: 1px solid #ffffff8a;
+  border-radius: 9px;
+  color: #fff;
+  background: #ffffff16;
+  opacity: 1;
+  box-shadow: inset 0 1px #ffffff22;
+  font-size: 12px;
+  font-weight: 600;
+}
+html body > #userAccessDialog #accessBack:not([hidden]) .icon {
+  color: #fff;
+  width: 16px;
+  height: 16px;
+}
+
+html
+  body
+  > #registrationDiscardDialog
+  #registrationDiscardForm
+  #confirmRegistrationDiscard:not(:disabled):is(
+    :focus-visible,
+    :active,
+    .is-pressed
+  ),
+html
+  body
+  > #operation.destructive:is(
+    [data-action="baixar"],
+    [data-action="descarte_estoque"]
+  )
+  #operationForm
+  #confirmOperation:not(:disabled):is(:focus-visible, :active, .is-pressed) {
+  background-position: 100% 50%;
+}
+@media (hover: hover) and (pointer: fine) {
+  html
+    body
+    > #registrationDiscardDialog
+    #registrationDiscardForm
+    #confirmRegistrationDiscard:not(:disabled):hover,
+  html
+    body
+    > #operation.destructive:is(
+      [data-action="baixar"],
+      [data-action="descarte_estoque"]
+    )
+    #operationForm
+    #confirmOperation:not(:disabled):hover {
+    background-position: 100% 50%;
+    translate: 0 -1px;
+    box-shadow:
+      inset 0 1px #ffffff65,
+      0 7px 23px #cf174650;
+  }
+  html
+    body
+    > #operation.destructive[data-action="descarte_estoque"]
+    #operationForm
+    #confirmOperation:not(:disabled):hover {
+    box-shadow:
+      inset 0 1px #ffffffa6,
+      0 7px 23px #d3932359;
+  }
+  html body > #userAccessDialog #accessBack:not([hidden]):hover {
+    background: linear-gradient(115deg, #fff, #dfedff);
+    border-color: #fff;
+    color: #174c96;
+    box-shadow: 0 4px 15px #081f4140;
+    text-shadow: none;
+  }
+  html body > #userAccessDialog #accessBack:not([hidden]):hover .icon {
+    color: #174c96;
+  }
+  html body > #registrationDiscardDialog .operation-hero > button:hover {
+    color: #fff;
+    background: #ffffff2e;
+    border-color: #fff;
+    box-shadow: 0 0 15px #ffb2c455;
+  }
+  html
+    body
+    > #operation.destructive[data-action="descarte_estoque"]
+    .operation-hero
+    > button:hover {
+    color: #49300b;
+    background: #ffffff65;
+    border-color: #70450877;
+    box-shadow: 0 0 15px #fff5;
+  }
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  /* Controls and numeric fields share labels, heights and a baseline. */
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control {
+    align-items: start;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .stock-control
+    > fieldset
+    > legend {
+    clip-path: none;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    visibility: visible;
+    display: block;
+    float: none;
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    margin: 0 0 8px;
+    color: #29496f;
+    font: 500 12px/1.4 var(--pc-font);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #stockFields
+    label {
+    display: block;
+    padding: 0;
+    margin: 0 0 8px;
+    color: #29496f;
+    font: 500 12px/1.4 var(--pc-font);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #controlHost
+    .choice
+    > span,
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm.quantity-layout
+    #stockFields
+    :is(#quantity, #minimum) {
+    min-height: 44px;
+    height: 44px;
+    margin-block: 0;
+    padding-block: 10px;
+  }
+  html.acervo-desktop body .institution-footer .institution-credits {
+    gap: 2px;
+  }
+  html.acervo-desktop
+    body
+    .institution-footer
+    :is(.institution-copyright, .institution-rights) {
+    margin: 0;
+    color: #e5efff;
+    font: 400 12px/1.6 var(--pc-font);
+  }
+
+  .acervo-desktop #app #browse .record-row .record-item-symbol {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    flex: 0 0 40px;
+    padding: 7px;
+    border-radius: 10px;
+    line-height: 0;
+    aspect-ratio: 1;
+  }
+  .acervo-desktop #app #browse .record-row .record-item-symbol > svg.icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 24px;
+    translate: none;
+    transform: none;
+    align-self: center;
+    justify-self: center;
+  }
+
+  /* The same account controls live in the desktop header and mobile dialog. */
+  html.acervo-desktop body .shell > header.bar > #mobileAccountMenu {
+    display: none;
+  }
+  html.acervo-desktop body:not(.auth-screen) .shell > header.bar .header-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 1 auto;
+    width: auto;
+    min-width: 0;
+    margin-left: auto;
+  }
+  html.acervo-desktop body .shell > header.bar .account-toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 18px;
+    max-width: 100%;
+    min-width: 0;
+    padding: 8px 9px 8px 13px;
+    border: 1px solid #ffffff35;
+    border-radius: 13px;
+    background: linear-gradient(115deg, #ffffff0f, #ffffff04);
+    box-shadow: inset 0 1px #ffffff15;
+  }
+  html.acervo-desktop body .shell > header.bar .header-person {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+  html.acervo-desktop body .shell > header.bar .header-account-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  html.acervo-desktop
+    body
+    .shell
+    > header.bar
+    .header-person
+    :is(.account, .account-role) {
+    display: block;
+    max-width: 23ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #fff;
+  }
+  html.acervo-desktop body .shell > header.bar .header-person .account {
+    font: 650 12px/1.3 var(--pc-font);
+  }
+  html.acervo-desktop body .shell > header.bar .header-person .account-role {
+    font: 400 10px/1.3 var(--pc-font);
+    color: #c6daf7;
+  }
+  html.acervo-desktop body .shell > header.bar #accountAvatar {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    color: #1956b5;
+    background: linear-gradient(135deg, #f8fcff, #bad7fb);
+    border: 1px solid #ffffff90;
+    border-radius: 50%;
+    font-size: 12px;
+  }
+  html.acervo-desktop body .shell > header.bar #syncTools:not([hidden]) {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+    margin: 0;
+    padding: 0 0 0 12px;
+    border: 0;
+    border-left: 1px solid #ffffff29;
+    background: none;
+  }
+  html.acervo-desktop
+    body
+    .shell
+    > header.bar
+    #syncTools
+    > button:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto;
+    min-height: 35px;
+    height: 35px;
+    margin: 0;
+    padding: 8px 9px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    box-shadow: none;
+    color: #fff;
+    font: 500 12px/1.3 var(--pc-font);
+    white-space: nowrap;
+  }
+  html.acervo-desktop body .shell > header.bar #syncTools > button .icon {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    color: inherit;
+  }
+  html.acervo-desktop body .shell > header.bar #syncTools .mobile-account-arrow,
+  html.acervo-desktop body .shell > header.bar #refresh .live {
+    display: none;
+  }
+  html.acervo-desktop
+    body
+    .shell
+    > header.bar
+    #syncTools
+    > button:not(:disabled):hover {
+    color: #fff;
+    border-color: #86b8ff70;
+    background: linear-gradient(115deg, #5d9dec40, #2e7be25e);
+    box-shadow:
+      inset 0 1px #ffffff24,
+      0 3px 12px #081f412b;
+    translate: 0 -1px;
+  }
+  html.acervo-desktop
+    body
+    .shell
+    > header.bar
+    #syncTools
+    > #logout:not(:disabled):hover {
+    background: var(--acervo-discard);
+    border-color: #f77597;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) and (hover: hover) {
+  html.acervo-desktop body:not(.auth-screen) .shell > header.bar {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  html.acervo-desktop body:not(.auth-screen) .shell > header.bar .header-meta {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  html.acervo-desktop body .shell > header.bar .account-toolbar {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html
+    body
+    > #registrationDiscardDialog
+    #registrationDiscardForm
+    #confirmRegistrationDiscard,
+  html body > #operation #operationForm #confirmOperation {
+    transition: none;
+  }
+}
+
+/* Shared mobile dialog templates inherit the operation's semantic color. */
+html body > #registrationDiscardDialog,
+html body > #operation[data-action="baixar"] {
+  --mobile-red: var(--acervo-discard);
+}
+html body > #operation[data-action="descarte_estoque"] {
+  --mobile-red: var(--acervo-amber);
 }

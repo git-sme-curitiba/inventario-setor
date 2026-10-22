@@ -1944,7 +1944,7 @@ function mountControlFields(host, prefix = "", record = null) {
   const box = el("div", undefined, "stock-control");
   const group = el("fieldset"),
     opts = el("div", undefined, "choices");
-  group.append(el("legend", "Controle"), opts);
+  group.append(el("legend", "Tipo de controle"), opts);
   choices(
     opts,
     e ? "editControl" : "control",
@@ -3779,6 +3779,7 @@ function openOperation(a, r) {
     return toast("Conclua a operação pendente primeiro.", true);
   selected = r;
   action = a;
+  $("operation").dataset.action = a;
   $("operation").classList.toggle(
     "destructive",
     ["baixar", "descarte_estoque"].includes(a),
@@ -11842,19 +11843,12 @@ function initDesktopExperience() {
   grid.append(distribution, identity, priority, balances, facts);
   dashboard.append(heading, metrics, grid);
   $("dashboard").prepend(dashboard);
-  const about = button(
-    "Sobre o Acervo",
-    () => showAcervoDialog($("mobileAboutDialog")),
-    "desktop-about-link desktop-only",
-  );
   const footer = document.querySelector(".institution-footer");
   const credits = footer.querySelector(".institution-credits");
-  const copyright = el(
-    "p",
-    "© 2026 Gabriel Santiago Cândido. Todos os direitos reservados.",
-    "institution-copyright",
+  credits.replaceChildren(
+    el("p", "© 2026 Gabriel Santiago Cândido.", "institution-copyright"),
+    el("p", "Todos os direitos reservados.", "institution-rights"),
   );
-  credits.replaceChildren(copyright, about);
   footer.querySelector(".institution-signature span").innerHTML =
     "Gestão de bens e materiais<br>Controle e organização do acervo";
   const queryTitle = $("browse").querySelector(".workspace-title");
@@ -11877,12 +11871,10 @@ function initDesktopExperience() {
       .forEach((meta) => (meta.content = mobileChromeColor()));
     if (active) {
       const accountDialog = $("mobileAccountDialog");
-      const accountBody = accountDialog.querySelector(".mobile-dialog-body");
-      if (accountBody) accountBody.prepend(accountToolbar);
-      else
-        accountDialog
-          .querySelector(".mobile-account-heading")
-          .after(accountToolbar);
+      if (accountDialog.open) accountDialog.close();
+      document
+        .querySelector(".shell > header .header-meta")
+        .append(accountToolbar);
       legacySummary.append(...originalSide);
       side.replaceChildren(
         legacySummary,
@@ -12429,7 +12421,7 @@ function desktopRoomPicker(select) {
 
 function initAcervoChameleon() {
   const selector =
-    "#save, #mobileRegistrationNext, #loginButton, #editSave, .desktop-completion-actions > .primary";
+    "#save, #mobileRegistrationNext, #loginButton, #editSave, #confirmRegistrationDiscard, #confirmOperation, .desktop-completion-actions > .primary";
   let pressed = null;
   const release = () => {
     pressed?.classList.remove("is-pressed");

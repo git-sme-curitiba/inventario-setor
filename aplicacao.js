@@ -1562,14 +1562,13 @@ function setAcervoSync(
   if (active) b.prepend(acervoBooks());
   $("acervoOpening").hidden = !active;
   if (active) {
-    const loader = acervoLoader(message);
-    if (opening) {
-      const text = loader.lastElementChild;
-      const title = el("strong", "Seu acervo está chegando.");
-      text.prepend(title);
-    }
+    const loader = acervoLoader(opening ? "Carregando acervo…" : message, true);
     $("acervoOpening").replaceChildren(loader);
-  } else $("acervoOpening").replaceChildren();
+    $("app").setAttribute("aria-busy", "true");
+  } else {
+    $("acervoOpening").replaceChildren();
+    $("app").removeAttribute("aria-busy");
+  }
   return generation;
 }
 
@@ -2168,7 +2167,15 @@ function renderMovementResults() {
     return;
   }
   for (const r of found.slice(0, 20)) {
-    const card = el("div", undefined, "movement-result");
+    const stock = r.controle === "QUANTIDADE";
+    const card = el("article", undefined, "movement-result");
+    card.dataset.id = r.id;
+    card.dataset.control = stock ? "stock" : "individual";
+    card.dataset.status = r.situacao;
+    const identity = el("div", undefined, "movement-identity");
+    const mark = el("span", undefined, "movement-item-symbol");
+    mark.append(itemIcon(r));
+    const copy = el("div", undefined, "movement-item-copy");
     const heading = el("div", undefined, "movement-result-heading");
     heading.append(
       el("h3", r.dados.item),
@@ -2183,63 +2190,85 @@ function renderMovementResults() {
               : ""),
       ),
     );
-    card.append(
-      heading,
-      el(
-        "p",
-        [
-          internal(r.id),
-          r.dados.codigo ? r.dados.tipo + " " + r.dados.codigo : "",
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        "movement-code",
-      ),
+    const meta = el(
+      "p",
+      [
+        internal(r.id),
+        r.dados.codigo ? r.dados.tipo + " " + r.dados.codigo : "",
+        r.dados.ambiente,
+        locationText(r),
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      "movement-code",
     );
-    const position = locationText(r);
-    card.append(
-      el(
-        "p",
-        [r.dados.ambiente, position].filter(Boolean).join(" · "),
-        "hint movement-location",
-      ),
-    );
-    if (r.controle === "QUANTIDADE")
-      card.append(
-        el("p", "Saldo: " + quantityText(r.saldo, r.unidade), "notice"),
+    copy.append(heading, meta);
+    if (stock)
+      copy.append(
+        el(
+          "span",
+          quantityText(r.saldo, r.unidade) + " em estoque",
+          "movement-stock-balance",
+        ),
       );
+    else copy.append(el("span", "Bem individual", "movement-control-label"));
     if (r.emprestimo)
-      card.append(
+      copy.append(
         el(
           "p",
           `Com ${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
-          "notice",
+          "movement-loan-info",
         ),
       );
-    const actions = el("div", undefined, "actions");
-    if (role !== "leitor")
-      for (const a of movementActions(r))
-        actions.append(
-          button(
-            ACTION[a],
-            () => openOperation(a, r),
-            a === "baixar" || a === "descarte_estoque" ? "danger" : "",
-            ACTION_ICON[a],
-          ),
+    identity.append(mark, copy);
+    card.append(identity);
+    const actions = el("div", undefined, "movement-controls");
+    const available = movementActions(r);
+    if (role !== "leitor" && available.length) {
+      const routine = el("div", undefined, "movement-routine");
+      routine.append(
+        el("small", stock ? "Movimentar estoque" : "Movimentar bem"),
+      );
+      const buttons = el("div", undefined, "actions");
+      for (const a of available.filter((a) => a !== "baixar")) {
+        const label =
+          {
+            entrada: "Entrada",
+            saida: "Saída",
+            descarte_estoque: "Descartar quantidade",
+          }[a] || ACTION[a];
+        const control = button(
+          label,
+          () => openOperation(a, r),
+          "movement-action action-" + a,
+          ACTION_ICON[a],
         );
-    if (role === "leitor")
-      card.append(el("p", "Seu perfil permite consultar este item.", "hint"));
-    else if (!actions.children.length)
+        control.dataset.action = a;
+        buttons.append(control);
+      }
+      routine.append(buttons);
+      if (buttons.children.length) actions.append(routine);
+      if (available.includes("baixar")) {
+        const discard = button(
+          "Descartar registro",
+          () => openOperation("baixar", r),
+          "movement-register-discard",
+          "writeoff",
+        );
+        discard.dataset.action = "baixar";
+        actions.append(discard);
+      }
+      card.append(actions);
+    } else
       card.append(
         el(
           "p",
-          r.situacao === "ARQUIVADO"
-            ? "Registro arquivado. Abra os detalhes na consulta para restaurar."
-            : "Item descartado. Consulte os detalhes para ver o motivo e o histórico.",
-          "hint",
+          role === "leitor"
+            ? "Seu perfil permite consultar este item."
+            : "Registro encerrado. Consulte a ficha para ver o histórico.",
+          "hint movement-readonly",
         ),
       );
-    card.append(actions);
     $("moveResults").append(card);
   }
   if (found.length > 20)
@@ -3070,32 +3099,35 @@ function renderList() {
   for (const r of found.slice((page - 1) * 25, page * 25)) {
     const tr = el("tr", undefined, "record-row");
     tr.dataset.id = r.id;
+    tr.dataset.status = r.situacao;
     const d = r.dados;
     tr.append(
-      el("td", d.item),
+      el("td"),
       el("td", d.codigo ? TYPE[d.tipo] + " " + d.codigo : internal(r.id)),
       el("td", d.ambiente + (locationText(r) ? " · " + locationText(r) : "")),
     );
+    const itemCell = el("div", undefined, "desktop-record-item");
+    const itemMark = el("span", undefined, "record-item-symbol");
+    itemMark.append(itemIcon(r));
+    const itemCopy = el("span", undefined, "record-item-copy");
+    itemCopy.append(el("strong", d.item));
     if (r.controle === "QUANTIDADE")
-      tr.firstChild.append(
+      itemCopy.append(
         el(
-          "div",
+          "small",
           r.situacao === "BAIXADO"
             ? r.baixa?.quantidade != null
               ? "Descarte: " + quantityText(r.baixa.quantidade, r.unidade)
               : "Estoque descartado"
-            : `${r.saldo} ${r.unidade} · em estoque`,
-          "hint",
+            : quantityText(r.saldo, r.unidade) + " em estoque",
         ),
       );
     if (r.emprestimo)
-      tr.firstChild.append(
-        el(
-          "div",
-          `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`,
-          "hint",
-        ),
+      itemCopy.append(
+        el("small", `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`),
       );
+    itemCell.append(itemMark, itemCopy);
+    tr.firstChild.append(itemCell);
     const status = el("td");
     status.append(
       el(
@@ -3126,9 +3158,6 @@ function renderList() {
       expanded === r.id ? "close" : "right",
     );
     open.setAttribute("aria-expanded", String(expanded === r.id));
-    const recordIcon = icon(CATEGORY_ICON[d.categoria] || "draft");
-    recordIcon.classList.add("mobile-record-icon");
-    tr.firstChild.prepend(recordIcon);
     tr.addEventListener("click", (event) => {
       if (mobileAcervo() && !event.target.closest("button")) open.click();
     });
@@ -8957,6 +8986,7 @@ function renderMobileMovement() {
           el("strong", "Transferir"),
           el("small", "Mudar o ambiente ou a posição."),
         );
+        transfer.dataset.action = "transfer";
         transfer.append(copy, icon("right"));
         host.append(transfer);
       }
@@ -8970,9 +9000,13 @@ function renderMobileMovement() {
               : ""),
           ACTION_ICON[action],
         );
+        tile.dataset.action = action;
         const copy = el("div");
         copy.append(
-          el("strong", ACTION[action]),
+          el(
+            "strong",
+            action === "baixar" ? "Descartar registro" : ACTION[action],
+          ),
           el("small", descriptions[action]),
         );
         tile.append(copy, icon("right"));
@@ -11143,7 +11177,7 @@ function mobileInventorySnapshot(records, room = "") {
 }
 
 function mobileChromeColor() {
-  if (!mobileAcervo()) return $("login").hidden ? "#0852b8" : "#0d61b0";
+  if (!mobileAcervo()) return "#0b3975";
   return document.querySelector("#camera[open]")
     ? "#0852b8"
     : document.querySelector("body > dialog[open]")
@@ -11606,7 +11640,7 @@ function initDesktopExperience() {
   const previewHeading = el("div", undefined, "desktop-preview-heading");
   const previewMark = el("span");
   previewMark.setAttribute("aria-hidden", "true");
-  previewMark.append(mobileBooksMark());
+  previewMark.append(icon("composition"));
   previewHeading.append(previewMark, el("h2", "Prévia do item"));
   const progress = el("div", undefined, "desktop-registration-progress");
   const progressCopy = el("div");
@@ -11641,6 +11675,22 @@ function initDesktopExperience() {
       { duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" },
     );
   });
+  const stageGroups = [
+    ["local", ["registrationRooms", "location"]],
+    ["item", ["registrationItem", "registrationCategory"]],
+    ["control", ["identityBlock", "controlHost"]],
+    ["review", ["notesBlock"]],
+  ];
+  for (const [stage, ids] of stageGroups)
+    for (const id of ids) $(id).dataset.desktopSection = stage;
+  $("itemForm").addEventListener("focusin", (event) => {
+    if (!document.documentElement.classList.contains("acervo-desktop")) return;
+    const section = event.target.closest("[data-desktop-section]");
+    if (section) {
+      $("register").dataset.desktopFocus = section.dataset.desktopSection;
+      syncDesktopRegistrationFocus();
+    }
+  });
   $("save").setAttribute("form", "itemForm");
   const dashboard = el("div", undefined, "desktop-overview desktop-only");
   dashboard.id = "desktopOverview";
@@ -11652,7 +11702,7 @@ function initDesktopExperience() {
   dashboardMark.append(icon("chart"));
   dashboardTitle.append(dashboardMark, document.createTextNode("Visão geral"));
   title.append(dashboardTitle);
-  const scope = el("label", undefined, "desktop-scope");
+  const scope = el("div", undefined, "desktop-scope");
   scope.append(el("span", "Ambiente"));
   const room = el("select");
   room.id = "desktopOverviewRoom";
@@ -11667,11 +11717,15 @@ function initDesktopExperience() {
   room.onchange = () => {
     desktopAcervoState.room = room.value;
     renderDesktopOverview();
+    syncDesktopRoomPicker();
   };
   const updated = el("small");
   updated.id = "desktopOverviewUpdated";
   updated.hidden = true;
-  scope.append(room, updated);
+  room.hidden = true;
+  room.tabIndex = -1;
+  const roomPicker = desktopRoomPicker(room);
+  scope.append(room, roomPicker, updated);
   heading.append(title, scope);
   const metrics = el("div", undefined, "desktop-metrics");
   metrics.id = "desktopOverviewMetrics";
@@ -11775,6 +11829,10 @@ function initDesktopExperience() {
     ),
   );
   footer.append(footerLine);
+  const credits = footer.querySelector(".institution-credits");
+  credits.firstChild.textContent = "Concepção e desenvolvimento";
+  footer.querySelector(".institution-signature span").innerHTML =
+    "Gestão de bens e materiais<br>Controle e organização do acervo";
   const queryTitle = $("browse").querySelector(".workspace-title");
   const queryText = [...queryTitle.childNodes].find(
     (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
@@ -11810,7 +11868,8 @@ function initDesktopExperience() {
         savebar,
       );
       queryText.textContent = "Inventário";
-      exportText.textContent = "Baixar Excel";
+      exportText.textContent = "Exportar Excel";
+      exportSummary.querySelector("use")?.setAttribute("href", "#i-sheet");
       syncMobileDialogSymbol(
         $("editDialog"),
         $("editDialog").querySelector(".dialog-heading"),
@@ -11820,6 +11879,7 @@ function initDesktopExperience() {
       side.replaceChildren(...originalSide);
       queryText.textContent = mobileAcervo() ? "Consultar" : originalQueryText;
       exportText.textContent = originalExportText;
+      exportSummary.querySelector("use")?.setAttribute("href", "#i-download");
       labelButton($("moreFilters"), "Mais filtros", "filter");
     }
     syncDesktopBrowseTools();
@@ -12091,50 +12151,15 @@ function syncDesktopRegistrationGame(d) {
     part.classList.toggle("is-complete", complete[i]),
   );
   const cards = root.querySelectorAll(".desktop-art-card");
-  cards.forEach((card, i) =>
-    card.classList.toggle("is-collected", complete[i]),
-  );
-  if (!previous || root.hidden || busy || !desktopAcervoMotion()) return;
-  const gained = complete
-    .map((done, i) => (done && !previous.complete[i] ? i : -1))
-    .filter((i) => i >= 0);
-  for (const i of gained)
-    cards[i]?.animate(
-      [{ scale: "1" }, { scale: "1.12", offset: 0.45 }, { scale: "1" }],
-      { duration: 520, easing: "cubic-bezier(.2,.8,.2,1)" },
-    );
-  if (gained.length) collectDesktopRegistrationPart(gained.at(-1));
-  if (!previous.item && item)
-    $("formRest").animate(
-      [
-        { opacity: 0, translate: "0 9px" },
-        { opacity: 1, translate: "0 0" },
-      ],
-      { duration: 300, easing: "ease-out" },
-    );
-  if (state.icon && state.icon !== previous.icon)
-    $("registrationSummary")
-      .querySelector(".desktop-preview-symbol")
-      ?.animate(
-        [
-          { scale: ".8", rotate: "-8deg" },
-          { scale: "1.08", rotate: "3deg", offset: 0.65 },
-          { scale: "1", rotate: "0deg" },
-        ],
-        { duration: 380, easing: "ease-out" },
-      );
-  if (ready && !previous.ready)
-    $("save").animate(
-      [
-        { boxShadow: "0 0 0 0 #00cce900" },
-        { boxShadow: "0 0 0 7px #00cce940", offset: 0.5 },
-        { boxShadow: "0 0 0 11px #00cce900" },
-      ],
-      { duration: 850, easing: "ease-out" },
-    );
+  syncDesktopRegistrationFocus(complete);
+  scheduleDesktopRegistrationFeedback(previous, state, cards);
 }
 
 function collectDesktopRegistrationPart(part) {
+  document.querySelectorAll(".desktop-collectible").forEach((node) => {
+    node.getAnimations().forEach((effect) => effect.cancel());
+    node.remove();
+  });
   const sources = [
     $("location").hidden
       ? $("rooms").querySelector("input:checked + span")
@@ -12173,7 +12198,207 @@ function collectDesktopRegistrationPart(part) {
       },
       { transform: `translate(${x}px,${y}px) scale(.35)`, opacity: 0 },
     ],
-    { duration: 650, easing: "cubic-bezier(.2,.7,.3,1)" },
+    { duration: 560, easing: "cubic-bezier(.2,.7,.3,1)" },
   );
   flight.onfinish = flight.oncancel = () => token.remove();
+}
+
+function syncDesktopRegistrationFocus(
+  complete = syncDesktopRegistrationGame.state?.complete || [],
+) {
+  const root = $("register");
+  const stages = ["local", "item", "control"];
+  const active = document.activeElement?.closest(
+    "#itemForm [data-desktop-section]",
+  );
+  const stage =
+    active?.dataset.desktopSection ||
+    stages[complete.findIndex((done) => !done)] ||
+    "review";
+  root.dataset.desktopFocus = stage;
+  document
+    .querySelectorAll("#itemForm [data-desktop-section]")
+    .forEach((group) => {
+      const current = group.dataset.desktopSection === stage;
+      group.classList.toggle("is-current-section", current);
+      const i = stages.indexOf(group.dataset.desktopSection);
+      group.dataset.sectionComplete = String(i >= 0 && !!complete[i]);
+    });
+}
+
+function scheduleDesktopRegistrationFeedback(previous, state, cards) {
+  const fn = scheduleDesktopRegistrationFeedback;
+  fn.pending ||= new Set();
+  fn.timers ||= [];
+  const stop = () => {
+    clearTimeout(fn.debounce);
+    fn.timers.forEach(clearTimeout);
+    fn.timers = [];
+  };
+  if (
+    !previous ||
+    $("register").hidden ||
+    busy ||
+    role === "leitor" ||
+    !desktopAcervoMotion()
+  ) {
+    stop();
+    fn.pending.clear();
+    fn.ready = fn.newItem = fn.icon = false;
+    cards.forEach((card, i) =>
+      card.classList.toggle("is-collected", state.complete[i]),
+    );
+    return;
+  }
+  state.complete.forEach((done, i) => {
+    if (!done) {
+      fn.pending.delete(i);
+      cards[i]?.classList.remove("is-collected");
+    } else if (!previous.complete[i]) fn.pending.add(i);
+  });
+  fn.ready = state.ready && (fn.ready || !previous.ready);
+  fn.newItem ||= state.item && !previous.item;
+  fn.icon ||= !!state.icon && state.icon !== previous.icon;
+  clearTimeout(fn.debounce);
+  if (!fn.pending.size && !fn.ready && !fn.newItem && !fn.icon) return;
+  fn.debounce = setTimeout(() => {
+    const gained = [...fn.pending]
+      .filter((i) => syncDesktopRegistrationGame.state?.complete[i])
+      .sort();
+    fn.pending.clear();
+    const animateReady = fn.ready,
+      reveal = fn.newItem,
+      changeIcon = fn.icon;
+    fn.ready = fn.newItem = fn.icon = false;
+    if (!desktopAcervoMotion() || $("register").hidden || busy) return;
+    gained.forEach((i, index) => {
+      fn.timers.push(
+        setTimeout(() => {
+          if (
+            !syncDesktopRegistrationGame.state?.complete[i] ||
+            $("register").hidden ||
+            busy
+          )
+            return;
+          const card = cards[i];
+          card?.classList.add("is-collected");
+          card?.feedbackAnimation?.cancel();
+          if (card)
+            card.feedbackAnimation = card.animate(
+              [{ scale: "1" }, { scale: "1.055", offset: 0.5 }, { scale: "1" }],
+              { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)" },
+            );
+          if (index === gained.length - 1) collectDesktopRegistrationPart(i);
+        }, index * 190),
+      );
+    });
+    if (reveal && !$("formRest").hidden)
+      $("formRest").animate(
+        [
+          { opacity: 0.6, translate: "0 5px" },
+          { opacity: 1, translate: "0 0" },
+        ],
+        { duration: 300, easing: "ease-out" },
+      );
+    if (changeIcon)
+      $("registrationSummary")
+        .querySelector(".desktop-preview-symbol")
+        ?.animate(
+          [
+            { scale: ".96", opacity: 0.65 },
+            { scale: "1", opacity: 1 },
+          ],
+          { duration: 320, easing: "ease-out" },
+        );
+    if (animateReady)
+      fn.timers.push(
+        setTimeout(
+          () => {
+            if (
+              syncDesktopRegistrationGame.state?.ready &&
+              !busy &&
+              !$("register").hidden
+            )
+              $("save").animate(
+                [
+                  { boxShadow: "0 0 0 0 #00cce900" },
+                  { boxShadow: "0 0 0 5px #00cce925", offset: 0.5 },
+                  { boxShadow: "0 0 0 9px #00cce900" },
+                ],
+                { duration: 720, easing: "ease-out" },
+              );
+          },
+          gained.length * 190 + 200,
+        ),
+      );
+  }, 170);
+}
+
+function syncDesktopRoomPicker() {
+  const picker = $("desktopOverviewRoomPicker");
+  if (!picker) return;
+  picker.querySelector("summary > span").textContent =
+    desktopAcervoState.room || "Todos os ambientes";
+  picker
+    .querySelectorAll("button[data-room]")
+    .forEach((option) =>
+      option.setAttribute(
+        "aria-pressed",
+        String(option.dataset.room === desktopAcervoState.room),
+      ),
+    );
+}
+
+function desktopRoomPicker(select) {
+  const picker = el("details", undefined, "desktop-room-picker");
+  picker.id = "desktopOverviewRoomPicker";
+  const trigger = el("summary");
+  trigger.append(icon("pin"), el("span", "Todos os ambientes"), icon("right"));
+  const options = el("div", undefined, "desktop-room-options");
+  options.setAttribute("role", "group");
+  options.setAttribute("aria-label", "Escolher ambiente da visão geral");
+  for (const option of select.options) {
+    const choice = button("", () => {
+      select.value = option.value;
+      select.dispatchEvent(new Event("change"));
+      picker.open = false;
+      trigger.focus({ preventScroll: true });
+    });
+    choice.dataset.room = option.value;
+    choice.setAttribute(
+      "aria-pressed",
+      String(option.value === desktopAcervoState.room),
+    );
+    choice.append(el("span", option.textContent), icon("check"));
+    options.append(choice);
+  }
+  picker.append(trigger, options);
+  picker.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && picker.open) {
+      event.preventDefault();
+      picker.open = false;
+      trigger.focus({ preventScroll: true });
+    } else if (
+      picker.open &&
+      ["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)
+    ) {
+      event.preventDefault();
+      const choices = [...options.children],
+        current = choices.indexOf(document.activeElement);
+      const next =
+        event.key === "Home"
+          ? 0
+          : event.key === "End"
+            ? choices.length - 1
+            : event.key === "ArrowDown"
+              ? (current + 1) % choices.length
+              : (current <= 0 ? choices.length : current) - 1;
+      choices[next].focus({ preventScroll: true });
+    }
+  });
+  for (const type of ["pointerdown", "focusin"])
+    document.addEventListener(type, (event) => {
+      if (!picker.contains(event.target)) picker.open = false;
+    });
+  return picker;
 }

@@ -27720,3 +27720,1030 @@ body > #camera.is-unavailable .preview {
     system-ui,
     sans-serif;
 }
+
+/* 3.5.60 — contraste, hierarquia e adaptação para uso no computador. */
+:root {
+  --acervo-canvas-color: #0b3975;
+  --acervo-canvas:
+    radial-gradient(ellipse at 92% 9%, #087ede66, transparent 56%),
+    radial-gradient(ellipse at 16% 98%, #006fca55, transparent 65%),
+    linear-gradient(145deg, #0b3975, #0952a9 58%, #064389);
+  --app-login-background: var(--acervo-canvas);
+  --app-content-background: var(--acervo-canvas);
+}
+html.auth-viewport,
+html.acervo-desktop,
+body.auth-screen {
+  background-color: var(--acervo-canvas-color);
+  background-image: var(--acervo-canvas);
+  background-attachment: fixed;
+  background-size: 100vw 100lvh;
+}
+.brand-intro:not(.departing) {
+  background: var(--acervo-canvas);
+}
+body.auth-screen {
+  color: #172e46;
+}
+#loginForm .remember-session input {
+  appearance: none;
+  -webkit-appearance: none;
+  display: grid;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  padding: 0;
+  border: 1px solid #9baec1;
+  border-radius: 5px;
+  background: #fff;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+#loginForm .remember-session input::after {
+  content: "";
+  width: 8px;
+  height: 5px;
+  border: solid #fff;
+  border-width: 0 0 2px 2px;
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+  transition: transform 140ms ease;
+}
+#loginForm .remember-session input:checked {
+  border-color: #145bd2;
+  background: linear-gradient(135deg, #1883eb, #1454c7);
+}
+#loginForm .remember-session input:checked::after {
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+#loginForm .remember-session input:focus,
+#loginForm .remember-session input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.acervo-keyboard-nav #loginForm .remember-session input:focus-visible {
+  outline: 1px dashed #1b3c60;
+  outline-offset: 4px;
+}
+
+/* O indicador não altera a altura da página nem cria uma faixa branca. */
+#acervoOpening {
+  position: fixed;
+  z-index: 70;
+  top: 23px;
+  left: 50%;
+  width: max-content;
+  max-width: min(320px, 72vw);
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+  pointer-events: none;
+}
+#acervoOpening .acervo-loader.compact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font:
+    500 11px/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+#acervoOpening .acervo-books {
+  width: 34px;
+  height: 29px;
+  color: #b5edff;
+}
+#acervoOpening .acervo-loader > span {
+  max-width: 245px;
+  color: #e7f6ff;
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  html.acervo-desktop {
+    --ink: #182d43;
+    --muted: #637489;
+    --pc-action: linear-gradient(125deg, #167de7, #215bd4 65%, #1746b3);
+    --pc-danger: linear-gradient(125deg, #de1747, #ad1640);
+    --pc-stock: linear-gradient(125deg, #078b84, #006e73);
+    --pc-line: #d9e2eb;
+    --pc-font: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --pc-ink: #182d43;
+    --pc-muted: #65758a;
+  }
+  .acervo-desktop body:not(.auth-screen) {
+    background: transparent;
+  }
+  .acervo-desktop .brand b {
+    font-weight: 750;
+    font-size: 29px;
+    letter-spacing: -0.6px;
+  }
+  .acervo-desktop #app > .nav {
+    margin-bottom: 12px;
+    background: #ffffff0d;
+    border-color: #ffffff38;
+  }
+  .acervo-desktop #app .card {
+    border-color: #dce5ee;
+    color: var(--pc-ink);
+    box-shadow: 0 12px 34px #00193418;
+  }
+  .acervo-desktop #app .workspace-title {
+    color: var(--pc-ink);
+    font-weight: 650;
+    letter-spacing: -0.65px;
+  }
+  .acervo-desktop #app .workspace-title .title-mark {
+    background: linear-gradient(135deg, #174a75, #143658);
+    box-shadow: none;
+  }
+  .acervo-desktop #app #register > .desktop-register-intro {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    min-height: 202px;
+    margin: 0 0 16px;
+    gap: 20px;
+  }
+  .desktop-register-copy {
+    padding-left: 22px;
+  }
+  .acervo-desktop #app .desktop-register-copy h1 {
+    max-width: 700px;
+    margin-bottom: 14px;
+    font: 650 clamp(35px, 3.5vw, 50px) / 1.08 var(--pc-font);
+    letter-spacing: -1.9px;
+    text-shadow: 0 5px 24px #00215033;
+    color: #fff;
+  }
+  .desktop-register-copy p {
+    font-size: 16px;
+    color: #e3efff;
+    line-height: 1.55;
+  }
+  .desktop-hero-art {
+    width: 350px;
+    max-width: 115%;
+  }
+  html.acervo-desktop #app #register > .workspace {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+  .desktop-art-card::after {
+    transition:
+      scale 330ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 220ms;
+  }
+  .acervo-desktop #app #register .choice > span {
+    color: #31475d;
+    border-color: #c8d5e1;
+  }
+  .acervo-desktop #app #register .choice > span > .icon {
+    color: #31536f;
+  }
+  .acervo-desktop #app #register .choice > input:checked + span {
+    background: linear-gradient(125deg, #1976d4, #214ca4);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 3px 9px #10458818;
+  }
+  .acervo-desktop #app #register .choice > input:checked + span .icon {
+    color: #fff;
+  }
+  html.acervo-desktop #app #register #itemForm [data-desktop-section] {
+    position: relative;
+    opacity: 0.76;
+    transition: opacity 240ms ease;
+  }
+  html.acervo-desktop #app #register #itemForm [data-section-complete="true"] {
+    opacity: 0.88;
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    [data-desktop-section]:is(.is-current-section, :hover, :focus-within) {
+    opacity: 1;
+  }
+  html.acervo-desktop #app #register #itemForm [data-desktop-section]::after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    bottom: 1px;
+    left: -12px;
+    width: 3px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #04b5c2, #1465df);
+    opacity: 0;
+    transform: scaleY(0.6);
+    transition:
+      opacity 240ms,
+      transform 240ms;
+    pointer-events: none;
+  }
+  html.acervo-desktop #app #register #itemForm .is-current-section::after {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  html.acervo-desktop
+    #app
+    #register
+    #itemForm
+    :is(
+      #registrationRooms legend,
+      #registrationItem > label,
+      #registrationCategory legend,
+      #identityHeading,
+      #controlHeading
+    ) {
+    color: var(--pc-ink);
+  }
+  html.acervo-desktop #app #register #itemForm #codeWrap {
+    background: linear-gradient(115deg, #f4fbff, #e4f3fc);
+    border-color: #b4d6e9;
+  }
+  .desktop-preview-heading > span {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #067b84, #075d77);
+    box-shadow: none;
+  }
+  .desktop-preview-heading > span > .icon {
+    width: 25px;
+    height: 25px;
+    color: #fff;
+  }
+  .desktop-preview-heading > span::after {
+    border-radius: 15px;
+  }
+  .desktop-preview-heading h2 {
+    color: var(--pc-ink);
+    font-weight: 650;
+  }
+  .acervo-desktop .desktop-registration-progress strong {
+    color: #4a6075;
+    font-weight: 600;
+  }
+  #register[data-desktop-ready="true"] #desktopProgressMessage {
+    color: #006d72;
+  }
+  #desktopProgressCount {
+    color: #006d72;
+  }
+  .desktop-progress-track > i {
+    background: #e2e9f0;
+  }
+  .desktop-progress-track > i::before {
+    background: linear-gradient(90deg, #00aeb7, #087b8c);
+  }
+  .desktop-preview-symbol {
+    background: linear-gradient(135deg, #164e72, #136984);
+  }
+  .desktop-preview-facts dt {
+    color: #68788b;
+  }
+  .desktop-preview-facts dd {
+    color: var(--pc-ink);
+  }
+  .acervo-desktop #mobileAccountTrigger {
+    min-height: 44px;
+    border-radius: 14px;
+    border-color: #ffffff4a;
+    color: #fff;
+    background: linear-gradient(135deg, #ffffff1c, #ffffff08);
+    box-shadow: inset 0 1px 0 #ffffff14;
+  }
+  .acervo-desktop #mobileAccountTrigger .mobile-account-avatar {
+    color: #174d79;
+    background: linear-gradient(135deg, #f5fcff, #b9e0f2);
+  }
+  .acervo-desktop #mobileAccountTrigger:hover {
+    background: #ffffff22;
+    border-color: #ffffff90;
+  }
+  .acervo-desktop #mobileAccountDialog :is(#manageAccess, #refresh) {
+    color: #203d56;
+    background: #fff;
+    border: 1px solid #d9e3ec;
+    border-radius: 10px;
+  }
+  .acervo-desktop #mobileAccountDialog :is(#manageAccess, #refresh):hover {
+    background: #f3f8fc;
+    border-color: #95bbd6;
+  }
+  .acervo-desktop #mobileAccountDialog :is(#manageAccess, #refresh) > .icon {
+    color: #1761a6;
+  }
+  .acervo-desktop #mobileAccountDialog #logout {
+    color: #aa153f;
+    border: 1px solid #e3b6c2;
+    background: #fff;
+  }
+  .acervo-desktop #mobileAccountDialog #logout:hover {
+    color: #fff;
+    background: var(--pc-danger);
+  }
+
+  /* Resultados independentes, com ações agrupadas por finalidade. */
+  .acervo-desktop #app #movements #moveResults {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .acervo-desktop #app #movements .movement-result {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 20px;
+    align-items: center;
+    min-height: 108px;
+    padding: 18px;
+    border-color: #d9e3eb;
+    border-radius: 13px;
+    background: #fff;
+  }
+  .movement-identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .movement-item-symbol {
+    display: grid;
+    place-items: center;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 50px;
+    border: 1px solid #d9e4ed;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #f7fbfd, #eaf1f6);
+    color: #285269;
+  }
+  .movement-item-symbol .icon {
+    width: 30px;
+    height: 30px;
+    color: inherit;
+  }
+  .movement-item-copy {
+    min-width: 0;
+  }
+  .acervo-desktop #app #movements .movement-result-heading {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .acervo-desktop #app #movements .movement-result h3 {
+    font-size: 15px;
+    color: #182e45;
+    font-weight: 650;
+  }
+  .acervo-desktop #app #movements .movement-code {
+    margin: 5px 0 4px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #67798c;
+    overflow-wrap: anywhere;
+  }
+  .acervo-desktop #app #movements .badge {
+    background: none;
+    color: #1b715e;
+    border: 0;
+    padding: 1px 0;
+    font-size: 10px;
+    font-weight: 650;
+  }
+  .acervo-desktop #app #movements .badge::before {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-right: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .acervo-desktop #app #movements .badge.down {
+    color: #b3244b;
+  }
+  .acervo-desktop #app #movements .badge.archive {
+    color: #65758a;
+  }
+  .movement-stock-balance {
+    display: inline-block;
+    color: #006f73;
+    font-size: 11px;
+    font-weight: 650;
+  }
+  .movement-control-label {
+    color: #6e8090;
+    font-size: 10px;
+  }
+  .movement-loan-info {
+    color: #3c6977;
+    font-size: 11px;
+    margin: 3px 0 0;
+  }
+  .movement-controls {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 14px;
+    max-width: 590px;
+  }
+  .movement-routine > small {
+    display: block;
+    margin-bottom: 7px;
+    color: #738196;
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .acervo-desktop #app #movements .movement-result .actions {
+    margin: 0;
+    gap: 7px;
+  }
+  .acervo-desktop #app #movements .movement-result .actions button {
+    min-height: 35px;
+    padding: 8px 10px;
+    border: 1px solid #c6d5e0;
+    color: #304f68;
+    background: #fff;
+    box-shadow: none;
+    font: 600 11px/1.35 var(--pc-font);
+  }
+  .acervo-desktop #app #movements .movement-result .actions button .icon {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+    color: inherit;
+  }
+  .acervo-desktop #app #movements .movement-result .actions .action-entrada {
+    background: var(--pc-stock);
+    border-color: transparent;
+    color: #fff;
+  }
+  .acervo-desktop #app #movements .movement-result .actions .action-saida {
+    border-color: #9eb9c8;
+    color: #23485b;
+    background: #fff;
+  }
+  .acervo-desktop
+    #app
+    #movements
+    .movement-result
+    .actions
+    .action-descarte_estoque {
+    border-color: #d9b787;
+    color: #956217;
+    background: #fff;
+  }
+  .acervo-desktop
+    #app
+    #movements
+    .movement-result
+    .actions
+    :is(.action-emprestar, .action-devolver) {
+    background: var(--pc-action);
+    color: #fff;
+    border-color: transparent;
+  }
+  .acervo-desktop #app #movements .movement-register-discard {
+    min-height: 35px;
+    padding: 7px 0 7px 14px;
+    border: 0;
+    border-left: 1px solid #e0e6eb;
+    border-radius: 0;
+    color: #ad1c43;
+    background: none;
+    box-shadow: none;
+    font: 500 11px/1.35 var(--pc-font);
+  }
+  .acervo-desktop #app #movements .movement-register-discard .icon {
+    width: 16px;
+    height: 16px;
+    color: inherit;
+  }
+  .acervo-desktop #app #movements .movement-register-discard:hover {
+    color: #82062d;
+    text-decoration: underline;
+  }
+  .acervo-desktop #app #movements .movement-readonly {
+    margin: 0;
+    max-width: 240px;
+  }
+
+  /* Consulta: cor acompanha a informação, em vez de pintar toda a tabela. */
+  .acervo-desktop #app #browse .export-menu > summary {
+    color: #fff;
+    background: linear-gradient(125deg, #0c857b, #08636a);
+    border: 1px solid #ffffff15;
+    border-radius: 10px;
+    min-height: 41px;
+  }
+  .acervo-desktop #app #browse .export-options button {
+    color: #21545b;
+  }
+  .acervo-desktop #app #browse .export-options button:hover {
+    background: linear-gradient(125deg, #0c857b, #08636a);
+  }
+  .acervo-desktop #app #browse table thead {
+    background: #f0f4f7;
+  }
+  .acervo-desktop #app #browse table th {
+    background: #f0f4f7;
+    color: #566b7e;
+    border-color: #dce5ec;
+    font-size: 10px;
+    font-weight: 650;
+    letter-spacing: 0.045em;
+    padding-block: 14px;
+  }
+  .acervo-desktop #app #browse .record-row > td {
+    color: #30465a;
+    border-color: #e5ebf0;
+  }
+  .acervo-desktop #app #browse .record-row:nth-child(even) {
+    background: #fafcfd;
+  }
+  .desktop-record-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+  }
+  .record-item-symbol {
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 38px;
+    border-radius: 9px;
+    background: #f0f5f8;
+    color: #376078;
+  }
+  .record-item-symbol .icon {
+    width: 25px;
+    height: 25px;
+    color: inherit;
+  }
+  .record-item-copy {
+    min-width: 0;
+  }
+  .record-item-copy > strong {
+    display: block;
+    color: #203c53;
+    font-size: 12px;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+  }
+  .record-item-copy > small {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #65798c;
+  }
+  .acervo-desktop #app #browse .badge:not(.down):not(.archive) {
+    background: none;
+    color: #19715b;
+    border: 0;
+    font-weight: 650;
+  }
+  .acervo-desktop #app #browse .record-row > td:last-child button {
+    border-color: #d7e2eb;
+    color: #425f77;
+    background: #fff;
+  }
+  .acervo-desktop #app #browse .record-row > td:last-child button:hover {
+    border-color: #8fb9d5;
+    color: #155d9f;
+  }
+
+  /* Painel: título integrado ao fundo, recortes discretos e indicadores distintos. */
+  .acervo-desktop #desktopOverview .desktop-section-heading.card {
+    padding: 9px 3px 21px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .acervo-desktop #desktopOverview .desktop-section-heading .workspace-title {
+    font-size: 32px;
+    color: #fff;
+  }
+  .acervo-desktop #desktopOverview .desktop-section-heading .title-mark {
+    background: linear-gradient(135deg, #ffffff26, #ffffff09);
+    border: 1px solid #ffffff3d;
+  }
+  .acervo-desktop #desktopOverview .desktop-scope {
+    display: block;
+    min-width: 0;
+    max-width: 240px;
+    color: #d9eaff;
+  }
+  .acervo-desktop #desktopOverview .desktop-scope > span {
+    display: none;
+  }
+  .desktop-room-picker {
+    position: relative;
+    z-index: 6;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+  }
+  .desktop-room-picker > summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid #ffffff57;
+    border-radius: 11px;
+    color: #fff;
+    background: linear-gradient(135deg, #ffffff17, #ffffff06);
+    list-style: none;
+    cursor: pointer;
+    font: 500 12px/1.4 var(--pc-font);
+  }
+  .desktop-room-picker > summary::-webkit-details-marker {
+    display: none;
+  }
+  .desktop-room-picker > summary::marker {
+    content: "";
+  }
+  .desktop-room-picker > summary > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .desktop-room-picker > summary > .icon {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    color: #e3f5ff;
+  }
+  .desktop-room-picker > summary > .icon:last-child {
+    rotate: 90deg;
+    width: 13px;
+    height: 13px;
+  }
+  .desktop-room-picker[open] > summary {
+    border-color: #a6e5f5;
+  }
+  .desktop-room-options {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 235px;
+    padding: 7px;
+    border: 1px solid #d2e3ec;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 14px 34px #001a4759;
+  }
+  .desktop-room-options button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 9px;
+    width: 100%;
+    min-height: 39px;
+    padding: 10px;
+    border: 0;
+    color: #263e54;
+    background: #fff;
+    box-shadow: none;
+    font: 500 12px/1.4 var(--pc-font);
+    text-align: left;
+  }
+  .desktop-room-options button .icon {
+    width: 15px;
+    height: 15px;
+    opacity: 0;
+  }
+  .desktop-room-options button[aria-pressed="true"] {
+    background: var(--pc-action);
+    color: #fff;
+  }
+  .desktop-room-options button[aria-pressed="true"] .icon {
+    opacity: 1;
+    color: #fff;
+  }
+  .desktop-room-options button:not([aria-pressed="true"]):hover {
+    background: #f0f6fa;
+  }
+  .desktop-metric {
+    border-color: #e2eaf0;
+    color: #23384c;
+    min-height: 142px;
+    padding: 21px;
+  }
+  .desktop-metric b {
+    font-size: 38px;
+    font-weight: 650;
+  }
+  .desktop-metric small {
+    color: #6c7c8c;
+    font-size: 11px;
+  }
+  .desktop-metric.is-main {
+    background: linear-gradient(125deg, #145b70, #087a80);
+    color: #fff;
+    border-color: #58b0b8;
+  }
+  .desktop-metric:not(.is-main) > .icon {
+    color: #256e88;
+  }
+  .desktop-metric:nth-child(2) > .icon {
+    color: #32547b;
+  }
+  .desktop-metric:nth-child(4) > .icon,
+  .desktop-metric.needs-attention > .icon {
+    color: #ab741f;
+  }
+  .desktop-overview-card h2 {
+    color: #20374c;
+    font-weight: 650;
+  }
+  .desktop-overview-card h2 .icon {
+    color: #376b7c;
+  }
+  .desktop-chart-tabs {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9px;
+    background: #edf3f6;
+  }
+  .desktop-chart-tabs button {
+    border: 0;
+    background: none;
+    color: #586f83;
+  }
+  .desktop-chart-tabs button[aria-pressed="true"] {
+    background: #fff;
+    color: #174f68;
+    box-shadow: 0 1px 5px #1e4c651c;
+  }
+  .desktop-distribution-track {
+    background: #e9eff3;
+  }
+  .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #288ce0, #2466c0);
+  }
+  .desktop-distribution-row:nth-child(2) .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #08a4ab, #087989);
+  }
+  .desktop-distribution-row:nth-child(3) .desktop-distribution-track > i {
+    background: linear-gradient(90deg, #527c9c, #2c536d);
+  }
+  .desktop-identification-ring {
+    background: conic-gradient(#0b9699 var(--identified), #e5edf1 0);
+  }
+  .desktop-identification-ring b {
+    color: #136f79;
+  }
+  .desktop-card-link {
+    color: #1a6c85;
+  }
+  .desktop-item-symbol {
+    color: #28657a;
+    background: #eef5f7;
+  }
+  #desktopOverviewPriorityList > .icon {
+    color: #14837c;
+  }
+  #desktopOverviewFacts > div > b {
+    color: #215e77;
+  }
+
+  /* Assinatura institucional completa no PC; rodapé compacto permanece no celular. */
+  .acervo-desktop .institution-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px 28px;
+    margin-top: 32px;
+    padding: 24px 2px 20px;
+    border-top: 1px solid #ffffff2d;
+    color: #dceaf8;
+  }
+  .acervo-desktop
+    .institution-footer
+    > :is(.institution-signature, .institution-credits) {
+    display: flex;
+  }
+  .acervo-desktop .institution-footer .institution-signature {
+    align-items: center;
+    gap: 20px;
+  }
+  .acervo-desktop .institution-footer .institution-logo {
+    width: 124px;
+    flex-basis: 124px;
+    height: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+  }
+  .acervo-desktop .institution-footer .institution-signature > span {
+    display: block;
+    color: #dceaf8;
+    font: 400 12px/1.65 var(--pc-font);
+  }
+  .acervo-desktop .institution-footer .institution-credits {
+    display: block;
+    max-width: none;
+    color: #c4d8ed;
+    font: 400 11px/1.7 var(--pc-font);
+    text-align: right;
+  }
+  .acervo-desktop .institution-footer .institution-credits strong {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .acervo-desktop .desktop-footer-line {
+    display: flex;
+    grid-column: 1/-1;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 25px;
+    padding-top: 12px;
+    border-top: 1px solid #ffffff14;
+    color: #b9d0e8;
+    font-size: 11px;
+  }
+  .acervo-desktop .desktop-footer-separator {
+    display: none;
+  }
+  .acervo-desktop .desktop-about-link {
+    color: #e1efff;
+    font: 500 12px/1.4 var(--pc-font);
+  }
+}
+@media (min-width: 641px) and (max-width: 1100px) and (hover: hover) {
+  .acervo-desktop #app #movements .movement-result {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .movement-controls {
+    max-width: none;
+    justify-content: flex-start;
+    padding-left: 60px;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) and (hover: hover) {
+  .acervo-desktop #app #register > .desktop-register-intro {
+    grid-template-columns: minmax(0, 1fr) 230px;
+    min-height: 150px;
+    gap: 14px;
+  }
+  .desktop-hero-art {
+    width: 235px;
+  }
+  .desktop-register-copy {
+    padding-left: 7px;
+  }
+  .acervo-desktop #app .desktop-register-copy h1 {
+    font-size: 34px;
+    letter-spacing: -1px;
+  }
+  .desktop-register-copy p {
+    font-size: 14px;
+  }
+  .acervo-desktop .institution-footer {
+    gap: 15px;
+  }
+  .acervo-desktop .institution-footer .institution-signature > span {
+    font-size: 11px;
+  }
+  .acervo-desktop .institution-footer .institution-logo {
+    width: 100px;
+    flex-basis: 100px;
+  }
+}
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  :root {
+    --acervo-canvas-color: #0852b8;
+    --acervo-canvas:
+      radial-gradient(ellipse at 100% 75%, #0086ed66, transparent 68%),
+      linear-gradient(180deg, #0852b8 0, #0852b8 100px, #005dc7 100%);
+    --app-login-background: var(--acervo-canvas);
+    --app-content-background: var(--acervo-canvas);
+  }
+  html.auth-viewport,
+  body.auth-screen,
+  html:not(.acervo-camera-open):not(.app-typing),
+  html:not(.app-typing) body:not(.auth-screen) {
+    background-color: #0852b8;
+    background-image: var(--acervo-canvas);
+    background-size: 100vw 100lvh;
+    background-attachment: fixed;
+  }
+  #acervoOpening {
+    top: calc(var(--app-safe-top) + 80px);
+    max-width: 74vw;
+  }
+  #acervoOpening .acervo-loader.compact {
+    gap: 7px;
+    font-size: 11px;
+  }
+  #acervoOpening .acervo-loader > span {
+    max-width: 180px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #rememberSession::after,
+  .desktop-art-card::after,
+  #itemForm [data-desktop-section],
+  #itemForm [data-desktop-section]::after {
+    transition: none !important;
+  }
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  html.acervo-desktop,
+  html.auth-viewport {
+    background-attachment: scroll;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+  .acervo-desktop #app #movements .movement-register-discard {
+    white-space: nowrap;
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .acervo-desktop #app #movements .movement-action {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .acervo-desktop #desktopOverview .desktop-scope {
+    width: 224px;
+    flex: 0 0 224px;
+  }
+  .desktop-room-picker > summary > span {
+    flex: 1;
+  }
+}
+
+@media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
+  .acervo-desktop
+    #app
+    #movements
+    .movement-result[data-status="EMPRESTADO"]
+    .badge,
+  .acervo-desktop #app #browse .record-row[data-status="EMPRESTADO"] .badge {
+    color: #98671c;
+  }
+}
+@media (max-width: 640px),
+  (hover: none) and (pointer: coarse) and (max-width: 1024px) {
+  #app #movements .mobile-action-tile[data-action="transfer"],
+  #app #movements .mobile-action-tile[data-action="saida"] {
+    background: linear-gradient(125deg, #24506c, #143456);
+    color: #fff;
+  }
+  #app #movements .mobile-action-tile[data-action="entrada"] {
+    background: linear-gradient(125deg, #079c9b, #006c7a);
+    color: #fff;
+  }
+  #app #movements .mobile-action-tile[data-action="descarte_estoque"] {
+    background: linear-gradient(125deg, #ad781c, #8e5814);
+    color: #fff;
+  }
+  #app
+    #movements
+    .mobile-action-tile:is(
+      [data-action="entrada"],
+      [data-action="saida"],
+      [data-action="transfer"],
+      [data-action="descarte_estoque"]
+    )
+    :is(.icon, strong, small) {
+    color: #fff;
+  }
+  #mobileDashboardAttention:not([data-alert="true"]) .mobile-stock-heading {
+    background: linear-gradient(125deg, #087e8e, #07546e);
+  }
+  #mobileDashboardAttributes .mobile-attribute:nth-child(2) > .icon {
+    color: #82ece4;
+  }
+  #mobileDashboardAttributes .mobile-attribute:nth-child(3) > .icon {
+    color: #ffda92;
+  }
+  #mobileQueryMenu .mobile-export-heading > .icon,
+  #mobileQueryMenu .export-options button {
+    color: #08777a;
+  }
+}

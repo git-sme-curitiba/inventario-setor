@@ -3146,7 +3146,7 @@ function renderList() {
     );
     const actionCell = el("td");
     const open = button(
-      expanded === r.id ? "Fechar" : "Abrir",
+      expanded === r.id ? "Fechar ficha" : "Ver ficha",
       () => {
         if (!leaveEditor()) return;
         expanded = expanded === r.id ? null : r.id;
@@ -3156,6 +3156,7 @@ function renderList() {
       expanded === r.id ? "close" : "right",
     );
     open.setAttribute("aria-expanded", String(expanded === r.id));
+    open.setAttribute("aria-label", (expanded === r.id ? "Fechar ficha de " : "Ver ficha de ") + d.item);
     actionCell.append(open);
     tr.append(actionCell);
     fragment.append(tr);
@@ -3202,38 +3203,35 @@ function renderDetails(r, panel) {
   const heading = el("div", undefined, "desktop-detail-heading");
   const mark = el("span", undefined, "desktop-detail-symbol acervo-living-surface");
   mark.append(itemIcon(r));
-  const identity = el("div");
-  identity.append(el("h3", r.dados.item), el("small", internal(r.id)));
-  heading.append(
-    mark,
-    identity,
-    el(
-      "span",
-      STATUS[r.situacao],
-      "badge" + (r.situacao === "BAIXADO" ? " down" : ""),
-    ),
-  );
+  const identity = el("div", undefined, "desktop-detail-identity");
+  const code = el("small", undefined, "desktop-detail-code");
+  code.append(mobileBarcodeMark(), el("span", internal(r.id)));
+  identity.append(el("span", "FICHA DO ACERVO", "desktop-detail-eyebrow"), el("h3", r.dados.item), code);
+  heading.append(mark, identity,
+    el("span", STATUS[r.situacao], "badge" + (r.situacao === "BAIXADO" ? " down" : r.situacao === "EMPRESTADO" ? " loan" : "")));
   panel.append(heading);
-  const dl = el("dl", undefined, "desktop-detail-facts");
-  for (const [label, text] of [
-    ["Categoria", r.dados.categoria],
-    [
-      "Identificação",
-      TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : ""),
-    ],
-    ["Localização", r.dados.ambiente + " " + locationText(r)],
-    ["Cadastro", dateBR(r.criado_em)],
-    ["Observação", r.dados.observacao || "—"],
-    [
-      "Controle",
-      r.controle === "QUANTIDADE"
-        ? `Por quantidade · ${r.saldo} ${r.unidade} · mínimo ${r.minimo}`
-        : "Individual",
-    ],
+  const highlights = el("div", undefined, "desktop-detail-highlights");
+  for (const [name, value, help, symbol] of [
+    [r.situacao === "EMPRESTADO" ? "Local de origem" : "Local atual", r.dados.ambiente, locationText(r) || "Ambiente do registro", "pin"],
+    [r.controle === "QUANTIDADE" ? (r.situacao === "BAIXADO" ? "Saldo do registro" : "Saldo em estoque") : "Tipo de controle",
+      r.controle === "QUANTIDADE" ? quantityText(r.saldo, r.unidade) : "Bem individual",
+      r.controle === "QUANTIDADE" ? "Mínimo: " + quantityText(r.minimo, r.unidade) : "Um registro para cada bem", "stock"],
   ]) {
-    const pair = el("div");
-    pair.append(el("dt", label), el("dd", text));
-    dl.append(pair);
+    const block = el("section", undefined, "desktop-detail-highlight");
+    const copy = el("div"); copy.append(el("small", name), el("strong", value), el("span", help));
+    block.append(icon(symbol), copy); highlights.append(block);
+  }
+  panel.append(highlights);
+  const dl = el("dl", undefined, "desktop-detail-facts");
+  for (const [label, text, symbol, cls] of [
+    ["Categoria", r.dados.categoria, "composition", ""],
+    ["Identificação", TYPE[r.dados.tipo] + (r.dados.codigo ? " · " + r.dados.codigo : ""), "code", ""],
+    ["Cadastrado em", dateBR(r.criado_em), "history", ""],
+    ["Observações", r.dados.observacao || "Nenhuma observação registrada.", "draft", "is-note"],
+  ]) {
+    const pair = el("div", undefined, cls);
+    const labelNode = el("dt"); labelNode.append(icon(symbol), document.createTextNode(label));
+    pair.append(labelNode, el("dd", text)); dl.append(pair);
   }
   panel.append(dl);
   if (r.emprestimo)
@@ -3289,7 +3287,7 @@ function renderDetails(r, panel) {
     );
     panel.append(box);
   }
-  const actions = el("div", undefined, "actions");
+  const actions = el("div", undefined, "actions desktop-detail-actions");
   if (role !== "leitor") {
     for (const a of movementActions(r)) {
       if (a !== "baixar")
@@ -3355,15 +3353,18 @@ function renderDetails(r, panel) {
   for (const action of actions.querySelectorAll("button")) {
     if (action.textContent.trim()) decorateAcervoGradient(action);
   }
-  panel.append(actions);
   const history = el("div", undefined, "history");
-  history.append(el("h3", "Histórico"));
-  const content = el("div");
-  content.append(acervoLoader("Puxando a ficha desta história…", true));
+  const historyHeading = el("div", undefined, "desktop-history-heading");
+  const historyTitle = el("h3"); historyTitle.append(icon("history"), document.createTextNode("Histórico do item"));
+  historyHeading.append(historyTitle, el("p", "Movimentações e alterações deste registro."));
+  history.append(historyHeading);
+  const content = el("div", undefined, "desktop-history-list");
+  content.append(acervoLoader("Carregando o histórico…", true));
   history.append(content);
   const summary = el("div", undefined, "desktop-detail-summary");
   summary.append(...[...panel.children].filter((node) => node !== heading));
-  panel.replaceChildren(heading, summary, history);
+  if (!actions.children.length) actions.append(el("span", "Seu perfil permite consultar este registro.", "desktop-detail-readonly"));
+  panel.replaceChildren(heading, actions, summary, history);
   decorateAcervoRim(panel);
   loadHistory(r.id, content);
 }
@@ -5508,7 +5509,7 @@ async function exportExcel(all) {
       return lines;
     }
     const logo = new Image();
-    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.70";
+    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.71";
     await logo.decode().catch(() => {});
     const municipalityMark = document.querySelector(".institution-logo");
     const imageCache = new Map();
@@ -10038,7 +10039,7 @@ function initMobileJourney() {
   art.setAttribute("aria-hidden", "true");
   const mark = el("img", undefined, "mobile-home-mark");
   mark.src =
-    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.70";
+    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.71";
   mark.alt = "";
   for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
     const card = el("span", undefined, "mobile-art-fiche");
@@ -11505,8 +11506,9 @@ function renderDesktopOverview() {
         el("strong", title),
         el("small", help),
       );
-      if (i === 0) node.classList.add("acervo-living-surface");
-      decorateAcervoRim(node);
+      const cue = el("span", undefined, "desktop-metric-cue");
+      cue.setAttribute("aria-hidden", "true"); cue.append(icon("right")); node.append(cue);
+      node.setAttribute("aria-label", i === 3 ? "Ver prioridades de reposição" : "Consultar: " + title.toLocaleLowerCase("pt-BR"));
       return node;
     }),
   );
@@ -11577,6 +11579,7 @@ function renderDesktopOverview() {
           },
           "desktop-stock-row",
         );
+        row.dataset.empty = String(Number(record.saldo) === 0);
         const graphic = el("span", undefined, "desktop-item-symbol");
         graphic.append(itemIcon(record));
         const copy = el("span");

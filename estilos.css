@@ -27264,10 +27264,9 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
 
 /* 3.5.70 — animação onde há interação, sem multiplicar camadas nas listas. */
 @media (min-width:641px) and (hover:hover), (min-width:1025px) {
-  /* Os três controles do cabeçalho recuperam o Gradient Menu. O grupo reserva
-     a largura da expansão, mantendo nome e restante do cabeçalho no lugar. */
+  /* O grupo acompanha o menu: conta e ações se deslocam juntos na expansão. */
   html.acervo-desktop body .shell > header.bar #syncTools {
-    width:196px; flex:0 0 196px; flex-wrap:nowrap; justify-content:flex-end;
+    width:auto; flex:0 0 auto; flex-wrap:nowrap; justify-content:flex-end;
   }
   html.acervo-desktop body .shell > header.bar #syncTools > .acervo-gradient-action {
     width:32px !important; min-width:32px !important; padding:0 !important;
@@ -27423,3 +27422,128 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
   html.acervo-desktop #app #browse .record-row td:last-child > button > .icon { transition:none !important; }
   html.acervo-desktop body #app :is(#movements,#browse) .acervo-gradient-action::after { animation:none !important; }
 }
+
+/* 3.5.71 — luz nas letras, ficha com hierarquia e hovers previsíveis. */
+html.acervo-desktop body #app .desktop-register-copy h1.acervo-hero-title,
+html body #mobileJourneyHome h1.acervo-hero-title {
+  color:#fff;
+  text-shadow:none;
+  filter:drop-shadow(0 0 11px #ffffff99);
+}
+html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
+@media (min-width:641px) and (hover:hover), (min-width:1025px) {
+  /* Saída conserva a aparência prateada ao passar o mouse. */
+  html.acervo-desktop body #app :is(#movements,#browse) .action-saida.acervo-gradient-action {
+    --action-paper:linear-gradient(120deg,#fff,#eff3f8);
+    --action-gradient:linear-gradient(115deg,#fff,#d3dfef);
+    --action-ink:#304d70; --action-edge:#9baec9;
+  }
+  html.acervo-desktop body #app :is(#movements,#browse) .action-saida.acervo-gradient-action:is(:hover,:focus-visible):not(:disabled) {
+    color:#203e64 !important; border-color:#718daf !important;
+  }
+
+  /* Consulta: tabela tranquila; destaque e identidade na ficha aberta. */
+  html.acervo-desktop body #app #browse table thead { background:linear-gradient(110deg,#2e517d,#1f3b63); }
+  html.acervo-desktop body #app #browse table thead th { background:transparent; padding-top:15px; padding-bottom:15px; }
+  html.acervo-desktop body #app #browse .record-row:nth-child(even) > td { background:#f7f9fc; }
+  html.acervo-desktop body #app #browse .record-row:hover > td { background:#eef4fc; }
+  html.acervo-desktop body #app #browse .record-row:has(+.detail-row) > td { background:#e9f1fd; }
+  html.acervo-desktop body #app #browse .detail-row > td { padding:14px 12px 22px; background:#e9eff8; }
+  html.acervo-desktop body #app #browse .detail-panel {
+    display:grid; grid-template-columns:minmax(0,1.2fr) minmax(300px,.9fr);
+    gap:0; padding:0; border:1px solid #92b5e0; border-radius:20px;
+    background:#fff; overflow:hidden; box-shadow:0 10px 22px #173c6820;
+  }
+  html.acervo-desktop body #app #browse .detail-panel > .desktop-detail-heading {
+    display:flex; grid-column:1/-1; align-items:center; gap:18px; padding:23px 25px;
+    background:radial-gradient(ellipse at 12% 0,#80b3ff30,transparent 65%),linear-gradient(115deg,#2f5d98,#1c4786 68%,#233e67);
+    border:0; border-bottom:1px solid #7dabe2; border-radius:0;
+    color:#fff; box-shadow:inset 0 1px #ffffff60;
+  }
+  html.acervo-desktop body #app #browse .desktop-detail-symbol {
+    display:grid; place-items:center; width:64px; height:64px; flex:0 0 64px;
+    padding:0; border-radius:17px; border:1px solid #ffffff70;
+    background:linear-gradient(135deg,#ffffff20,#ffffff09); box-shadow:inset 0 1px #ffffff65;
+  }
+  html.acervo-desktop body #app #browse .desktop-detail-symbol > .icon { width:39px; height:39px; color:#fff; }
+  html.acervo-desktop body #app #browse .desktop-detail-identity { flex:1; min-width:0; }
+  html.acervo-desktop body #app #browse .desktop-detail-eyebrow { display:block; color:#cce1ff; font:600 9px/1.4 var(--pc-font); letter-spacing:.16em; margin-bottom:6px; }
+  html.acervo-desktop body #app #browse .desktop-detail-heading h3 { margin:0; color:#fff; font:700 23px/1.3 var(--pc-font); overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse .desktop-detail-code { display:flex; align-items:center; gap:7px; margin-top:8px; color:#e0ebff; font-size:11px; letter-spacing:.05em; }
+  html.acervo-desktop body #app #browse .desktop-detail-code > .icon { width:17px; height:17px; color:inherit; }
+  html.acervo-desktop body #app #browse .detail-panel .desktop-detail-heading > .badge {
+    flex:0 0 auto; align-self:center; margin:0; padding:7px 12px;
+    border:1px solid #ffffff80; border-radius:20px; background:#ffffffed; color:#234f8b;
+    font-size:11px; font-weight:650; white-space:nowrap;
+  }
+  html.acervo-desktop body #app #browse .detail-panel .desktop-detail-heading > .badge.down { background:var(--acervo-discard); color:#fff; border-color:#ff9db7; }
+  html.acervo-desktop body #app #browse .detail-panel .desktop-detail-heading > .badge.loan { background:linear-gradient(120deg,#ffdf86,#f2bb42); color:#593d0a; border-color:#ffe5aa; }
+  html.acervo-desktop body #app #browse .desktop-detail-summary { grid-column:1; grid-row:3; padding:25px; min-width:0; background:#fff; }
+  .desktop-detail-highlights { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; margin-bottom:24px; }
+  .desktop-detail-highlight { display:flex; align-items:flex-start; gap:11px; min-width:0; padding:15px; border:1px solid #b6cdea; border-radius:14px; background:linear-gradient(125deg,#f4f8ff,#fff); }
+  .desktop-detail-highlight > .icon { width:23px; height:23px; flex:0 0 23px; color:#3775bd; margin-top:2px; }
+  .desktop-detail-highlight > div { min-width:0; }
+  .desktop-detail-highlight small { display:block; color:#617c9d; font:500 10px/1.4 var(--pc-font); }
+  .desktop-detail-highlight strong { display:block; color:#244d83; font:700 16px/1.35 var(--pc-font); margin-top:5px; overflow-wrap:anywhere; }
+  .desktop-detail-highlight span { display:block; color:#637a96; font:400 10px/1.5 var(--pc-font); margin-top:5px; }
+  html.acervo-desktop body #app #browse .desktop-detail-summary > .desktop-detail-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); margin:0; gap:0 22px; }
+  html.acervo-desktop body #app #browse .desktop-detail-summary > .desktop-detail-facts > div { padding:15px 0; background:none; border:0; border-top:1px solid #d8e3f1; border-radius:0; min-width:0; }
+  html.acervo-desktop body #app #browse .desktop-detail-facts dt { display:flex; align-items:center; gap:7px; color:#627995; font:500 10px/1.4 var(--pc-font); }
+  html.acervo-desktop body #app #browse .desktop-detail-facts dt > .icon { width:15px; height:15px; color:#4a7cb6; }
+  html.acervo-desktop body #app #browse .desktop-detail-facts dd { margin:8px 0 0; color:#203c65; font:600 12px/1.6 var(--pc-font); overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse .desktop-detail-facts .is-note { grid-column:1/-1; }
+  html.acervo-desktop body #app #browse .desktop-detail-facts .is-note dd { font-weight:400; color:#435e7f; white-space:pre-wrap; }
+  html.acervo-desktop body #app #browse .detail-panel > .history { grid-column:2; grid-row:3; padding:25px; border-left:1px solid #cad9eb; border-radius:0; background:linear-gradient(145deg,#f2f6fc,#eaf0f9); min-width:0; }
+  .desktop-history-list { max-height:360px; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#a6bfdc transparent; padding:2px 7px 2px 6px; margin-left:-6px; }
+  html.acervo-desktop body #app #browse .desktop-history-heading h3 { display:flex; align-items:center; gap:8px; margin:0; color:#24456f; font:650 15px/1.4 var(--pc-font); }
+  .desktop-history-heading h3 > .icon { width:19px; height:19px; color:#3773b7; }
+  .desktop-history-heading p { margin:6px 0 21px; color:#657d9d; font:400 10px/1.5 var(--pc-font); }
+  html.acervo-desktop body #app #browse .detail-panel .history-entry { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:7px 12px; margin:0; padding:0 0 22px 20px; border:0; border-left:1px solid #b3c9e5; border-radius:0; background:transparent; box-shadow:none; }
+  html.acervo-desktop body #app #browse .detail-panel .history-entry::before { content:""; position:absolute; left:-5px; top:3px; width:9px; height:9px; border:2px solid #eef4fd; border-radius:50%; background:#3878c2; box-shadow:0 0 0 1px #8db0dc; }
+  html.acervo-desktop body #app #browse .history-entry > strong { grid-column:1; color:#285d9d; font-size:11px; line-height:1.4; }
+  html.acervo-desktop body #app #browse .history-entry > span { color:#627b9a; font-size:9px; line-height:1.5; }
+  html.acervo-desktop body #app #browse .history-entry > .history-user { grid-column:1/-1; font-size:9px; letter-spacing:.025em; }
+  html.acervo-desktop body #app #browse .history-entry dl { grid-column:1/-1; margin:4px 0 0; padding:11px 13px; border:1px solid #d5e1ef; border-radius:10px; background:#ffffffb3; font-size:10px; gap:5px 10px; }
+  html.acervo-desktop body #app #browse .history-entry dd { font-size:10px; color:#304e74; overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse .detail-panel > .desktop-detail-actions { display:flex; align-items:center; flex-wrap:wrap; grid-column:1/-1; grid-row:2; gap:9px; margin:0; padding:15px 24px; border:0; border-bottom:1px solid #c8d9ee; background:linear-gradient(110deg,#f0f5fd,#fff); }
+  html.acervo-desktop body #app #browse .desktop-detail-actions > .item-delete-action { margin-left:auto; }
+  .desktop-detail-readonly { color:#637b9c; font:400 11px/1.5 var(--pc-font); }
+
+  /* Indicadores não se deslocam nem trocam a paleta inteira no hover. */
+  html.acervo-desktop body #app #desktopOverview :is(.desktop-metric,.desktop-distribution-row,.desktop-stock-row,.desktop-chart-tabs button,.desktop-card-link) {
+    transform:none !important; translate:none !important; scale:1 !important; filter:none !important;
+    text-shadow:none !important; background-position:0 0; transition:border-color 180ms,box-shadow 180ms,background-color 180ms !important;
+  }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric { overflow:hidden; border-color:#bdcfe6; box-shadow:inset 0 1px #fff,0 5px 15px #0f2d5714; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric > .icon { box-sizing:border-box; width:36px; height:36px; padding:8px; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric::before,
+  html.acervo-desktop body #app #desktopOverview .desktop-metric::after { content:none !important; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric:is(:hover,:focus-visible) { border-color:#6c9dd9; box-shadow:inset 0 2px #d3e5ff,0 7px 17px #153c7020; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric:not(.is-main) { background:#fff; color:#18345d; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric.is-main { background:radial-gradient(ellipse at 100% 0,#6488b43d,transparent 70%),linear-gradient(125deg,#2c5284,#183b6a); color:#fff; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric.is-main > .icon { width:36px; height:36px; }
+  .desktop-metric-cue { position:absolute; right:17px; bottom:18px; display:grid; place-items:center; opacity:.45; color:inherit; transition:opacity 180ms,transform 250ms; }
+  .desktop-metric-cue > .icon { width:16px; height:16px; color:inherit; }
+  .desktop-metric:is(:hover,:focus-visible) .desktop-metric-cue { opacity:1; transform:translateX(3px); }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-row { padding:13px 12px; border-radius:10px; background:transparent; color:#244a78; border:1px solid transparent; }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-row:is(:hover,:focus-visible) { background:#f0f5fc; border-color:#c1d5ee; box-shadow:none; }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-row :is(strong,span) { color:inherit; }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-copy > span { color:#637c9b; }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-track > i { transition:none; }
+  html.acervo-desktop body #app #desktopOverview .desktop-stock-row { padding:13px 10px; background:transparent; color:#244a78; border:1px solid transparent; border-bottom-color:#d9e3ef; border-radius:10px; }
+  html.acervo-desktop body #app #desktopOverview .desktop-stock-row:is(:hover,:focus-visible) { border-color:#9ebde4; background:#f0f5fc; box-shadow:inset 3px 0 #4c88cd; }
+  html.acervo-desktop body #app #desktopOverview .desktop-stock-row > b { padding:6px 9px; border:1px solid #ecc26a; border-radius:9px; background:linear-gradient(115deg,#ffdf91,#ffd273); color:#65430c; }
+  html.acervo-desktop body #app #desktopOverview .desktop-stock-row[data-empty="true"] > b { border-color:#d9315a; background:var(--acervo-discard); color:#fff; }
+  html.acervo-desktop body #app #desktopOverview .desktop-chart-tabs button { color:#4a6384; }
+  html.acervo-desktop body #app #desktopOverview .desktop-chart-tabs button:not([aria-pressed="true"]):is(:hover,:focus-visible) { color:#1e4d87; background:#eaf2fc; }
+  html.acervo-desktop body #app #desktopOverview .desktop-chart-tabs button[aria-pressed="true"] { color:#fff; background:linear-gradient(115deg,#294f81,#2468c4); }
+  html.acervo-desktop body #app #desktopOverview .desktop-card-link { background:#fff; color:#2c5c9a; }
+  html.acervo-desktop body #app #desktopOverview .desktop-card-link:is(:hover,:focus-visible) { background:#eaf2fc; color:#234d83; border-color:#80a8dc; }
+  html.acervo-desktop body #app #desktopOverview .desktop-card-link > .icon { color:inherit; }
+  html.acervo-desktop body #app #desktopOverview .desktop-overview-card { box-shadow:0 6px 19px #0f2d5718; }
+  @media (max-width:1000px) {
+    html.acervo-desktop body #app #browse .detail-panel { grid-template-columns:minmax(0,1fr); }
+    html.acervo-desktop body #app #browse .detail-panel > .history { grid-column:1; grid-row:4; border-left:0; border-top:1px solid #cad9eb; }
+  }
+}
+@media (prefers-reduced-motion:reduce) { .desktop-metric-cue { transition:none; } }

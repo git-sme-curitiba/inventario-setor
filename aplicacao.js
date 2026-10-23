@@ -1674,6 +1674,8 @@ function labelButton(n, text, name) {
   if (loading) n.append(acervoBooks());
   else if (name) n.append(icon(name));
   n.append(document.createTextNode(text));
+  if (n.classList.contains("acervo-gradient-action")) decorateAcervoGradient(n);
+  if (n.classList.contains("acervo-fill-action")) decorateAcervoFill(n);
 }
 
 function setHelpHint(n, text, name) {
@@ -2246,6 +2248,7 @@ function renderMovementResults() {
           ACTION_ICON[a],
         );
         control.dataset.action = a;
+        decorateAcervoGradient(control);
         buttons.append(control);
       }
       routine.append(buttons);
@@ -2258,6 +2261,7 @@ function renderMovementResults() {
           "writeoff",
         );
         discard.dataset.action = "baixar";
+        decorateAcervoGradient(discard, "danger");
         actions.append(discard);
       }
       card.append(actions);
@@ -3344,6 +3348,9 @@ function renderDetails(r, panel) {
     remove.setAttribute("aria-label", "Excluir definitivamente");
     remove.title = "Excluir definitivamente";
     actions.append(remove);
+  }
+  for (const action of actions.querySelectorAll("button")) {
+    if (action.textContent.trim()) decorateAcervoGradient(action);
   }
   panel.append(actions);
   const history = el("div", undefined, "history");
@@ -8559,6 +8566,7 @@ function mobileReceipt(record, template) {
     "mobile-receipt-restart",
     "left",
   );
+  restart.classList.add("acervo-glass-fill");
   saved.className =
     "notice mobile-receipt" + (discarded ? " is-discarded" : "");
   const next = el("div", undefined, "mobile-receipt-next");
@@ -11972,6 +11980,7 @@ function showDesktopReceipt(record, template) {
     "",
     "left",
   );
+  restart.classList.add("acervo-glass-fill", "acervo-metal-sheen");
   actions.append(continueHere, restart);
   saved.replaceChildren(stage, heading, item, code, actions);
   saved.hidden = false;
@@ -12463,3 +12472,73 @@ function initAcervoNavEdgeLight() {
 }
 
 initAcervoNavEdgeLight();
+
+
+function decorateAcervoGradient(control, tone = "") {
+  if (!control || control.querySelector(".gradient-action-label")) return;
+  const text = control.id === "refresh" ? "Atualizar" : control.textContent.trim();
+  if (!text) return;
+  control.classList.add("acervo-gradient-action");
+  control.dataset.gradientTone = tone ||
+    (control.matches(".action-descarte_estoque") ? "amber" :
+      control.matches(".danger, .movement-register-discard, #logout") ? "danger" : "sapphire");
+  control.dataset.gradientLabel = text;
+  if (!control.hasAttribute("aria-label")) control.setAttribute("aria-label", text);
+  const label = el("span", undefined, "gradient-action-label");
+  for (const node of [...control.childNodes]) {
+    if (node.nodeType === Node.TEXT_NODE ||
+        (node.nodeType === Node.ELEMENT_NODE && !node.matches(".icon, .acervo-books"))) label.append(node);
+  }
+  const hover = el("span", text, "gradient-action-hover");
+  hover.setAttribute("aria-hidden", "true");
+  control.append(label, hover);
+}
+
+function initAcervoVisualPolish() {
+  for (const id of ["manageAccess", "refresh", "logout"]) decorateAcervoGradient($(id));
+  const panels = [
+    $("login"), document.querySelector("#register .workspace > .card"),
+    $("desktopRegistrationPreview"), ...document.querySelectorAll(".desktop-overview-card"),
+  ].filter(Boolean);
+  panels.forEach((panel) => panel.classList.add("acervo-soft-rim"));
+  const hover = matchMedia("(hover: hover) and (pointer: fine)");
+  panels.forEach((panel) => {
+    let frame = 0, point;
+    const reset = () => { cancelAnimationFrame(frame); frame = 0; panel.removeAttribute("data-rim-hover"); };
+    panel.addEventListener("pointermove", (event) => {
+      if (!hover.matches || event.pointerType !== "mouse") return;
+      point = [event.clientX, event.clientY];
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const rect = panel.getBoundingClientRect();
+        panel.style.setProperty("--rim-x", `${point[0] - rect.left}px`);
+        panel.style.setProperty("--rim-y", `${point[1] - rect.top}px`);
+        panel.setAttribute("data-rim-hover", "");
+      });
+    }, { passive: true });
+    panel.addEventListener("pointerleave", reset, { passive: true });
+    panel.addEventListener("pointercancel", reset, { passive: true });
+    hover.addEventListener("change", reset);
+    window.addEventListener("blur", reset);
+  });
+  for (const selector of [".desktop-register-copy h1", ".mobile-home-copy h1", ".mobile-journey-title", "#desktopOverview .workspace-title"]) {
+    document.querySelectorAll(selector).forEach((heading) => heading.classList.add("acervo-title-reveal"));
+  }
+  $("accessBack")?.classList.add("acervo-glass-fill");
+  for (const id of ["save", "editSave", "accessBack"]) decorateAcervoFill($(id));
+  const ambient = el("div", undefined, "acervo-ambient-light");
+  ambient.setAttribute("aria-hidden", "true");
+  document.body.prepend(ambient);
+}
+
+initAcervoVisualPolish();
+
+function decorateAcervoFill(control) {
+  if (!control) return;
+  control.classList.add("acervo-fill-action");
+  if (control.querySelector(".acervo-fill-orb")) return;
+  const orb = el("span", undefined, "acervo-fill-orb");
+  orb.setAttribute("aria-hidden", "true");
+  control.prepend(orb);
+}

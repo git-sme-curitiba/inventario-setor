@@ -1270,6 +1270,8 @@ const ACTION_ICON = {
 
 const ZONE = "America/Sao_Paulo";
 
+const IS_DEMO = document.body.dataset.demo === "true";
+
 const AUTH_KEY = "sb-yipfkwxhpahpuiizkcny-auth-token";
 
 const REMEMBER_KEY = "acervo:manter-conectado";
@@ -1307,19 +1309,21 @@ const authStorage = {
   },
 };
 
-const db = window.supabase?.createClient(
-  "https://yipfkwxhpahpuiizkcny.supabase.co",
-  "sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI",
-  {
-    auth: {
-      storage: authStorage,
-      storageKey: AUTH_KEY,
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: false,
-    },
-  },
-);
+const db = IS_DEMO
+  ? createAcervoDemoClient()
+  : window.supabase?.createClient(
+      "https://yipfkwxhpahpuiizkcny.supabase.co",
+      "sb_publishable_WSiEY5i1VJfNoAZ_KwUp8Q_HkmeMdlI",
+      {
+        auth: {
+          storage: authStorage,
+          storageKey: AUTH_KEY,
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
+        },
+      },
+    );
 
 let user = null,
   role = "leitor",
@@ -1431,8 +1435,6 @@ let deletionTarget = null,
   deletionKey = null,
   deletionSaving = false;
 
-const IS_DEMO = document.body.dataset.demo === "true";
-
 const PASSWORD_SYMBOLS = "!@#$%^&*()_+-=[]{};'\":\\|<>?,./`~";
 
 let passwordChanging = false,
@@ -1447,8 +1449,7 @@ const PEOPLE_ROLES = {
   admin: "Administrador",
 };
 
-let accessMode = "list",
-  peopleRows = [],
+let peopleRows = [],
   peoplePage = 1,
   peopleTotal = 0,
   peopleLimit = 30,
@@ -1474,6 +1475,7 @@ function authRemove(store, key) {
 }
 
 function chooseSessionStorage(remember) {
+  if (IS_DEMO) return;
   const saved = authStorage.getItem(AUTH_KEY);
   rememberSession = remember;
   try {
@@ -1705,7 +1707,7 @@ function toast(text, error = false) {
 function storage(name, data) {
   try {
     if (!user?.id) return arguments.length === 1 ? null : false;
-    const k = "acervo2:" + user?.id + ":" + name;
+    const k = (IS_DEMO ? "acervo-demo:" : "acervo2:") + user.id + ":" + name;
     if (arguments.length === 1)
       return JSON.parse(localStorage.getItem(k) || "null");
     if (data === null) localStorage.removeItem(k);
@@ -3021,16 +3023,6 @@ function renderFilters() {
         state !== "ARQUIVADO" || rows.some((r) => r.situacao === "ARQUIVADO"),
     ),
   ]);
-  const discarded = rows.filter((r) => r.situacao === "BAIXADO").length;
-  labelButton(
-    $("viewDiscarded"),
-    "Descartados (" + discarded + ")",
-    "writeoff",
-  );
-  $("viewDiscarded").setAttribute(
-    "aria-pressed",
-    String(filters.situacao === "BAIXADO"),
-  );
   filterButtons(
     "filterShelf",
     "estante",
@@ -3158,9 +3150,6 @@ function renderList() {
       expanded === r.id ? "close" : "right",
     );
     open.setAttribute("aria-expanded", String(expanded === r.id));
-    tr.addEventListener("click", (event) => {
-      if (mobileAcervo() && !event.target.closest("button")) open.click();
-    });
     actionCell.append(open);
     tr.append(actionCell);
     $("results").append(tr);
@@ -3183,26 +3172,6 @@ function renderList() {
       row.append(cell);
       $("results").append(row);
       renderDetails(r, panel);
-      if (mobileAcervo()) {
-        row.remove();
-        const detail = el("div", undefined, "mobile-item-detail");
-        detail.id = "mobileDetail";
-        const back = button(
-          "Voltar aos resultados",
-          () => {
-            const id = expanded;
-            expanded = null;
-            renderList();
-            $("results").querySelector(`[data-id="${id}"] button`)?.focus();
-          },
-          "",
-          "left",
-        );
-        detail.append(back, panel);
-        $("browse").append(detail);
-        $("browse").classList.add("mobile-detail-open");
-        back.focus({ preventScroll: true });
-      }
     }
   }
   if (!found.length) {
@@ -3896,15 +3865,19 @@ async function transmit() {
       )
     )
       toast(
-        op.origin === "create" && result.situacao !== "BAIXADO"
-          ? "Pronto. Mais um bem no seu lugar."
-          : "Operação salva.",
+        IS_DEMO
+          ? "Salvo na demonstração deste navegador."
+          : op.origin === "create" && result.situacao !== "BAIXADO"
+            ? "Pronto. Mais um bem no seu lugar."
+            : "Operação salva.",
       );
     try {
       await refresh();
     } catch {
       toast(
-        "Salvo no banco. A lista será atualizada quando a conexão voltar.",
+        IS_DEMO
+          ? "Salvo na demonstração. Atualize a página para consultar."
+          : "Salvo no banco. A lista será atualizada quando a conexão voltar.",
         true,
       );
     }
@@ -4727,7 +4700,6 @@ function setAccessView(mode) {
     ++peopleRequest;
     clearTimeout(peopleSearchTimer);
   }
-  accessMode = mode;
   $("peoplePanel").hidden = mode !== "list";
   $("newUserForm").hidden = mode !== "create";
   $("personRoleForm").hidden = mode !== "profile";
@@ -5361,10 +5333,12 @@ async function exportExcel(all) {
     const emitted = new Date();
     const list = all ? [...rows] : filtered();
     const wb = new ExcelJS.Workbook();
-    wb.creator = "ACERVO";
+    wb.creator = IS_DEMO ? "ACERVO · Demonstração" : "ACERVO";
     wb.created = emitted;
     wb.modified = emitted;
-    wb.subject = "Gestão de bens e materiais · Curitiba";
+    wb.subject = IS_DEMO
+      ? "DEMONSTRAÇÃO · DADOS FICTÍCIOS"
+      : "Gestão de bens e materiais · Curitiba";
     wb.calcProperties.fullCalcOnLoad = true;
     const color = {
       green: "FF124FA3",
@@ -5391,7 +5365,7 @@ async function exportExcel(all) {
       dia: "Cadastro",
       item: "Item",
     };
-    const scope = all
+    const selectedScope = all
       ? "Inventário completo"
       : Object.entries(filters)
           .filter(([, v]) => v)
@@ -5415,6 +5389,8 @@ async function exportExcel(all) {
           )
           .concat($("search").value ? ["Busca: " + $("search").value] : [])
           .join(" · ") || "Lista corrente";
+    const scope =
+      (IS_DEMO ? "DEMONSTRAÇÃO · DADOS FICTÍCIOS · " : "") + selectedScope;
     const issued = dateBR(emitted);
     const shortDate = (v) =>
       v
@@ -6786,7 +6762,7 @@ async function exportExcel(all) {
     const a = document.createElement("a");
     a.href = url;
     a.download =
-      "Acervo - " +
+      (IS_DEMO ? "Acervo - Demonstração - " : "Acervo - ") +
       (all ? "Inventário Completo" : "Consulta Filtrada") +
       " - " +
       shortDate(emitted).replaceAll("/", "-") +
@@ -6924,7 +6900,7 @@ function warmOCR() {
         preserve_interword_spaces: "1",
       });
       return w;
-    })().catch((e) => {
+    })().catch(() => {
       ocrPromise = null;
       return null;
     });
@@ -7083,7 +7059,7 @@ async function barcodeLoop(s) {
           candidate(s, r.text, r.format, true);
         }
       }
-    } catch (e) {
+    } catch {
       if (scene === s) {
         $("cameraStatus").textContent =
           "Aproxime a etiqueta. Se preferir, digite o código.";
@@ -7125,7 +7101,7 @@ async function ocrLoop(s) {
           }
         }
       }
-    } catch (e) {
+    } catch {
       if (scene === s) {
         $("cameraStatus").textContent =
           "Aponte para o código de barras ou digite o número.";
@@ -7139,6 +7115,7 @@ async function ocrLoop(s) {
 }
 
 function mobileCamera() {
+  if (IS_DEMO) return false;
   const ua = navigator.userAgent || "";
   return (
     /Android|iPhone|iPad|iPod/i.test(ua) ||
@@ -9591,7 +9568,7 @@ function initMobileRefresh() {
         label.textContent = "Acervo atualizado";
         indicator.dataset.state = "done";
       }
-    } catch (error) {
+    } catch {
       if (user?.id === owner) {
         label.textContent = "Não foi possível atualizar";
         indicator.dataset.state = "error";
@@ -10722,11 +10699,6 @@ $("search").oninput = () => {
   renderList();
 };
 
-$("viewDiscarded").onclick = () =>
-  query({
-    situacao: "BAIXADO",
-  });
-
 $("moreFilters").onclick = () => {
   $("filterPanel").hidden = !$("filterPanel").hidden;
   $("moreFilters").setAttribute(
@@ -10792,8 +10764,9 @@ $("exportAll").onclick = () => exportExcel(true);
 
 $("exportFiltered").onclick = () => exportExcel(false);
 
-$("rememberSession").checked =
-  rememberSession || authRead("localStorage", REMEMBER_KEY) === "sim";
+if (!IS_DEMO)
+  $("rememberSession").checked =
+    rememberSession || authRead("localStorage", REMEMBER_KEY) === "sim";
 
 $("loginForm").onsubmit = async (e) => {
   e.preventDefault();
@@ -10921,6 +10894,8 @@ initForm();
 initAppViewport();
 
 initVisualExperience();
+
+if (IS_DEMO) initAcervoDemo(db);
 
 (async () => {
   if (!db) {
@@ -12448,3 +12423,43 @@ function initAcervoChameleon() {
 }
 
 initAcervoChameleon();
+
+function initAcervoNavEdgeLight() {
+  const nav = document.querySelector(".nav");
+  if (!nav || nav.querySelector(".nav-edge-light")) return;
+  const light = document.createElement("span");
+  light.className = "nav-edge-light";
+  light.setAttribute("aria-hidden", "true");
+  nav.append(light);
+  const hover = matchMedia("(hover: hover) and (pointer: fine)");
+  let frame = 0;
+  let point = null;
+  const reset = () => {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    point = null;
+    nav.removeAttribute("data-edge-hover");
+  };
+  nav.addEventListener("pointermove", (event) => {
+    if (!hover.matches || event.pointerType !== "mouse") return;
+    point = { x: event.clientX, y: event.clientY };
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      if (!point) return;
+      const bounds = nav.getBoundingClientRect();
+      light.style.setProperty("--nav-light-x", `${point.x - bounds.left}px`);
+      light.style.setProperty("--nav-light-y", `${point.y - bounds.top}px`);
+      nav.setAttribute("data-edge-hover", "");
+    });
+  }, { passive: true });
+  nav.addEventListener("pointerleave", reset, { passive: true });
+  nav.addEventListener("pointercancel", reset, { passive: true });
+  hover.addEventListener("change", reset);
+  window.addEventListener("blur", reset);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) reset();
+  });
+}
+
+initAcervoNavEdgeLight();

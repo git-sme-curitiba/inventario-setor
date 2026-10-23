@@ -2159,7 +2159,7 @@ function renderMovementResults() {
             ),
           ).includes(q),
       );
-  $("moveResults").replaceChildren();
+  const fragment = document.createDocumentFragment();
   $("moveMissing").hidden = !q || found.length > 0;
   $("createDown").hidden = role === "leitor";
   if (!q) {
@@ -2168,7 +2168,7 @@ function renderMovementResults() {
       icon("search"),
       el("span", "Encontre o item para ver as ações disponíveis."),
     );
-    $("moveResults").append(empty);
+    $("moveResults").replaceChildren(empty);
     return;
   }
   for (const r of found.slice(0, 20)) {
@@ -2276,17 +2276,17 @@ function renderMovementResults() {
           "hint movement-readonly",
         ),
       );
-    decorateAcervoRim(card);
-    $("moveResults").append(card);
+    fragment.append(card);
   }
   if (found.length > 20)
-    $("moveResults").append(
+    fragment.append(
       el(
         "p",
         `${found.length} itens encontrados. Digite mais detalhes para refinar.`,
         "hint",
       ),
     );
+  $("moveResults").replaceChildren(fragment);
 }
 
 function configureMovement(a, r) {
@@ -3093,7 +3093,7 @@ function renderList() {
   if (mobileAcervo())
     return renderMobileRecords(found.slice((page - 1) * 25, page * 25));
   closeMobileDetail();
-  $("results").replaceChildren();
+  const fragment = document.createDocumentFragment();
   for (const r of found.slice((page - 1) * 25, page * 25)) {
     const tr = el("tr", undefined, "record-row");
     tr.dataset.id = r.id;
@@ -3158,7 +3158,7 @@ function renderList() {
     open.setAttribute("aria-expanded", String(expanded === r.id));
     actionCell.append(open);
     tr.append(actionCell);
-    $("results").append(tr);
+    fragment.append(tr);
     [
       "Item",
       "Identificação",
@@ -3176,7 +3176,7 @@ function renderList() {
       panel.id = "detailPanel";
       cell.append(panel);
       row.append(cell);
-      $("results").append(row);
+      fragment.append(row);
       renderDetails(r, panel);
     }
   }
@@ -3191,8 +3191,9 @@ function renderList() {
     );
     td.colSpan = 7;
     tr.append(td);
-    $("results").append(tr);
+    fragment.append(tr);
   }
+  $("results").replaceChildren(fragment);
 }
 
 function renderDetails(r, panel) {
@@ -5507,7 +5508,7 @@ async function exportExcel(all) {
       return lines;
     }
     const logo = new Image();
-    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.69";
+    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.70";
     await logo.decode().catch(() => {});
     const municipalityMark = document.querySelector(".institution-logo");
     const imageCache = new Map();
@@ -10037,7 +10038,7 @@ function initMobileJourney() {
   art.setAttribute("aria-hidden", "true");
   const mark = el("img", undefined, "mobile-home-mark");
   mark.src =
-    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.69";
+    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.70";
   mark.alt = "";
   for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
     const card = el("span", undefined, "mobile-art-fiche");
@@ -10143,7 +10144,7 @@ function initMobileJourney() {
   $("confirmOperation").before(preview);
   $("operationForm").addEventListener("input", updateMobileOperation);
   $("operation").addEventListener("close", () => {
-    if (!$("mobileDetail")?.open && !$("movements").hidden)
+    if (mobileAcervo() && !$("mobileDetail")?.open && !$("movements").hidden)
       renderMovementResults();
   });
   $("createDown").addEventListener("click", () => {
@@ -11919,19 +11920,6 @@ function showDesktopReceipt(record, template) {
   badge.append(icon(discarded ? "discard" : "check"));
   seal.append(mobileBooksMark(), badge);
   stage.append(seal);
-  if (!discarded) {
-    const incoming = el("span", undefined, "desktop-completion-incoming");
-    incoming.append(itemIcon(record));
-    stage.append(incoming);
-    for (let i = 0; i < 8; i++) {
-      const fragment = el("i", undefined, "desktop-completion-fragment");
-      const angle = (i / 8) * Math.PI * 2;
-      fragment.style.setProperty("--burst-x", Math.cos(angle) * 104 + "px");
-      fragment.style.setProperty("--burst-y", Math.sin(angle) * 66 + "px");
-      fragment.style.setProperty("--burst-turn", i * 48 + "deg");
-      stage.append(fragment);
-    }
-  }
   const heading = el(
     "h2",
     discarded
@@ -11940,6 +11928,18 @@ function showDesktopReceipt(record, template) {
         ? "Estoque cadastrado"
         : "Item cadastrado",
   );
+  const hero = el("div", undefined, "desktop-completion-hero");
+  const heroCopy = el("div", undefined, "desktop-completion-copy");
+  heroCopy.append(
+    el("small", discarded ? "HISTÓRICO PRESERVADO" : "TUDO NO LUGAR"),
+    heading,
+    el("p", discarded
+      ? "O registro continua no Acervo, com seu histórico."
+      : stock
+        ? "Saldo inicial registrado. Pronto para acompanhar."
+        : "O item já faz parte do seu Acervo."),
+  );
+  hero.append(stage, heroCopy);
   const item = el("div", undefined, "desktop-completion-item");
   item.append(itemIcon(record), el("div"));
   item.lastChild.append(
@@ -11952,10 +11952,10 @@ function showDesktopReceipt(record, template) {
     ),
   );
   const code = el("div", undefined, "desktop-completion-code");
-  code.append(
-    el("span", "Código do registro"),
-    el("strong", internal(record.id)),
-  );
+  const codeLabel = el("span");
+  codeLabel.append(mobileBarcodeMark(), el("span", "Código do registro"));
+  code.append(codeLabel, el("strong", internal(record.id)));
+
   const actions = el("div", undefined, "desktop-completion-actions");
   const continueHere = button(
     "Cadastrar outro neste local",
@@ -11986,10 +11986,24 @@ function showDesktopReceipt(record, template) {
     "",
     "left",
   );
-  restart.classList.add("acervo-glass-fill", "acervo-metal-sheen");
+  for (const [control, title, hint] of [
+    [continueHere, "Cadastrar outro neste local", template.ambiente],
+    [restart, "Voltar ao início", "Recomeçar e escolher o local"],
+  ]) {
+    const copy = el("span", undefined, "receipt-action-copy");
+    copy.append(el("strong", title), el("small", hint));
+    for (const node of [...control.childNodes]) {
+      if (node.nodeType === Node.TEXT_NODE) node.remove();
+    }
+    control.append(copy);
+    control.setAttribute("aria-label", title);
+  }
+  restart.classList.add("acervo-glass-fill");
   decorateAcervoFill(restart);
   actions.append(continueHere, restart);
-  saved.replaceChildren(stage, heading, item, code, actions);
+  const body = el("div", undefined, "desktop-completion-body");
+  body.append(item, code, actions);
+  saved.replaceChildren(hero, body);
   saved.hidden = false;
   saved.setAttribute("role", "status");
   requestAnimationFrame(() =>

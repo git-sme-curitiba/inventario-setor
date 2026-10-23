@@ -1676,6 +1676,7 @@ function labelButton(n, text, name) {
   n.append(document.createTextNode(text));
   if (n.classList.contains("acervo-gradient-action")) decorateAcervoGradient(n);
   if (n.classList.contains("acervo-fill-action")) decorateAcervoFill(n);
+  if (n.classList.contains("acervo-submit-shimmer")) decorateAcervoSubmit(n);
 }
 
 function setHelpHint(n, text, name) {
@@ -3198,7 +3199,7 @@ function renderDetails(r, panel) {
   if (mobileAcervo()) return renderMobileRecordDetail(r, panel);
   panel.replaceChildren();
   const heading = el("div", undefined, "desktop-detail-heading");
-  const mark = el("span", undefined, "desktop-detail-symbol");
+  const mark = el("span", undefined, "desktop-detail-symbol acervo-living-surface");
   mark.append(itemIcon(r));
   const identity = el("div");
   identity.append(el("h3", r.dados.item), el("small", internal(r.id)));
@@ -5350,17 +5351,19 @@ async function exportExcel(all) {
       : "Gestão de bens e materiais · Curitiba";
     wb.calcProperties.fullCalcOnLoad = true;
     const color = {
-      green: "FF124FA3",
-      lime: "FFB6E4FF",
-      ink: "FF19304D",
-      muted: "FF607489",
-      soft: "FFF1F5FC",
-      paper: "FFF3F5F7",
+      sapphire: "FF1956B5",
+      graphite: "FF264979",
+      deep: "FF103164",
+      accent: "FFDDEAFF",
+      ink: "FF18345D",
+      muted: "FF5A7190",
+      soft: "FFF3F6FB",
+      paper: "FFF7F9FC",
       white: "FFFFFFFF",
-      line: "FFDCE5F1",
+      line: "FFD6E1EF",
       amber: "FF99642C",
       warning: "FFFCF5E8",
-      chart: "FF357CAF",
+      chart: "FF3268B0",
       neutral: "FFE4EAF0",
     };
     const filterNames = {
@@ -5421,10 +5424,10 @@ async function exportExcel(all) {
     }
     function formatStatusCell(cell) {
       const tones = {
-        Ativo: ["FFDCEBFF", "FF0D438A", "FF7FA7D6"],
-        Emprestado: ["FFDEF1F8", "FF125C7A", "FF86B7CD"],
-        Descartado: ["FFF9E1E7", "FF8E2340", "FFD895A8"],
-        Arquivado: ["FFE8EDF4", "FF465B71", "FFB2BDC9"],
+        Ativo: ["FF1956B5", "FFFFFFFF", "FF1956B5"],
+        Emprestado: ["FF264979", "FFFFFFFF", "FF264979"],
+        Descartado: ["FFB91C46", "FFFFFFFF", "FFB91C46"],
+        Arquivado: ["FF5B6980", "FFFFFFFF", "FF5B6980"],
       };
       const tone = tones[String(cell.value)];
       if (!tone) return;
@@ -5448,7 +5451,7 @@ async function exportExcel(all) {
       const cell = ws.getCell(range.split(":")[0]);
       cell.value = value;
       cell.font = {
-        name: options.serif ? "Georgia" : "Aptos",
+        name: "Aptos",
         size: options.size || 11,
         color: {
           argb: options.fg || color.ink,
@@ -5503,12 +5506,11 @@ async function exportExcel(all) {
       return lines;
     }
     const logo = new Image();
-    logo.src =
-      "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYWNlcnZvLWJsdWUiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMjdiMWYzIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC40OCIgc3RvcC1jb2xvcj0iIzA4N2NkZCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwNTQ4OWMiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE2IiBmaWxsPSJ1cmwoI2FjZXJ2by1ibHVlKSIvPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cmVjdCB4PSIxNiIgeT0iMjEiIHdpZHRoPSIxNSIgaGVpZ2h0PSIyOSIgcng9IjMiLz4KICAgIDxyZWN0IHg9IjM0IiB5PSIxNCIgd2lkdGg9IjE1IiBoZWlnaHQ9IjM2IiByeD0iMyIvPgogICAgPHBhdGggZD0iTTIxIDI3aDVNMjEgMzJoNU0zOSAyMGg1TTM5IDI1aDVNMzkgMzBoNU0xNCA1MWgzOCIvPgogIDwvZz4KPC9zdmc+Cg==";
+    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.68";
     await logo.decode().catch(() => {});
     const municipalityMark = document.querySelector(".institution-logo");
     const imageCache = new Map();
-    async function graphicIcon(name, tone = "#155bb9") {
+    async function graphicIcon(name, tone = "#1956b5") {
       const key = name + tone;
       if (imageCache.has(key)) return imageCache.get(key);
       const symbol = document.getElementById("i-" + name);
@@ -5589,7 +5591,7 @@ async function exportExcel(all) {
     }
     async function drawExportPanel() {
       const ws = wb.addWorksheet("Resumo", {
-        properties: { tabColor: { argb: color.green } },
+        properties: { tabColor: { argb: color.sapphire } },
         views: [{ showGridLines: false, zoomScale: 90 }],
         pageSetup: {
           paperSize: 9,
@@ -5616,20 +5618,20 @@ async function exportExcel(all) {
         ws.getRow(row).height = panelRowHeight;
       paint(ws, 1, 40, 1, 4, "FFEAF1FC");
       const { canvas, context: c } = graphic(1600, 1160);
-      c.fillStyle = "#eaf1fc";
+      c.fillStyle = "#f3f6fb";
       c.fillRect(0, 0, 1600, 1160);
       const glow = c.createRadialGradient(1240, 70, 0, 1240, 70, 970);
-      glow.addColorStop(0, "#cce4ff");
-      glow.addColorStop(1, "#eaf1fc00");
+      glow.addColorStop(0, "#dbe7fa");
+      glow.addColorStop(1, "#f3f6fb00");
       c.fillStyle = glow;
       c.fillRect(0, 0, 1600, 1160);
       const blue = c.createLinearGradient(40, 40, 1520, 230);
-      blue.addColorStop(0, "#093b84");
-      blue.addColorStop(0.55, "#155fc1");
-      blue.addColorStop(1, "#1994d6");
+      blue.addColorStop(0, "#" + color.deep.slice(2));
+      blue.addColorStop(0.55, "#1956b5");
+      blue.addColorStop(1, "#2e64ad");
       rounded(c, 40, 36, 1520, 180, 28, blue, true);
       contain(c, logo, 64, 59, 72, 72);
-      c.font = "700 38px Georgia";
+      c.font = "700 38px Arial";
       c.fillStyle = "white";
       c.fillText("ACERVO", 153, 103);
       label(c, "GESTÃO DE BENS E MATERIAIS", 155, 128, 12, "#d7edff", 700);
@@ -5657,21 +5659,21 @@ async function exportExcel(all) {
           available,
           "Controle individual",
           "available",
-          "#155fc1",
+          "#1956b5",
         ],
         [
           "Materiais em estoque",
           stocks.length,
           "Cadastros por quantidade",
           "stock",
-          "#216aba",
+          "#3268b0",
         ],
         [
           "Bens emprestados",
           borrowed,
           "Empréstimos em aberto",
           "loan",
-          "#3479c2",
+          "#264979",
         ],
         [
           "Materiais para repor",
@@ -5686,7 +5688,7 @@ async function exportExcel(all) {
           x = 40 + i * 386,
           w = 362;
         rounded(c, x, 240, w, 145, 20, i === 0 ? blue : "white", true);
-        rounded(c, x + 20, 261, 43, 43, 13, i === 0 ? "#ffffff20" : "#edf4ff");
+        rounded(c, x + 20, 261, 43, 43, 13, i === 0 ? "#ffffff20" : "#f3f6fb");
         const image = await graphicIcon(mark, i === 0 ? "white" : tone);
         if (image) c.drawImage(image, x + 30, 271, 23, 23);
         label(
@@ -5695,7 +5697,7 @@ async function exportExcel(all) {
           x + 76,
           287,
           17,
-          i === 0 ? "white" : "#21466e",
+          i === 0 ? "white" : "#264979",
           700,
           266,
         );
@@ -5722,7 +5724,7 @@ async function exportExcel(all) {
       }
       rounded(c, 40, 410, 745, 302, 22, "white", true);
       rounded(c, 809, 410, 751, 302, 22, "white", true);
-      label(c, "Situação dos bens", 66, 450, 23, "#164478", 700);
+      label(c, "Situação dos bens", 66, 450, 23, "#18345d", 700);
       label(
         c,
         "Controle individual · exclui registros arquivados",
@@ -5732,7 +5734,7 @@ async function exportExcel(all) {
         "#75879d",
       );
       const states = [
-        ["Em uso", available, "#216bcc"],
+        ["Em uso", available, "#1956b5"],
         [
           "Emprestados",
           goods.filter((r) => r.situacao === "EMPRESTADO").length,
@@ -5741,13 +5743,13 @@ async function exportExcel(all) {
         [
           "Descartados",
           goods.filter((r) => r.situacao === "BAIXADO").length,
-          "#cc6a82",
+          "#b91c46",
         ],
       ];
       const total = states.reduce((n, s) => n + s[1], 0);
       let start = -Math.PI / 2;
       c.lineWidth = 28;
-      c.strokeStyle = "#edf3fa";
+      c.strokeStyle = "#eef2f8";
       c.beginPath();
       c.arc(204, 588, 82, 0, Math.PI * 2);
       c.stroke();
@@ -5767,7 +5769,7 @@ async function exportExcel(all) {
         204,
         594,
         total > 9999 ? 30 : total > 999 ? 37 : 45,
-        "#164478",
+        "#18345d",
         700,
       );
       label(c, "bens", 204, 620, 14, "#74859c");
@@ -5780,7 +5782,7 @@ async function exportExcel(all) {
         label(c, n.toLocaleString("pt-BR"), 749, y, 21, "#1f4779", 700, 130);
         c.textAlign = "left";
       });
-      label(c, "Saúde do estoque", 835, 450, 23, "#164478", 700);
+      label(c, "Saúde do estoque", 835, 450, 23, "#18345d", 700);
       label(
         c,
         "Materiais ativos · sem somar unidades diferentes",
@@ -5793,7 +5795,7 @@ async function exportExcel(all) {
         [
           "Acima do mínimo",
           stocks.filter((r) => Number(r.saldo) > Number(r.minimo)).length,
-          "#286dce",
+          "#3268b0",
         ],
         [
           "No mínimo ou abaixo",
@@ -5805,10 +5807,10 @@ async function exportExcel(all) {
         [
           "Sem saldo",
           stocks.filter((r) => Number(r.saldo) <= 0).length,
-          "#d27387",
+          "#b91c46",
         ],
       ];
-      rounded(c, 835, 500, 695, 22, 11, "#edf3fa");
+      rounded(c, 835, 500, 695, 22, 11, "#eef2f8");
       let offset = 835;
       c.save();
       c.beginPath();
@@ -5828,7 +5830,7 @@ async function exportExcel(all) {
         rounded(c, 838, y - 13, 12, 12, 4, tone);
         label(c, title, 865, y, 17, "#3d5572");
         c.textAlign = "right";
-        label(c, n.toLocaleString("pt-BR"), 1430, y, 22, "#21466e", 700, 130);
+        label(c, n.toLocaleString("pt-BR"), 1430, y, 22, "#264979", 700, 130);
         label(
           c,
           (stocks.length ? Math.round((n / stocks.length) * 100) : 0) + "%",
@@ -5839,7 +5841,7 @@ async function exportExcel(all) {
         );
         c.textAlign = "left";
       });
-      label(c, "Onde está o acervo", 42, 756, 24, "#164478", 700);
+      label(c, "Onde está o acervo", 42, 756, 24, "#18345d", 700);
       label(c, "Bens individuais em uso por ambiente", 42, 779, 13, "#75879d");
       const roomMarks = ROOMS.map((room) => ROOM_ICON[room]);
       for (let i = 0; i < ROOMS.length; i++) {
@@ -5849,13 +5851,13 @@ async function exportExcel(all) {
             (r) => r.situacao === "ATIVO" && r.dados.ambiente === room,
           ).length;
         rounded(c, x, 799, 490, 130, 20, "white", true);
-        rounded(c, x + 19, 818, 40, 40, 12, "#edf4ff");
+        rounded(c, x + 19, 818, 40, 40, 12, "#f3f6fb");
         const image = await graphicIcon(roomMarks[i]);
         if (image) c.drawImage(image, x + 29, 828, 20, 20);
-        label(c, room, x + 73, 844, 17, "#21466e", 700, 380);
+        label(c, room, x + 73, 844, 17, "#264979", 700, 380);
         const roomNumber = n.toLocaleString("pt-BR"),
           roomSize = n >= 1000000 ? 25 : 33;
-        label(c, roomNumber, x + 21, 892, roomSize, "#155fc1", 700, 150);
+        label(c, roomNumber, x + 21, 892, roomSize, "#1956b5", 700, 150);
         c.save();
         c.font = "700 " + roomSize + "px Arial";
         const roomNumberWidth = c.measureText(roomNumber).width;
@@ -5870,13 +5872,13 @@ async function exportExcel(all) {
         );
         rounded(c, x + 21, 910, 448, 5, 2.5, "#e8f0fb");
         const bar = (448 * n) / Math.max(1, available);
-        if (bar) rounded(c, x + 21, 910, bar, 5, 2.5, "#3d85d9");
+        if (bar) rounded(c, x + 21, 910, bar, 5, 2.5, "#447dc4");
       }
-      rounded(c, 40, 952, 1520, 83, 18, "#dbe8fa");
+      rounded(c, 40, 952, 1520, 83, 18, "#e7edf6");
       const untagged = goods.filter(
         (r) => r.situacao === "ATIVO" && r.dados.tipo === "SEM_IDENTIFICACAO",
       ).length;
-      label(c, "Para acompanhar", 63, 980, 16, "#164478", 700);
+      label(c, "Para acompanhar", 63, 980, 16, "#18345d", 700);
       label(
         c,
         low + (low === 1 ? " material para repor" : " materiais para repor"),
@@ -5916,7 +5918,8 @@ async function exportExcel(all) {
       ];
       destinations.forEach((name, index) => {
         const x = 40 + index * 386;
-        rounded(c, x, 1052, 362, 53, 14, "#155fc1");
+        const tones = ["#1956b5", "#264979", "#b91c46", "#18345d"];
+        rounded(c, x, 1052, 362, 53, 14, tones[index]);
         label(c, name + "  →", x + 20, 1085, 17, "white", 700, 260);
       });
       label(
@@ -6009,7 +6012,7 @@ async function exportExcel(all) {
           name: "Aptos",
           size: 12,
           bold: true,
-          color: { argb: color.green },
+          color: { argb: color.sapphire },
         };
         cell.fill = fill(color.soft);
         cell.alignment = { vertical: "middle", horizontal: "center" };
@@ -6030,9 +6033,9 @@ async function exportExcel(all) {
         for (let col = 1; col <= lastCol; col++)
           ws.getCell(row, col).value = null;
       const blue = c.createLinearGradient(0, 0, Math.min(width, 1300), height);
-      blue.addColorStop(0, "#093b84");
-      blue.addColorStop(0.62, "#155fc1");
-      blue.addColorStop(1, "#1688cf");
+      blue.addColorStop(0, "#" + color.deep.slice(2));
+      blue.addColorStop(0.62, "#1956b5");
+      blue.addColorStop(1, "#3268b0");
       rounded(c, 0, 0, width, height, 18, blue);
       contain(c, logo, 22, 22, 51, 51);
       label(c, "ACERVO", 86, 43, 22, "white", 700);
@@ -6068,7 +6071,7 @@ async function exportExcel(all) {
         "ACERVO",
         {
           size: 13,
-          fg: color.green,
+          fg: color.sapphire,
           indent: 0,
         },
       );
@@ -6094,7 +6097,7 @@ async function exportExcel(all) {
         "Gestão de bens e materiais",
         {
           size: 9,
-          fg: color.green,
+          fg: color.sapphire,
           align: "right",
         },
       );
@@ -6107,7 +6110,7 @@ async function exportExcel(all) {
       text(ws, "A3:" + edge + "3", title, {
         size: 22,
         bold: true,
-        fg: color.green,
+        fg: color.sapphire,
       });
       ws.getRow(3).height = 40;
       text(ws, "A4:" + edge + "4", scope, {
@@ -6189,7 +6192,7 @@ async function exportExcel(all) {
       const ws = wb.addWorksheet(name, {
         properties: {
           tabColor: {
-            argb: options.tabColor || color.green,
+            argb: options.tabColor || color.sapphire,
           },
         },
         views: [
@@ -6297,7 +6300,7 @@ async function exportExcel(all) {
       ws.getRow(7).height = 38;
       for (let j = 1; j <= headers.length; j++) {
         const cell = ws.getCell(7, j);
-        cell.fill = fill(color.green);
+        cell.fill = fill(color.graphite);
         cell.font = {
           name: "Aptos",
           size: 10,
@@ -6343,7 +6346,7 @@ async function exportExcel(all) {
             size: 11,
             bold: j === 1,
             color: {
-              argb: missing ? color.amber : color.ink,
+              argb: missing ? color.amber : j === 1 ? color.sapphire : color.ink,
             },
           };
           cell.alignment = {
@@ -6508,7 +6511,7 @@ async function exportExcel(all) {
     ];
     report.getRow(5).height = 28;
     report.getRow(5).eachCell((cell) => {
-      cell.fill = fill(color.green);
+      cell.fill = fill(color.sapphire);
       cell.font = {
         name: "Aptos",
         size: 10,
@@ -6587,9 +6590,9 @@ async function exportExcel(all) {
         knownRoomIndex >= 0
           ? knownRoomIndex
           : ROOMS.length + groupOrder.indexOf(room);
-      const roomTone = ["FF286CAB", "FF1988A5", "FF5C779B"][roomIndex % 3];
-      const roomShade = ["FFE1EDFA", "FFDFF1F7", "FFE5EBF3"][roomIndex % 3];
-      const roomStripe = ["FFF0F6FC", "FFEDF8FC", "FFF1F4F9"][roomIndex % 3];
+      const roomTone = ["FF1956B5", "FF264979", "FF18345D"][roomIndex % 3];
+      const roomShade = ["FFE5EDFA", "FFE9EEF6", "FFE4EAF3"][roomIndex % 3];
+      const roomStripe = ["FFF5F8FD", "FFF6F8FC", "FFF3F6FA"][roomIndex % 3];
       const records = groups
         .get(room)
         .sort(
@@ -10033,7 +10036,7 @@ function initMobileJourney() {
   art.setAttribute("aria-hidden", "true");
   const mark = el("img", undefined, "mobile-home-mark");
   mark.src =
-    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=5";
+    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.68";
   mark.alt = "";
   for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
     const card = el("span", undefined, "mobile-art-fiche");
@@ -10256,7 +10259,7 @@ function initMobileJourney() {
   const hero = button(
     "",
     () => mobileDashboardQuery({ controle: "INDIVIDUAL", situacao: "EM_USO" }),
-    "mobile-dashboard-hero",
+    "mobile-dashboard-hero acervo-living-surface",
   );
   hero.id = "mobileDashboardHero";
   const image = mark.cloneNode();
@@ -11500,6 +11503,7 @@ function renderDesktopOverview() {
         el("strong", title),
         el("small", help),
       );
+      if (i === 0) node.classList.add("acervo-living-surface");
       decorateAcervoRim(node);
       return node;
     }),
@@ -12521,6 +12525,18 @@ function decorateAcervoFill(control) {
   control.prepend(orb);
 }
 
+function decorateAcervoSubmit(control) {
+  if (!control) return;
+  control.classList.add("acervo-submit-shimmer");
+  if (control.querySelector(".acervo-submit-copy")) return;
+  const copy = el("span", undefined, "acervo-submit-copy");
+  for (const node of [...control.childNodes]) {
+    if (node.nodeType === Node.TEXT_NODE ||
+        (node.nodeType === Node.ELEMENT_NODE && !node.matches(".icon, .acervo-books"))) copy.append(node);
+  }
+  control.append(copy);
+}
+
 function initAcervoHero(heading) {
   if (!heading || heading.classList.contains("acervo-hero-title")) return;
   const original = heading.textContent;
@@ -12545,7 +12561,7 @@ function initAcervoHero(heading) {
       index = (index + 1) % words.length;
       words[index].classList.remove("is-leaving");
       words[index].classList.add("is-visible");
-    }, 4200);
+    }, 2300);
   };
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(heading);
   reduced.addEventListener("change", sync);
@@ -12559,75 +12575,100 @@ function initAcervoAmbient() {
   ambient.append(canvas);
   document.body.prepend(ambient);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const gl = canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" });
-  if (!gl) return;
-  const vertex = `attribute vec2 position; varying vec2 vUv; void main(){vUv=position*.5+.5;gl_Position=vec4(position,0.,1.);}`;
-  const fragment = `precision mediump float;
-    varying vec2 vUv; uniform vec2 resolution; uniform float time;
-    float field(vec2 p){return sin(p.x*2.4+sin(p.y*2.1))*cos(p.y*1.9+sin(p.x*1.6));}
-    void main(){
-      vec2 p=(vUv-.5)*vec2(resolution.x/resolution.y,1.);
-      float t=time*.18;
-      float a=field(p*1.4+vec2(t,-t*.7));
-      float b=field(p*1.9+vec2(-t*.8,t*.65)+a*.45);
-      float c=field(p*2.3+vec2(t*.4,-t*.55)+b*.35);
-      vec3 base=vec3(.063,.192,.392);
-      vec3 col=mix(base,vec3(.105,.31,.65),smoothstep(-.7,.7,a)*.85);
-      col=mix(col,vec3(.22,.46,.78),smoothstep(-.2,.9,b)*.58);
-      float mist=pow(smoothstep(.12,.95,c),2.)*.20;
-      col=mix(col,vec3(.78,.87,.98),mist);
-      float vignette=1.-smoothstep(.2,1.25,length(p));
-      gl_FragColor=vec4(col*(.72+.28*vignette),1.);
-    }`;
-  const shaders = [];
-  const make = (type, source) => {
-    const shader = gl.createShader(type);
-    if (!shader) return null;
-    shaders.push(shader);
-    gl.shaderSource(shader, source); gl.compileShader(shader);
-    return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
-  };
-  const vs = make(gl.VERTEX_SHADER, vertex), fs = make(gl.FRAGMENT_SHADER, fragment);
-  const program = gl.createProgram();
-  if (!vs || !fs || !program) { shaders.forEach(s => gl.deleteShader(s)); return; }
-  gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { shaders.forEach(s => gl.deleteShader(s)); gl.deleteProgram(program); return; }
-  shaders.forEach(shader => { gl.detachShader(program, shader); gl.deleteShader(shader); });
-  gl.useProgram(program);
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-  const position = gl.getAttribLocation(program, "position");
-  gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-  const res = gl.getUniformLocation(program, "resolution"), clock = gl.getUniformLocation(program, "time");
-  let frame = 0, last = 0, elapsed = 0, running = false;
-  const size = () => {
-    canvas.width = Math.max(1, Math.round(innerWidth * Math.min(devicePixelRatio, 1) * .8));
-    canvas.height = Math.max(1, Math.round(innerHeight * Math.min(devicePixelRatio, 1) * .8));
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  };
-  const draw = () => {
-    gl.uniform2f(res, canvas.width, canvas.height);
-    gl.uniform1f(clock, reduced.matches ? 0 : elapsed);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-  };
-  const tick = time => {
-    if (!running) return;
-    if (time - last >= 48) {
-      elapsed += Math.min(time - last, 100) / 1000;
-      last = time; draw();
-    }
-    frame = requestAnimationFrame(tick);
-  };
+  const isLogin = () => document.body.classList.contains("auth-screen");
+  let renderer = null, attempted = false, previousLogin = isLogin(), enterTimer = 0;
+
+  // O contexto só é criado no login. Dentro do Acervo não há desenho contínuo.
+  function createLoginRenderer() {
+    const gl = canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" });
+    if (!gl) return null;
+    const vertex = `attribute vec2 position; varying vec2 vUv; void main(){vUv=position*.5+.5;gl_Position=vec4(position,0.,1.);}`;
+    const fragment = `precision mediump float;
+      varying vec2 vUv; uniform vec2 resolution; uniform float time;
+      float field(vec2 p){return sin(p.x*2.4+sin(p.y*2.1))*cos(p.y*1.9+sin(p.x*1.6));}
+      void main(){
+        vec2 p=(vUv-.5)*vec2(resolution.x/resolution.y,1.);
+        float t=time*.18;
+        float a=field(p*1.4+vec2(t,-t*.7));
+        float b=field(p*1.9+vec2(-t*.8,t*.65)+a*.45);
+        float c=field(p*2.3+vec2(t*.4,-t*.55)+b*.35);
+        vec3 base=vec3(.063,.192,.392);
+        vec3 col=mix(base,vec3(.105,.31,.65),smoothstep(-.7,.7,a)*.85);
+        col=mix(col,vec3(.22,.46,.78),smoothstep(-.2,.9,b)*.58);
+        float mist=pow(smoothstep(.12,.95,c),2.)*.20;
+        col=mix(col,vec3(.78,.87,.98),mist);
+        float vignette=1.-smoothstep(.2,1.25,length(p));
+        gl_FragColor=vec4(col*(.72+.28*vignette),1.);
+      }`;
+    const shaders = [];
+    const make = (type, source) => {
+      const shader = gl.createShader(type);
+      if (!shader) return null;
+      shaders.push(shader);
+      gl.shaderSource(shader, source); gl.compileShader(shader);
+      return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+    };
+    const vs = make(gl.VERTEX_SHADER, vertex), fs = make(gl.FRAGMENT_SHADER, fragment);
+    const program = gl.createProgram();
+    if (!vs || !fs || !program) { shaders.forEach(s => gl.deleteShader(s)); return; }
+    gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { shaders.forEach(s => gl.deleteShader(s)); gl.deleteProgram(program); return; }
+    shaders.forEach(shader => { gl.detachShader(program, shader); gl.deleteShader(shader); });
+    gl.useProgram(program);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+    const position = gl.getAttribLocation(program, "position");
+    gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    const res = gl.getUniformLocation(program, "resolution"), clock = gl.getUniformLocation(program, "time");
+    let frame = 0, last = 0, elapsed = 0, running = false, releaseTimer = 0;
+    const size = () => {
+      canvas.width = Math.max(1, Math.round(Math.min(innerWidth, 1920) * .5));
+      canvas.height = Math.max(1, Math.round(Math.min(innerHeight, 1200) * .5));
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    const draw = () => {
+      gl.uniform2f(res, canvas.width, canvas.height);
+      gl.uniform1f(clock, reduced.matches ? 0 : elapsed);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    };
+    const tick = time => {
+      if (!running || reduced.matches || !isLogin() || document.hidden) { running = false; return; }
+      if (time - last >= 80) {
+        elapsed += Math.min(time - last, 160) / 1000;
+        last = time; draw();
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    const sync = () => {
+      cancelAnimationFrame(frame); running = false;
+      clearTimeout(releaseTimer);
+      if (!isLogin()) {
+        // Conserva a última imagem durante a saída; depois libera o buffer maior.
+        releaseTimer = setTimeout(() => { if (!isLogin()) canvas.width = canvas.height = 1; }, 700);
+        return;
+      }
+      if (document.hidden) return;
+      size(); draw();
+      if (!reduced.matches) { running = true; last = performance.now(); frame = requestAnimationFrame(tick); }
+    };
+    ambient.classList.add("has-shader");
+    canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); cancelAnimationFrame(frame); clearTimeout(releaseTimer); running = false; renderer = null; ambient.classList.remove("has-shader"); });
+    return { sync };
+  }
   const sync = () => {
-    cancelAnimationFrame(frame); running = false;
-    if (document.hidden || $("camera").open) return;
-    size(); draw();
-    if (!reduced.matches) { running = true; last = performance.now(); frame = requestAnimationFrame(tick); }
+    if (isLogin() && !attempted) { attempted = true; renderer = createLoginRenderer(); }
+    renderer?.sync();
   };
-  ambient.classList.add("has-shader");
-  canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); cancelAnimationFrame(frame); running = false; ambient.classList.remove("has-shader"); });
-  new MutationObserver(sync).observe($("camera"), { attributes: true, attributeFilter: ["open"] });
+  new MutationObserver(() => {
+    const login = isLogin();
+    if (login === previousLogin) return;
+    previousLogin = login;
+    clearTimeout(enterTimer);
+    document.body.classList.toggle("acervo-entering", !login && !reduced.matches);
+    if (!login) enterTimer = setTimeout(() => document.body.classList.remove("acervo-entering"), 800);
+    sync();
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   window.addEventListener("resize", sync);
   reduced.addEventListener("change", sync);
   document.addEventListener("visibilitychange", sync);
@@ -12636,8 +12677,10 @@ function initAcervoAmbient() {
 
 function initAcervoVisualPolish() {
   for (const id of ["manageAccess", "refresh", "logout"]) decorateAcervoGradient($(id));
-  document.querySelectorAll("#login, #app .card, .account-toolbar").forEach(decorateAcervoRim);
-  for (const id of ["save", "editSave", "editCancel", "accessBack", "moreFilters", "clearFilters", "previous", "next"]) decorateAcervoFill($(id));
+  document.querySelectorAll("#login, #app .card:not(.desktop-section-heading), .account-toolbar").forEach(decorateAcervoRim);
+  for (const id of ["editCancel", "accessBack", "moreFilters", "clearFilters", "previous", "next"]) decorateAcervoFill($(id));
+  decorateAcervoSubmit($("save"));
+  document.querySelectorAll("#acervoHome, #app .workspace-title .title-mark, .desktop-preview-heading > span").forEach(node => node.classList.add("acervo-living-surface"));
   document.querySelectorAll(".desktop-register-copy h1, #mobileJourneyHome h1").forEach(initAcervoHero);
   document.querySelector("#desktopOverview .workspace-title")?.classList.add("acervo-title-reveal");
   const fine = matchMedia("(hover: hover) and (pointer: fine)");

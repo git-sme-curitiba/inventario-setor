@@ -2275,6 +2275,7 @@ function renderMovementResults() {
           "hint movement-readonly",
         ),
       );
+    decorateAcervoRim(card);
     $("moveResults").append(card);
   }
   if (found.length > 20)
@@ -3361,6 +3362,7 @@ function renderDetails(r, panel) {
   const summary = el("div", undefined, "desktop-detail-summary");
   summary.append(...[...panel.children].filter((node) => node !== heading));
   panel.replaceChildren(heading, summary, history);
+  decorateAcervoRim(panel);
   loadHistory(r.id, content);
 }
 
@@ -8567,6 +8569,7 @@ function mobileReceipt(record, template) {
     "left",
   );
   restart.classList.add("acervo-glass-fill");
+  decorateAcervoFill(restart);
   saved.className =
     "notice mobile-receipt" + (discarded ? " is-discarded" : "");
   const next = el("div", undefined, "mobile-receipt-next");
@@ -11497,6 +11500,7 @@ function renderDesktopOverview() {
         el("strong", title),
         el("small", help),
       );
+      decorateAcervoRim(node);
       return node;
     }),
   );
@@ -11617,6 +11621,8 @@ function renderDesktopOverview() {
   fact(data.models.size, "nomes diferentes entre os bens");
   fact(data.discarded.length, "registros no histórico de descartados");
   fact(data.empty.length, "materiais com saldo zerado");
+  const common = data.common[0];
+  if (common) fact(common.count, "bens com o nome “" + common.name + "”");
 }
 
 function initDesktopExperience() {
@@ -11981,6 +11987,7 @@ function showDesktopReceipt(record, template) {
     "left",
   );
   restart.classList.add("acervo-glass-fill", "acervo-metal-sheen");
+  decorateAcervoFill(restart);
   actions.append(continueHere, restart);
   saved.replaceChildren(stage, heading, item, code, actions);
   saved.hidden = false;
@@ -12474,6 +12481,7 @@ function initAcervoNavEdgeLight() {
 initAcervoNavEdgeLight();
 
 
+/* Refinamento 3.5.67: mesma interface, efeitos compactos e coerentes. */
 function decorateAcervoGradient(control, tone = "") {
   if (!control || control.querySelector(".gradient-action-label")) return;
   const text = control.id === "refresh" ? "Atualizar" : control.textContent.trim();
@@ -12484,6 +12492,8 @@ function decorateAcervoGradient(control, tone = "") {
       control.matches(".danger, .movement-register-discard, #logout") ? "danger" : "sapphire");
   control.dataset.gradientLabel = text;
   if (!control.hasAttribute("aria-label")) control.setAttribute("aria-label", text);
+  control.removeAttribute("title");
+  control.removeAttribute("data-help");
   const label = el("span", undefined, "gradient-action-label");
   for (const node of [...control.childNodes]) {
     if (node.nodeType === Node.TEXT_NODE ||
@@ -12494,45 +12504,13 @@ function decorateAcervoGradient(control, tone = "") {
   control.append(label, hover);
 }
 
-function initAcervoVisualPolish() {
-  for (const id of ["manageAccess", "refresh", "logout"]) decorateAcervoGradient($(id));
-  const panels = [
-    $("login"), document.querySelector("#register .workspace > .card"),
-    $("desktopRegistrationPreview"), ...document.querySelectorAll(".desktop-overview-card"),
-  ].filter(Boolean);
-  panels.forEach((panel) => panel.classList.add("acervo-soft-rim"));
-  const hover = matchMedia("(hover: hover) and (pointer: fine)");
-  panels.forEach((panel) => {
-    let frame = 0, point;
-    const reset = () => { cancelAnimationFrame(frame); frame = 0; panel.removeAttribute("data-rim-hover"); };
-    panel.addEventListener("pointermove", (event) => {
-      if (!hover.matches || event.pointerType !== "mouse") return;
-      point = [event.clientX, event.clientY];
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        const rect = panel.getBoundingClientRect();
-        panel.style.setProperty("--rim-x", `${point[0] - rect.left}px`);
-        panel.style.setProperty("--rim-y", `${point[1] - rect.top}px`);
-        panel.setAttribute("data-rim-hover", "");
-      });
-    }, { passive: true });
-    panel.addEventListener("pointerleave", reset, { passive: true });
-    panel.addEventListener("pointercancel", reset, { passive: true });
-    hover.addEventListener("change", reset);
-    window.addEventListener("blur", reset);
-  });
-  for (const selector of [".desktop-register-copy h1", ".mobile-home-copy h1", ".mobile-journey-title", "#desktopOverview .workspace-title"]) {
-    document.querySelectorAll(selector).forEach((heading) => heading.classList.add("acervo-title-reveal"));
-  }
-  $("accessBack")?.classList.add("acervo-glass-fill");
-  for (const id of ["save", "editSave", "accessBack"]) decorateAcervoFill($(id));
-  const ambient = el("div", undefined, "acervo-ambient-light");
-  ambient.setAttribute("aria-hidden", "true");
-  document.body.prepend(ambient);
+function decorateAcervoRim(panel) {
+  if (!panel || panel.querySelector(":scope > .acervo-edge-aura")) return;
+  panel.classList.add("acervo-soft-rim");
+  const aura = el("span", undefined, "acervo-edge-aura");
+  aura.setAttribute("aria-hidden", "true");
+  panel.append(aura);
 }
-
-initAcervoVisualPolish();
 
 function decorateAcervoFill(control) {
   if (!control) return;
@@ -12542,3 +12520,153 @@ function decorateAcervoFill(control) {
   orb.setAttribute("aria-hidden", "true");
   control.prepend(orb);
 }
+
+function initAcervoHero(heading) {
+  if (!heading || heading.classList.contains("acervo-hero-title")) return;
+  const original = heading.textContent;
+  heading.classList.add("acervo-hero-title");
+  heading.setAttribute("aria-label", original);
+  const prefix = el("span", "Cadastre um ", "hero-title-prefix");
+  prefix.setAttribute("aria-hidden", "true");
+  const slot = el("span", undefined, "hero-title-slot");
+  slot.setAttribute("aria-hidden", "true");
+  const words = ["item.", "bem.", "material."].map((word, i) => el("span", word, "hero-title-word" + (i ? "" : " is-visible")));
+  slot.append(...words);
+  heading.replaceChildren(prefix, slot);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let index = 0, timer = 0, visible = false;
+  const sync = () => {
+    clearInterval(timer);
+    timer = 0;
+    if (!visible || reduced.matches || document.hidden) return;
+    timer = setInterval(() => {
+      words[index].classList.remove("is-visible");
+      words[index].classList.add("is-leaving");
+      index = (index + 1) % words.length;
+      words[index].classList.remove("is-leaving");
+      words[index].classList.add("is-visible");
+    }, 4200);
+  };
+  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }).observe(heading);
+  reduced.addEventListener("change", sync);
+  document.addEventListener("visibilitychange", sync);
+}
+
+function initAcervoAmbient() {
+  const ambient = el("div", undefined, "acervo-ambient-light");
+  ambient.setAttribute("aria-hidden", "true");
+  const canvas = document.createElement("canvas");
+  ambient.append(canvas);
+  document.body.prepend(ambient);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  const gl = canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" });
+  if (!gl) return;
+  const vertex = `attribute vec2 position; varying vec2 vUv; void main(){vUv=position*.5+.5;gl_Position=vec4(position,0.,1.);}`;
+  const fragment = `precision mediump float;
+    varying vec2 vUv; uniform vec2 resolution; uniform float time;
+    float field(vec2 p){return sin(p.x*2.4+sin(p.y*2.1))*cos(p.y*1.9+sin(p.x*1.6));}
+    void main(){
+      vec2 p=(vUv-.5)*vec2(resolution.x/resolution.y,1.);
+      float t=time*.18;
+      float a=field(p*1.4+vec2(t,-t*.7));
+      float b=field(p*1.9+vec2(-t*.8,t*.65)+a*.45);
+      float c=field(p*2.3+vec2(t*.4,-t*.55)+b*.35);
+      vec3 base=vec3(.063,.192,.392);
+      vec3 col=mix(base,vec3(.105,.31,.65),smoothstep(-.7,.7,a)*.85);
+      col=mix(col,vec3(.22,.46,.78),smoothstep(-.2,.9,b)*.58);
+      float mist=pow(smoothstep(.12,.95,c),2.)*.20;
+      col=mix(col,vec3(.78,.87,.98),mist);
+      float vignette=1.-smoothstep(.2,1.25,length(p));
+      gl_FragColor=vec4(col*(.72+.28*vignette),1.);
+    }`;
+  const shaders = [];
+  const make = (type, source) => {
+    const shader = gl.createShader(type);
+    if (!shader) return null;
+    shaders.push(shader);
+    gl.shaderSource(shader, source); gl.compileShader(shader);
+    return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+  };
+  const vs = make(gl.VERTEX_SHADER, vertex), fs = make(gl.FRAGMENT_SHADER, fragment);
+  const program = gl.createProgram();
+  if (!vs || !fs || !program) { shaders.forEach(s => gl.deleteShader(s)); return; }
+  gl.attachShader(program, vs); gl.attachShader(program, fs); gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { shaders.forEach(s => gl.deleteShader(s)); gl.deleteProgram(program); return; }
+  shaders.forEach(shader => { gl.detachShader(program, shader); gl.deleteShader(shader); });
+  gl.useProgram(program);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const position = gl.getAttribLocation(program, "position");
+  gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+  const res = gl.getUniformLocation(program, "resolution"), clock = gl.getUniformLocation(program, "time");
+  let frame = 0, last = 0, elapsed = 0, running = false;
+  const size = () => {
+    canvas.width = Math.max(1, Math.round(innerWidth * Math.min(devicePixelRatio, 1) * .8));
+    canvas.height = Math.max(1, Math.round(innerHeight * Math.min(devicePixelRatio, 1) * .8));
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  };
+  const draw = () => {
+    gl.uniform2f(res, canvas.width, canvas.height);
+    gl.uniform1f(clock, reduced.matches ? 0 : elapsed);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  };
+  const tick = time => {
+    if (!running) return;
+    if (time - last >= 48) {
+      elapsed += Math.min(time - last, 100) / 1000;
+      last = time; draw();
+    }
+    frame = requestAnimationFrame(tick);
+  };
+  const sync = () => {
+    cancelAnimationFrame(frame); running = false;
+    if (document.hidden || $("camera").open) return;
+    size(); draw();
+    if (!reduced.matches) { running = true; last = performance.now(); frame = requestAnimationFrame(tick); }
+  };
+  ambient.classList.add("has-shader");
+  canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); cancelAnimationFrame(frame); running = false; ambient.classList.remove("has-shader"); });
+  new MutationObserver(sync).observe($("camera"), { attributes: true, attributeFilter: ["open"] });
+  window.addEventListener("resize", sync);
+  reduced.addEventListener("change", sync);
+  document.addEventListener("visibilitychange", sync);
+  sync();
+}
+
+function initAcervoVisualPolish() {
+  for (const id of ["manageAccess", "refresh", "logout"]) decorateAcervoGradient($(id));
+  document.querySelectorAll("#login, #app .card, .account-toolbar").forEach(decorateAcervoRim);
+  for (const id of ["save", "editSave", "editCancel", "accessBack", "moreFilters", "clearFilters", "previous", "next"]) decorateAcervoFill($(id));
+  document.querySelectorAll(".desktop-register-copy h1, #mobileJourneyHome h1").forEach(initAcervoHero);
+  document.querySelector("#desktopOverview .workspace-title")?.classList.add("acervo-title-reveal");
+  const fine = matchMedia("(hover: hover) and (pointer: fine)");
+  let frame = 0, point = null, target = null;
+  const clear = () => {
+    cancelAnimationFrame(frame); frame = 0; point = null; target = null;
+    document.querySelectorAll("[data-rim-hover]").forEach(panel => panel.removeAttribute("data-rim-hover"));
+  };
+  document.addEventListener("pointermove", event => {
+    if (!fine.matches || event.pointerType !== "mouse") return;
+    target = event.target.closest(".acervo-soft-rim");
+    point = [event.clientX, event.clientY];
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      document.querySelectorAll("[data-rim-hover]").forEach(panel => { if (panel !== target && !panel.contains(target)) panel.removeAttribute("data-rim-hover"); });
+      for (let panel = target; panel; panel = panel.parentElement?.closest(".acervo-soft-rim")) {
+        const bounds = panel.getBoundingClientRect();
+        panel.style.setProperty("--rim-x", `${point[0] - bounds.left}px`);
+        panel.style.setProperty("--rim-y", `${point[1] - bounds.top}px`);
+        panel.setAttribute("data-rim-hover", "");
+      }
+    });
+  }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", clear);
+  window.addEventListener("blur", clear);
+  fine.addEventListener("change", clear);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) clear(); });
+  initAcervoAmbient();
+}
+
+initAcervoVisualPolish();

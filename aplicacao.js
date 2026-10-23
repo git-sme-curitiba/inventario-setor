@@ -2727,7 +2727,7 @@ function saveDraft() {
 
 function restoreDraft() {
   const d = storage("draft");
-  if (!d?.dados) return;
+  if (!d?.dados || !clean(d.dados.item)) return;
   if (d.editing) {
     toast(
       "Há um rascunho de edição da versão anterior. Abra o item na consulta para revisá-lo.",
@@ -2738,7 +2738,7 @@ function restoreDraft() {
   $("item").value = r.item || "";
   $("note").value = r.observacao || "";
   $("code").value = r.codigo || "";
-  setChoice("room", ROOMS.includes(r.ambiente) ? r.ambiente : ROOMS[0]);
+  setChoice("room", clean(r.item) && ROOMS.includes(r.ambiente) ? r.ambiente : "");
   setChoice("category", r.categoria);
   setChoice("type", r.tipo);
   setChoice("shelf", r.estante);
@@ -5215,7 +5215,7 @@ function initForm() {
     $("rooms"),
     "room",
     ROOMS.map((v) => [v, v, ROOM_ICON[v]]),
-    ROOMS[0],
+    "",
     () => {
       syncLocation();
       syncControl();
@@ -5265,6 +5265,7 @@ function endSession() {
   selected = null;
   action = "";
   role = "leitor";
+  for (const name of ["room", "shelf", "level"]) setChoice(name, "");
   resetForm();
   $("password").value = "";
   $("moveSearch").value = "";
@@ -5506,7 +5507,7 @@ async function exportExcel(all) {
       return lines;
     }
     const logo = new Image();
-    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.68";
+    logo.src = document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.69";
     await logo.decode().catch(() => {});
     const municipalityMark = document.querySelector(".institution-logo");
     const imageCache = new Map();
@@ -10036,7 +10037,7 @@ function initMobileJourney() {
   art.setAttribute("aria-hidden", "true");
   const mark = el("img", undefined, "mobile-home-mark");
   mark.src =
-    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.68";
+    document.querySelector(".brand .acervo-mark")?.src || "./favicon.svg?v=3.5.69";
   mark.alt = "";
   for (const name of ["Cadeira giratória", "Monitor", "Armário"]) {
     const card = el("span", undefined, "mobile-art-fiche");
@@ -11643,7 +11644,7 @@ function initDesktopExperience() {
   art.setAttribute("aria-hidden", "true");
   for (const name of ["Cadeira", "Monitor", "Armário"]) {
     const card = el("span", undefined, "desktop-art-card");
-    card.append(itemIcon(name));
+    card.append(itemIcon(name), desktopRegistrationSeal());
     art.append(card);
   }
   const emblem = el("span", undefined, "desktop-hero-emblem");
@@ -11906,11 +11907,6 @@ function initDesktopExperience() {
 initDesktopExperience();
 
 function showDesktopReceipt(record, template) {
-  document
-    .querySelectorAll(".desktop-collectible")
-    .forEach((node) =>
-      node.getAnimations().forEach((effect) => effect.cancel()),
-    );
   const saved = $("saved"),
     stock = record.controle === "QUANTIDADE",
     discarded = record.situacao === "BAIXADO";
@@ -12166,52 +12162,32 @@ function syncDesktopRegistrationGame(d) {
   scheduleDesktopRegistrationFeedback(previous, state, cards);
 }
 
-function collectDesktopRegistrationPart(part) {
-  document.querySelectorAll(".desktop-collectible").forEach((node) => {
-    node.getAnimations().forEach((effect) => effect.cancel());
-    node.remove();
-  });
-  const sources = [
-    $("location").hidden
-      ? $("rooms").querySelector("input:checked + span")
-      : $("levels").querySelector("input:checked + span"),
-    $("categories").querySelector("input:checked + span"),
-    value("control") === "QUANTIDADE"
-      ? $("quantity")
-      : $("types").querySelector("input:checked + span"),
-  ];
-  const visible = (node) => {
-    const box = node?.getBoundingClientRect();
-    return box?.width && box.top >= 0 && box.bottom <= innerHeight ? box : null;
-  };
-  const origin = visible(sources[part]);
-  const target =
-    visible(document.querySelector(".desktop-hero-emblem")) ||
-    visible(document.querySelector(".desktop-preview-heading > span"));
-  if (!origin || !target) return;
-  const token = el("span", undefined, "desktop-collectible");
-  token.setAttribute("aria-hidden", "true");
-  token.append(icon(["pin", "draft", "code"][part]));
-  const startX = origin.left + origin.width / 2 - 16;
-  const startY = origin.top + origin.height / 2 - 16;
-  token.style.left = startX + "px";
-  token.style.top = startY + "px";
-  document.body.append(token);
-  const x = target.left + target.width / 2 - 16 - startX;
-  const y = target.top + target.height / 2 - 16 - startY;
-  const flight = token.animate(
-    [
-      { transform: "translate(0,0) scale(.7)", opacity: 0 },
-      {
-        transform: `translate(${x * 0.4}px,${y * 0.4 - 44}px) scale(1.1)`,
-        opacity: 1,
-        offset: 0.45,
-      },
-      { transform: `translate(${x}px,${y}px) scale(.35)`, opacity: 0 },
-    ],
-    { duration: 560, easing: "cubic-bezier(.2,.7,.3,1)" },
-  );
-  flight.onfinish = flight.oncancel = () => token.remove();
+// O selo é desenhado no próprio card; não há partículas atravessando a tela.
+function desktopRegistrationSeal() {
+  const seal = el("span", undefined, "desktop-card-seal");
+  seal.setAttribute("aria-hidden", "true");
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 36 36");
+  for (const [name, d] of [
+    ["seal-ink", "M18 3C9.7 3 3 9.7 3 18s6.7 15 15 15 15-6.7 15-15S26.3 5 19 5 7 10.8 7 18s5 11 11 11 10-4.5 10-10-4.2-9-9-9"],
+    ["seal-check", "M10 18l5.5 5.5L26 12"],
+  ]) {
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("class", name);
+    path.setAttribute("d", d);
+    path.setAttribute("pathLength", "1");
+    svg.append(path);
+  }
+  seal.append(svg);
+  return seal;
+}
+
+function revealDesktopRegistrationPart(card) {
+  if (!card) return;
+  card.classList.add("is-collected", "is-collecting");
+  clearTimeout(card.sealTimer);
+  card.sealTimer = setTimeout(() => card.classList.remove("is-collecting"), 1100);
 }
 
 function syncDesktopRegistrationFocus(
@@ -12264,7 +12240,7 @@ function scheduleDesktopRegistrationFeedback(previous, state, cards) {
   state.complete.forEach((done, i) => {
     if (!done) {
       fn.pending.delete(i);
-      cards[i]?.classList.remove("is-collected");
+      cards[i]?.classList.remove("is-collected", "is-collecting");
     } else if (!previous.complete[i]) fn.pending.add(i);
   });
   fn.ready = state.ready && (fn.ready || !previous.ready);
@@ -12292,14 +12268,7 @@ function scheduleDesktopRegistrationFeedback(previous, state, cards) {
           )
             return;
           const card = cards[i];
-          card?.classList.add("is-collected");
-          card?.feedbackAnimation?.cancel();
-          if (card)
-            card.feedbackAnimation = card.animate(
-              [{ scale: "1" }, { scale: "1.055", offset: 0.5 }, { scale: "1" }],
-              { duration: 420, easing: "cubic-bezier(.2,.8,.2,1)" },
-            );
-          if (index === gained.length - 1) collectDesktopRegistrationPart(i);
+          revealDesktopRegistrationPart(card);
         }, index * 190),
       );
     });
@@ -12503,9 +12472,7 @@ function decorateAcervoGradient(control, tone = "") {
     if (node.nodeType === Node.TEXT_NODE ||
         (node.nodeType === Node.ELEMENT_NODE && !node.matches(".icon, .acervo-books"))) label.append(node);
   }
-  const hover = el("span", text, "gradient-action-hover");
-  hover.setAttribute("aria-hidden", "true");
-  control.append(label, hover);
+  control.append(label);
 }
 
 function decorateAcervoRim(panel) {
@@ -12683,32 +12650,7 @@ function initAcervoVisualPolish() {
   document.querySelectorAll("#acervoHome, #app .workspace-title .title-mark, .desktop-preview-heading > span").forEach(node => node.classList.add("acervo-living-surface"));
   document.querySelectorAll(".desktop-register-copy h1, #mobileJourneyHome h1").forEach(initAcervoHero);
   document.querySelector("#desktopOverview .workspace-title")?.classList.add("acervo-title-reveal");
-  const fine = matchMedia("(hover: hover) and (pointer: fine)");
-  let frame = 0, point = null, target = null;
-  const clear = () => {
-    cancelAnimationFrame(frame); frame = 0; point = null; target = null;
-    document.querySelectorAll("[data-rim-hover]").forEach(panel => panel.removeAttribute("data-rim-hover"));
-  };
-  document.addEventListener("pointermove", event => {
-    if (!fine.matches || event.pointerType !== "mouse") return;
-    target = event.target.closest(".acervo-soft-rim");
-    point = [event.clientX, event.clientY];
-    if (frame) return;
-    frame = requestAnimationFrame(() => {
-      frame = 0;
-      document.querySelectorAll("[data-rim-hover]").forEach(panel => { if (panel !== target && !panel.contains(target)) panel.removeAttribute("data-rim-hover"); });
-      for (let panel = target; panel; panel = panel.parentElement?.closest(".acervo-soft-rim")) {
-        const bounds = panel.getBoundingClientRect();
-        panel.style.setProperty("--rim-x", `${point[0] - bounds.left}px`);
-        panel.style.setProperty("--rim-y", `${point[1] - bounds.top}px`);
-        panel.setAttribute("data-rim-hover", "");
-      }
-    });
-  }, { passive: true });
-  document.documentElement.addEventListener("pointerleave", clear);
-  window.addEventListener("blur", clear);
-  fine.addEventListener("change", clear);
-  document.addEventListener("visibilitychange", () => { if (document.hidden) clear(); });
+  // Os cards usam reflexos CSS estáticos, sem rastrear o mouse globalmente.
   initAcervoAmbient();
 }
 

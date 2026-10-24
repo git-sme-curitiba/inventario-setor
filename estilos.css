@@ -27547,3 +27547,323 @@ html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
   }
 }
 @media (prefers-reduced-motion:reduce) { .desktop-metric-cue { transition:none; } }
+
+/* 3.5.72 — família de janelas: painel lateral, superfície clara e luz branca. */
+html.acervo-dialogs body > dialog.acervo-dialog {
+  --dialog-ink:#173858; --dialog-muted:#60758f; --dialog-line:#c7d6e8;
+  --dialog-fill:linear-gradient(125deg,#153453,#235baa 80%,#3075cd);
+  --dialog-edge:#4c85c6; --dialog-shadow:#143c6c30;
+  box-sizing:border-box; padding:0 !important; margin:auto !important;
+  width:min(1020px,calc(100vw - 48px)) !important; max-width:calc(100vw - 48px) !important;
+  min-width:0 !important; height:fit-content !important; max-height:calc(100dvh - 48px) !important;
+  border:1px solid #d7eaff !important; border-radius:24px !important;
+  background:#fff !important; color:var(--dialog-ink) !important;
+  box-shadow:0 24px 70px #061d4666,0 0 2px #ffffffd9,inset 0 1px #fff !important;
+  overflow:hidden !important; font-family:var(--pc-font,Arial,sans-serif);
+  position:fixed !important; inset:0 !important; transform:none !important;
+}
+html.acervo-dialogs body > dialog.acervo-dialog[open] {
+  display:grid !important; grid-template-columns:minmax(225px,29fr) minmax(0,71fr);
+  grid-template-rows:minmax(0,1fr); align-items:stretch; gap:0 !important;
+}
+html.acervo-dialogs body > dialog.acervo-dialog[data-theme="ruby"] {
+  --dialog-fill:linear-gradient(135deg,#59162f,#a3093f 70%,#d70a48);
+  --dialog-edge:#ce3a62; --dialog-shadow:#95133e30;
+}
+html.acervo-dialogs body > dialog.acervo-dialog[data-theme="amber"] {
+  --dialog-fill:linear-gradient(135deg,#653c10,#956011 55%,#bb7e16);
+  --dialog-edge:#c89a44; --dialog-shadow:#88550c24;
+}
+html.acervo-dialogs body > dialog.acervo-dialog::backdrop { background:#09254e94; backdrop-filter:blur(2px); }
+html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-side {
+  box-sizing:border-box; display:flex !important; flex-direction:column !important;
+  position:relative !important; isolation:isolate; align-items:flex-start !important; justify-content:flex-start !important;
+  gap:0 !important; padding:35px 28px 29px !important; min-width:0 !important; min-height:410px;
+  margin:0 !important; border:0 !important; border-radius:0 !important;
+  background:radial-gradient(ellipse at 0 0,#ffffff12,transparent 65%),var(--dialog-fill) !important;
+  color:#fff !important; box-shadow:inset 0 1px #ffffff80 !important; overflow:hidden;
+}
+html.acervo-dialogs .acervo-dialog-side::before { content:none !important; }
+html.acervo-dialogs .acervo-dialog-side:focus,
+html.acervo-dialogs .acervo-dialog-side > h2:focus { outline:none !important; }
+html.acervo-dialogs .acervo-dialog-side::after {
+  content:"" !important; position:absolute !important; z-index:-1; pointer-events:none;
+  width:180% !important; height:65% !important; bottom:0 !important; top:auto !important;
+  left:-50% !important; right:auto !important; border:1px solid #ffffff45 !important;
+  border-top:0 !important; border-radius:0 0 100% 65% !important;
+  transform:rotate(-14deg) !important; background:none !important;
+  box-shadow:0 10px 25px #ffffff13 !important; opacity:1 !important;
+}
+html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-kicker {
+  flex:0 0 auto !important;
+  margin:0 0 32px !important; padding:0 !important; color:#d9e8fc !important;
+  font:600 10px/1.5 var(--pc-font,Arial,sans-serif) !important; letter-spacing:.13em;
+}
+html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol {
+  box-sizing:border-box; display:grid !important; place-items:center !important; position:relative !important;
+  width:58px !important; height:58px !important; flex:0 0 58px !important;
+  padding:11px !important; margin:0 0 22px !important; border:1px solid #ffffff65 !important;
+  border-radius:16px !important; color:#fff !important;
+  background:linear-gradient(135deg,#ffffff24,#ffffff08) !important;
+  box-shadow:inset 0 1px 1px #ffffff65,0 3px 12px #0000000c !important;
+}
+html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol > .icon { width:33px !important; height:33px !important; color:#fff !important; }
+html.acervo-dialogs .acervo-dialog-side > h2 {
+  flex:0 0 auto !important; width:100% !important; max-width:100% !important;
+  padding:0 !important; margin:0 0 17px !important; color:#fff !important;
+  font:720 clamp(25px,2.1vw,32px)/1.13 var(--pc-font,Arial,sans-serif) !important;
+  letter-spacing:-.8px !important; text-shadow:0 0 17px #ffffff13 !important;
+  overflow-wrap:anywhere; background:none !important;
+}
+html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-description {
+  display:block !important; margin:0 0 28px !important; padding:0 !important;
+  font:400 13px/1.7 var(--pc-font,Arial,sans-serif) !important; color:#e0eafa !important;
+  border:0 !important; background:none !important; box-shadow:none !important; max-width:100% !important;
+}
+html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-foot {
+  flex:0 0 auto !important; display:flex; align-items:flex-start; gap:10px; margin-top:auto !important; padding-top:25px;
+  border-top:1px solid #ffffff6b; color:#f3f7ff; font-size:11px; line-height:1.65;
+}
+html.acervo-dialogs .acervo-dialog-foot > .icon { flex:0 0 20px; width:20px; height:20px; margin-top:1px; color:#fff; }
+html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-main {
+  box-sizing:border-box; display:block !important; min-width:0 !important; min-height:0 !important;
+  max-height:calc(100dvh - 50px) !important; height:auto !important;
+  overflow:auto !important; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#a4bddc transparent;
+  padding:56px 30px 27px !important; margin:0 !important; position:relative !important;
+  border:0 !important; border-radius:0 !important; background:#fff !important; color:var(--dialog-ink) !important;
+}
+html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-close {
+  box-sizing:border-box; position:absolute !important; top:14px !important; right:14px !important;
+  display:grid !important; place-items:center !important; z-index:5; padding:7px !important; margin:0 !important;
+  width:32px !important; height:32px !important; min-width:32px !important; min-height:32px !important;
+  border:1px solid #c4d5e9 !important; border-radius:50% !important; color:#365776 !important;
+  background:linear-gradient(145deg,#fff,#edf2f8) !important; box-shadow:inset 0 1px #fff !important;
+  transform:none !important; translate:none !important; filter:none !important;
+  transition:border-color 180ms,box-shadow 180ms,color 180ms !important;
+}
+html.acervo-dialogs .acervo-dialog-close > .icon { width:17px !important; height:17px !important; color:inherit !important; }
+html.acervo-dialogs .acervo-dialog-close::before,html.acervo-dialogs .acervo-dialog-close::after { content:none !important; }
+html.acervo-dialogs .acervo-dialog-main :is(form,section,fieldset) { min-width:0; }
+html.acervo-dialogs .acervo-dialog-main > :is(form,.access-dialog-body,.delete-person-body,#editDialogContent) {
+  padding:0 !important; margin:0 !important; border:0 !important; border-radius:0 !important; background:none !important;
+}
+html.acervo-dialogs .acervo-dialog-main label,
+html.acervo-dialogs .acervo-dialog-main legend {
+  color:#24435e !important; font:600 12px/1.5 var(--pc-font,Arial,sans-serif) !important;
+  padding:0; margin:17px 0 7px; letter-spacing:0 !important;
+}
+html.acervo-dialogs .acervo-dialog-main :is(input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),textarea,select) {
+  box-sizing:border-box !important; width:100%; min-width:0 !important; min-height:42px;
+  height:auto; margin:0 !important; padding:11px 13px !important;
+  border:1px solid #b6cae2 !important; border-radius:10px !important;
+  background:#fff !important; color:#1b3b5d !important; box-shadow:inset 0 1px 2px #0d2b4d05 !important;
+  font:400 13px/1.5 var(--pc-font,Arial,sans-serif) !important; outline:none !important;
+}
+html.acervo-dialogs .acervo-dialog-main textarea { min-height:102px; resize:vertical; }
+html.acervo-dialogs .acervo-dialog-main :is(input,textarea,select):focus-visible { border-color:#5289c6 !important; box-shadow:0 0 0 2px #578ccb26 !important; }
+html.acervo-dialogs .acervo-dialog-main :is(input,textarea)::placeholder { color:#8292a7; opacity:1; }
+html.acervo-dialogs .acervo-dialog-main :is(input,textarea):read-only { background:#f4f7fb !important; }
+html.acervo-dialogs .acervo-dialog-main :is(button,summary) {
+  box-sizing:border-box; min-height:36px; padding:9px 13px; gap:8px;
+  border:1px solid #a9c1de; border-radius:10px; background:#fff; color:#285174;
+  font:600 11px/1.4 var(--pc-font,Arial,sans-serif); text-shadow:none;
+  box-shadow:inset 0 1px #fff,0 2px 5px #173b6310; transform:none; translate:none;
+  transition:border-color 180ms,box-shadow 180ms,background-color 180ms;
+}
+html.acervo-dialogs .acervo-dialog-main :is(button,summary) > .icon { width:17px; height:17px; flex:0 0 17px; color:inherit; filter:none; }
+html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions) {
+  display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin:23px 0 0; padding:17px 0 0;
+  border-top:1px solid #cad9eb; background:none; width:100%;
+}
+html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions) > button { width:auto !important; flex:0 1 auto !important; min-height:41px; margin:0 !important; }
+html.acervo-dialogs .acervo-dialog-main :is(.primary,#confirmOperation,#confirmRegistrationDiscard,#deleteItemSave,#confirmPersonDelete,#savePersonRole) {
+  background:var(--dialog-fill) !important; background-size:100% 100% !important;
+  border:1px solid var(--dialog-edge) !important; color:#fff !important;
+  box-shadow:inset 0 1px #ffffff80,0 4px 11px var(--dialog-shadow) !important;
+  filter:none !important; text-shadow:none !important; animation:none !important;
+}
+html.acervo-dialogs .acervo-dialog-main .acervo-secondary {
+  background:linear-gradient(145deg,#fff,#f7f9fc) !important; color:#305474 !important;
+  border:1px solid #9fb7d3 !important; box-shadow:inset 0 1px #fff,0 2px 5px #173b6310 !important;
+}
+html.acervo-dialogs .acervo-dialog-main button:disabled { cursor:not-allowed; opacity:.45; box-shadow:none !important; }
+html.acervo-dialogs .acervo-dialog-main :is(button,summary):focus-visible,
+html.acervo-dialogs .acervo-dialog-side #accessBack:focus-visible,
+html.acervo-dialogs .acervo-dialog-close:focus-visible { outline:2px solid #8bb1dc !important; outline-offset:3px !important; }
+html.acervo-dialogs .acervo-dialog-main :is(p,.hint,.access-field-help) { color:#677d95; font-size:11px; line-height:1.65; }
+html.acervo-dialogs .acervo-dialog-main :is(#newUserMessage,#deletePersonMessage,#deleteItemError):not(:empty) { padding:11px 13px; border-left:3px solid #b31b4d; color:#922745; background:#fff; }
+html.acervo-dialogs .acervo-dialog-main p:empty { display:none; }
+html.acervo-dialogs .acervo-dialog-section-title,
+html.acervo-dialogs .acervo-access-receipt-heading h3 {
+  color:#193c60; font:650 17px/1.5 var(--pc-font,Arial,sans-serif); padding:0 0 15px; margin:0 0 19px;
+  border-bottom:1px solid #ccd9e9;
+}
+html.acervo-dialogs .acervo-dialog-record {
+  box-sizing:border-box; display:flex !important; align-items:center !important; gap:14px !important;
+  min-width:0; padding:0 0 21px !important; margin:0 0 23px !important; border:0 !important;
+  border-bottom:1px solid #c7d7e9 !important; border-radius:0 !important;
+  background:none !important; box-shadow:none !important; color:#193b5f !important;
+}
+html.acervo-dialogs .acervo-dialog-record > .acervo-record-symbol {
+  box-sizing:border-box; display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px;
+  padding:10px; border:1px solid var(--dialog-edge); border-radius:13px;
+  background:var(--dialog-fill); color:#fff; box-shadow:inset 0 1px #ffffff80;
+}
+html.acervo-dialogs .acervo-record-symbol > .icon { width:27px !important; height:27px !important; color:#fff !important; }
+html.acervo-dialogs .acervo-record-copy { flex:1; min-width:0; }
+html.acervo-dialogs .acervo-dialog-record .acervo-record-copy > strong { display:block; color:#1b3d60 !important; font:650 17px/1.4 var(--pc-font,Arial,sans-serif) !important; overflow-wrap:anywhere; }
+html.acervo-dialogs .acervo-dialog-record .acervo-record-copy > small { display:block; margin-top:5px; color:#667f99 !important; font:400 11px/1.5 var(--pc-font,Arial,sans-serif) !important; overflow-wrap:anywhere; }
+html.acervo-dialogs .acervo-record-code { display:flex; align-items:center; justify-content:flex-end; gap:6px; white-space:nowrap; color:#315c83; font-size:11px; }
+html.acervo-dialogs .acervo-record-code .icon { width:20px; height:20px; color:inherit; }
+html.acervo-dialogs #operation.acervo-dialog #moveFields { display:grid; grid-template-columns:1fr; gap:16px; margin:0 0 17px; }
+html.acervo-dialogs #operation.acervo-dialog #moveFields label { display:block; margin-top:0; }
+html.acervo-dialogs #operation.acervo-dialog #downFields { display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:15px; margin:0 0 20px; }
+html.acervo-dialogs #operation.acervo-dialog #downFields label { display:block; margin-top:0; }
+html.acervo-dialogs #operation.acervo-dialog #moveBalance { padding:8px 0 0; margin:0; background:none; color:#667f99; }
+html.acervo-dialogs #operation.acervo-dialog .mobile-operation-preview { padding:11px 0 0 !important; margin:0 !important; color:#60768f !important; border:0 !important; border-radius:0 !important; background:none !important; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-dialog-body { padding:0 !important; margin:0 !important; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-toolbar { display:flex; align-items:flex-end; gap:12px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-search { flex:1; min-width:0; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-search label { display:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #addPerson { min-height:42px; flex:0 0 auto; padding:10px 14px; border-radius:10px; background:var(--dialog-fill); border-color:var(--dialog-edge); color:#fff; box-shadow:inset 0 1px #ffffff80,0 4px 11px var(--dialog-shadow); font-size:11px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-summary { display:flex; align-items:center; justify-content:space-between; margin:17px 0 10px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #peopleCount { font-size:11px; color:#647f9c; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #refreshPeople { min-height:30px; padding:6px 9px; font-size:10px; background:none; box-shadow:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-row {
+  display:flex; align-items:center; flex-wrap:nowrap; gap:14px; padding:20px 0; margin:0; width:100%;
+  border:0; border-top:1px solid #cbd9eb; border-bottom:1px solid #cbd9eb; border-radius:0; background:#fff; box-shadow:none;
+}
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-row + .people-row { border-top:0; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-avatar { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; border-radius:12px; color:#fff; background:var(--dialog-fill); border:1px solid #6994c7; box-shadow:inset 0 1px #ffffff90; font-size:15px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-person { flex:1; min-width:0; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-name { color:#203d5c; font:650 13px/1.5 var(--pc-font,Arial,sans-serif); overflow-wrap:anywhere; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-self { border:1px solid #becfe4; border-radius:6px; background:#fff; color:#4c7198; padding:2px 5px; font-size:9px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-email { margin:3px 0 7px; color:#6b8098; font-size:10px; overflow-wrap:anywhere; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-meta { display:flex; align-items:center; flex-wrap:wrap; gap:7px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-role,
+html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-access-receipt-heading .people-role { color:#fff; background:linear-gradient(125deg,#24486d,#20578c); border:1px solid #3f6997; border-radius:7px; padding:4px 7px; font-size:9px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-status { padding:0; background:none; color:#637e96; border:0; font-size:9px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions { display:flex; align-items:center; flex:0 0 auto; flex-wrap:nowrap; gap:7px; padding:0; margin:0; border:0; background:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions button { min-height:32px; padding:7px 9px; font-size:9px; color:#254c72; background:#fff; border:1px solid #a7bed9; box-shadow:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions .danger { width:32px; min-width:32px; padding:7px; background:linear-gradient(135deg,#7c1639,#c50b43); border:1px solid #be345d; color:#fff; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions .danger:disabled { background:#fff; color:#9a4a63; border-color:#d7b1bd; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-fieldset { padding:0; margin:24px 0 0; border:0; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-fieldset legend { margin-bottom:9px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option { display:grid; grid-template-columns:15px minmax(0,1fr); align-content:start; align-items:start; gap:9px 8px; padding:14px 12px; margin:0; min-height:112px; border:1px solid #a9c0dc; border-radius:12px; background:#fff; color:#254867; box-shadow:inset 0 1px #fff; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option input { margin:2px 0 0; width:14px; height:14px; accent-color:#336fc0; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option strong { grid-column:2 !important; grid-row:1 !important; width:auto !important; min-width:0; display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin:0; font-size:11px; font-weight:650; color:inherit !important; overflow-wrap:normal; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option strong .icon { width:17px; height:17px; flex:0 0 17px; color:inherit; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option small { grid-column:1/-1; color:inherit; opacity:.85; font-size:10px; line-height:1.65; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option:has(input:checked) { color:#fff !important; background:var(--dialog-fill); border-color:#4c84c6; box-shadow:inset 0 1px #ffffff90,0 4px 11px #1c4f8c20; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option:has(input:focus-visible) { outline:2px solid #81a8d5; outline-offset:3px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #accessBack { position:relative; display:inline-flex; align-items:center; align-self:flex-start; gap:7px; padding:8px 10px; margin:-12px 0 24px; min-height:33px; border:1px solid #ffffff60; border-radius:9px; color:#fff; background:#ffffff12; font-size:10px; box-shadow:inset 0 1px #ffffff2e; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #accessBack .acervo-fill-orb { display:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-dialog-flow { display:grid; gap:17px; padding:0; margin:24px 0 0; width:100%; border:0; background:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-dialog-flow > .access-flow-step { display:flex; align-items:flex-start; gap:10px; padding:0; margin:0; border:0; border-radius:0; background:none; box-shadow:none; color:#fff; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step > span { display:grid; place-items:center; width:29px; height:29px; flex:0 0 29px; border:1px solid #ffffff80; background:none; border-radius:50%; color:#fff; font-size:10px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step strong { color:#fff; font-size:10px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step small { display:block; margin-top:4px; color:#dbe7f7; font-size:10px; line-height:1.5; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #newUserResult { margin:0; padding:0; border:0; border-radius:0; background:none; color:#1d3e60; }
+html.acervo-dialogs .acervo-access-receipt-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:15px; border-bottom:1px solid #c7d6e8; padding-bottom:16px; margin-bottom:26px; }
+html.acervo-dialogs .acervo-access-receipt-heading h3 { margin:0; padding:0; border:0; }
+html.acervo-dialogs .acervo-access-email { display:flex; align-items:center; justify-content:space-between; gap:15px; padding:0 0 25px; }
+html.acervo-dialogs .acervo-access-email > div { flex:1; min-width:0; }
+html.acervo-dialogs .acervo-access-email label { display:block; margin:0 0 9px; }
+html.acervo-dialogs .acervo-access-email strong { color:#22466c; font-size:16px; font-weight:500; overflow-wrap:anywhere; }
+html.acervo-dialogs .acervo-access-password { display:flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid #b6cbe4; border-radius:11px; }
+html.acervo-dialogs .acervo-access-password > .icon { width:22px; height:22px; flex:0 0 22px; color:#315c86; }
+html.acervo-dialogs .acervo-dialog-main .acervo-access-password input { border:0 !important; background:none !important; box-shadow:none !important; padding:6px !important; font:600 19px/1.5 ui-monospace,monospace !important; flex:1; min-width:0; }
+html.acervo-dialogs .acervo-dialog-main .acervo-icon-control { display:grid; place-items:center; flex:0 0 31px; width:31px; height:31px; min-height:31px; padding:7px; margin:0; background:#fff; color:#315b82; border:1px solid #c5d5e9; border-radius:8px; box-shadow:none; }
+html.acervo-dialogs .acervo-copy-buffer { position:fixed; width:1px; height:1px; opacity:0; pointer-events:none; }
+html.acervo-dialogs #editDialog.acervo-dialog #editFields { padding:0 !important; border:0 !important; margin:0 !important; }
+html.acervo-dialogs #editDialog.acervo-dialog .editor-location,
+html.acervo-dialogs #editDialog.acervo-dialog .editor-grid > *,
+html.acervo-dialogs #editDialog.acervo-dialog .editor-name-card,
+html.acervo-dialogs #editDialog.acervo-dialog .editor-category-card { min-width:0; padding:0; margin:0; border:0; border-radius:0; background:none; box-shadow:none; }
+html.acervo-dialogs #editDialog.acervo-dialog .editor-location { margin-bottom:23px; padding-bottom:19px; border-bottom:1px solid #ccd9e9; }
+html.acervo-dialogs #editDialog.acervo-dialog .editor-item,
+html.acervo-dialogs #editDialog.acervo-dialog .editor-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:22px; }
+html.acervo-dialogs #editDialog.acervo-dialog .choices { display:flex; align-items:stretch; flex-wrap:wrap; gap:8px; }
+html.acervo-dialogs #editDialog.acervo-dialog .choice { flex:1 1 auto; min-width:0; margin:0; }
+html.acervo-dialogs #editDialog.acervo-dialog .choice > span { display:flex; align-items:center; justify-content:center; gap:7px; min-width:0; min-height:39px; box-sizing:border-box; padding:9px 10px; border:1px solid #b4c9e3; border-radius:9px; background:#fff; color:#375b7b; font-size:11px; line-height:1.4; }
+html.acervo-dialogs #editDialog.acervo-dialog .choice input:checked + span { background:var(--dialog-fill); color:#fff; border-color:#4f84c3; }
+html.acervo-dialogs #editDialog.acervo-dialog :is(.choice,.registration-group-heading) .icon { width:18px; height:18px; flex:0 0 18px; color:inherit; }
+html.acervo-dialogs #editDialog.acervo-dialog .registration-group-heading { border-bottom:1px solid #d6e0ec; padding:0 0 12px; margin:0 0 14px; background:none; }
+html.acervo-dialogs #editDialog.acervo-dialog .mobile-transfer-origin { display:none; }
+html.acervo-dialogs #editDialog.acervo-dialog .editor-note { grid-column:1/-1; }
+html.acervo-dialogs #deleteItemDialog.acervo-dialog .deletion-record { display:flex; align-items:center; flex-wrap:wrap; gap:9px 15px; padding:0 0 20px; margin:0 0 23px; border:0; border-bottom:1px solid #cbd9ea; background:none; color:#254868; }
+html.acervo-dialogs #deletePersonDialog.acervo-dialog .delete-person-body > strong { color:#1d4165; font-size:18px; }
+html.acervo-dialogs #deletePersonDialog.acervo-dialog .delete-person-body > span { display:block; color:#6b8098; font-size:12px; margin-top:8px; overflow-wrap:anywhere; }
+html.acervo-dialogs #mobileDetail.acervo-dialog .mobile-detail-tabs { margin:18px 0; }
+html.acervo-dialogs #mobileDetail.acervo-dialog .mobile-item-anchor { min-width:0; flex-wrap:wrap; }
+html.acervo-dialogs #mobileDetail.acervo-dialog .mobile-detail-summary { background:#fff; }
+html.acervo-dialogs #mobileAccountDialog.acervo-dialog .mobile-institution-credit { display:none; }
+html.acervo-dialogs #mobileAboutDialog.acervo-dialog .mobile-about-content { padding:0; background:#fff; text-align:center; }
+html.acervo-dialogs #mobileAboutDialog.acervo-dialog .institution-logo { max-width:160px; }
+html.acervo-dialogs #camera { border:1px solid #bed7f4; box-shadow:0 25px 70px #061d4666; }
+html.acervo-dialogs #camera :is(#closeCamera,#torch) { border:1px solid #ffffff70; box-shadow:inset 0 1px #ffffff35; }
+@media (hover:hover) {
+  html.acervo-dialogs .acervo-dialog-main :is(button,summary):not(:disabled):hover { border-color:#6796c8; box-shadow:inset 0 1px #fff,0 3px 10px #315c8926; color:#1e5386; }
+  html.acervo-dialogs .acervo-dialog-main :is(.primary,#confirmOperation,#confirmRegistrationDiscard,#deleteItemSave,#confirmPersonDelete,#savePersonRole):not(:disabled):hover { color:#fff !important; box-shadow:inset 0 1px #fff,0 5px 15px var(--dialog-shadow),inset 0 0 17px #ffffff20 !important; }
+  html.acervo-dialogs .acervo-dialog-close:not(:disabled):hover { color:#1e5689 !important; border-color:#79a2d0 !important; box-shadow:0 2px 10px #315c8930,inset 0 1px #fff !important; }
+  html.acervo-dialogs .acervo-dialog-side #accessBack:not(:disabled):hover { background:#ffffff26 !important; color:#fff !important; box-shadow:inset 0 1px #ffffff8c,0 2px 12px #ffffff15 !important; }
+}
+@media (min-width:641px) and (max-width:900px) and (hover:hover) {
+  html.acervo-dialogs body > dialog.acervo-dialog[open] { grid-template-columns:185px minmax(0,1fr); }
+  html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-side { padding:29px 20px 24px !important; }
+  html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-main { padding:53px 23px 23px !important; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-options { grid-template-columns:1fr; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option { min-height:0; grid-template-columns:15px 110px minmax(0,1fr); }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option small { grid-column:3; }
+  html.acervo-dialogs .acervo-dialog-record { flex-wrap:wrap; }
+  html.acervo-dialogs .acervo-record-code { margin-left:62px; }
+}
+@media (max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px) {
+  html.acervo-dialogs body > dialog.acervo-dialog {
+    width:calc(100vw - 24px) !important; max-width:calc(100vw - 24px) !important;
+    max-height:calc(100dvh - var(--app-safe-top,0px) - var(--app-safe-bottom,0px) - 24px) !important;
+    top:calc(var(--app-safe-top,0px) + 12px) !important; bottom:calc(var(--app-safe-bottom,0px) + 12px) !important;
+    border-radius:20px !important;
+  }
+  html.acervo-dialogs body > dialog.acervo-dialog[open] { grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr); }
+  html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-side { display:grid !important; grid-template-columns:38px minmax(0,1fr); gap:9px 12px !important; align-items:center !important; min-height:0; padding:17px 19px 19px !important; }
+  html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-kicker { grid-column:1/-1; padding-right:30px !important; font-size:8px !important; margin:0 0 3px !important; }
+  html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol { width:38px !important; height:40px !important; flex:0 0 38px !important; padding:7px !important; margin:0 !important; border-radius:11px !important; }
+  html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol > .icon { width:24px !important; height:24px !important; }
+  html.acervo-dialogs .acervo-dialog-side > h2 { margin:0 !important; padding-right:16px !important; font-size:23px !important; line-height:1.2 !important; }
+  html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-description { grid-column:1/-1; font-size:11px !important; line-height:1.6 !important; margin:0 !important; }
+  html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-foot,
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-dialog-flow { display:none; }
+  html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-main { max-height:100% !important; padding:20px 18px !important; }
+  html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-close { top:12px !important; right:12px !important; width:27px !important; height:27px !important; min-width:27px !important; min-height:27px !important; padding:5px !important; border-color:#ffffff60 !important; background:#ffffff12 !important; color:#fff !important; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog #accessBack { grid-column:1/-1; grid-row:2; margin:0 0 5px; justify-self:start; padding:5px 8px; min-height:29px; font-size:9px; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-toolbar { flex-wrap:wrap; gap:10px; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-search { flex:1 1 100%; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog #addPerson { flex:1 1 auto; min-height:40px; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-row { flex-wrap:wrap; gap:10px; padding:16px 0; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-person { flex:1 1 calc(100% - 60px); }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-row > .people-role { margin-left:52px; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-overflow { margin-left:auto; position:relative; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .people-overflow > .people-actions { padding:10px; border:1px solid #9cb9da; border-radius:11px; background:#fff; box-shadow:0 9px 22px #13365f30; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-options { grid-template-columns:minmax(0,1fr); }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option { min-height:0; grid-template-columns:16px minmax(0,1fr); gap:5px 9px; padding:12px; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option strong { flex-wrap:nowrap; }
+  html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option small { grid-column:2; }
+  html.acervo-dialogs .acervo-dialog-main label,html.acervo-dialogs .acervo-dialog-main legend { font-size:12px !important; }
+  html.acervo-dialogs .acervo-dialog-main :is(input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),textarea,select) { font-size:16px !important; min-height:44px; padding:10px 11px !important; }
+  html.acervo-dialogs .acervo-dialog-record { gap:13px !important; flex-wrap:wrap; margin-bottom:19px !important; padding-bottom:18px !important; }
+  html.acervo-dialogs .acervo-dialog-record .acervo-record-copy > strong { font-size:15px !important; }
+  html.acervo-dialogs .acervo-record-code { width:100%; justify-content:flex-start; padding-left:61px; }
+  html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions) { flex-wrap:wrap; gap:9px; margin-top:20px; }
+  html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions) > button { flex:1 1 110px !important; min-height:44px; padding:10px; font-size:11px; }
+  html.acervo-dialogs #operation.acervo-dialog #downFields { grid-template-columns:minmax(0,1fr); gap:16px; }
+  html.acervo-dialogs .acervo-access-email strong { font-size:14px; }
+  html.acervo-dialogs #editDialog.acervo-dialog .rooms .choice { flex:1 1 100%; }
+  html.acervo-dialogs #editDialog.acervo-dialog .editor-grid { gap:19px; }
+  html.acervo-dialogs #editDialog.acervo-dialog .acervo-dialog-main .actions { position:static; box-shadow:none; border-top:1px solid #cad9eb; padding:16px 0 0; }
+  html.acervo-dialogs #camera { border:0; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html.acervo-dialogs .acervo-dialog :is(button,summary,input,textarea,.choice > span,.role-option) { transition:none !important; animation:none !important; }
+}

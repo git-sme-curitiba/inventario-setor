@@ -2084,34 +2084,10 @@ function openRegistrationDiscard() {
     d.ambiente === "Almoxarifado"
       ? `${d.ambiente} · ${d.estante} / ${String(d.prateleira).padStart(2, "0")}`
       : d.ambiente;
-  $("registrationDiscardItem").replaceChildren(
-    el("strong", d.item),
-    el(
-      "span",
-      (d.controle === "QUANTIDADE"
-        ? quantityText(d.quantidade, d.unidade)
-        : "1 bem individual") +
-        " · " +
-        place,
-    ),
-  );
+  renderAcervoDialogRecord($("registrationDiscardItem"), { dados: d },
+    (d.controle === "QUANTIDADE" ? quantityText(d.quantidade, d.unidade) : "1 bem individual") + " · " + place);
   showAcervoDialog($("registrationDiscardDialog"));
-  if (mobileAcervo()) {
-    const anchor = mobileItemAnchor({ dados: d });
-    anchor.querySelector("small")?.remove();
-    if (d.controle === "QUANTIDADE")
-      anchor
-        .querySelector("div")
-        .append(
-          el(
-            "strong",
-            quantityText(d.quantidade, d.unidade),
-            "mobile-discard-quantity",
-          ),
-        );
-    $("registrationDiscardItem").replaceChildren(anchor);
-    focusAcervoDialog($("registrationDiscardDialog"));
-  } else $("directReason").focus();
+  focusAcervoDialog($("registrationDiscardDialog"), "directReason");
 }
 
 function movementActions(r) {
@@ -3767,16 +3743,7 @@ function openOperation(a, r) {
   );
   $("operationTitle").textContent = ACTION[a];
   $("operationMark").replaceChildren(icon(ACTION_ICON[a] || "history"));
-  const context = el("div"),
-    code = el("span", internal(r.id), "operation-code");
-  context.append(
-    el("strong", r.dados.item),
-    el(
-      "small",
-      [r.dados.ambiente, locationText(r)].filter(Boolean).join(" · "),
-    ),
-  );
-  $("operationRecord").replaceChildren(context, code);
+  renderAcervoDialogRecord($("operationRecord"), r);
   $("confirmOperation").replaceChildren(
     icon(ACTION_ICON[a] || "history"),
     document.createTextNode(ACTION[a]),
@@ -3800,7 +3767,6 @@ function openOperation(a, r) {
   configureMovement(a, r);
   showAcervoDialog($("operation"));
   if (mobileAcervo()) {
-    $("operationRecord").prepend(itemIcon(r));
     updateMobileOperation();
   }
 }
@@ -4708,6 +4674,7 @@ function personInitials(person) {
 }
 
 function setAccessView(mode) {
+  $("userAccessDialog").dataset.view = mode;
   if (mode !== "list") {
     ++peopleRequest;
     clearTimeout(peopleSearchTimer);
@@ -4741,31 +4708,12 @@ function setAccessView(mode) {
       "check",
     ],
   };
-  if (mobileAcervo()) {
-    labels.list = ["Pessoas", "Gerencie os acessos ao Acervo.", "users"];
-    labels.create = [
-      "Adicionar pessoa",
-      "Cadastre a pessoa e escolha o perfil.",
-      "user-add",
-    ];
-    labels.profile = [
-      "Perfil de acesso",
-      "Escolha as permissões desta pessoa.",
-      "shield-key",
-    ];
-    labels.result = [
-      "Acesso criado",
-      "Compartilhe as instruções de primeiro acesso.",
-      "check",
-    ];
-  }
-  if (mobileAcervo() && mode === "create")
-    labelButton($("newUserSave"), "Criar acesso");
   $("userAccessTitle").textContent = labels[mode][0];
   $("userAccessDescription").textContent = labels[mode][1];
   $("userAccessMark")
     .querySelector("use")
     .setAttribute("href", "#i-" + labels[mode][2]);
+  syncAcervoSplitDialog($("userAccessDialog"));
 }
 
 function resetPeopleManagement() {
@@ -4812,8 +4760,10 @@ function setPeopleBusy(value) {
     "cancelPersonRole",
     "confirmPersonDelete",
     "cancelPersonDelete",
+    "cancelNewUser",
+    "acervoDeletePersonClose",
   ])
-    $(id).disabled = value;
+    if ($(id)) $(id).disabled = value;
   $("newUserForm").setAttribute("aria-busy", String(value));
   $("personRoleForm").setAttribute("aria-busy", String(value));
 }
@@ -4864,7 +4814,7 @@ function renderPeople() {
     profile.onclick = () => editPersonRole(person);
     const remove = el("button", undefined, "danger");
     remove.type = "button";
-    labelButton(remove, "Excluir", "discard");
+    labelButton(remove, "", "discard");
     remove.disabled = self;
     remove.setAttribute(
       "aria-label",
@@ -4872,6 +4822,7 @@ function renderPeople() {
     );
     if (self) remove.title = "Você não pode excluir sua própria conta.";
     remove.onclick = () => confirmPersonRemoval(person);
+    remove.title = self ? "Você não pode excluir sua própria conta." : "Excluir pessoa";
     actions.append(profile, remove);
     if (mobileAcervo()) {
       const menu = el("details", undefined, "people-overflow");
@@ -4930,6 +4881,7 @@ function renderPeople() {
   $("peoplePage").textContent = peoplePage + " de " + pages;
   $("peoplePrevious").disabled = peoplePage <= 1;
   $("peopleNext").disabled = peoplePage >= pages;
+  syncAcervoSplitDialog($("userAccessDialog"));
 }
 
 function showPeopleLoading() {
@@ -9133,28 +9085,19 @@ function openMobileTransfer(record) {
           .join(" · "),
     ),
   );
-  $("editFields").querySelector(".mobile-editor-content").prepend(origin);
+  ($("editFields").querySelector(".mobile-editor-content") || $("editFields")).prepend(origin);
   labelButton($("editSave"), "Transferir", "movement");
   labelButton($("editCancel"), "Cancelar", "left");
   $("editRooms").closest("fieldset").querySelector("legend").textContent =
     "Novo ambiente";
+  syncAcervoSplitDialog($("editDialog"));
 }
 
 function updateMobileOperation() {
   if (!mobileAcervo() || !selected || !$("operation").open) return;
-  const actions = {
-    emprestar: "Confirmar empréstimo",
-    devolver: "Confirmar devolução",
-    entrada: "Confirmar entrada",
-    saida: "Confirmar saída",
-    descarte_estoque: "Confirmar descarte",
-    baixar: "Confirmar descarte",
-    estornar: "Confirmar reversão",
-    restaurar: "Confirmar restauração",
-  };
   labelButton(
     $("confirmOperation"),
-    actions[action] || "Confirmar movimentação",
+    acervoOperationCopy(action).submit,
     ACTION_ICON[action],
   );
   const root = $("mobileOperationPreview");
@@ -9822,7 +9765,7 @@ function initMobileReference() {
         "Voltar";
       $("newUserName").placeholder = "Digite o nome completo";
       $("newUserEmail").placeholder = "Digite o e-mail institucional";
-      labelButton($("newUserSave"), "Criar acesso");
+      labelButton($("newUserSave"), "Cadastrar pessoa", "user-add");
       const descriptions = [
         "Apenas consulta e leitura.",
         "Cadastro e movimentações.",
@@ -10564,15 +10507,7 @@ $("newUserForm").onsubmit = async (event) => {
       perfil: new FormData($("newUserForm")).get("newUserRole"),
     });
     if (user?.id !== owner) return;
-    const resultTitle = el("strong", "Conta cadastrada.");
-    resultTitle.prepend(icon("check"));
-    $("newUserResult").replaceChildren(
-      resultTitle,
-      el("p", result.email),
-      el("p", "Senha inicial: " + result.senha_inicial),
-      el("p", "Perfil: " + (PEOPLE_ROLES[result.perfil] || "Leitor")),
-      el("p", "No primeiro acesso, a pessoa criará sua própria senha."),
-    );
+    renderAcervoAccessReceipt(result);
     setAccessView("result");
   } catch (error) {
     if (user?.id === owner) $("newUserMessage").textContent = error.message;
@@ -10976,9 +10911,20 @@ function syncMobileDialogSymbol(dialog, heading) {
 }
 
 function prepareAcervoDialog(dialog) {
+  prepareAcervoSplitDialog(dialog);
+  syncAcervoSplitDialog(dialog);
+  bindAcervoDialogReturn(dialog);
   if (!mobileAcervo() || dialog.id === "camera") return;
   dialog.classList.add("mobile-dialog");
-  let heading = dialog.querySelector(":scope > .mobile-dialog-heading");
+  let heading = dialog.querySelector(":scope > .acervo-dialog-side, :scope > .mobile-dialog-heading");
+  if (dialog.classList.contains("acervo-dialog")) {
+    heading.classList.add("mobile-dialog-heading");
+    dialog.querySelector(":scope > .acervo-dialog-main").classList.add("mobile-dialog-body");
+    const title = heading.querySelector("h2");
+    title.tabIndex = -1;
+    title.setAttribute("autofocus", "");
+    return;
+  }
   if (!heading) {
     heading = dialog.querySelector(
       ":scope > .operation-hero, :scope > .access-dialog-hero, :scope > .dialog-heading, :scope > .delete-person-heading, :scope > .mobile-account-heading, :scope > .mobile-detail-toolbar, :scope > .mobile-about-heading",
@@ -11009,28 +10955,10 @@ function prepareAcervoDialog(dialog) {
   const title = heading.querySelector("h2") || heading;
   title.tabIndex = -1;
   title.setAttribute("autofocus", "");
-  if (dialog.dataset.mobilePrepared) return;
   dialog.dataset.mobilePrepared = "true";
-  dialog.addEventListener("close", () => {
-    const parent = dialog.mobileParentDialog;
-    dialog.mobileParentDialog = null;
-    if (!parent) return;
-    delete parent.dataset.mobileSuspended;
-    if (!mobileAcervo() || $("app").hidden || parent.open) return;
-    if (parent.id === "mobileDetail") {
-      const record = rows.find((item) => item.id === expanded);
-      if (record) openMobileRecord(record);
-    } else if (parent.id === "userAccessDialog" && role === "admin") {
-      showAcervoDialog(parent);
-    }
-  });
 }
 
 function showAcervoDialog(dialog) {
-  if (!mobileAcervo()) {
-    if (!dialog.open) dialog.showModal();
-    return;
-  }
   prepareAcervoDialog(dialog);
   if (!dialog.open) {
     const parent = [...document.querySelectorAll("dialog[open]")].find(
@@ -11107,6 +11035,16 @@ function initMobileSurfaces() {
     for (const dialog of document.querySelectorAll(
       "body > dialog:not(#camera)",
     )) {
+      if (dialog.classList.contains("acervo-dialog")) {
+        syncAcervoSplitDialog(dialog);
+        if (media.matches) prepareAcervoDialog(dialog);
+        else {
+          dialog.classList.remove("mobile-dialog");
+          dialog.querySelector(".acervo-dialog-side").classList.remove("mobile-dialog-heading");
+          dialog.querySelector(".acervo-dialog-main").classList.remove("mobile-dialog-body");
+        }
+        continue;
+      }
       if (media.matches) prepareAcervoDialog(dialog);
       else {
         const body = dialog.querySelector(":scope > .mobile-dialog-body");
@@ -12672,3 +12610,283 @@ function initAcervoVisualPolish() {
 }
 
 initAcervoVisualPolish();
+
+/* Janelas divididas: os campos e eventos existentes mantêm sua identidade. */
+function acervoOperationCopy(name) {
+  const copy = {
+    emprestar: ["Emprestar item", "Confirmar empréstimo"],
+    devolver: ["Devolver item", "Confirmar devolução"],
+    entrada: ["Entrada de estoque", "Registrar entrada"],
+    saida: ["Saída de estoque", "Registrar saída"],
+    descarte_estoque: ["Descartar quantidade", "Confirmar descarte"],
+    baixar: ["Registrar descarte", "Registrar descarte"],
+    estornar: ["Reverter descarte", "Confirmar reversão"],
+    restaurar: ["Restaurar item", "Confirmar restauração"],
+    arquivar: ["Arquivar item", "Confirmar arquivamento"],
+  }[name] || ["Movimentar item", "Confirmar movimentação"];
+  return { title: copy[0], submit: copy[1] };
+}
+
+function acervoDialogSpec(dialog) {
+  const common = { theme: "sapphire", eyebrow: "ACERVO / ACESSOS", symbol: "users" };
+  switch (dialog.id) {
+    case "userAccessDialog": {
+      const view = dialog.dataset.view || "list";
+      const copy = {
+        list: ["Gerenciar pessoas", "Controle quem pode acessar e usar o Acervo.", "users", peopleTotal + (peopleTotal === 1 ? " pessoa cadastrada" : " pessoas cadastradas")],
+        create: ["Adicionar pessoa", "Crie a conta. No primeiro acesso, a pessoa define a própria senha.", "user-add", "Primeiro acesso"],
+        profile: ["Alterar perfil", "Escolha o que esta pessoa poderá fazer no Acervo.", "shield-key", "Perfis e permissões"],
+        result: ["Conta cadastrada", "Compartilhe os dados de acesso com a pessoa.", "check", "Ela criará a própria senha no primeiro acesso."],
+      }[view];
+      return { ...common, title: copy[0], description: copy[1], symbol: copy[2], foot: copy[3] };
+    }
+    case "operation": {
+      const name = dialog.dataset.action || action;
+      const copy = acervoOperationCopy(name);
+      return { ...common, title: copy.title, eyebrow: "ACERVO / MOVIMENTAÇÃO",
+        theme: name === "baixar" ? "ruby" : name === "descarte_estoque" ? "amber" : "sapphire",
+        symbol: ACTION_ICON[name] || "movement", description: $("operationHint").textContent,
+        foot: name === "baixar" ? "Histórico preservado" : name === "descarte_estoque" ? "Somente as unidades informadas saem do saldo." : selected ? "Origem: " + selected.dados.ambiente : "Movimentação com histórico" };
+    }
+    case "registrationDiscardDialog":
+      return { ...common, title: "Registrar descarte", eyebrow: "ACERVO / CADASTRO", theme: "ruby", symbol: "discard",
+        description: "O item permanece no Acervo, com histórico preservado.", foot: "Não entra no estoque disponível." };
+    case "editDialog": {
+      const transfer = dialog.dataset.mode === "transfer";
+      const record = rows.find(r => r.id === editor?.id);
+      return { ...common, eyebrow: transfer ? "ACERVO / MOVIMENTAÇÃO" : "ACERVO / CADASTRO",
+        title: transfer ? "Transferir item" : "Editar item", symbol: transfer ? "movement" : "edit",
+        description: transfer ? "Escolha o novo ambiente ou a posição do item." : "Atualize os dados do item. As alterações ficam no histórico.",
+        foot: record ? (transfer ? "Origem: " + record.dados.ambiente : internal(record.id)) : "Histórico preservado" };
+    }
+    case "deleteItemDialog":
+      return { ...common, title: "Excluir definitivamente", eyebrow: "ACERVO / ADMINISTRAÇÃO", theme: "ruby", symbol: "discard",
+        description: "O registro será removido do Acervo. Esta ação não pode ser desfeita.", foot: "A trilha de auditoria fica preservada." };
+    case "deletePersonDialog":
+      return { ...common, title: "Excluir pessoa", theme: "ruby", symbol: "user-remove",
+        description: "A pessoa perderá o acesso ao Acervo. Seus cadastros e movimentações continuam preservados.", foot: "Histórico preservado" };
+    case "mobileDetail":
+      return { ...common, title: "Ficha do item", eyebrow: "ACERVO / CONSULTA", symbol: "draft", description: "Dados, localização e histórico do registro.", foot: "Informações do Acervo" };
+    case "mobileAccountDialog":
+      return { ...common, title: "Sua conta", symbol: "users", description: "Seu perfil e as ações da conta.", foot: "Acesso ao Acervo" };
+    case "mobileAboutDialog":
+      return { ...common, title: "Sobre o Acervo", eyebrow: "ACERVO / SOBRE", symbol: "draft", description: "Gestão de bens e materiais.", foot: "Controle e organização do acervo" };
+    default: return null;
+  }
+}
+
+function prepareAcervoSplitDialog(dialog) {
+  const spec = acervoDialogSpec(dialog);
+  if (!spec) return;
+  if (dialog.querySelector(":scope > .acervo-dialog-side") && dialog.querySelector(":scope > .acervo-dialog-main")) return;
+  const heading = dialog.querySelector(":scope > .operation-hero, :scope > .access-dialog-hero, :scope > .dialog-heading, :scope > .delete-person-heading, :scope > .mobile-account-heading, :scope > .mobile-detail-toolbar, :scope > .mobile-about-heading");
+  if (!heading) return;
+  dialog.classList.add("acervo-dialog");
+  const main = dialog.querySelector(":scope > .mobile-dialog-body") || el("div");
+  main.classList.add("acervo-dialog-main");
+  for (const node of [...dialog.childNodes]) if (node !== heading && node !== main) main.append(node);
+  dialog.append(main);
+  let close = heading.querySelector("button:not(#accessBack)");
+  if (!close) {
+    close = button("", () => { if (!accessSaving) $("cancelPersonDelete").click(); }, "", "close");
+    close.id = "acervoDeletePersonClose";
+    close.setAttribute("aria-label", "Fechar exclusão de pessoa");
+  }
+  close.type = "button";
+  close.classList.add("acervo-dialog-close");
+  close.replaceChildren(icon("close"));
+  close.setAttribute("aria-label", close.getAttribute("aria-label") || "Fechar janela");
+  const back = heading.querySelector("#accessBack");
+  const record = heading.querySelector("#operationRecord");
+  if (record) $("operationForm").prepend(record);
+  let title = heading.querySelector("h2");
+  if (!title) {
+    title = el("h2", spec.title);
+    title.id = "acervo-" + dialog.id + "-title";
+    dialog.setAttribute("aria-labelledby", title.id);
+  }
+  const symbol = heading.querySelector("#operationMark, #userAccessMark, .operation-mark, .mobile-dialog-symbol") || el("span");
+  symbol.classList.add("acervo-dialog-symbol", "mobile-dialog-symbol");
+  symbol.setAttribute("aria-hidden", "true");
+  const description = dialog.querySelector("#userAccessDescription, #operationHint, #registrationDiscardDescription, #deletePersonDescription") || el("p");
+  description.classList.add("acervo-dialog-description");
+  const kicker = el("div", spec.eyebrow, "acervo-dialog-kicker");
+  const foot = el("div", undefined, "acervo-dialog-foot");
+  foot.append(icon("history"), el("span", spec.foot));
+  heading.classList.add("acervo-dialog-side");
+  heading.replaceChildren(kicker);
+  if (back) heading.append(back);
+  heading.append(symbol, title, description, foot);
+  title.tabIndex = -1;
+  title.setAttribute("autofocus", "");
+  dialog.replaceChildren(heading, main, close);
+  if (dialog.id === "userAccessDialog") {
+    const flow = $("newUserForm").querySelector(".access-flow");
+    if (flow) { flow.classList.add("acervo-dialog-flow"); heading.append(flow); }
+    const formTitle = el("h3", "Dados da pessoa", "acervo-dialog-section-title");
+    $("newUserForm").prepend(formTitle);
+    const formActions = el("div", undefined, "acervo-dialog-actions");
+    const cancel = button("Cancelar", () => { if (!accessSaving) returnToPeople(); }, "acervo-secondary", "left");
+    cancel.id = "cancelNewUser";
+    formActions.append(cancel, $("newUserSave")); $("newUserForm").append(formActions);
+    for (const group of main.querySelectorAll(".role-options")) {
+      const names = ["users", "edit", "shield-key"];
+      [...group.children].forEach((option, i) => option.querySelector("strong").prepend(icon(names[i])));
+    }
+    $("peopleSearch").placeholder = "Buscar por nome ou e-mail";
+    $("newUserName").placeholder = "Nome da pessoa";
+    $("newUserEmail").placeholder = "nome@exemplo.com.br";
+  }
+  if (dialog.id === "operation") {
+    const fields = $("downFields");
+    for (const input of [$("downDate"), $("document")]) {
+      const wrap = el("div"); wrap.append(input.previousElementSibling, input); fields.append(wrap);
+    }
+    const actions = el("div", undefined, "acervo-dialog-actions");
+    const cancel = button("Cancelar", () => { if (!busy) dialog.close(); }, "acervo-secondary", "left");
+    cancel.id = "cancelOperation";
+    actions.append(cancel, $("confirmOperation")); $("operationForm").append(actions);
+  }
+  if (dialog.id === "editDialog") {
+    const identity = el("div", undefined, "acervo-edit-record");
+    identity.id = "acervoEditRecord"; main.prepend(identity);
+  }
+  if (dialog.id === "deleteItemDialog") {
+    $("deleteItemForm").querySelector("p:not(#deleteItemError)")?.remove();
+    const actions = el("div", undefined, "acervo-dialog-actions");
+    actions.append(button("Cancelar", () => $("deleteItemClose").click(), "acervo-secondary", "left"), $("deleteItemSave"));
+    $("deleteItemForm").append(actions);
+  }
+}
+
+function renderAcervoDialogRecord(host, record, subtitle) {
+  host.classList.add("acervo-dialog-record");
+  const symbol = el("span", undefined, "acervo-record-symbol"); symbol.append(itemIcon(record));
+  symbol.setAttribute("aria-hidden", "true");
+  const copy = el("div", undefined, "acervo-record-copy");
+  copy.append(el("strong", record.dados?.item || "Item do cadastro"),
+    el("small", subtitle ?? [record.dados?.ambiente, record.id ? locationText(record) : ""].filter(Boolean).join(" · ")));
+  host.replaceChildren(symbol, copy);
+  if (record.id) {
+    const code = el("span", undefined, "acervo-record-code");
+    code.append(mobileBarcodeMark(), el("span", internal(record.id))); host.append(code);
+  }
+}
+
+function syncAcervoSplitDialog(dialog) {
+  if (!dialog?.classList.contains("acervo-dialog")) return;
+  const spec = acervoDialogSpec(dialog);
+  const side = dialog.querySelector(":scope > .acervo-dialog-side");
+  if (!spec || !side) return;
+  dialog.dataset.theme = spec.theme;
+  side.querySelector("h2").textContent = spec.title;
+  side.querySelector(".acervo-dialog-kicker").textContent = spec.eyebrow;
+  side.querySelector(".acervo-dialog-description").textContent = spec.description || "";
+  const mark = side.querySelector(".acervo-dialog-symbol");
+  mark.dataset.symbol = spec.symbol;
+  mark.replaceChildren(icon(spec.symbol));
+  side.querySelector(".acervo-dialog-foot > span").textContent = spec.foot;
+  if (dialog.id === "userAccessDialog") {
+    const view = dialog.dataset.view || "list";
+    side.querySelector(".acervo-dialog-flow").hidden = view !== "create";
+    $("accessBack").hidden = view === "list" || view === "result";
+    labelButton($("newUserSave"), accessSaving ? "Cadastrando…" : "Cadastrar pessoa", accessSaving ? "clock" : "user-add");
+  } else if (dialog.id === "operation") {
+    const name = dialog.dataset.action;
+    labelButton($("confirmOperation"), acervoOperationCopy(name).submit, ACTION_ICON[name] || "check");
+    $("movePerson").placeholder = name === "saida" ? "Quem retirou o material?" : "Quem ficará com o bem?";
+    $("moveDestination").placeholder = "Onde o item será usado?";
+    $("document").placeholder = "Número do documento";
+    $("reason").placeholder = $("reason").required ? "Informe o motivo." : "Se precisar, acrescente uma informação.";
+  } else if (dialog.id === "registrationDiscardDialog") {
+    labelButton($("confirmRegistrationDiscard"), "Confirmar descarte", "discard");
+    labelButton($("registrationDiscardForm").querySelector("[data-close]"), "Cancelar", "left");
+    $("directReason").placeholder = "Se quiser, explique o descarte.";
+  } else if (dialog.id === "editDialog") {
+    const record = rows.find(r => r.id === editor?.id);
+    if (record) renderAcervoDialogRecord($("acervoEditRecord"), record);
+    if ($("editSave")) labelButton($("editSave"), dialog.dataset.mode === "transfer" ? "Confirmar transferência" : "Salvar alterações", dialog.dataset.mode === "transfer" ? "movement" : "save");
+  }
+}
+
+function bindAcervoDialogReturn(dialog) {
+  if (dialog.dataset.acervoReturnBound) return;
+  dialog.dataset.acervoReturnBound = "true";
+  dialog.addEventListener("close", () => {
+    const parent = dialog.mobileParentDialog;
+    dialog.mobileParentDialog = null;
+    if (!parent) return;
+    delete parent.dataset.mobileSuspended;
+    if ($("app").hidden || parent.open) return;
+    if (parent.id === "mobileDetail" && mobileAcervo()) {
+      const record = rows.find(item => item.id === expanded);
+      if (record) openMobileRecord(record);
+    } else if (parent.id === "userAccessDialog" && role === "admin") {
+      showAcervoDialog(parent);
+      if ((parent.dataset.view || "list") === "list") loadPeople();
+    }
+  });
+}
+
+async function copyAcervoAccess(text, control) {
+  try {
+    if (navigator.clipboard?.writeText && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else {
+      const field = el("textarea"); field.value = text;
+      field.className = "acervo-copy-buffer"; $("userAccessDialog").append(field); field.select();
+      const copied = document.execCommand("copy"); field.remove();
+      if (!copied) throw Error("Copie os dados manualmente.");
+    }
+    control?.focus({ preventScroll: true });
+    toast("Dados copiados.");
+  } catch { toast("Não foi possível copiar. Selecione os dados e copie manualmente.", true); }
+}
+
+function renderAcervoAccessReceipt(result) {
+  const host = $("newUserResult"); host.replaceChildren();
+  const heading = el("div", undefined, "acervo-access-receipt-heading");
+  heading.append(el("h3", "Dados de acesso"), el("span", PEOPLE_ROLES[result.perfil] || "Leitor", "people-role"));
+  const email = el("div", undefined, "acervo-access-email");
+  const address = el("div"); address.append(el("label", "E-mail de acesso"), el("strong", result.email));
+  const emailCopy = button("", () => copyAcervoAccess(result.email, emailCopy), "acervo-icon-control", "copy");
+  emailCopy.setAttribute("aria-label", "Copiar e-mail"); emailCopy.title = "Copiar e-mail";
+  email.append(address, emailCopy);
+  const passwordLabel = el("label", "Senha inicial"); passwordLabel.htmlFor = "createdUserPassword";
+  const credential = el("div", undefined, "acervo-access-password");
+  const password = el("input"); password.id = "createdUserPassword"; password.type = "text";
+  password.value = result.senha_inicial; password.readOnly = true; password.autocomplete = "off"; password.spellcheck = false;
+  const visibility = button("", () => {
+    const visible = password.type === "password"; password.type = visible ? "text" : "password";
+    visibility.replaceChildren(icon(visible ? "eye-off" : "eye"));
+    visibility.setAttribute("aria-label", visible ? "Ocultar senha inicial" : "Mostrar senha inicial");
+    visibility.setAttribute("aria-pressed", String(visible));
+  }, "acervo-icon-control", "eye-off");
+  visibility.setAttribute("aria-label", "Ocultar senha inicial"); visibility.setAttribute("aria-pressed", "true");
+  const passwordCopy = button("", () => copyAcervoAccess(password.value, passwordCopy), "acervo-icon-control", "copy");
+  passwordCopy.setAttribute("aria-label", "Copiar senha inicial"); passwordCopy.title = "Copiar senha inicial";
+  credential.append(icon("key"), password, visibility, passwordCopy);
+  const actions = el("div", undefined, "acervo-dialog-actions");
+  const copy = button("Copiar dados de acesso", () => copyAcervoAccess("E-mail: " + result.email + "\nSenha inicial: " + password.value + "\nNo primeiro acesso, crie sua própria senha.", copy), "primary", "copy");
+  actions.append(button("Voltar às pessoas", returnToPeople, "acervo-secondary", "left"), copy);
+  host.append(heading, email, passwordLabel, credential, el("p", "Válida para o primeiro acesso.", "access-field-help"), actions);
+}
+
+function initAcervoSplitDialogs() {
+  document.documentElement.classList.add("acervo-dialogs");
+  const update = () => {
+    for (const dialog of document.querySelectorAll("body > dialog:not(#camera)")) {
+      prepareAcervoSplitDialog(dialog); syncAcervoSplitDialog(dialog);
+      if (!dialog.classList.contains("acervo-dialog")) continue;
+      const mobile = mobileAcervo();
+      dialog.classList.toggle("mobile-dialog", mobile);
+      dialog.querySelector(".acervo-dialog-side").classList.toggle("mobile-dialog-heading", mobile);
+      dialog.querySelector(".acervo-dialog-main").classList.toggle("mobile-dialog-body", mobile);
+      bindAcervoDialogReturn(dialog);
+    }
+  };
+  const media = matchMedia("(max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px)");
+  media.addEventListener("change", update);
+  update();
+}
+
+initAcervoSplitDialogs();

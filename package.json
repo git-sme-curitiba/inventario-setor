@@ -1,0 +1,17 @@
+{
+  "name": "acervo",
+  "version": "3.5.76",
+  "private": true,
+  "description": "Gestão de bens e materiais",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "npm run check && node --test tests/app.test.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

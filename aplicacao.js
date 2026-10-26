@@ -12498,9 +12498,10 @@ function initAcervoAmbient() {
   document.body.prepend(ambient);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const isLogin = () => document.body.classList.contains("auth-screen");
+  const canAnimate = () => !reduced.matches && !document.hidden && !$("camera").open;
   let renderer = null, attempted = false, previousLogin = isLogin(), enterTimer = 0;
 
-  // O contexto só é criado no login. Dentro do Acervo não há desenho contínuo.
+  // Um único fundo contínuo, com resolução limitada e relógio pausável.
   function createLoginRenderer() {
     const gl = canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" });
     if (!gl) return null;
@@ -12510,7 +12511,7 @@ function initAcervoAmbient() {
       float field(vec2 p){return sin(p.x*2.4+sin(p.y*2.1))*cos(p.y*1.9+sin(p.x*1.6));}
       void main(){
         vec2 p=(vUv-.5)*vec2(resolution.x/resolution.y,1.);
-        float t=time*.18;
+        float t=time*.045;
         float a=field(p*1.4+vec2(t,-t*.7));
         float b=field(p*1.9+vec2(-t*.8,t*.65)+a*.45);
         float c=field(p*2.3+vec2(t*.4,-t*.55)+b*.35);
@@ -12543,43 +12544,50 @@ function initAcervoAmbient() {
     const position = gl.getAttribLocation(program, "position");
     gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     const res = gl.getUniformLocation(program, "resolution"), clock = gl.getUniformLocation(program, "time");
-    let frame = 0, last = 0, elapsed = 0, running = false, releaseTimer = 0;
+    let frame = 0, last = 0, elapsed = 0, running = false, quality = 1, slowFrames = 0;
+    const interval = 1000 / 30;
     const size = () => {
-      canvas.width = Math.max(1, Math.round(Math.min(innerWidth, 1920) * .5));
-      canvas.height = Math.max(1, Math.round(Math.min(innerHeight, 1200) * .5));
+      const scale = Math.min(.5, 576 / innerWidth, 360 / innerHeight) * quality;
+      const width = Math.max(1, Math.round(innerWidth * scale));
+      const height = Math.max(1, Math.round(innerHeight * scale));
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width; canvas.height = height;
+      }
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
     const draw = () => {
       gl.uniform2f(res, canvas.width, canvas.height);
-      gl.uniform1f(clock, reduced.matches ? 0 : elapsed);
+      gl.uniform1f(clock, elapsed);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     const tick = time => {
-      if (!running || reduced.matches || !isLogin() || document.hidden) { running = false; return; }
-      if (time - last >= 80) {
-        elapsed += Math.min(time - last, 160) / 1000;
-        last = time; draw();
+      if (!running || !canAnimate()) { running = false; return; }
+      const delta = time - last;
+      if (delta >= interval - 1) {
+        elapsed += Math.min(delta, 100) / 1000;
+        last = time;
+        // Sob carga, reduz os pixels em vez de acelerar o movimento ou criar mais efeitos.
+        slowFrames = delta > 70 ? slowFrames + 1 : Math.max(0, slowFrames - 1);
+        if (slowFrames >= 8 && quality > .55) {
+          quality *= .75; slowFrames = 0; size();
+        }
+        draw();
       }
       frame = requestAnimationFrame(tick);
     };
     const sync = () => {
       cancelAnimationFrame(frame); running = false;
-      clearTimeout(releaseTimer);
-      if (!isLogin()) {
-        // Conserva a última imagem durante a saída; depois libera o buffer maior.
-        releaseTimer = setTimeout(() => { if (!isLogin()) canvas.width = canvas.height = 1; }, 700);
-        return;
-      }
-      if (document.hidden) return;
+      if (document.hidden || $("camera").open) return;
       size(); draw();
-      if (!reduced.matches) { running = true; last = performance.now(); frame = requestAnimationFrame(tick); }
+      if (canAnimate()) { running = true; last = performance.now(); frame = requestAnimationFrame(tick); }
     };
     ambient.classList.add("has-shader");
-    canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); cancelAnimationFrame(frame); clearTimeout(releaseTimer); running = false; renderer = null; ambient.classList.remove("has-shader"); });
+    canvas.addEventListener("webglcontextlost", event => { event.preventDefault(); cancelAnimationFrame(frame); running = false; renderer = null; ambient.classList.remove("has-shader"); });
     return { sync };
   }
   const sync = () => {
-    if (isLogin() && !attempted) { attempted = true; renderer = createLoginRenderer(); }
+    ambient.classList.toggle("is-paused", !canAnimate());
+    if (!attempted && !document.hidden) { attempted = true; renderer = createLoginRenderer(); }
     renderer?.sync();
   };
   new MutationObserver(() => {
@@ -12594,6 +12602,7 @@ function initAcervoAmbient() {
   window.addEventListener("resize", sync);
   reduced.addEventListener("change", sync);
   document.addEventListener("visibilitychange", sync);
+  new MutationObserver(sync).observe($("camera"), { attributes:true, attributeFilter:["open"] });
   sync();
 }
 
@@ -12736,6 +12745,7 @@ function prepareAcervoSplitDialog(dialog) {
     $("peopleSearch").placeholder = "Buscar por nome ou e-mail";
     $("newUserName").placeholder = "Nome da pessoa";
     $("newUserEmail").placeholder = "nome@exemplo.com.br";
+    labelButton($("cancelPersonRole"), "Cancelar", "left");
   }
   if (dialog.id === "operation") {
     const fields = $("downFields");
@@ -12752,10 +12762,18 @@ function prepareAcervoSplitDialog(dialog) {
     identity.id = "acervoEditRecord"; main.prepend(identity);
   }
   if (dialog.id === "deleteItemDialog") {
+    main.querySelector(".deletion-record").prepend(icon("discard"));
     $("deleteItemForm").querySelector("p:not(#deleteItemError)")?.remove();
     const actions = el("div", undefined, "acervo-dialog-actions");
     actions.append(button("Cancelar", () => $("deleteItemClose").click(), "acervo-secondary", "left"), $("deleteItemSave"));
     $("deleteItemForm").append(actions);
+  }
+  if (dialog.id === "deletePersonDialog") {
+    const record = el("div", undefined, "acervo-dialog-record");
+    const symbol = el("span", undefined, "acervo-record-symbol"); symbol.append(icon("user-remove"));
+    const copy = el("div", undefined, "acervo-record-copy");
+    copy.append($("deletePersonName"), $("deletePersonEmail"));
+    record.append(symbol, copy); main.querySelector(".delete-person-body").prepend(record);
   }
 }
 
@@ -12846,11 +12864,13 @@ function renderAcervoAccessReceipt(result) {
   const host = $("newUserResult"); host.replaceChildren();
   const heading = el("div", undefined, "acervo-access-receipt-heading");
   heading.append(el("h3", "Dados de acesso"), el("span", PEOPLE_ROLES[result.perfil] || "Leitor", "people-role"));
+  const emailLabel = el("label", "E-mail de acesso"); emailLabel.htmlFor = "createdUserEmail";
   const email = el("div", undefined, "acervo-access-email");
-  const address = el("div"); address.append(el("label", "E-mail de acesso"), el("strong", result.email));
-  const emailCopy = button("", () => copyAcervoAccess(result.email, emailCopy), "acervo-icon-control", "copy");
+  const address = el("input"); address.id = "createdUserEmail"; address.type = "text";
+  address.value = result.email; address.readOnly = true; address.autocomplete = "off"; address.spellcheck = false;
+  const emailCopy = button("", () => copyAcervoAccess(result.email, emailCopy), "acervo-icon-control", "clipboard");
   emailCopy.setAttribute("aria-label", "Copiar e-mail"); emailCopy.title = "Copiar e-mail";
-  email.append(address, emailCopy);
+  email.append(icon("mail"), address, emailCopy);
   const passwordLabel = el("label", "Senha inicial"); passwordLabel.htmlFor = "createdUserPassword";
   const credential = el("div", undefined, "acervo-access-password");
   const password = el("input"); password.id = "createdUserPassword"; password.type = "text";
@@ -12862,13 +12882,13 @@ function renderAcervoAccessReceipt(result) {
     visibility.setAttribute("aria-pressed", String(visible));
   }, "acervo-icon-control", "eye-off");
   visibility.setAttribute("aria-label", "Ocultar senha inicial"); visibility.setAttribute("aria-pressed", "true");
-  const passwordCopy = button("", () => copyAcervoAccess(password.value, passwordCopy), "acervo-icon-control", "copy");
+  const passwordCopy = button("", () => copyAcervoAccess(password.value, passwordCopy), "acervo-icon-control", "clipboard");
   passwordCopy.setAttribute("aria-label", "Copiar senha inicial"); passwordCopy.title = "Copiar senha inicial";
   credential.append(icon("key"), password, visibility, passwordCopy);
   const actions = el("div", undefined, "acervo-dialog-actions");
-  const copy = button("Copiar dados de acesso", () => copyAcervoAccess("E-mail: " + result.email + "\nSenha inicial: " + password.value + "\nNo primeiro acesso, crie sua própria senha.", copy), "primary", "copy");
+  const copy = button("Copiar dados de acesso", () => copyAcervoAccess("E-mail: " + result.email + "\nSenha inicial: " + password.value + "\nNo primeiro acesso, crie sua própria senha.", copy), "primary", "clipboard");
   actions.append(button("Voltar às pessoas", returnToPeople, "acervo-secondary", "left"), copy);
-  host.append(heading, email, passwordLabel, credential, el("p", "Válida para o primeiro acesso.", "access-field-help"), actions);
+  host.append(heading, emailLabel, email, passwordLabel, credential, el("p", "Válida para o primeiro acesso.", "access-field-help"), actions);
 }
 
 function initAcervoSplitDialogs() {

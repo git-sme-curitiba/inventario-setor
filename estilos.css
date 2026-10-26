@@ -333,6 +333,13 @@ input[readonly] {
   text-align: left;
 }
 
+.suggestions button[aria-selected="true"] {
+  color: var(--cor-principal);
+  background: var(--soft);
+  outline: 2px solid #3474a9;
+  outline-offset: -2px;
+}
+
 .choices {
   display: flex;
   gap: 7px;
@@ -8155,12 +8162,6 @@ button.has-books-loader:disabled,
   font-size: 11px;
   color: #d1e5ff;
 }
-.operation-code {
-  flex-shrink: 0;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: #d8edff;
-}
 #operationForm,
 #deleteItemForm {
   padding: 20px 28px 26px;
@@ -8202,8 +8203,7 @@ button.has-books-loader:disabled,
 #operation.destructive .operation-record {
   background: #5b122124;
 }
-#operation.destructive .operation-record small,
-#operation.destructive .operation-code {
+#operation.destructive .operation-record small {
   color: #ffe2e8;
 }
 #operation.destructive #confirmOperation,
@@ -10779,8 +10779,7 @@ body::before {
   .operation-record strong {
     font-size: 13px;
   }
-  .operation-record small,
-  .operation-record .operation-code {
+  .operation-record small {
     font-size: 10px;
   }
   #registrationDiscardItem {
@@ -13343,12 +13342,6 @@ body::before {
     flex: 0 0 28px;
     width: 28px;
     height: 28px;
-  }
-  #operation .operation-code {
-    color: #e0efff;
-    background: transparent;
-    border: 0;
-    font-size: 10px;
   }
   #operationForm,
   #registrationDiscardForm,
@@ -16232,12 +16225,6 @@ body::before {
   }
   #registrationDiscardItem .mobile-item-anchor > div > strong:first-child {
     font: 600 13px/1.3 var(--mobile-font);
-    color: #0b104b;
-  }
-  #registrationDiscardItem .mobile-discard-quantity {
-    display: block;
-    margin-top: 4px;
-    font: 700 24px/1.2 var(--mobile-font);
     color: #0b104b;
   }
   #registrationDiscardDescription {
@@ -21284,21 +21271,6 @@ body::before {
     line-height: 1.4;
     overflow-wrap: anywhere;
   }
-  body
-    > #operation.mobile-dialog
-    .mobile-dialog-body
-    > #operationRecord
-    > .operation-code {
-    grid-column: 2;
-    grid-row: 2;
-    margin: 0;
-    padding: 0;
-    background: none;
-    border: 0;
-    color: #52708e;
-    font-size: 11px;
-    line-height: 1.4;
-  }
   body > #camera[open] {
     display: flex;
     flex-direction: column;
@@ -24377,9 +24349,6 @@ body.auth-screen {
     color: #fff;
     box-shadow: 0 3px 9px #10458818;
   }
-  .acervo-desktop #app #register .choice > input:checked + span .icon {
-    color: #fff;
-  }
   html.acervo-desktop #app #register #itemForm [data-desktop-section] {
     position: relative;
     transition: opacity 240ms ease;
@@ -25367,7 +25336,7 @@ html body #userAccessDialog #addPerson {
     0 5px 15px #1956b524;
 }
 html body #userAccessDialog #addPerson .icon {
-  color: #fff;
+  color: inherit;
 }
 
 /* The automatic identifier is a read-only ticket, never a second editable field. */
@@ -25901,8 +25870,6 @@ html body :is(#app, #login, dialog) :is(button, summary) > .icon {
   }
   .acervo-desktop #app #browse .desktop-detail-summary > .actions {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     margin: 17px 0 0;
     padding: 15px 0 0;
     border: 0;
@@ -26831,7 +26798,7 @@ html body > #operation[data-action="descarte_estoque"] {
 }
 
 
-/* 3.5.69 — ações compactas sem expansão de largura ou atraso no rótulo. */
+/* ações compactas sem expansão de largura ou atraso no rótulo. */
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
   html.acervo-desktop body .acervo-gradient-action {
     --action-ink: #2464ad;
@@ -26840,7 +26807,7 @@ html body > #operation[data-action="descarte_estoque"] {
     --action-gradient: linear-gradient(115deg, #3272c5, #24559b);
     position: relative !important;
     isolation: isolate;
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center !important;
     justify-content: center !important;
     flex: 0 0 auto !important;
@@ -27012,13 +26979,6 @@ html body #saved .acervo-glass-fill {
   -webkit-backdrop-filter:blur(8px);
   box-shadow:inset 0 1px #ffffff85, inset 0 -1px #ffffff18, 0 2px 7px #081f4120;
 }
-html body #saved .acervo-metal-sheen {
-  background-image: linear-gradient(115deg, #ffffff12, #ffffff40 45%, #ffffff12 60%);
-  background-size: 240% 100%;
-  animation: acervo-metal-drift 10s ease-in-out infinite;
-  border: 1px solid #ffffff70;
-  box-shadow: inset 0 1px #ffffffaa;
-}
 @media (min-width:641px) and (hover:hover), (min-width:1025px) {
   html.acervo-desktop body #app #saved.desktop-receipt .acervo-glass-fill {
     --fill-gradient:linear-gradient(115deg, #deecff, #b7d5ff);
@@ -27029,7 +26989,6 @@ html body #saved .acervo-metal-sheen {
     box-shadow:inset 0 1px #fff, 0 2px 8px #18345d0c;
   }
 }
-@keyframes acervo-metal-drift { 0%,100% { background-position: 0 0; } 50% { background-position: 100% 0; } }
 
 /* Bento: total em destaque e indicadores compactos, sem faixas pesadas. */
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
@@ -27252,7 +27211,9 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
 @media (prefers-reduced-motion: reduce) {
   .hero-title-word { animation: none !important; opacity:0; transform:none; }
   .hero-title-word.is-visible { opacity:1; }
-  .acervo-title-reveal, body > .acervo-ambient-light, body > .acervo-ambient-light::before, html body #saved .acervo-metal-sheen { animation: none !important; }
+  .acervo-title-reveal,
+body>.acervo-ambient-light,
+body>.acervo-ambient-light::before { animation: none !important; }
   html.acervo-desktop body .acervo-gradient-action,
   html.acervo-desktop body .acervo-gradient-action *,
   html.acervo-desktop body .acervo-gradient-action::before,
@@ -27266,7 +27227,7 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
   body > .acervo-ambient-light { transition:none; }
 }
 
-/* 3.5.70 — animação onde há interação, sem multiplicar camadas nas listas. */
+/* animação onde há interação, sem multiplicar camadas nas listas. */
 @media (min-width:641px) and (hover:hover), (min-width:1025px) {
   /* O grupo acompanha o menu: conta e ações se deslocam juntos na expansão. */
   html.acervo-desktop body .shell > header.bar #syncTools {
@@ -27427,7 +27388,7 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
   html.acervo-desktop body #app :is(#movements,#browse) .acervo-gradient-action::after { animation:none !important; }
 }
 
-/* 3.5.71 — luz nas letras, ficha com hierarquia e hovers previsíveis. */
+/* luz nas letras, ficha com hierarquia e hovers previsíveis. */
 html.acervo-desktop body #app .desktop-register-copy h1.acervo-hero-title,
 html body #mobileJourneyHome h1.acervo-hero-title {
   color:#fff;
@@ -27552,7 +27513,7 @@ html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
 }
 @media (prefers-reduced-motion:reduce) { .desktop-metric-cue { transition:none; } }
 
-/* 3.5.72 — família de janelas: painel lateral, superfície clara e luz branca. */
+/* família de janelas: painel lateral, superfície clara e luz branca. */
 html.acervo-dialogs body > dialog.acervo-dialog {
   --dialog-ink:#173858; --dialog-muted:#60758f; --dialog-line:#c7d6e8;
   --dialog-fill:linear-gradient(125deg,#153453,#235baa 80%,#3075cd);
@@ -27790,8 +27751,8 @@ html.acervo-dialogs #editDialog.acervo-dialog .editor-item,
 html.acervo-dialogs #editDialog.acervo-dialog .editor-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:22px; }
 html.acervo-dialogs #editDialog.acervo-dialog .choices { display:flex; align-items:stretch; flex-wrap:wrap; gap:8px; }
 html.acervo-dialogs #editDialog.acervo-dialog .choice { flex:1 1 auto; min-width:0; margin:0; }
-html.acervo-dialogs #editDialog.acervo-dialog .choice > span { display:flex; align-items:center; justify-content:center; gap:7px; min-width:0; min-height:39px; box-sizing:border-box; padding:9px 10px; border:1px solid #b4c9e3; border-radius:9px; background:#fff; color:#375b7b; font-size:11px; line-height:1.4; }
-html.acervo-dialogs #editDialog.acervo-dialog .choice input:checked + span { background:var(--dialog-fill); color:#fff; border-color:#4f84c3; }
+html.acervo-dialogs #editDialog.acervo-dialog .choice > span { display:flex; align-items:center; justify-content:center; gap:7px; min-width:0; min-height:39px; box-sizing:border-box; padding:9px 10px; border:1px solid #b4c9e3; border-radius:9px; color:#375b7b; font-size:11px; line-height:1.4; }
+html.acervo-dialogs #editDialog.acervo-dialog .choice input:checked + span { border-color:#4f84c3; }
 html.acervo-dialogs #editDialog.acervo-dialog :is(.choice,.registration-group-heading) .icon { width:18px; height:18px; flex:0 0 18px; color:inherit; }
 html.acervo-dialogs #editDialog.acervo-dialog .registration-group-heading { border-bottom:1px solid #d6e0ec; padding:0 0 12px; margin:0 0 14px; background:none; }
 html.acervo-dialogs #editDialog.acervo-dialog .mobile-transfer-origin { display:none; }
@@ -27872,7 +27833,7 @@ html.acervo-dialogs #camera :is(#closeCamera,#torch) { border:1px solid #ffffff7
   html.acervo-dialogs .acervo-dialog :is(button,summary,input,textarea,.choice > span,.role-option) { transition:none !important; animation:none !important; }
 }
 
-/* 3.5.74 — acessos: superfícies Safira, campos integrados e reflexos pontuais. */
+/* acessos: superfícies Safira, campos integrados e reflexos pontuais. */
 html.acervo-dialogs #userAccessDialog.acervo-dialog .profile-person {
   display:flex; align-items:center; gap:16px; padding:20px; margin:0 0 26px;
   background:linear-gradient(120deg,#193554,#23558b 75%,#2e69ae);
@@ -27904,8 +27865,7 @@ html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-access-password { gr
 html.acervo-dialogs #userAccessDialog.acervo-dialog :is(.acervo-access-email,.acervo-access-password) > .icon { width:22px; height:22px; color:#fff; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog :is(.acervo-access-email,.acervo-access-password) input {
   width:100% !important; min-width:0 !important; min-height:36px !important; height:36px !important;
-  margin:0 !important; padding:3px 0 !important; border:0 !important; border-radius:0 !important;
-  background:transparent !important; color:#fff !important; box-shadow:none !important;
+  margin:0 !important; padding:3px 0 !important; border-radius:0 !important; color:#fff !important;
   font:500 14px/1.5 var(--pc-font,Arial,sans-serif) !important;
 }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-access-password input { font-family:ui-monospace,monospace !important; letter-spacing:.02em; }
@@ -27962,7 +27922,7 @@ html.acervo-dialogs :is(dialog.acervo-dialog,#camera) button:not(:disabled):acti
   html.acervo-dialogs :is(dialog.acervo-dialog,#camera) button:active { transform:none; }
 }
 
-/* 3.5.75 — acabamento comum das janelas, preservando a cor de cada ação. */
+/* acabamento comum das janelas, preservando a cor de cada ação. */
 html.acervo-dialogs body > dialog.acervo-dialog {
   --dialog-action-from:#244970; --dialog-action-to:#2d6bb5;
   --dialog-danger:linear-gradient(135deg,#671b36,#ac1245 75%,#ce2454);

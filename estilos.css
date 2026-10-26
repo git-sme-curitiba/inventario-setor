@@ -25336,7 +25336,7 @@ html body #userAccessDialog #addPerson {
     0 5px 15px #1956b524;
 }
 html body #userAccessDialog #addPerson .icon {
-  color: #fff;
+  color: inherit;
 }
 
 /* The automatic identifier is a read-only ticket, never a second editable field. */

@@ -1,8 +1,20 @@
+/* Inter em um único arquivo variável, com caracteres latinos e portugueses. */
+@font-face {
+  font-family: "Acervo Inter";
+  src: url("./acervo-inter-latin.woff2?v=3.5.78") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --paper: #ffffff;
   --cor-realce: #b6e4ff;
-  --serif: Georgia, "Times New Roman", serif;
+  --font-ui: "Acervo Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --pc-font: var(--font-ui);
+  --mobile-font: var(--font-ui);
+  --serif: var(--font-ui);
   --ease: cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
@@ -17,18 +29,14 @@
 body {
   margin: 0;
   color: var(--ink);
-  font:
-    14px/1.6 -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  font: 14px/1.6 var(--font-ui);
+  font-kerning: normal;
 }
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -180,7 +188,7 @@ h1,
 h2,
 h3 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -0.025em;
 }
 
@@ -3426,7 +3434,7 @@ body.screen-ready #login > h1 {
 
 #login.first-access-active h1 {
   margin-bottom: 10px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-ui);
   font-size: 32px;
   font-weight: 650;
   letter-spacing: -0.04em;
@@ -9382,7 +9390,7 @@ body::before {
     display: flex;
     align-items: center;
     margin: 0;
-    font-family: Georgia, serif;
+    font-family: var(--font-ui);
     font-size: clamp(22px, 6.2vw, 27px);
     line-height: 1.12;
     outline: none;
@@ -10646,7 +10654,7 @@ body::before {
   }
   .mobile-account-heading h2 {
     margin: 0;
-    font-family: Georgia, serif;
+    font-family: var(--font-ui);
     color: #154e7e;
     font-size: 25px;
   }
@@ -11720,7 +11728,7 @@ body::before {
   }
   .mobile-journey-home h1 {
     color: white;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--font-ui);
     font-weight: 500;
   }
   .mobile-journey-home > small {
@@ -11922,7 +11930,7 @@ body::before {
   }
   #register #mobileRegistrationTitle {
     display: block;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family: var(--font-ui);
     font-weight: 500;
     outline: none;
   }
@@ -15345,7 +15353,7 @@ body::before {
 @media (max-width: 640px),
   (hover: none) and (pointer: coarse) and (max-width: 1024px) {
   :root {
-    --mobile-font: Arial, Helvetica, sans-serif;
+    --mobile-font: var(--font-ui);
   }
   body:not(.auth-screen) .shell {
     max-width: 560px;
@@ -24277,7 +24285,7 @@ body.auth-screen {
     --pc-action: var(--acervo-action);
     --pc-danger: linear-gradient(125deg, #de1747, #ad1640);
     --pc-stock: var(--acervo-support);
-    --pc-font: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --pc-font: var(--font-ui);
     --pc-ink: #182d43;
   }
   .acervo-desktop body:not(.auth-screen) {
@@ -26904,12 +26912,12 @@ html body > #operation[data-action="descarte_estoque"] {
 }
 
 /* Animated Hero: palavras em uma área de tamanho estável. */
-.acervo-hero-title .hero-title-slot { display: inline-grid; overflow: hidden; vertical-align: baseline; line-height: inherit; }
-.hero-title-word { grid-area: 1/1; opacity: 0; transform: translateY(110%); pointer-events: none; }
+.acervo-hero-title .hero-title-slot { display: inline-grid; overflow: visible; vertical-align: baseline; line-height: inherit; }
+.hero-title-word { grid-area: 1/1; opacity: 0; transform: translateY(10px); pointer-events: none; }
 .hero-title-word.is-visible { animation: acervo-hero-word-in 500ms cubic-bezier(.18,.85,.25,1) both; }
 .hero-title-word.is-leaving { animation: acervo-hero-word-out 380ms cubic-bezier(.4,0,.4,1) both; }
-@keyframes acervo-hero-word-in { 0% { transform: translateY(110%); opacity: 0; } 75% { transform: translateY(-4%); opacity: 1; } 100% { transform: translateY(0); opacity: 1; } }
-@keyframes acervo-hero-word-out { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-110%); opacity: 0; } }
+@keyframes acervo-hero-word-in { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes acervo-hero-word-out { from { transform: none; opacity: 1; } to { transform: translateY(-10px); opacity: 0; } }
 @keyframes acervo-heading-arrive { from { opacity: .4; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .acervo-title-reveal { animation: acervo-heading-arrive 650ms cubic-bezier(.2,.8,.2,1) both; }
 
@@ -27392,8 +27400,9 @@ body>.acervo-ambient-light::before { animation: none !important; }
 html.acervo-desktop body #app .desktop-register-copy h1.acervo-hero-title,
 html body #mobileJourneyHome h1.acervo-hero-title {
   color:#fff;
-  text-shadow:none;
-  filter:drop-shadow(0 0 11px #ffffff99);
+  /* O halo fica na sombra; os glifos permanecem sem filtro de imagem. */
+  text-shadow:0 0 16px #ffffff5c,0 0 32px #ffffff20;
+  filter:none;
 }
 html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
 @media (min-width:641px) and (hover:hover), (min-width:1025px) {
@@ -27562,7 +27571,7 @@ html.acervo-dialogs .acervo-dialog-side::after {
 html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-kicker {
   flex:0 0 auto !important;
   margin:0 0 32px !important; padding:0 !important; color:#d9e8fc !important;
-  font:600 10px/1.5 var(--pc-font,Arial,sans-serif) !important; letter-spacing:.13em;
+  font:600 11px/1.5 var(--pc-font,Arial,sans-serif) !important; letter-spacing:.1em;
 }
 html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol {
   box-sizing:border-box; display:grid !important; place-items:center !important; position:relative !important;
@@ -27582,12 +27591,12 @@ html.acervo-dialogs .acervo-dialog-side > h2 {
 }
 html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-description {
   display:block !important; margin:0 0 28px !important; padding:0 !important;
-  font:400 13px/1.7 var(--pc-font,Arial,sans-serif) !important; color:#e0eafa !important;
+  font:400 14px/1.65 var(--pc-font,Arial,sans-serif) !important; color:#edf4ff !important;
   border:0 !important; background:none !important; box-shadow:none !important; max-width:100% !important;
 }
 html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-foot {
   flex:0 0 auto !important; display:flex; align-items:flex-start; gap:10px; margin-top:auto !important; padding-top:25px;
-  border-top:1px solid #ffffff6b; color:#f3f7ff; font-size:11px; line-height:1.65;
+  border-top:1px solid #ffffff6b; color:#f3f7ff; font-size:12px; line-height:1.6;
 }
 html.acervo-dialogs .acervo-dialog-foot > .icon { flex:0 0 20px; width:20px; height:20px; margin-top:1px; color:#fff; }
 html.acervo-dialogs dialog.acervo-dialog > .acervo-dialog-main {
@@ -27727,8 +27736,8 @@ html.acervo-dialogs #userAccessDialog.acervo-dialog #accessBack .acervo-fill-orb
 html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-dialog-flow { display:grid; gap:17px; padding:0; margin:24px 0 0; width:100%; border:0; background:none; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-dialog-flow > .access-flow-step { display:flex; align-items:flex-start; gap:10px; padding:0; margin:0; border:0; border-radius:0; background:none; box-shadow:none; color:#fff; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step > span { display:grid; place-items:center; width:29px; height:29px; flex:0 0 29px; border:1px solid #ffffff80; background:none; border-radius:50%; color:#fff; font-size:10px; }
-html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step strong { color:#fff; font-size:10px; }
-html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step small { display:block; margin-top:4px; color:#dbe7f7; font-size:10px; line-height:1.5; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step strong { color:#fff; font-size:11px; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .access-flow-step small { display:block; margin-top:4px; color:#edf4ff; font-size:11px; line-height:1.5; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog #newUserResult { margin:0; padding:0; border:0; border-radius:0; background:none; color:#1d3e60; }
 html.acervo-dialogs .acervo-access-receipt-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:15px; border-bottom:1px solid #c7d6e8; padding-bottom:16px; margin-bottom:26px; }
 html.acervo-dialogs .acervo-access-receipt-heading h3 { margin:0; padding:0; border:0; }
@@ -27842,7 +27851,7 @@ html.acervo-dialogs #userAccessDialog.acervo-dialog .profile-person {
 }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .profile-person > div { flex:1; min-width:0; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog #profilePersonName { display:block; color:#fff; font-size:16px; line-height:1.45; overflow-wrap:anywhere; }
-html.acervo-dialogs #userAccessDialog.acervo-dialog #profilePersonEmail { display:block; margin-top:5px; color:#e0edff; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog #profilePersonEmail { display:block; margin-top:5px; color:#edf4ff; font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog #profilePersonAvatar { width:46px; height:46px; flex:0 0 46px; margin:0; background:linear-gradient(135deg,#ffffff28,#ffffff08); border-color:#ffffff80; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .role-option input {
   appearance:none; position:static; grid-column:1; grid-row:1; width:15px; height:15px;
@@ -27936,7 +27945,7 @@ html.acervo-dialogs :is(#operation,#registrationDiscardDialog,#editDialog,#delet
 }
 html.acervo-dialogs .acervo-dialog-record > .acervo-record-symbol { background:linear-gradient(135deg,#ffffff28,#ffffff08); border-color:#ffffff80; }
 html.acervo-dialogs :is(#operation,#registrationDiscardDialog,#editDialog,#deleteItemDialog,#deletePersonDialog).acervo-dialog .acervo-record-copy > strong { color:#fff !important; }
-html.acervo-dialogs :is(#operation,#registrationDiscardDialog,#editDialog,#deleteItemDialog,#deletePersonDialog).acervo-dialog .acervo-record-copy > :is(small,span) { display:block; margin-top:5px; color:#e9f1ff !important; font-size:11px; line-height:1.5; overflow-wrap:anywhere; }
+html.acervo-dialogs :is(#operation,#registrationDiscardDialog,#editDialog,#deleteItemDialog,#deletePersonDialog).acervo-dialog .acervo-record-copy > :is(small,span) { display:block; margin-top:5px; color:#edf4ff !important; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
 html.acervo-dialogs .acervo-dialog-record .acervo-record-code { margin:0; color:#fff; }
 html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions,.mobile-detail-actions) { align-items:stretch; gap:12px; }
 html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions,.mobile-detail-actions) > button { min-height:44px; padding:11px 15px; }
@@ -28036,3 +28045,4 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   html.acervo-dialogs .acervo-dialog-main :is(.acervo-dialog-actions,.actions,.mobile-detail-actions) > button { width:100% !important; min-height:44px; }
   html.acervo-dialogs #editDialog.acervo-dialog #editStockFields { grid-template-columns:minmax(0,1fr); }
 }
+

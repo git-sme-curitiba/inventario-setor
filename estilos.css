@@ -7,14 +7,23 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Acervo Sora";
+  src: url("./acervo-sora-latin.woff2?v=3.5.79") format("woff2");
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --paper: #ffffff;
   --cor-realce: #b6e4ff;
   --font-ui: "Acervo Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: "Acervo Sora", var(--font-ui);
   --pc-font: var(--font-ui);
   --mobile-font: var(--font-ui);
-  --serif: var(--font-ui);
+  --serif: var(--font-heading);
   --ease: cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
@@ -3434,7 +3443,7 @@ body.screen-ready #login > h1 {
 
 #login.first-access-active h1 {
   margin-bottom: 10px;
-  font-family: var(--font-ui);
+  font-family: var(--font-heading);
   font-size: 32px;
   font-weight: 650;
   letter-spacing: -0.04em;
@@ -10654,7 +10663,7 @@ body::before {
   }
   .mobile-account-heading h2 {
     margin: 0;
-    font-family: var(--font-ui);
+    font-family: var(--font-heading);
     color: #154e7e;
     font-size: 25px;
   }
@@ -11728,7 +11737,7 @@ body::before {
   }
   .mobile-journey-home h1 {
     color: white;
-    font-family: var(--font-ui);
+    font-family: var(--font-heading);
     font-weight: 500;
   }
   .mobile-journey-home > small {
@@ -14156,7 +14165,7 @@ body::before {
     text-align: center;
   }
   .mobile-journey-home h1 {
-    font: 700 25px/1.2 var(--mobile-font);
+    font: 700 25px/1.2 var(--font-heading);
     letter-spacing: -0.8px;
     margin: 18px 0 10px;
     text-align: center;
@@ -14655,7 +14664,7 @@ body::before {
   #dashboard h2,
   #app #browse h2.workspace-title,
   #app #movements h2.workspace-title {
-    font-family: var(--mobile-font);
+    font-family: var(--font-heading);
     font-size: 23px;
     font-weight: 700;
     line-height: 1.25;
@@ -14663,7 +14672,7 @@ body::before {
   }
   #movements #moveResults h3,
   #dashboard h3 {
-    font-family: var(--mobile-font);
+    font-family: var(--font-heading);
     font-size: 16px;
     font-weight: 700;
   }
@@ -14687,7 +14696,7 @@ body::before {
   #mobileDashboard h1,
   #mobileDashboard h2,
   #mobileDashboard h3 {
-    font-family: var(--mobile-font);
+    font-family: var(--font-heading);
   }
   body
     > :is(
@@ -14709,7 +14718,7 @@ body::before {
   }
   body > dialog :is(h1, h2, h3),
   #firstAccess :is(h1, h2, h3) {
-    font-family: var(--mobile-font);
+    font-family: var(--font-heading);
     letter-spacing: -0.4px;
   }
   body > dialog h2 {
@@ -14990,7 +14999,7 @@ body::before {
     border-radius: 10px;
   }
   #login.first-access-active h1 {
-    font: 700 25px/1.2 var(--mobile-font);
+    font: 700 25px/1.2 var(--font-heading);
     letter-spacing: -0.6px;
   }
 
@@ -15122,7 +15131,7 @@ body::before {
   .mobile-detail-extra h3 {
     margin: 0 0 8px;
     color: #29577f;
-    font: 700 12px/1.4 var(--mobile-font);
+    font: 700 12px/1.4 var(--font-heading);
   }
   .mobile-detail-extra p {
     margin: 6px 0;
@@ -15875,7 +15884,7 @@ body::before {
   }
   #saved .mobile-receipt-visual > h2 {
     text-align: center;
-    font: 700 21px/1.2 var(--mobile-font);
+    font: 700 21px/1.2 var(--font-heading);
     letter-spacing: -0.5px;
     margin: 0 0 17px;
   }
@@ -15974,7 +15983,7 @@ body::before {
   }
   body > dialog :is(.operation-heading h2, .access-dialog-title h2) {
     color: white;
-    font: 600 17px/1.25 var(--mobile-font);
+    font: 600 17px/1.25 var(--font-heading);
     letter-spacing: 0;
     margin: 0;
   }
@@ -16088,7 +16097,7 @@ body::before {
     padding-left: 0;
   }
   #userAccessDialog .access-dialog-title h2 {
-    font: 600 17px/1.25 var(--mobile-font);
+    font: 600 17px/1.25 var(--font-heading);
   }
   #userAccessDialog #closeUserAccess {
     z-index: 4;
@@ -16860,7 +16869,7 @@ body::before {
     margin: 0;
   }
   body:not(.auth-screen) .shell > header .brand b {
-    font: 800 21px/1.15 var(--mobile-font);
+    font: 800 21px/1.15 var(--font-heading);
     letter-spacing: 0.1px;
   }
   body:not(.auth-screen) .shell > header .brand small {
@@ -16909,7 +16918,7 @@ body::before {
     padding-top: clamp(24px, 4svh, 38px);
   }
   #mobileJourneyHome h1 {
-    font: 800 clamp(26px, 7.5vw, 31px) / 1.15 var(--mobile-font);
+    font: 800 clamp(26px, 7.5vw, 31px) / 1.15 var(--font-heading);
   }
   #mobileJourneyDraft {
     max-width: 310px;
@@ -17712,7 +17721,7 @@ body::before {
   #mobileAccountDialog .mobile-account-heading h2,
   #userAccessDialog #userAccessTitle {
     color: white;
-    font: 700 18px/1.2 var(--mobile-font);
+    font: 700 18px/1.2 var(--font-heading);
     margin: 0;
   }
   #mobileAccountDialog .mobile-account-heading button,
@@ -18299,7 +18308,7 @@ body::before {
     [data-dialog-title] {
     margin: 0;
     color: #fff;
-    font: 700 17px/1.25 var(--mobile-font);
+    font: 700 17px/1.25 var(--font-heading);
     letter-spacing: -0.25px;
     overflow-wrap: anywhere;
   }
@@ -20235,7 +20244,7 @@ body::before {
   }
   #mobileDashboard #mobileDashboardDistribution h3,
   #mobileDashboard .inventory-insight-card h3 {
-    font: 700 15px/1.35 var(--mobile-font);
+    font: 700 15px/1.35 var(--font-heading);
     color: #14385d;
     margin: 0;
   }
@@ -20405,7 +20414,7 @@ body::before {
     gap: 11px;
     margin: 0;
     color: #fff;
-    font: 750 clamp(23px, 6.3vw, 26px) / 1.15 var(--mobile-font);
+    font: 750 clamp(23px, 6.3vw, 26px) / 1.15 var(--font-heading);
     letter-spacing: -0.65px;
     text-shadow: 0 2px 15px #002d7452;
   }
@@ -21397,7 +21406,7 @@ body::before {
 }
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
   html.acervo-desktop {
-    --serif: var(--pc-font);
+    --serif: var(--font-heading);
     --blue-action: var(--pc-action);
     --blue-heading: var(--pc-action);
     --blue-deep: #124879;
@@ -21437,7 +21446,7 @@ body::before {
     gap: 13px;
   }
   .acervo-desktop .brand b {
-    font: 800 29px/1.05 var(--pc-font);
+    font: 800 29px/1.05 var(--font-heading);
     color: #fff;
   }
   .acervo-desktop .brand small {
@@ -21571,7 +21580,7 @@ body::before {
     gap: 12px;
     margin: 0;
     color: #123e71;
-    font: 750 26px/1.2 var(--pc-font);
+    font: 750 26px/1.2 var(--font-heading);
     letter-spacing: -0.55px;
   }
   .acervo-desktop #app .workspace-title .title-mark {
@@ -22295,7 +22304,7 @@ body::before {
   .acervo-desktop #app #browse .detail-panel > h3 {
     grid-column: 1/-1;
     margin: 0;
-    font: 700 19px/1.35 var(--pc-font);
+    font: 700 19px/1.35 var(--font-heading);
     color: #173f70;
   }
   .acervo-desktop #app #browse .detail-panel > dl {
@@ -22335,7 +22344,7 @@ body::before {
     margin-left: 0;
   }
   .acervo-desktop #app #browse .detail-panel .history h3 {
-    font: 700 17px/1.35 var(--pc-font);
+    font: 700 17px/1.35 var(--font-heading);
   }
   .acervo-desktop #app #browse .detail-panel .history article {
     background: #fff;
@@ -22385,7 +22394,7 @@ body::before {
     box-shadow: none;
   }
   .acervo-desktop #app #movements .movement-result h3 {
-    font: 700 16px/1.35 var(--pc-font);
+    font: 700 16px/1.35 var(--font-heading);
     margin: 0;
   }
   .acervo-desktop #app #movements .movement-result .actions {
@@ -22479,7 +22488,7 @@ body::before {
     align-items: center;
     gap: 10px;
     margin: 0 0 18px;
-    font: 700 17px/1.35 var(--pc-font);
+    font: 700 17px/1.35 var(--font-heading);
   }
   .desktop-overview-card h2 .icon {
     width: 20px;
@@ -22739,7 +22748,7 @@ body::before {
     ) {
     margin: 0;
     color: #fff;
-    font: 750 23px/1.25 var(--pc-font);
+    font: 750 23px/1.25 var(--font-heading);
     letter-spacing: -0.35px;
   }
   .acervo-desktop body > #editDialog[open] {
@@ -22948,7 +22957,7 @@ body::before {
   .acervo-desktop #app #saved.desktop-receipt h2 {
     margin: 0 0 25px;
     color: #173f70;
-    font: 750 28px/1.2 var(--pc-font);
+    font: 750 28px/1.2 var(--font-heading);
   }
   .desktop-completion-item {
     display: flex;
@@ -23501,7 +23510,7 @@ body::before {
   }
   .desktop-preview-heading h2 {
     margin: 0;
-    font: 700 18px/1.3 var(--pc-font);
+    font: 700 18px/1.3 var(--font-heading);
   }
   .desktop-preview-empty {
     display: grid;
@@ -24025,7 +24034,7 @@ body::before {
   .acervo-desktop #mobileAccountDialog h2 {
     margin: 0;
     color: #fff;
-    font: 750 22px/1.2 var(--pc-font);
+    font: 750 22px/1.2 var(--font-heading);
   }
   .acervo-desktop #mobileAccountDialog .mobile-account-heading button {
     display: grid;
@@ -24117,7 +24126,7 @@ body::before {
   .acervo-desktop #mobileAboutDialog .mobile-about-heading h2 {
     margin: 0;
     color: #fff;
-    font: 750 22px/1.2 var(--pc-font);
+    font: 750 22px/1.2 var(--font-heading);
   }
   .acervo-desktop #mobileAboutDialog .mobile-about-heading button {
     display: grid;
@@ -24327,7 +24336,7 @@ body.auth-screen {
   .acervo-desktop #app .desktop-register-copy h1 {
     max-width: 700px;
     margin-bottom: 14px;
-    font: 650 clamp(35px, 3.5vw, 50px) / 1.08 var(--pc-font);
+    font: 650 clamp(35px, 3.5vw, 50px) / 1.08 var(--font-heading);
     letter-spacing: -1.9px;
     text-shadow: 0 5px 24px #00215033;
     color: #fff;
@@ -26911,13 +26920,18 @@ html body > #operation[data-action="descarte_estoque"] {
   html body .choice > input:checked + span { box-shadow:inset 0 1px 1px #ffffffb3,0 0 8px #c1dcff44; }
 }
 
-/* Animated Hero: palavras em uma área de tamanho estável. */
-.acervo-hero-title .hero-title-slot { display: inline-grid; overflow: visible; vertical-align: baseline; line-height: inherit; }
-.hero-title-word { grid-area: 1/1; opacity: 0; transform: translateY(10px); pointer-events: none; }
-.hero-title-word.is-visible { animation: acervo-hero-word-in 500ms cubic-bezier(.18,.85,.25,1) both; }
-.hero-title-word.is-leaving { animation: acervo-hero-word-out 380ms cubic-bezier(.4,0,.4,1) both; }
-@keyframes acervo-hero-word-in { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes acervo-hero-word-out { from { transform: none; opacity: 1; } to { transform: translateY(-10px); opacity: 0; } }
+/* Hero: janela estável; cada palavra sai antes da próxima entrar. */
+.acervo-hero-title .hero-title-slot {
+  display:inline-grid; overflow:hidden; vertical-align:baseline; line-height:inherit;
+}
+@supports (overflow:clip) {
+  .acervo-hero-title .hero-title-slot { overflow:clip; overflow-clip-margin:.2em; }
+}
+.hero-title-word { grid-area:1/1; opacity:0; transform:translateY(130%); pointer-events:none; }
+.hero-title-word.is-visible { animation:acervo-hero-word-in 420ms cubic-bezier(.18,.85,.25,1) both; }
+.hero-title-word.is-leaving { animation:acervo-hero-word-out 280ms cubic-bezier(.4,0,.4,1) both; }
+@keyframes acervo-hero-word-in { from { transform:translateY(130%); opacity:0; } to { transform:none; opacity:1; } }
+@keyframes acervo-hero-word-out { from { transform:none; opacity:1; } to { transform:translateY(-130%); opacity:0; } }
 @keyframes acervo-heading-arrive { from { opacity: .4; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .acervo-title-reveal { animation: acervo-heading-arrive 650ms cubic-bezier(.2,.8,.2,1) both; }
 
@@ -27084,7 +27098,7 @@ html body #saved .acervo-glass-fill {
     color: #18345d;
     border-bottom: 1px solid #dce6f1;
     box-shadow: none;
-    font: 650 15px/1.4 var(--pc-font);
+    font: 650 15px/1.4 var(--font-heading);
   }
   html.acervo-desktop #app #desktopOverview .desktop-overview-card > h2 > .icon { color: #2865b6; width: 19px; height: 19px; }
   html.acervo-desktop #app #desktopOverview .desktop-chart-tabs { background: transparent; border: 1px solid #cbd9e9; border-radius: 22px; padding: 3px; gap: 3px; }
@@ -27103,7 +27117,7 @@ html body #saved .acervo-glass-fill {
   html.acervo-desktop #app #browse .record-row:has(+ .detail-row) { background: #f0f5fc; box-shadow: inset 3px 0 #3a78cb; }
   html.acervo-desktop #app #browse .detail-panel { background: #fff; border: 1px solid #bdcfe5; border-radius: 17px; box-shadow: 0 8px 18px #10316415; overflow: visible; }
   html.acervo-desktop #app #browse .detail-panel > .desktop-detail-heading { background: linear-gradient(110deg,#f2f7ff,#fff); color: #18345d; padding: 17px 20px; border-bottom: 1px solid #d6e1ef; border-radius: 17px 17px 0 0; box-shadow: inset 0 1px #fff; }
-  html.acervo-desktop #app #browse .desktop-detail-heading h3 { color: #18345d; font: 650 17px/1.3 var(--pc-font); }
+  html.acervo-desktop #app #browse .desktop-detail-heading h3 { color: #18345d; font: 650 17px/1.3 var(--font-heading); }
   html.acervo-desktop #app #browse .desktop-detail-heading small { color: #5a7190; }
   html.acervo-desktop #app #browse .desktop-detail-symbol { flex:0 0 38px; width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(125deg,#315a90,#226bc7); color:#fff; box-shadow:inset 0 1px #ffffff8c; border:0; }
   html.acervo-desktop #app #browse .desktop-detail-symbol > .icon { width:24px; height:24px; }
@@ -27346,7 +27360,7 @@ body>.acervo-ambient-light::before { animation: none !important; }
   .desktop-completion-hero .desktop-completion-badge { width:34px; height:34px; right:-8px; bottom:-6px; background:linear-gradient(120deg,#5d9aee,#2d69bb); }
   .desktop-completion-copy { min-width:0; }
   .desktop-completion-copy > small { display:block; color:#c5dcff; font:650 10px/1.4 var(--pc-font); letter-spacing:.15em; margin:0 0 10px; }
-  html.acervo-desktop #app #saved.desktop-receipt .desktop-completion-copy > h2 { color:#fff; margin:0 0 9px; font:700 clamp(25px,2.4vw,32px)/1.15 var(--pc-font); letter-spacing:-.7px; text-shadow:0 0 16px #ffffff20; }
+  html.acervo-desktop #app #saved.desktop-receipt .desktop-completion-copy > h2 { color:#fff; margin:0 0 9px; font:700 clamp(25px,2.4vw,32px)/1.15 var(--font-heading); letter-spacing:-.7px; text-shadow:0 0 16px #ffffff20; }
   .desktop-completion-copy > p { margin:0; color:#e1edff; font:400 13px/1.55 var(--pc-font); max-width:36ch; }
   .desktop-completion-body { padding:27px 30px 30px; background:#fff; }
   .desktop-completion-body .desktop-completion-item { justify-content:flex-start; gap:16px; margin:0 0 22px; min-width:0; }
@@ -27442,7 +27456,7 @@ html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
   html.acervo-desktop body #app #browse .desktop-detail-symbol > .icon { width:39px; height:39px; color:#fff; }
   html.acervo-desktop body #app #browse .desktop-detail-identity { flex:1; min-width:0; }
   html.acervo-desktop body #app #browse .desktop-detail-eyebrow { display:block; color:#cce1ff; font:600 9px/1.4 var(--pc-font); letter-spacing:.16em; margin-bottom:6px; }
-  html.acervo-desktop body #app #browse .desktop-detail-heading h3 { margin:0; color:#fff; font:700 23px/1.3 var(--pc-font); overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse .desktop-detail-heading h3 { margin:0; color:#fff; font:700 23px/1.3 var(--font-heading); overflow-wrap:anywhere; }
   html.acervo-desktop body #app #browse .desktop-detail-code { display:flex; align-items:center; gap:7px; margin-top:8px; color:#e0ebff; font-size:11px; letter-spacing:.05em; }
   html.acervo-desktop body #app #browse .desktop-detail-code > .icon { width:17px; height:17px; color:inherit; }
   html.acervo-desktop body #app #browse .detail-panel .desktop-detail-heading > .badge {
@@ -27469,7 +27483,7 @@ html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
   html.acervo-desktop body #app #browse .desktop-detail-facts .is-note dd { font-weight:400; color:#435e7f; white-space:pre-wrap; }
   html.acervo-desktop body #app #browse .detail-panel > .history { grid-column:2; grid-row:3; padding:25px; border-left:1px solid #cad9eb; border-radius:0; background:linear-gradient(145deg,#f2f6fc,#eaf0f9); min-width:0; }
   .desktop-history-list { max-height:360px; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#a6bfdc transparent; padding:2px 7px 2px 6px; margin-left:-6px; }
-  html.acervo-desktop body #app #browse .desktop-history-heading h3 { display:flex; align-items:center; gap:8px; margin:0; color:#24456f; font:650 15px/1.4 var(--pc-font); }
+  html.acervo-desktop body #app #browse .desktop-history-heading h3 { display:flex; align-items:center; gap:8px; margin:0; color:#24456f; font:650 15px/1.4 var(--font-heading); }
   .desktop-history-heading h3 > .icon { width:19px; height:19px; color:#3773b7; }
   .desktop-history-heading p { margin:6px 0 21px; color:#657d9d; font:400 10px/1.5 var(--pc-font); }
   html.acervo-desktop body #app #browse .detail-panel .history-entry { position:relative; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:7px 12px; margin:0; padding:0 0 22px 20px; border:0; border-left:1px solid #b3c9e5; border-radius:0; background:transparent; box-shadow:none; }
@@ -27585,7 +27599,7 @@ html.acervo-dialogs .acervo-dialog-side > .acervo-dialog-symbol > .icon { width:
 html.acervo-dialogs .acervo-dialog-side > h2 {
   flex:0 0 auto !important; width:100% !important; max-width:100% !important;
   padding:0 !important; margin:0 0 17px !important; color:#fff !important;
-  font:720 clamp(25px,2.1vw,32px)/1.13 var(--pc-font,Arial,sans-serif) !important;
+  font:720 clamp(25px,2.1vw,32px)/1.13 var(--font-heading) !important;
   letter-spacing:-.8px !important; text-shadow:0 0 17px #ffffff13 !important;
   overflow-wrap:anywhere; background:none !important;
 }

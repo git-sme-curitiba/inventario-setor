@@ -12410,17 +12410,26 @@ function initAcervoHero(heading) {
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   let index = 0,
     timer = 0,
+    transitionTimer = 0,
     visible = false;
   const sync = () => {
     clearInterval(timer);
     timer = 0;
+    clearTimeout(transitionTimer);
+    transitionTimer = 0;
+    for (const word of words) word.classList.remove("is-visible", "is-leaving");
+    words[index].classList.add("is-visible");
     if (!visible || reduced.matches || document.hidden) return;
     timer = setInterval(() => {
-      words[index].classList.remove("is-visible");
-      words[index].classList.add("is-leaving");
-      index = (index + 1) % words.length;
-      words[index].classList.remove("is-leaving");
-      words[index].classList.add("is-visible");
+      const current = words[index];
+      current.classList.remove("is-visible");
+      current.classList.add("is-leaving");
+      transitionTimer = setTimeout(() => {
+        current.classList.remove("is-leaving");
+        index = (index + 1) % words.length;
+        words[index].classList.add("is-visible");
+        transitionTimer = 0;
+      }, 280);
     }, 2300);
   };
   new IntersectionObserver(([entry]) => {
@@ -13207,3 +13216,4 @@ function initAcervoSplitDialogs() {
 }
 
 initAcervoSplitDialogs();
+

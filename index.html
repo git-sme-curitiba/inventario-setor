@@ -49,7 +49,7 @@
     ></script>
     <link rel="preload" href="./acervo-inter-latin.woff2?v=3.5.78" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./acervo-sora-latin.woff2?v=3.5.79" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./estilos.css?v=3.5.79" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.80" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
@@ -2837,21 +2837,23 @@
                   <use href="#i-movement" /></svg></span
               >Movimentações
             </h2>
-            <ol
-              class="movement-steps"
-              aria-label="Como registrar uma movimentação"
-            >
-              <li><b>1</b>Buscar item</li>
-              <li><b>2</b>Escolher ação</li>
-              <li><b>3</b>Confirmar</li>
-            </ol>
-            <label for="moveSearch">Buscar item</label>
+            <div id="movementStart" class="movement-start">
+              <p>O que você precisa registrar?</p>
+              <div id="movementTasks" class="movement-tasks" role="group" aria-label="Escolher movimentação"></div>
+            </div>
+            <div id="movementTaskSummary" class="movement-task-summary" hidden>
+              <div><strong id="movementTaskTitle"></strong><span id="movementTaskCount"></span></div>
+              <button id="movementAll" type="button">Todas as ações</button>
+            </div>
+            <label id="moveSearchLabel" for="moveSearch">Buscar item · todas as ações</label>
             <div class="scanrow">
               <input
                 id="moveSearch"
+                type="search"
                 autocomplete="off"
                 maxlength="120"
                 placeholder="Nome ou código PMC, ICI ou ACV"
+                aria-describedby="movementSearchHelp"
               />
               <button
                 id="moveScan"
@@ -2864,6 +2866,7 @@
                 </svg>
               </button>
             </div>
+            <p id="movementSearchHelp" class="movement-search-help">Escolha uma ação acima ou busque diretamente pelo nome ou código.</p>
             <div id="moveResults" class="spaced" aria-live="polite"></div>
             <div id="moveMissing" class="notice" hidden>
               <strong>Ainda não encontramos por aqui.</strong
@@ -3674,7 +3677,7 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.79"></script>
+    <script src="./aplicacao.js?v=3.5.80"></script>
   </body>
 </html>
 

@@ -1200,6 +1200,7 @@ const journey = {
   maxStage: 1,
   draftStage: 1,
   movementId: null,
+  movementTask: "",
   movementReceipt: "",
   browseScroll: 0,
   dashboardRoom: "",
@@ -2098,6 +2099,91 @@ function movementActions(r) {
     : ["emprestar", "baixar"];
 }
 
+const MOVEMENT_TASKS = {
+  emprestar: { label: "Empréstimo", title: "Bens disponíveis para emprestar", empty: "Não há bens disponíveis para empréstimo nesta lista.", unit: "bem", plural: "bens" },
+  devolver: { label: "Devolução", title: "Bens emprestados", empty: "Não há bens emprestados para devolver nesta lista.", unit: "bem", plural: "bens" },
+  entrada: { label: "Entrada", title: "Estoques para receber entrada", empty: "Não há estoques ativos para receber entrada nesta lista.", unit: "estoque", plural: "estoques" },
+  saida: { label: "Saída", title: "Estoques com saldo disponível", empty: "Não há estoques com saldo disponível para saída nesta lista.", unit: "estoque", plural: "estoques" },
+};
+
+function supportsMovementTask(record, task = journey.movementTask) {
+  return !task || (movementActions(record).includes(task) && (task !== "saida" || Number(record.saldo) > 0));
+}
+
+function movementMatches(search, task = journey.movementTask) {
+  const q = key(search);
+  const eligible = task ? rows.filter(record => supportsMovementTask(record, task)) : rows;
+  if (!q) return task ? eligible : [];
+  const exact = eligible.filter(record => key(record.dados.codigo) === q || key(internal(record.id)) === q);
+  return exact.length ? exact : eligible.filter(record => key([record.dados.item, record.dados.codigo, internal(record.id), record.dados.ramal, record.emprestimo?.responsavel, record.emprestimo?.destino].filter(Boolean).join(" ")).includes(q));
+}
+
+function chooseMovementTask(task) {
+  if (role === "leitor") return;
+  if (busy || pending) return toast("Conclua a operação pendente primeiro.", true);
+  journey.movementTask = MOVEMENT_TASKS[task] ? task : "";
+  journey.movementId = null;
+  journey.movementReceipt = "";
+  $("moveSearch").value = "";
+  renderMovementResults();
+  if (!mobileAcervo()) $("moveSearch").focus();
+}
+
+function syncMovementTasks() {
+  const host = $("movementTasks");
+  if (!host) return;
+  if (role === "leitor") journey.movementTask = "";
+  const task = journey.movementTask;
+  $("movementStart").hidden = role === "leitor";
+  if (!host.children.length) {
+    for (const [name, config] of Object.entries(MOVEMENT_TASKS)) {
+      const control = button("", () => chooseMovementTask(journey.movementTask === name ? "" : name), "movement-task", ACTION_ICON[name]);
+      control.dataset.movementTask = name;
+      const copy = el("span", undefined, "movement-task-copy");
+      copy.append(el("strong", config.label), el("small", "", "movement-task-amount"));
+      control.append(copy);
+      host.append(control);
+    }
+    $("movementAll").onclick = () => chooseMovementTask("");
+  }
+  const counts = { emprestar: 0, devolver: 0, entrada: 0, saida: 0 };
+  for (const record of rows) {
+    for (const available of movementActions(record)) {
+      if (available in counts && (available !== "saida" || Number(record.saldo) > 0)) counts[available]++;
+    }
+  }
+  for (const control of host.children) {
+    const name = control.dataset.movementTask, config = MOVEMENT_TASKS[name], count = counts[name];
+    control.setAttribute("aria-pressed", String(name === task));
+    control.querySelector("small").textContent = count.toLocaleString("pt-BR") + " " + (count === 1 ? config.unit : config.plural);
+  }
+  $("movements").dataset.movementTask = task;
+  $("movementTaskSummary").hidden = !task;
+  if (task) {
+    $("movementTaskTitle").textContent = MOVEMENT_TASKS[task].title;
+    $("movementTaskCount").textContent = counts[task].toLocaleString("pt-BR") + (counts[task] === 1 ? " disponível" : " disponíveis");
+  }
+  $("moveSearchLabel").textContent = task === "devolver" ? "Buscar item ou responsável" : task ? "Encontrar nesta operação" : "Buscar item · todas as ações";
+  $("moveSearch").placeholder = task === "devolver" ? "Item, responsável, destino ou código" : "Nome ou código PMC, ICI ou ACV";
+  $("movementSearchHelp").textContent = task ? "Selecione um item para conferir os dados e confirmar." : "Escolha uma ação acima ou busque diretamente pelo nome ou código.";
+}
+
+function syncMovementMissing(query, found) {
+  const task = journey.movementTask;
+  $("moveMissing").hidden = !query || found.length > 0;
+  $("createDown").hidden = role === "leitor" || !!task;
+  $("moveMissing").querySelector("strong").textContent = task ? "Nenhum item compatível com esta operação." : "Ainda não encontramos por aqui.";
+  $("moveMissing").querySelector("span").textContent = task ? "Tente outro nome ou código, ou use a busca livre para consultar as outras ações." : "Tente outro nome ou confira o código.";
+}
+
+function openMovementMatch() {
+  if (!journey.movementTask || role === "leitor") return false;
+  const found = movementMatches($("moveSearch").value);
+  if (found.length !== 1) return false;
+  openOperation(journey.movementTask, found[0]);
+  return true;
+}
+
 function quantityText(amount, unit = "unidade") {
   const n = Number(amount),
     plural = {
@@ -2119,30 +2205,21 @@ function quantityText(amount, unit = "unidade") {
 
 function renderMovementResults() {
   if (!$("moveResults")) return;
+  syncMovementTasks();
   if (mobileAcervo()) return renderMobileMovement();
   const q = key($("moveSearch").value);
-  const exact = rows.filter(
-    (r) => q && (key(r.dados.codigo) === q || key(internal(r.id)) === q),
-  );
-  const found = exact.length
-    ? exact
-    : rows.filter(
-        (r) =>
-          q &&
-          key(
-            [r.dados.item, r.dados.codigo, internal(r.id), r.dados.ramal].join(
-              " ",
-            ),
-          ).includes(q),
-      );
+  const found = movementMatches(q);
   const fragment = document.createDocumentFragment();
-  $("moveMissing").hidden = !q || found.length > 0;
-  $("createDown").hidden = role === "leitor";
-  if (!q) {
+  syncMovementMissing(q, found);
+  if (!q && !journey.movementTask) {
+    $("moveResults").replaceChildren();
+    return;
+  }
+  if (!found.length && journey.movementTask && !q) {
     const empty = el("div", undefined, "movement-empty");
     empty.append(
       icon("search"),
-      el("span", "Encontre o item para ver as ações disponíveis."),
+      el("span", MOVEMENT_TASKS[journey.movementTask].empty),
     );
     $("moveResults").replaceChildren(empty);
     return;
@@ -2206,6 +2283,16 @@ function renderMovementResults() {
     const actions = el("div", undefined, "movement-controls");
     const available = movementActions(r);
     if (role !== "leitor" && available.length) {
+      if (journey.movementTask) {
+        const task = journey.movementTask;
+        const control = button(acervoOperationCopy(task).submit, () => openOperation(task, r), "movement-task-open movement-action action-" + task, ACTION_ICON[task]);
+        control.dataset.action = task;
+        decorateAcervoGradient(control);
+        actions.append(control);
+        card.append(actions);
+        fragment.append(card);
+        continue;
+      }
       const routine = el("div", undefined, "movement-routine");
       routine.append(
         el("small", stock ? "Movimentar estoque" : "Movimentar bem"),
@@ -3938,6 +4025,10 @@ async function transmit() {
       );
     }
     if (op.origin === "create" && !mobileAcervo()) $("item").focus();
+    else if (op.origin === "operation" && journey.movementTask && !$("movements").hidden && !mobileAcervo()) {
+      $("moveSearch").focus();
+      $("moveSearch").select();
+    }
   } catch (e) {
     if (e.code) {
       pending = null;
@@ -5100,6 +5191,12 @@ function initForm() {
       $("registrationDiscardDialog").close();
   };
   $("moveSearch").oninput = renderMovementResults;
+  $("moveSearch").onkeydown = (event) => {
+    if (event.key === "Enter" && !event.isComposing && journey.movementTask) {
+      event.preventDefault();
+      if (!openMovementMatch()) $("moveResults").querySelector("button[data-action], button.mobile-movement-result")?.focus();
+    }
+  };
   $("moveScan").hidden = !mobileCamera();
   $("moveScan").onclick = () => openScanner("moveSearch");
   $("createDown").onclick = () => {
@@ -5197,6 +5294,7 @@ function endSession() {
   resetForm();
   $("password").value = "";
   $("moveSearch").value = "";
+  journey.movementTask = "";
   $("search").value = "";
   $("saved").replaceChildren();
   $("saved").hidden = true;
@@ -6965,6 +7063,7 @@ function acceptCode(s, value) {
   closeScanner();
   if (scanTarget === "moveSearch") {
     renderMovementResults();
+    openMovementMatch();
     return;
   }
   if (scanTarget === "search") {
@@ -8885,6 +8984,7 @@ function renderMobileRecordDetail(record, panel) {
 }
 
 function openMobileMovement(record) {
+  journey.movementTask = "";
   journey.movementId = record.id;
   journey.movementReceipt = "";
   $("moveSearch").value = internal(record.id);
@@ -8896,7 +8996,7 @@ function renderMobileMovement() {
   const host = $("moveResults");
   const search = key($("moveSearch").value);
   const selectedRecord = rows.find(
-    (record) => record.id === journey.movementId,
+    (record) => !journey.movementTask && record.id === journey.movementId,
   );
   host.replaceChildren();
   $("movements").classList.toggle("mobile-movement-selected", !!selectedRecord);
@@ -8989,33 +9089,17 @@ function renderMobileMovement() {
     );
     return;
   }
-  if (!search) {
-    host.append(
-      acervoEmpty(
-        "Qual item vamos movimentar?",
-        "Busque pelo nome ou leia o código da etiqueta.",
-      ),
-    );
+  if (!search && !journey.movementTask) {
     return;
   }
-  const exact = rows.filter(
-    (record) =>
-      key(internal(record.id)) === search ||
-      key(record.dados.codigo) === search,
-  );
-  const found = exact.length
-    ? exact
-    : rows.filter((record) =>
-        key(
-          [record.dados.item, record.dados.codigo, internal(record.id)].join(
-            " ",
-          ),
-        ).includes(search),
-      );
+  const found = movementMatches(search);
+  if (!found.length && journey.movementTask && !search)
+    host.append(acervoEmpty("Nenhum item disponível", MOVEMENT_TASKS[journey.movementTask].empty));
   for (const record of found.slice(0, 20)) {
     const choose = button(
       "",
       () => {
+        if (journey.movementTask) return openOperation(journey.movementTask, record);
         journey.movementId = record.id;
         renderMovementResults();
       },
@@ -9023,17 +9107,19 @@ function renderMobileMovement() {
     );
     choose.append(
       mobileItemAnchor(record),
-      el("small", record.dados.ambiente),
+      el("small", [record.dados.ambiente,
+        record.controle === "QUANTIDADE" ? quantityText(record.saldo, record.unidade) + " em estoque" :
+        record.situacao === "EMPRESTADO" && record.emprestimo ? "Com " + record.emprestimo.responsavel : "",
+      ].filter(Boolean).join(" · "), "movement-result-context"),
       icon("right"),
     );
     choose.setAttribute(
       "aria-label",
-      `Selecionar ${record.dados.item}, ${internal(record.id)}`,
+      `${journey.movementTask ? acervoOperationCopy(journey.movementTask).submit + " para" : "Selecionar"} ${record.dados.item}, ${internal(record.id)}`,
     );
     host.append(choose);
   }
-  $("moveMissing").hidden = found.length > 0;
-  $("createDown").hidden = role === "leitor";
+  syncMovementMissing(search, found);
   if (found.length > 20)
     host.append(
       el(

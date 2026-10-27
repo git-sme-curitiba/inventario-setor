@@ -28060,3 +28060,68 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   html.acervo-dialogs #editDialog.acervo-dialog #editStockFields { grid-template-columns:minmax(0,1fr); }
 }
 
+
+/* Movimentações: entrada pela tarefa, com busca livre preservada. */
+#app #movements .movement-start { margin:18px 0 20px; }
+#app #movements .movement-start > p { margin:0 0 10px; color:#405b7b; font-size:14px; font-weight:500; }
+#app #movements .movement-tasks { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+#app #movements .movement-tasks > .movement-task {
+  display:flex; justify-content:flex-start; align-items:center; gap:12px;
+  width:auto; min-width:0; min-height:78px; margin:0; padding:14px 16px;
+  color:#244970; background:#fff; border:1px solid #a9bed9; border-radius:13px;
+  box-shadow:inset 0 1px #fff; text-align:left;
+  transition:border-color 160ms,box-shadow 160ms,transform 160ms;
+}
+#app #movements .movement-task > .icon { width:24px; height:24px; flex:0 0 24px; color:inherit; }
+#app #movements .movement-task-copy { display:flex; min-width:0; flex-direction:column; gap:4px; }
+#app #movements .movement-task-copy strong { color:inherit; font:600 14px/1.35 var(--font-heading); overflow-wrap:anywhere; }
+#app #movements .movement-task-copy small { color:inherit; font:400 12px/1.35 var(--font-ui); opacity:.85; }
+#app #movements .movement-tasks > .movement-task[aria-pressed="true"] {
+  background:linear-gradient(120deg,#244970,#2867b3); color:#fff; border-color:#4e86cb;
+  box-shadow:inset 0 1px #ffffff80,0 4px 10px #15385c20;
+}
+#app #movements .movement-task-summary {
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  margin:0 0 17px; padding:0 0 16px; border-bottom:1px solid #c9d8ea;
+}
+#app #movements .movement-task-summary > div { min-width:0; flex:1; }
+#app #movements .movement-task-summary strong { display:block; color:#244565; font:600 16px/1.45 var(--font-heading); overflow-wrap:anywhere; }
+#app #movements .movement-task-summary span { display:block; margin-top:4px; color:#536f90; font:400 12px/1.5 var(--font-ui); }
+#app #movements #movementAll { min-height:38px; padding:8px 12px; font:500 12px/1.4 var(--font-ui); color:#244970; background:#fff; border-color:#90accc; }
+#app #movements #moveSearchLabel { display:block; margin:0 0 7px; }
+#app #movements .scanrow { margin-top:0; margin-bottom:6px; }
+#app #movements .movement-search-help { margin:8px 0 17px; color:#536f90; font:400 12px/1.55 var(--font-ui); }
+#app #movements[data-movement-task]:not([data-movement-task=""]) .movement-result { padding:16px 18px; }
+#app #movements .movement-task-open { min-height:42px; margin:0; }
+#app #movements .mobile-movement-result > .movement-result-context { flex:1; min-width:0; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
+@media (hover:hover) and (pointer:fine) {
+  #app #movements .movement-tasks > .movement-task:hover { border-color:#5687bc; box-shadow:inset 0 1px #fff,0 4px 10px #24497020; transform:translateY(-1px); }
+  #app #movements #movementAll:hover { background:#edf3fc; }
+}
+@media (max-width:900px) {
+  #app #movements .movement-tasks { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px) {
+  #app #movements .movement-start { margin-top:18px; margin-bottom:18px; }
+  #app #movements .movement-start > p,
+  #app #movements .movement-task-summary strong,
+  #app #movements #moveSearchLabel { color:#fff; }
+  #app #movements .movement-tasks { gap:9px; }
+  #app #movements .movement-tasks > .movement-task { gap:10px; padding:12px; min-height:74px; }
+  #app #movements .movement-task-copy strong { font-size:13px; }
+  #app #movements .movement-task-summary { align-items:flex-start; }
+  #app #movements .movement-task-summary span,
+  #app #movements .movement-search-help { color:#e0ecff; }
+  #app #movements #movementAll { color:#fff; border-color:#afc7e3; background:#ffffff0a; min-height:42px; }
+  #app #movements.mobile-movement-selected #movementStart,
+  #app #movements.mobile-movement-selected #moveSearchLabel,
+  #app #movements.mobile-movement-selected #movementSearchHelp,
+  .keyboard-open #app #movements #movementStart,
+  .app-typing #app #movements #movementStart { display:none; }
+}
+@media (max-width:360px) {
+  #app #movements .movement-task-summary > div { flex-basis:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  #app #movements .movement-tasks > .movement-task { transition:none; transform:none; }
+}

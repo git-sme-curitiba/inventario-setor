@@ -28066,20 +28066,37 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
 #app #movements .movement-start > p { margin:0 0 10px; color:#405b7b; font-size:14px; font-weight:500; }
 #app #movements .movement-tasks { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
 #app #movements .movement-tasks > .movement-task {
-  display:flex; justify-content:flex-start; align-items:center; gap:12px;
-  width:auto; min-width:0; min-height:78px; margin:0; padding:14px 16px;
-  color:#244970; background:#fff; border:1px solid #a9bed9; border-radius:13px;
-  box-shadow:inset 0 1px #fff; text-align:left;
-  transition:border-color 160ms,box-shadow 160ms,transform 160ms;
+  --movement-task-face:linear-gradient(145deg,#fff,#f4f7fb);
+  --movement-task-edge:#a6bdd8;
+  position:relative; isolation:isolate; display:flex; justify-content:flex-start; align-items:center; gap:17px;
+  width:auto; min-width:0; min-height:104px; margin:0; padding:25px 20px 15px;
+  color:#244970; background:transparent; border:0; border-radius:10px;
+  box-shadow:none; text-align:left; transform:none;
 }
-#app #movements .movement-task > .icon { width:24px; height:24px; flex:0 0 24px; color:inherit; }
+#app #movements .movement-tasks > .movement-task::before,
+#app #movements .movement-tasks > .movement-task::after {
+  content:""; position:absolute; pointer-events:none; border-radius:10px 0 11px 11px;
+  clip-path:polygon(0 0,42% 0,calc(42% + 13px) 12px,100% 12px,100% 100%,0 100%);
+}
+#app #movements .movement-tasks > .movement-task::before { inset:0; z-index:-2; background:var(--movement-task-edge); }
+#app #movements .movement-tasks > .movement-task::after { inset:1px; z-index:-1; background:var(--movement-task-face); }
+#app #movements .movement-task-icon { position:relative; display:grid; place-items:center; width:34px; height:34px; flex:0 0 34px; color:inherit; background:#2566b412; border-radius:50%; }
+#app #movements .movement-task-icon > .icon { display:block; width:25px; height:25px; color:inherit; stroke-width:1.7; }
+#app #movements .movement-task-orbit { position:absolute; inset:-6px; border:1px solid #709bc94d; border-radius:50%; transform:rotate(-45deg); pointer-events:none; }
+#app #movements .movement-task-orbit::after { content:""; position:absolute; top:-3px; left:calc(50% - 3px); width:6px; height:6px; border-radius:50%; background:currentColor; box-shadow:0 0 5px #accfff90; }
 #app #movements .movement-task-copy { display:flex; min-width:0; flex-direction:column; gap:4px; }
 #app #movements .movement-task-copy strong { color:inherit; font:600 14px/1.35 var(--font-heading); overflow-wrap:anywhere; }
 #app #movements .movement-task-copy small { color:inherit; font:400 12px/1.35 var(--font-ui); opacity:.85; }
 #app #movements .movement-tasks > .movement-task[aria-pressed="true"] {
-  background:linear-gradient(120deg,#244970,#2867b3); color:#fff; border-color:#4e86cb;
-  box-shadow:inset 0 1px #ffffff80,0 4px 10px #15385c20;
+  --movement-task-face:linear-gradient(130deg,#244970,#2566b4);
+  --movement-task-edge:#72a3de; color:#fff;
 }
+#app #movements .movement-task[aria-pressed="true"] .movement-task-icon { background:#ffffff18; }
+#app #movements .movement-task[aria-pressed="true"] .movement-task-orbit { border-color:#ffffff55; }
+#app #movements .movement-task:focus-visible .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
+#app #movements .movement-task:focus-visible .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
+@keyframes movement-task-orbit-turn { from { transform:rotate(-45deg); } to { transform:rotate(315deg); } }
+@keyframes movement-task-icon-lift { 0%,100% { transform:translateY(0); } 40% { transform:translateY(-4px); } }
 #app #movements .movement-task-summary {
   display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
   margin:0 0 17px; padding:0 0 16px; border-bottom:1px solid #c9d8ea;
@@ -28095,7 +28112,9 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
 #app #movements .movement-task-open { min-height:42px; margin:0; }
 #app #movements .mobile-movement-result > .movement-result-context { flex:1; min-width:0; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
 @media (hover:hover) and (pointer:fine) {
-  #app #movements .movement-tasks > .movement-task:hover { border-color:#5687bc; box-shadow:inset 0 1px #fff,0 4px 10px #24497020; transform:translateY(-1px); }
+  #app #movements .movement-tasks > .movement-task:hover { --movement-task-edge:#5687bc; }
+  #app #movements .movement-task:hover .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
+  #app #movements .movement-task:hover .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
   #app #movements #movementAll:hover { background:#edf3fc; }
 }
 @media (max-width:900px) {
@@ -28107,7 +28126,7 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   #app #movements .movement-task-summary strong,
   #app #movements #moveSearchLabel { color:#fff; }
   #app #movements .movement-tasks { gap:9px; }
-  #app #movements .movement-tasks > .movement-task { gap:10px; padding:12px; min-height:74px; }
+  #app #movements .movement-tasks > .movement-task { gap:14px; padding:25px 17px 15px; }
   #app #movements .movement-task-copy strong { font-size:13px; }
   #app #movements .movement-task-summary { align-items:flex-start; }
   #app #movements .movement-task-summary span,
@@ -28119,9 +28138,158 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   .keyboard-open #app #movements #movementStart,
   .app-typing #app #movements #movementStart { display:none; }
 }
+@media (max-width:480px) {
+  #app #movements .movement-tasks > .movement-task { flex-direction:column; align-items:flex-start; gap:12px; min-height:120px; padding:25px 14px 13px; }
+  #app #movements .movement-task-icon { width:30px; height:30px; flex-basis:30px; margin-left:4px; }
+  #app #movements .movement-task-icon > .icon { width:23px; height:23px; }
+}
 @media (max-width:360px) {
   #app #movements .movement-task-summary > div { flex-basis:100%; }
 }
 @media (prefers-reduced-motion:reduce) {
   #app #movements .movement-tasks > .movement-task { transition:none; transform:none; }
+  #app #movements .movement-task .movement-task-orbit,
+  #app #movements .movement-task .movement-task-icon > .icon { animation:none !important; }
+}
+
+/* Consulta 3.5.82: somente o card principal do inventário. */
+html body #app #browse > .card.inventory-card {
+  --inventory-fill:linear-gradient(120deg,#083778,#075fe0 78%,#008bff);
+  --inventory-ink:#14375f;
+  --inventory-edge:#2363a8;
+  padding:24px; border:1px solid #2485df; border-radius:18px; background:#fff; color:var(--inventory-ink);
+  box-shadow:inset 0 1px #fff,0 8px 22px #05295733; font-family:var(--font-ui);
+}
+html body #app #browse > .card.inventory-card > .bar:first-child { gap:18px; margin-bottom:22px; align-items:center; }
+html body #app #browse > .card.inventory-card .workspace-title { color:#102f5c; font:600 28px/1.3 var(--font-heading); letter-spacing:-.7px; text-shadow:none; filter:none; }
+html body #app #browse > .card.inventory-card .title-mark { width:42px; height:44px; padding:10px; border:1px solid #198fff; border-radius:10px; color:#fff; background:var(--inventory-fill); box-shadow:inset 0 1px #ffffffad,0 3px 8px #06469833; }
+html body #app #browse > .card.inventory-card .title-mark > .icon { width:25px; height:25px; color:inherit; }
+html body #app #browse > .card.inventory-card .inventory-export-extension { padding:3px 6px; border:1px solid #167bd8; border-radius:4px; background:#062d65; color:#fff; font:500 11px/1.3 var(--font-ui); }
+html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,#clearFilters,#mobileBrowseScan,.pager > button,.mobile-query-menu > summary) {
+  position:relative; isolation:isolate; overflow:hidden; min-height:43px; border:1px solid #198cf3; border-radius:8px; color:#fff; background:var(--inventory-fill);
+  box-shadow:inset 0 1px #ffffff80,inset 0 -1px #052451,0 3px 8px #06469826; transform:none;
+}
+html body #app #browse > .card.inventory-card .export-menu > summary { display:flex; align-items:center; justify-content:center; gap:9px; padding:10px 13px; font:500 13px/1.4 var(--font-ui); }
+html body #app #browse > .card.inventory-card .export-menu > summary::marker { content:""; }
+html body #app #browse > .card.inventory-card .export-menu > summary::-webkit-details-marker { display:none; }
+html body #app #browse > .card.inventory-card .export-menu > summary::after { content:""; width:7px; height:7px; border-right:1.5px solid #fff; border-bottom:1.5px solid #fff; transform:rotate(45deg); margin:-4px 2px 0 4px; }
+html body #app #browse > .card.inventory-card .export-menu[open] > summary::after { transform:rotate(225deg); margin-top:4px; }
+html body #app #browse > .card.inventory-card .export-options { background:#fff; border:1px solid #1263bb; color:#14375f; border-radius:10px; box-shadow:0 10px 22px #03265940; }
+html body #app #browse > .card.inventory-card .export-options button { color:#fff; background:var(--inventory-fill); border:1px solid #1381e8; border-radius:7px; min-height:43px; }
+html body #app #browse > .card.inventory-card .toolbar { position:relative; gap:11px; margin-bottom:13px; }
+html body #app #browse > .card.inventory-card .inventory-search-icon { position:absolute; z-index:1; left:15px; top:15px; width:21px; height:21px; color:#fff; pointer-events:none; }
+html body #app #browse > .card.inventory-card .toolbar > #search { min-width:0; min-height:52px; margin:0; padding:12px 14px 12px 46px; border:1px solid #187be3; border-radius:9px; background:linear-gradient(115deg,#092853,#0d3c7f); color:#fff; box-shadow:inset 0 2px 5px #001a403b,inset 0 1px #ffffff66; font:400 15px/1.5 var(--font-ui); }
+html body #app #browse > .card.inventory-card #search::placeholder { color:#fff; opacity:.85; }
+html body #app #browse > .card.inventory-card .toolbar > :is(#moreFilters,#clearFilters) { min-height:52px; padding:10px 15px; color:#fff; font-size:13px; }
+html body #app #browse > .card.inventory-card :is(#quickRooms,#filterPanel,#applied) .chip { min-height:39px; padding:8px 12px; border:1px solid #0e68c5; border-radius:8px; color:#124b8f; background:#fff; box-shadow:none; font:500 12px/1.4 var(--font-ui); }
+html body #app #browse > .card.inventory-card :is(#quickRooms,#filterPanel,#applied) .chip:is(.active,[aria-pressed="true"]) { color:#fff; border-color:#009aff; background:var(--inventory-fill); box-shadow:inset 0 1px #ffffff9c,0 2px 6px #074a9e26; }
+html body #app #browse > .card.inventory-card #filterPanel { color:#163d6c; border:1px solid #2363a8; background:#fff; }
+html body #app #browse > .card.inventory-card #filterPanel legend { color:#163d6c; }
+html body #app #browse > .card.inventory-card :is(#resultCount,#pageLabel,.bar > .muted,.mobile-export-heading) { color:#31577f; font-size:12px; }
+html body #app #browse > .card.inventory-card .inventory-record-meta { display:flex; flex-wrap:wrap; align-items:center; gap:5px 13px; margin-top:7px; }
+html body #app #browse > .card.inventory-card .inventory-record-code { color:#295487; font:400 12px/1.5 var(--font-ui); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+html body #app #browse > .card.inventory-card .inventory-record-kind { display:inline-flex; align-items:center; gap:6px; color:#183d6b; font:400 11px/1.5 var(--font-ui); }
+html body #app #browse > .card.inventory-card .inventory-record-kind::before { content:""; width:4px; height:4px; border-radius:50%; background:#1266cc; }
+html body #app #browse > .card.inventory-card .inventory-record-location { display:flex; align-items:flex-start; gap:9px; min-width:0; }
+html body #app #browse > .card.inventory-card .inventory-record-location > .icon { flex:0 0 19px; width:19px; height:19px; margin-top:1px; color:#0753af; }
+html body #app #browse > .card.inventory-card .inventory-record-location > span { min-width:0; }
+html body #app #browse > .card.inventory-card .inventory-record-location strong { display:block; color:#183c6a; font:500 13px/1.5 var(--font-ui); overflow-wrap:anywhere; }
+html body #app #browse > .card.inventory-card :is(.inventory-record-location small,.inventory-record-context) { display:block; margin-top:6px; color:#31577f; font:400 12px/1.5 var(--font-ui); overflow-wrap:anywhere; }
+html body #app #browse > .card.inventory-card .inventory-stock-amount { display:block; margin-bottom:6px; color:#102f5c; font:600 16px/1.4 var(--font-heading); overflow-wrap:anywhere; }
+html body #app #browse > .card.inventory-card .record-row .inventory-record-badge { display:inline-flex; align-items:center; gap:6px; max-width:100%; width:max-content; padding:5px 8px; border:1px solid #0b7cec; border-radius:6px; color:#fff; background:var(--inventory-fill); font:500 11px/1.4 var(--font-ui); white-space:normal; text-align:left; }
+html body #app #browse > .card.inventory-card .inventory-record-badge::before { content:""; flex:0 0 5px; width:5px; height:5px; border-radius:50%; background:#00c9ff; }
+html body #app #browse > .card.inventory-card .inventory-record-badge:is(.down,.baixado) { color:#fff; background:linear-gradient(120deg,#8f1237,#ca064a); border-color:#b0083f; }
+html body #app #browse > .card.inventory-card .inventory-record-badge:is(.down,.baixado,.archive,.arquivado)::before { background:#fff; }
+html body #app #browse > .card.inventory-card .inventory-record-badge:is(.archive,.arquivado) { color:#fff; background:#173d68; border-color:#173d68; }
+html body #app #browse > .card.inventory-card :is(.record-item-symbol,.mobile-item-symbol) { position:relative; display:grid; place-items:center; flex:0 0 42px; width:42px; height:46px; margin:0; padding:0; border:1px solid #148af0; border-radius:10px; color:#fff; background:linear-gradient(140deg,#0a356d,#076ce8); box-shadow:inset 0 1px #ffffffa8,inset 0 -1px #002957,0 3px 8px #074a9e26; }
+html body #app #browse > .card.inventory-card :is(.record-item-symbol,.mobile-item-symbol) > .icon { width:28px; height:28px; color:#fff; }
+html body #app #browse > .card.inventory-card .inventory-item-orbit { position:absolute; inset:-6px; border:1px solid transparent; border-top-color:#0baeff; border-right-color:#097df2; border-radius:50%; opacity:0; transform:rotate(-50deg); pointer-events:none; }
+html body #app #browse > .card.inventory-card .inventory-item-orbit::after { content:""; position:absolute; top:3px; right:7px; width:4px; height:4px; border-radius:50%; background:#087ce9; box-shadow:0 0 4px #008cff; }
+html body #app #browse > .card.inventory-card .pager { margin-top:18px; gap:12px; }
+html body #app #browse > .card.inventory-card .pager > button:disabled { opacity:1 !important; color:#fff !important; border-color:#12345e !important; background:#12345e !important; box-shadow:none !important; }
+html body #app #browse > .card.inventory-card .pager > button:disabled > .acervo-fill-orb { display:none; }
+html body #app #browse > .card.inventory-card :is(button,summary):focus-visible { outline:2px solid #075ad1 !important; outline-offset:3px; }
+html body #app #browse > .card.inventory-card .acervo-empty { color:#153b68; background:#fff; }
+html body #app #browse > .card.inventory-card .acervo-empty p { color:#31577f; }
+@media (min-width:641px) and (hover:hover), (min-width:1025px) {
+  html.acervo-desktop body #app #browse > .card.inventory-card .tablewrap { overflow-x:auto; padding:0; border:1px solid #2965a6; border-radius:11px; box-shadow:none; }
+  html.acervo-desktop body #app #browse > .card.inventory-card table { width:100%; min-width:0; table-layout:fixed; border-collapse:collapse; color:#153b68; font-family:var(--font-ui); }
+  html.acervo-desktop body #app #browse > .card.inventory-card thead { background:linear-gradient(110deg,#0b3976,#072b58); }
+  html.acervo-desktop body #app #browse > .card.inventory-card thead th { padding:15px; background:transparent; color:#fff; border-color:#2462a1; font:600 11px/1.4 var(--font-ui); letter-spacing:.04em; }
+  html.acervo-desktop body #app #browse > .card.inventory-card :is(thead th,.record-row > td):is(:nth-child(2),:nth-child(5),:nth-child(6)) { display:none; }
+  html.acervo-desktop body #app #browse > .card.inventory-card th:first-child { width:39%; }
+  html.acervo-desktop body #app #browse > .card.inventory-card th:nth-child(3) { width:25%; }
+  html.acervo-desktop body #app #browse > .card.inventory-card th:nth-child(4) { width:22%; }
+  html.acervo-desktop body #app #browse > .card.inventory-card th:last-child { width:14%; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row,
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row:nth-child(even),
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within,:has(+.detail-row)),
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td,
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row:nth-child(even) > td,
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within,:has(+.detail-row)) > td { background:#fff; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td { padding:17px 15px; border-bottom:1px solid #32649f; border-right:1px solid #32649f; color:#153b68; vertical-align:middle; overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child { border-right:0; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within,:has(+.detail-row)) > td:first-child { box-shadow:inset 3px 0 #0781f4; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .desktop-record-item { gap:15px; align-items:center; min-width:0; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-item-copy > strong { color:#102f5c; font:600 15px/1.45 var(--font-heading); overflow-wrap:anywhere; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child > button { position:relative; isolation:isolate; display:inline-flex; align-items:center; justify-content:center; gap:7px; width:100%; min-width:0; min-height:42px; padding:9px 10px; border:1px solid #048cf8; border-radius:8px; color:#fff; background:var(--inventory-fill); box-shadow:inset 0 1px #ffffff80,0 3px 7px #0751a52b; font:500 12px/1.4 var(--font-ui); transform:none; overflow:hidden; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child > button > .icon { color:#fff; width:16px; height:16px; flex:0 0 16px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child > button[aria-expanded="true"] { background:linear-gradient(120deg,#0a2b57,#124b90); }
+}
+@media (min-width:641px) and (max-width:1000px) {
+  html.acervo-desktop body #app #browse > .card.inventory-card { padding:20px 16px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card :is(thead th,.record-row > td) { padding:14px 9px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .desktop-record-item { align-items:flex-start; gap:10px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-item-symbol { flex-basis:33px; width:33px; height:38px; border-radius:8px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-item-symbol > .icon { width:23px; height:23px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-item-copy > strong { font-size:13px; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child > button { padding:8px 5px; gap:4px; font-size:11px; white-space:normal; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .record-row > td:last-child > button > .icon { display:none; }
+}
+@media (max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px) {
+  html body #app #browse > .card.inventory-card { padding:16px 13px; border-radius:14px; }
+  html body #app #browse > .card.inventory-card > .bar:first-child { margin-bottom:18px; gap:10px; }
+  html body #app #browse > .card.inventory-card .workspace-title { color:#102f5c; font-size:24px; }
+  html body #app #browse > .card.inventory-card .title-mark { width:35px; height:38px; padding:7px; border-radius:8px; }
+  html body #app #browse > .card.inventory-card .title-mark > .icon { width:23px; height:23px; }
+  html body #app #browse > .card.inventory-card .mobile-query-menu > summary { display:flex; align-items:center; justify-content:center; min-width:44px; padding:8px; }
+  html body #app #browse > .card.inventory-card .query-tools { color:#153b68; background:#fff; border-color:#175ca8; }
+  html body #app #browse > .card.inventory-card .toolbar { gap:7px; }
+  html body #app #browse > .card.inventory-card .inventory-search-icon { left:11px; top:13px; width:19px; height:19px; }
+  html body #app #browse > .card.inventory-card .toolbar > #search { min-height:46px; padding:10px 10px 10px 37px; font-size:16px; }
+  html body #app #browse > .card.inventory-card .toolbar > :is(#mobileBrowseScan,#moreFilters) { min-height:46px; height:46px; width:44px; padding:10px; font-size:0; }
+  html body #app #browse > .card.inventory-card .toolbar > #clearFilters { min-height:36px; width:auto; padding:7px 10px; font-size:11px; }
+  html body #app #browse > .card.inventory-card .toolbar:has(> #search:not(:placeholder-shown)) > #clearFilters { display:inline-flex; }
+  html body #app #browse > .card.inventory-card #quickRooms { flex-wrap:wrap; overflow:visible; padding:0; gap:6px; margin-bottom:15px; }
+  html body #app #browse > .card.inventory-card #quickRooms .chip { min-height:41px; padding:8px 10px; font-size:11px; }
+  html body #app #browse > .card.inventory-card .tablewrap { padding:0; background:#fff; border:0; border-radius:0; box-shadow:none; }
+  html body #app #browse > .card.inventory-card #results .mobile-room-heading td { padding:20px 0 10px; border-bottom:1px solid #32649f; color:#183d6c; font-size:11px; }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button { display:grid; grid-template-columns:37px minmax(0,1fr) 12px; align-items:start; gap:10px 11px; padding:18px 0; min-height:124px; color:#153b68; background:#fff; border:0; border-bottom:1px solid #32649f; border-radius:0; box-shadow:none; }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button > .mobile-item-symbol { grid-column:1; grid-row:1 / 3; width:37px; height:42px; border-radius:8px; }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button > .mobile-item-symbol > .icon { width:25px; height:25px; }
+  html body #app #browse > .card.inventory-card .mobile-record-copy { grid-column:2; grid-row:1; min-width:0; }
+  html body #app #browse > .card.inventory-card .mobile-record-copy > strong { color:#102f5c; font:600 13px/1.45 var(--font-heading); }
+  html body #app #browse > .card.inventory-card .inventory-record-meta { margin-top:6px; gap:4px 9px; }
+  html body #app #browse > .card.inventory-card .inventory-record-code,
+  html body #app #browse > .card.inventory-card .inventory-record-kind { font-size:11px; }
+  html body #app #browse > .card.inventory-card .mobile-record-copy :is(.inventory-mobile-location,.inventory-record-context) { display:block; margin-top:7px; color:#31577f; font:400 11px/1.5 var(--font-ui); }
+  html body #app #browse > .card.inventory-card .mobile-record-copy .mobile-stock-caption { display:block; margin-top:8px; color:#102f5c; font:600 16px/1.4 var(--font-heading); }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button > .inventory-record-badge { grid-column:2; grid-row:2; justify-self:start; margin:0; }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button > .icon { grid-column:3; grid-row:1 / 3; align-self:center; width:12px; height:12px; color:#0759b6; }
+  html body #app #browse > .card.inventory-card #results .mobile-record-button:focus-visible { outline:2px solid #075ad1 !important; outline-offset:-2px; }
+}
+@media (hover:hover) and (pointer:fine) {
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,#clearFilters,.pager > button:not(:disabled),.record-row:not(.mobile-record-row) > td:last-child > button):hover { background-position:100% 0; border-color:#008cff; box-shadow:inset 0 1px #fff,0 3px 10px #0759c040; color:#fff; }
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row:not(.mobile-record-row) > td:last-child > button)::before { content:""; position:absolute; inset:-30% auto -30% -60%; width:35%; background:linear-gradient(100deg,transparent,#ffffff52,transparent); transform:skewX(-18deg); pointer-events:none; z-index:-1; }
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row:not(.mobile-record-row) > td:last-child > button):hover::before { animation:inventory-control-glint 700ms ease-out; }
+  html body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within) .inventory-item-orbit { animation:inventory-icon-orbit 1100ms ease-out; }
+  html body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within) .record-item-symbol > .icon { animation:inventory-icon-lift 650ms ease-out; }
+}
+@keyframes inventory-control-glint { from { left:-60%; } to { left:150%; } }
+@keyframes inventory-icon-orbit { 0% { opacity:0; transform:rotate(-50deg); } 15%,80% { opacity:1; } 100% { opacity:0; transform:rotate(310deg); } }
+@keyframes inventory-icon-lift { 0%,100% { transform:translateY(0); } 40% { transform:translateY(-3px); } }
+@media (prefers-reduced-motion:reduce) {
+  html body #app #browse > .card.inventory-card .inventory-item-orbit,
+  html body #app #browse > .card.inventory-card .record-item-symbol > .icon,
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row > td:last-child > button)::before { animation:none !important; }
 }

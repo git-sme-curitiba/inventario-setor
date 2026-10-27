@@ -2129,6 +2129,21 @@ function chooseMovementTask(task) {
   if (!mobileAcervo()) $("moveSearch").focus();
 }
 
+function animateMovementTask(control) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const orbit = control.querySelector(".movement-task-orbit");
+  const glyph = control.querySelector(".movement-task-icon > .icon");
+  for (const node of [orbit, glyph]) node.getAnimations().forEach(animation => animation.cancel());
+  orbit.animate(
+    [{ transform: "rotate(-45deg)" }, { transform: "rotate(315deg)" }],
+    { duration: 1200, easing: "cubic-bezier(.25,.6,.25,1)" },
+  );
+  glyph.animate(
+    [{ transform: "translateY(0)" }, { transform: "translateY(-4px)", offset: .4 }, { transform: "translateY(0)" }],
+    { duration: 750, easing: "ease-out" },
+  );
+}
+
 function syncMovementTasks() {
   const host = $("movementTasks");
   if (!host) return;
@@ -2137,11 +2152,17 @@ function syncMovementTasks() {
   $("movementStart").hidden = role === "leitor";
   if (!host.children.length) {
     for (const [name, config] of Object.entries(MOVEMENT_TASKS)) {
-      const control = button("", () => chooseMovementTask(journey.movementTask === name ? "" : name), "movement-task", ACTION_ICON[name]);
+      const control = button("", () => {
+        animateMovementTask(control);
+        chooseMovementTask(journey.movementTask === name ? "" : name);
+      }, "movement-task");
       control.dataset.movementTask = name;
+      const glyph = el("span", undefined, "movement-task-icon");
+      glyph.setAttribute("aria-hidden", "true");
+      glyph.append(icon(ACTION_ICON[name]), el("span", undefined, "movement-task-orbit"));
       const copy = el("span", undefined, "movement-task-copy");
       copy.append(el("strong", config.label), el("small", "", "movement-task-amount"));
-      control.append(copy);
+      control.append(glyph, copy);
       host.append(control);
     }
     $("movementAll").onclick = () => chooseMovementTask("");
@@ -3177,39 +3198,51 @@ function renderList() {
     tr.dataset.id = r.id;
     tr.dataset.status = r.situacao;
     const d = r.dados;
+    const stock = r.controle === "QUANTIDADE";
+    const loan = r.situacao === "EMPRESTADO" && r.emprestimo;
     tr.append(
       el("td"),
       el("td", d.codigo ? TYPE[d.tipo] + " " + d.codigo : internal(r.id)),
-      el("td", d.ambiente + (locationText(r) ? " · " + locationText(r) : "")),
+      el("td"),
     );
     const itemCell = el("div", undefined, "desktop-record-item");
     const itemMark = el("span", undefined, "record-item-symbol");
     itemMark.append(itemIcon(r));
+    const orbit = el("span", undefined, "inventory-item-orbit");
+    orbit.setAttribute("aria-hidden", "true");
+    itemMark.append(orbit);
     const itemCopy = el("span", undefined, "record-item-copy");
     itemCopy.append(el("strong", d.item));
-    if (r.controle === "QUANTIDADE")
-      itemCopy.append(
-        el(
-          "small",
-          r.situacao === "BAIXADO"
-            ? r.baixa?.quantidade != null
-              ? "Descarte: " + quantityText(r.baixa.quantidade, r.unidade)
-              : "Estoque descartado"
-            : quantityText(r.saldo, r.unidade) + " em estoque",
-        ),
-      );
-    if (r.emprestimo)
-      itemCopy.append(
-        el("small", `${r.emprestimo.responsavel} · ${r.emprestimo.destino}`),
-      );
+    const identity = el("span", undefined, "inventory-record-meta");
+    identity.append(
+      el("span", d.codigo ? `${d.tipo} ${d.codigo}` : internal(r.id), "inventory-record-code"),
+      el("span", stock ? "Estoque" : "Bem individual", "inventory-record-kind"),
+    );
+    itemCopy.append(identity);
     itemCell.append(itemMark, itemCopy);
     tr.firstChild.append(itemCell);
+    const location = el("div", undefined, "inventory-record-location");
+    const locationCopy = el("span");
+    locationCopy.append(el("strong", loan?.destino || d.ambiente));
+    const locationHint = loan?.destino
+      ? "Origem: " + d.ambiente
+      : d.estante && d.prateleira
+        ? "Estante " + d.estante + " · Prateleira " + String(d.prateleira).padStart(2, "0")
+        : locationText(r);
+    if (locationHint) locationCopy.append(el("small", locationHint));
+    location.append(icon("pin"), locationCopy);
+    tr.children[2].append(location);
     const status = el("td");
+    const statusLabel = r.situacao === "ATIVO"
+      ? stock ? Number(r.saldo) > 0 ? "Em estoque" : "Sem estoque" : "Disponível"
+      : STATUS[r.situacao];
+    if (stock && r.situacao === "ATIVO")
+      status.append(el("strong", quantityText(r.saldo, r.unidade), "inventory-stock-amount"));
     status.append(
       el(
         "span",
-        STATUS[r.situacao],
-        "badge" +
+        statusLabel,
+        "badge inventory-record-badge" +
           (r.situacao === "BAIXADO"
             ? " down"
             : r.situacao === "ARQUIVADO"
@@ -3217,6 +3250,16 @@ function renderList() {
               : ""),
       ),
     );
+    const statusHint = r.situacao === "EMPRESTADO"
+      ? loan?.responsavel ? "Com " + loan.responsavel : "Empréstimo em andamento"
+      : r.situacao === "BAIXADO"
+        ? "Somente consulta" + (stock && r.baixa?.quantidade != null ? " · Descarte: " + quantityText(r.baixa.quantidade, r.unidade) : "")
+        : r.situacao === "ARQUIVADO"
+          ? "Fora da lista corrente"
+          : stock
+            ? "Mínimo: " + quantityText(r.minimo, r.unidade)
+            : "Sem empréstimo ativo";
+    status.append(el("small", statusHint, "inventory-record-context"));
     tr.append(
       status,
       el("td", d.observacao || "—", "note"),
@@ -3244,7 +3287,7 @@ function renderList() {
     [
       "Item",
       "Identificação",
-      "Ambiente",
+      "Localização",
       "Situação",
       "Observação",
       "Cadastrado em",
@@ -8636,6 +8679,7 @@ function renderMobileRecords(found) {
     }
     const row = el("tr", undefined, "record-row mobile-record-row");
     row.dataset.id = record.id;
+    row.dataset.status = record.situacao;
     const cell = el("td");
     cell.colSpan = 7;
     const open = button(
@@ -8656,28 +8700,41 @@ function renderMobileRecords(found) {
     open.setAttribute("aria-expanded", String(expanded === record.id));
     const symbol = el("span", undefined, "mobile-item-symbol");
     symbol.append(itemIcon(record));
+    const orbit = el("span", undefined, "inventory-item-orbit");
+    orbit.setAttribute("aria-hidden", "true");
+    symbol.append(orbit);
     const copy = el("div", undefined, "mobile-record-copy");
     copy.append(el("strong", record.dados.item));
-    copy.append(
-      el(
-        "small",
-        [
-          record.dados.codigo
-            ? `${record.dados.tipo} ${record.dados.codigo}`
-            : internal(record.id),
-          record.dados.ambiente,
-        ].join(" · "),
-      ),
+    const stock = record.controle === "QUANTIDADE";
+    const loan = record.situacao === "EMPRESTADO" && record.emprestimo;
+    const identity = el("span", undefined, "inventory-record-meta");
+    identity.append(
+      el("span", record.dados.codigo ? `${record.dados.tipo} ${record.dados.codigo}` : internal(record.id), "inventory-record-code"),
+      el("span", stock ? "Estoque" : "Bem individual", "inventory-record-kind"),
     );
-    if (record.controle === "QUANTIDADE")
-      copy.append(
-        el(
-          "span",
-          quantityText(record.saldo, record.unidade),
-          "mobile-stock-caption",
-        ),
-      );
-    open.append(symbol, copy, mobileStatus(record), icon("right"));
+    copy.append(identity);
+    const location = loan?.destino || record.dados.ambiente;
+    const locationHint = loan?.destino
+      ? "Origem: " + record.dados.ambiente
+      : record.dados.estante && record.dados.prateleira
+        ? "Estante " + record.dados.estante + " · Prateleira " + String(record.dados.prateleira).padStart(2, "0")
+        : locationText(record);
+    copy.append(el("small", location + (locationHint ? " · " + locationHint : ""), "inventory-mobile-location"));
+    if (stock && record.situacao === "ATIVO") {
+      copy.append(el("span", quantityText(record.saldo, record.unidade), "mobile-stock-caption"));
+      copy.append(el("small", "Mínimo: " + quantityText(record.minimo, record.unidade), "inventory-record-context"));
+    } else if (loan?.responsavel) {
+      copy.append(el("small", "Com " + loan.responsavel, "inventory-record-context"));
+    } else if (record.situacao === "BAIXADO") {
+      copy.append(el("small", "Somente consulta", "inventory-record-context"));
+    }
+    const badge = mobileStatus(record);
+    badge.classList.add("inventory-record-badge");
+    if (record.situacao === "ATIVO")
+      badge.textContent = stock
+        ? Number(record.saldo) > 0 ? "Em estoque" : "Sem estoque"
+        : "Disponível";
+    open.append(symbol, copy, badge, icon("right"));
     cell.append(open);
     row.append(cell);
     host.append(row);

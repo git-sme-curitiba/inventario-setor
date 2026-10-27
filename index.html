@@ -49,7 +49,7 @@
     ></script>
     <link rel="preload" href="./acervo-inter-latin.woff2?v=3.5.78" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./acervo-sora-latin.woff2?v=3.5.79" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./estilos.css?v=3.5.80" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.82" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
@@ -2878,7 +2878,7 @@
           </div>
         </section>
         <section id="browse" class="tab" hidden>
-          <div class="card">
+          <div class="card inventory-card">
             <div class="bar">
               <div>
                 <div class="eyebrow">Encontre e organize</div>
@@ -2894,7 +2894,7 @@
                   <summary>
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                       <use href="#i-download" /></svg
-                    >Exportar
+                    >Exportar <span class="inventory-export-extension" aria-hidden="true">.xlsx</span>
                   </summary>
                   <div class="export-options">
                     <button id="exportFiltered">
@@ -2913,6 +2913,7 @@
               </div>
             </div>
             <div class="toolbar">
+              <svg class="icon inventory-search-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search" /></svg>
               <label class="sr-only" for="search">Buscar no inventário</label
               ><input
                 id="search"
@@ -2973,7 +2974,7 @@
                   <tr>
                     <th>Item</th>
                     <th>Identificação</th>
-                    <th>Ambiente</th>
+                    <th>Localização</th>
                     <th>Situação</th>
                     <th>Observação</th>
                     <th>Cadastrado em</th>
@@ -3677,7 +3678,7 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.80"></script>
+    <script src="./aplicacao.js?v=3.5.82"></script>
   </body>
 </html>
 

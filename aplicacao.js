@@ -12781,10 +12781,6 @@ function initAcervoVisualPolish() {
   for (const id of [
     "editCancel",
     "accessBack",
-    "moreFilters",
-    "clearFilters",
-    "previous",
-    "next",
   ])
     decorateAcervoFill($(id));
   decorateAcervoSubmit($("save"));

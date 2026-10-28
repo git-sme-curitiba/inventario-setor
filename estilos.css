@@ -3604,7 +3604,8 @@ body.screen-ready #login > h1 {
   min-height: 38px;
   border-color: #b8cde7;
   border-radius: 10px;
-  background: #f2f6fd;
+  background: #fff;
+  color: #244970;
   font-size: 12px;
 }
 
@@ -9682,7 +9683,7 @@ body::before {
     padding: 10px;
     color: #0674c6;
     border: 1px solid #a9ccec;
-    background: #f6fbff;
+    background: #fff;
     box-shadow: none;
   }
   #register #scan .icon {
@@ -11616,7 +11617,7 @@ body::before {
   }
   #camera #candidates button {
     color: #155d99;
-    background: #f5faff;
+    background: #fff;
     border: 1px solid #a8cbea;
   }
   #mobileAccountDialog .account-avatar {
@@ -15848,8 +15849,8 @@ body::before {
     min-height: 43px;
     padding: 10px;
     color: #344580;
-    background: linear-gradient(120deg, #f5f7fe, #f3f7fc);
-    border: 1px solid #d8e3f5;
+    background: #fff;
+    border: 1px solid #9ab4d0;
     border-radius: 8px;
     gap: 8px;
     font: 400 12px/1.3 var(--mobile-font);
@@ -17133,7 +17134,7 @@ body::before {
     text-decoration: none;
     border: 1px solid #c4d7ed;
     border-radius: 9px;
-    background: #f5f9ff;
+    background: #fff;
   }
   #register #mobileRegistrationBack .icon {
     display: block;
@@ -17163,7 +17164,7 @@ body::before {
     min-width: 44px;
     min-height: 46px;
     padding: 11px;
-    background: #f3f8ff;
+    background: #fff;
     border: 1px solid #c7d9ef;
     color: #085bbb;
     box-shadow: none;
@@ -17466,7 +17467,9 @@ body::before {
     border-radius: 0;
     background: none;
     box-shadow: none;
-    animation: acervo-caption-float 3.8s 400ms ease-in-out infinite;
+    animation: none;
+    translate: none;
+    will-change: auto;
   }
   #mobileJourneyStart .mobile-start-arrow {
     display: block;
@@ -24292,7 +24295,7 @@ body.auth-screen {
     --ink: #182d43;
     --muted: #637489;
     --pc-action: var(--acervo-action);
-    --pc-danger: linear-gradient(125deg, #de1747, #ad1640);
+    --pc-danger: var(--acervo-discard);
     --pc-stock: var(--acervo-support);
     --pc-font: var(--font-ui);
     --pc-ink: #182d43;
@@ -24852,8 +24855,9 @@ body.auth-screen {
     opacity: 1;
     color: #fff;
   }
-  .desktop-room-options button:not([aria-pressed="true"]):hover {
-    background: #f0f6fa;
+  .desktop-room-options button:not([aria-pressed="true"]):hover:not(:disabled) {
+    background: var(--acervo-brand);
+    color: #fff;
   }
   .desktop-metric {
     border-color: #e2eaf0;
@@ -26212,12 +26216,12 @@ html body :is(#app, #login, dialog) :is(button, summary) > .icon {
   }
 }
 :root {
-  --acervo-discard: linear-gradient(115deg, #ff2454, #dc0040 54%, #aa0039);
+  --acervo-discard: linear-gradient(135deg, #59162f, #a3093f 70%, #d70a48);
   --acervo-discard-chameleon: linear-gradient(
     112deg,
-    #b6073b 0%,
-    #ff2454 50%,
-    #b6073b 100%
+    #59162f 0%,
+    #a3093f 50%,
+    #59162f 100%
   );
   --acervo-amber-chameleon: linear-gradient(
     112deg,
@@ -26819,7 +26823,7 @@ html body > #operation[data-action="descarte_estoque"] {
 @media (min-width: 641px) and (hover: hover), (min-width: 1025px) {
   html.acervo-desktop body .acervo-gradient-action {
     --action-ink: #2464ad;
-    --action-paper: linear-gradient(115deg, #fff, #f5f9ff);
+    --action-paper: #fff;
     --action-edge: #a9c6ea;
     --action-gradient: linear-gradient(115deg, #3272c5, #24559b);
     position: relative !important;
@@ -26857,7 +26861,7 @@ html body > #operation[data-action="descarte_estoque"] {
     --action-ink: #fff;
     --action-paper: var(--acervo-discard);
     --action-edge: #da3960;
-    --action-gradient: linear-gradient(115deg, #ff3b67, #c71949);
+    --action-gradient: var(--acervo-discard-chameleon);
   }
   html.acervo-desktop body .acervo-gradient-action::before {
     content: "";
@@ -27226,7 +27230,7 @@ html body #save.acervo-submit-shimmer > :is(.acervo-submit-copy,.icon,.acervo-bo
     box-shadow:inset 0 1px #ffffffb3,0 4px 18px #8ab7f260;
   }
   html body #save.acervo-submit-shimmer:is(:hover,:focus-visible):not(:disabled)::before {
-    opacity:.85; animation:acervo-submit-sheen 2400ms linear infinite;
+    opacity:.85; animation:acervo-submit-sheen 850ms ease-out 1;
   }
 }
 @keyframes acervo-submit-sheen { from {transform:translateX(-100%);} to {transform:translateX(100%);} }
@@ -27506,20 +27510,20 @@ html body #mobileJourneyHome h1.acervo-hero-title span { text-shadow:none; }
   html.acervo-desktop body #app #desktopOverview .desktop-metric > .icon { box-sizing:border-box; width:36px; height:36px; padding:8px; }
   html.acervo-desktop body #app #desktopOverview .desktop-metric::before,
   html.acervo-desktop body #app #desktopOverview .desktop-metric::after { content:none !important; }
-  html.acervo-desktop body #app #desktopOverview .desktop-metric:is(:hover,:focus-visible) { border-color:#6c9dd9; box-shadow:inset 0 2px #d3e5ff,0 7px 17px #153c7020; }
+  html.acervo-desktop body #app #desktopOverview .desktop-metric:is(:hover,:focus-visible):not(:disabled) { border-color:#6c9dd9; box-shadow:inset 0 2px #d3e5ff,0 7px 17px #153c7020; }
   html.acervo-desktop body #app #desktopOverview .desktop-metric:not(.is-main) { background:#fff; color:#18345d; }
   html.acervo-desktop body #app #desktopOverview .desktop-metric.is-main { background:radial-gradient(ellipse at 100% 0,#6488b43d,transparent 70%),linear-gradient(125deg,#2c5284,#183b6a); color:#fff; }
   html.acervo-desktop body #app #desktopOverview .desktop-metric.is-main > .icon { width:36px; height:36px; }
   .desktop-metric-cue { position:absolute; right:17px; bottom:18px; display:grid; place-items:center; opacity:.45; color:inherit; transition:opacity 180ms,transform 250ms; }
   .desktop-metric-cue > .icon { width:16px; height:16px; color:inherit; }
-  .desktop-metric:is(:hover,:focus-visible) .desktop-metric-cue { opacity:1; transform:translateX(3px); }
+  .desktop-metric:is(:hover,:focus-visible):not(:disabled) .desktop-metric-cue { opacity:1; transform:translateX(3px); }
   html.acervo-desktop body #app #desktopOverview .desktop-distribution-row { padding:13px 12px; border-radius:10px; background:transparent; color:#244a78; border:1px solid transparent; }
-  html.acervo-desktop body #app #desktopOverview .desktop-distribution-row:is(:hover,:focus-visible) { background:#f0f5fc; border-color:#c1d5ee; box-shadow:none; }
+  html.acervo-desktop body #app #desktopOverview .desktop-distribution-row:is(:hover,:focus-visible):not(:disabled) { background:#fff; border-color:#9ab4d0; box-shadow:inset 2px 0 #5389cc; }
   html.acervo-desktop body #app #desktopOverview .desktop-distribution-row :is(strong,span) { color:inherit; }
   html.acervo-desktop body #app #desktopOverview .desktop-distribution-copy > span { color:#637c9b; }
   html.acervo-desktop body #app #desktopOverview .desktop-distribution-track > i { transition:none; }
   html.acervo-desktop body #app #desktopOverview .desktop-stock-row { padding:13px 10px; background:transparent; color:#244a78; border:1px solid transparent; border-bottom-color:#d9e3ef; border-radius:10px; }
-  html.acervo-desktop body #app #desktopOverview .desktop-stock-row:is(:hover,:focus-visible) { border-color:#9ebde4; background:#f0f5fc; box-shadow:inset 3px 0 #4c88cd; }
+  html.acervo-desktop body #app #desktopOverview .desktop-stock-row:is(:hover,:focus-visible):not(:disabled) { border-color:#9ebde4; background:#fff; box-shadow:inset 3px 0 #4c88cd; }
   html.acervo-desktop body #app #desktopOverview .desktop-stock-row > b { padding:6px 9px; border:1px solid #ecc26a; border-radius:9px; background:linear-gradient(115deg,#ffdf91,#ffd273); color:#65430c; }
   html.acervo-desktop body #app #desktopOverview .desktop-stock-row[data-empty="true"] > b { border-color:#d9315a; background:var(--acervo-discard); color:#fff; }
   html.acervo-desktop body #app #desktopOverview .desktop-chart-tabs button { color:#4a6384; }
@@ -27555,7 +27559,7 @@ html.acervo-dialogs body > dialog.acervo-dialog[open] {
   grid-template-rows:minmax(0,1fr); align-items:stretch; gap:0 !important;
 }
 html.acervo-dialogs body > dialog.acervo-dialog[data-theme="ruby"] {
-  --dialog-fill:linear-gradient(135deg,#59162f,#a3093f 70%,#d70a48);
+  --dialog-fill:var(--acervo-discard);
   --dialog-edge:#ce3a62; --dialog-shadow:#95133e30;
 }
 html.acervo-dialogs body > dialog.acervo-dialog[data-theme="amber"] {
@@ -27732,8 +27736,8 @@ html.acervo-dialogs #userAccessDialog.acervo-dialog .people-role,
 html.acervo-dialogs #userAccessDialog.acervo-dialog .acervo-access-receipt-heading .people-role { color:#fff; background:linear-gradient(125deg,#24486d,#20578c); border:1px solid #3f6997; border-radius:7px; padding:4px 7px; font-size:9px; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .people-status { padding:0; background:none; color:#637e96; border:0; font-size:9px; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions { display:flex; align-items:center; flex:0 0 auto; flex-wrap:nowrap; gap:7px; padding:0; margin:0; border:0; background:none; }
-html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions button { min-height:32px; padding:7px 9px; font-size:9px; color:#254c72; background:#fff; border:1px solid #a7bed9; box-shadow:none; }
-html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions .danger { width:32px; min-width:32px; padding:7px; background:linear-gradient(135deg,#7c1639,#c50b43); border:1px solid #be345d; color:#fff; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions button { min-height:36px; padding:8px 10px; font:500 12px/1.5 var(--font-ui); color:#254c72; background:#fff; border:1px solid #a7bed9; box-shadow:none; }
+html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions .danger { width:36px; min-width:36px; padding:8px; background:var(--acervo-discard); border:1px solid #be345d; color:#fff; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .people-actions .danger:disabled { background:#fff; color:#9a4a63; border-color:#d7b1bd; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .role-fieldset { padding:0; margin:24px 0 0; border:0; }
 html.acervo-dialogs #userAccessDialog.acervo-dialog .role-fieldset legend { margin-bottom:9px; }
@@ -27948,7 +27952,7 @@ html.acervo-dialogs :is(dialog.acervo-dialog,#camera) button:not(:disabled):acti
 /* acabamento comum das janelas, preservando a cor de cada ação. */
 html.acervo-dialogs body > dialog.acervo-dialog {
   --dialog-action-from:#244970; --dialog-action-to:#2d6bb5;
-  --dialog-danger:linear-gradient(135deg,#671b36,#ac1245 75%,#ce2454);
+  --dialog-danger:var(--acervo-discard);
 }
 html.acervo-dialogs body > dialog.acervo-dialog[data-theme="ruby"] { --dialog-action-from:#681a36; --dialog-action-to:#bf1a4b; }
 html.acervo-dialogs body > dialog.acervo-dialog[data-theme="amber"] { --dialog-action-from:#664111; --dialog-action-to:#a77319; }
@@ -28093,8 +28097,8 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
 }
 #app #movements .movement-task[aria-pressed="true"] .movement-task-icon { background:#ffffff18; }
 #app #movements .movement-task[aria-pressed="true"] .movement-task-orbit { border-color:#ffffff55; }
-#app #movements .movement-task:focus-visible .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
-#app #movements .movement-task:focus-visible .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
+#app #movements .movement-task:focus-visible:not(:disabled) .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
+#app #movements .movement-task:focus-visible:not(:disabled) .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
 @keyframes movement-task-orbit-turn { from { transform:rotate(-45deg); } to { transform:rotate(315deg); } }
 @keyframes movement-task-icon-lift { 0%,100% { transform:translateY(0); } 40% { transform:translateY(-4px); } }
 #app #movements .movement-task-summary {
@@ -28112,9 +28116,9 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
 #app #movements .movement-task-open { min-height:42px; margin:0; }
 #app #movements .mobile-movement-result > .movement-result-context { flex:1; min-width:0; font-size:12px; line-height:1.5; overflow-wrap:anywhere; }
 @media (hover:hover) and (pointer:fine) {
-  #app #movements .movement-tasks > .movement-task:hover { --movement-task-edge:#5687bc; }
-  #app #movements .movement-task:hover .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
-  #app #movements .movement-task:hover .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
+  #app #movements .movement-tasks > .movement-task:hover:not(:disabled) { --movement-task-edge:#5687bc; }
+  #app #movements .movement-task:hover:not(:disabled) .movement-task-orbit { animation:movement-task-orbit-turn 1200ms cubic-bezier(.25,.6,.25,1) both; }
+  #app #movements .movement-task:hover:not(:disabled) .movement-task-icon > .icon { animation:movement-task-icon-lift 750ms ease-out both; }
   #app #movements #movementAll:hover { background:#edf3fc; }
 }
 @media (max-width:900px) {
@@ -28152,7 +28156,7 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   #app #movements .movement-task .movement-task-icon > .icon { animation:none !important; }
 }
 
-/* Inventário 3.5.84: contraste localizado na lista, com a paleta do Acervo. */
+/* Inventário 3.5.85: estados unificados, com a paleta do Acervo. */
 html body #app #browse > .card.inventory-card {
   --inventory-fill:linear-gradient(120deg,#397ece,#235aa8 55%,#254778);
   --inventory-ink:#244565;
@@ -28181,6 +28185,10 @@ html body #app #browse > .card.inventory-card .toolbar > #search { min-width:0; 
 html body #app #browse > .card.inventory-card #search::placeholder { color:#607994; opacity:1; }
 html body #app #browse > .card.inventory-card #search:focus { border-color:#5389cc; box-shadow:0 0 0 3px #24497012; }
 html body #app #browse > .card.inventory-card .toolbar > :is(#moreFilters,#clearFilters) { min-height:44px; padding:10px 14px; font-size:12px; }
+html body #app #browse > .card.inventory-card #moreFilters[aria-expanded="true"] { color:#fff; border-color:#5389cc; background:var(--inventory-fill); }
+html body #app #browse > .card.inventory-card :is(button,summary):is(:disabled,[aria-disabled="true"]) { transform:none; translate:none; }
+html body #app #browse > .card.inventory-card :is(button,summary):is(:disabled,[aria-disabled="true"])::before { animation:none !important; }
+html body #app #browse > .card.inventory-card :is(.export-options button,#moreFilters,#clearFilters,#mobileBrowseScan,.mobile-query-menu > summary,.record-row:not(.mobile-record-row) > td:last-child > button):active:not(:disabled):not([aria-disabled="true"]) { color:#fff; border-color:#5389cc; background:var(--inventory-fill); }
 html body #app #browse > .card.inventory-card :is(#quickRooms,#filterPanel,#applied) .chip { min-height:36px; padding:7px 11px; border:1px solid var(--inventory-edge); border-radius:9px; color:#3d5f84; background:#fff; box-shadow:none; font:500 11px/1.4 var(--font-ui); }
 html body #app #browse > .card.inventory-card :is(#quickRooms,#filterPanel,#applied) .chip:is(.active,[aria-pressed="true"]) { color:#fff; border-color:#5389cc; background:var(--inventory-fill); box-shadow:inset 0 1px #ffffff80; }
 html body #app #browse > .card.inventory-card #filterPanel { color:#244565; border:1px solid var(--inventory-edge); background:#fff; border-radius:12px; }
@@ -28277,11 +28285,11 @@ html body #app #browse > .card.inventory-card .acervo-empty p { color:#607994; }
   html body #app #browse > .card.inventory-card #results .mobile-record-button:focus-visible { outline:2px solid #386da3 !important; outline-offset:-2px; }
 }
 @media (hover:hover) and (pointer:fine) {
-  html body #app #browse > .card.inventory-card :is(.export-menu > summary,.export-options button,#moreFilters,#clearFilters,.pager > button:not(:disabled),.record-row:not(.mobile-record-row) > td:last-child > button):hover { background:var(--inventory-fill); border-color:#5389cc; box-shadow:inset 0 1px #ffffffb3,0 3px 7px #18345d12; color:#fff; }
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,.export-options button,#moreFilters,#clearFilters,.pager > button,.record-row:not(.mobile-record-row) > td:last-child > button):is(:hover,:focus-visible):not(:disabled):not([aria-disabled="true"]) { background:var(--inventory-fill); border-color:#5389cc; box-shadow:inset 0 1px #ffffffb3,0 3px 7px #18345d12; color:#fff; }
   html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row:not(.mobile-record-row) > td:last-child > button)::before { content:""; position:absolute; inset:-30% auto -30% -60%; width:35%; background:linear-gradient(100deg,transparent,#ffffff3d,transparent); transform:skewX(-18deg); pointer-events:none; z-index:-1; }
-  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row:not(.mobile-record-row) > td:last-child > button):hover::before { animation:inventory-control-glint 700ms ease-out; }
-  html body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within) .inventory-item-orbit { animation:inventory-icon-orbit 1100ms ease-out; }
-  html body #app #browse > .card.inventory-card .record-row:is(:hover,:focus-within) .record-item-symbol > .icon { animation:inventory-icon-lift 650ms ease-out; }
+  html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row:not(.mobile-record-row) > td:last-child > button):is(:hover,:focus-visible):not(:disabled):not([aria-disabled="true"])::before { animation:inventory-control-glint 700ms ease-out; }
+  html body #app #browse > .card.inventory-card .record-row:has(> td:last-child > button:not(:disabled)):is(:hover,:focus-within) .inventory-item-orbit { animation:inventory-icon-orbit 1100ms ease-out; }
+  html body #app #browse > .card.inventory-card .record-row:has(> td:last-child > button:not(:disabled)):is(:hover,:focus-within) .record-item-symbol > .icon { animation:inventory-icon-lift 650ms ease-out; }
 }
 @keyframes inventory-control-glint { from { left:-60%; } to { left:150%; } }
 @keyframes inventory-icon-orbit { 0% { opacity:0; transform:rotate(-50deg); } 15%,80% { opacity:1; } 100% { opacity:0; transform:rotate(310deg); } }
@@ -28306,12 +28314,17 @@ html body #app #browse > .card.inventory-card .acervo-empty p { color:#607994; }
 #app #movements #movementTaskTitle { margin:0; color:#fff; font:500 12px/1.5 var(--font-ui); }
 #app #movements #movementTaskCount { margin:0; color:#fff; opacity:.85; font:400 11px/1.5 var(--font-ui); }
 #app #movements #moveSearchLabel.sr-only { position:absolute; width:1px; height:1px; margin:0; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-#app #movements #movementAll { display:inline-flex; align-items:center; gap:5px; flex:0 0 auto; min-height:32px; margin:4px 0; padding:6px 9px; border:0; border-left:1px solid #ffffff5c; border-radius:0 8px 8px 0; color:#fff; background:transparent; box-shadow:none; font:500 11px/1.5 var(--font-ui); white-space:nowrap; }
-#app #movements #movementAll > .icon { width:13px; height:13px; color:inherit; }
+#app #movements #movementAll { display:inline-flex; align-items:center; gap:5px; flex:0 0 auto; min-height:32px; margin:4px 0; padding:6px 9px; border:0; border-left:1px solid #ffffff5c; border-radius:0 8px 8px 0; color:#fff; background:transparent; box-shadow:none; font:500 11px/1.5 var(--font-ui); white-space:nowrap; transform:none !important; translate:none !important; }
+#app #movements #movementAll > .icon { width:13px; height:13px; color:inherit; transition:transform 180ms ease-out; }
 #app #movements #movementAll:focus-visible { outline:2px solid #fff; outline-offset:-2px; }
 #app #movements .movement-search-help { display:none; }
 @media (hover:hover) and (pointer:fine) {
-  #app #movements #movementAll:hover { color:#fff; background:#ffffff20; box-shadow:inset 0 1px #ffffff55; }
+  #app #movements #movementAll:hover:not(:disabled) { color:#fff; background:#ffffff20; box-shadow:inset 0 1px #ffffff55; }
+  #app #movements #movementAll:hover:not(:disabled) > .icon { transform:rotate(90deg); }
+}
+#app #movements #movementAll:active:not(:disabled) > .icon { transform:rotate(90deg); }
+@media (prefers-reduced-motion:reduce) {
+  #app #movements #movementAll > .icon { transition:none; transform:none !important; }
 }
 @media (max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px) {
   #app #movements .movement-start > p { color:#fff; font-size:12px; }

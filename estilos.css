@@ -28152,7 +28152,7 @@ html.acervo-dialogs #camera :is(#torch,#closeCamera,.mobile-camera-zoom-controls
   #app #movements .movement-task .movement-task-icon > .icon { animation:none !important; }
 }
 
-/* Consulta 3.5.83: acabamento do card alinhado à identidade do Acervo. */
+/* Inventário 3.5.84: contraste localizado na lista, com a paleta do Acervo. */
 html body #app #browse > .card.inventory-card {
   --inventory-fill:linear-gradient(120deg,#397ece,#235aa8 55%,#254778);
   --inventory-ink:#244565;
@@ -28200,7 +28200,7 @@ html body #app #browse > .card.inventory-card .record-row .inventory-record-badg
 html body #app #browse > .card.inventory-card .inventory-record-badge::before { content:""; flex:0 0 4px; width:4px; height:4px; margin:0; border-radius:50%; background:currentColor; }
 html body #app #browse > .card.inventory-card .record-row .inventory-record-badge:is(.down,.baixado) { color:#a72c4b; background:none; }
 html body #app #browse > .card.inventory-card .record-row .inventory-record-badge:is(.archive,.arquivado) { color:#607994; background:none; }
-html body #app #browse > .card.inventory-card :is(.record-item-symbol,.mobile-item-symbol) { position:relative; display:grid; place-items:center; flex:0 0 44px; width:44px; height:48px; margin:0; padding:0; border:1px solid var(--inventory-edge); border-radius:12px; color:#386da3; background:#fff; box-shadow:none; }
+html body #app #browse > .card.inventory-card :is(.record-item-symbol,.mobile-item-symbol) { position:relative; display:grid; place-items:center; flex:0 0 44px; width:44px; height:48px; margin:0; padding:0; border:1px solid #426c96; border-radius:12px; color:#fff; background:linear-gradient(135deg,#244970,#173e6c); box-shadow:inset 0 1px #ffffff66,0 2px 5px #18345d12; }
 html body #app #browse > .card.inventory-card :is(.record-item-symbol,.mobile-item-symbol) > .icon { width:28px; height:28px; color:inherit; }
 html body #app #browse > .card.inventory-card .inventory-item-orbit { position:absolute; inset:-5px; border:1px solid transparent; border-top-color:#5389cc; border-right-color:#adc9e8; border-radius:50%; opacity:0; transform:rotate(-50deg); pointer-events:none; }
 html body #app #browse > .card.inventory-card .inventory-item-orbit::after { content:""; position:absolute; top:3px; right:7px; width:3px; height:3px; border-radius:50%; background:#386da3; }
@@ -28212,10 +28212,10 @@ html body #app #browse > .card.inventory-card :is(button,summary):focus-visible 
 html body #app #browse > .card.inventory-card .acervo-empty { color:#244565; background:#fff; }
 html body #app #browse > .card.inventory-card .acervo-empty p { color:#607994; }
 @media (min-width:641px) and (hover:hover), (min-width:1025px) {
-  html.acervo-desktop body #app #browse > .card.inventory-card .tablewrap { overflow-x:auto; padding:0; border:0; border-radius:0; box-shadow:none; }
+  html.acervo-desktop body #app #browse > .card.inventory-card .tablewrap { overflow-x:auto; padding:0; border:1px solid var(--inventory-edge); border-radius:12px; box-shadow:none; }
   html.acervo-desktop body #app #browse > .card.inventory-card table { width:100%; min-width:0; table-layout:fixed; border-collapse:collapse; color:#244565; font-family:var(--font-ui); }
-  html.acervo-desktop body #app #browse > .card.inventory-card thead { background:#fff; }
-  html.acervo-desktop body #app #browse > .card.inventory-card thead th { padding:12px 15px; background:#fff; color:#607994; border:0; border-bottom:1px solid var(--inventory-edge); font:500 10px/1.5 var(--font-ui); letter-spacing:.06em; }
+  html.acervo-desktop body #app #browse > .card.inventory-card thead { background:linear-gradient(120deg,#244970,#235aa8 65%,#254778); }
+  html.acervo-desktop body #app #browse > .card.inventory-card thead th { padding:14px 15px; background:transparent; color:#fff; border:0; border-bottom:1px solid #426c96; font:500 10px/1.5 var(--font-ui); letter-spacing:.06em; }
   html.acervo-desktop body #app #browse > .card.inventory-card :is(thead th,.record-row > td):is(:nth-child(2),:nth-child(5),:nth-child(6)) { display:none; }
   html.acervo-desktop body #app #browse > .card.inventory-card th:first-child { width:40%; }
   html.acervo-desktop body #app #browse > .card.inventory-card th:nth-child(3) { width:26%; }
@@ -28261,7 +28261,7 @@ html body #app #browse > .card.inventory-card .acervo-empty p { color:#607994; }
   html body #app #browse > .card.inventory-card #quickRooms { flex-wrap:wrap; overflow:visible; padding:0; gap:6px; margin-bottom:15px; }
   html body #app #browse > .card.inventory-card #quickRooms .chip { min-height:39px; padding:8px 10px; font-size:11px; }
   html body #app #browse > .card.inventory-card .tablewrap { padding:0; background:#fff; border:0; border-radius:0; box-shadow:none; }
-  html body #app #browse > .card.inventory-card #results .mobile-room-heading td { padding:20px 0 10px; border-bottom:1px solid var(--inventory-edge); color:#597393; font-size:10px; }
+  html body #app #browse > .card.inventory-card #results .mobile-room-heading td { padding:11px 12px; border-bottom:0; border-top:12px solid #fff; color:#fff; background:linear-gradient(120deg,#244970,#235aa8 65%,#254778); font-size:10px; }
   html body #app #browse > .card.inventory-card #results .mobile-record-button { display:grid; grid-template-columns:37px minmax(0,1fr) 12px; align-items:start; gap:9px 11px; padding:18px 0; min-height:110px; color:#244565; background:#fff; border:0; border-bottom:1px solid var(--inventory-edge); border-radius:0; box-shadow:none; }
   html body #app #browse > .card.inventory-card #results .mobile-record-button > .mobile-item-symbol { grid-column:1; grid-row:1 / 3; width:37px; height:42px; border-radius:10px; }
   html body #app #browse > .card.inventory-card #results .mobile-record-button > .mobile-item-symbol > .icon { width:25px; height:25px; }
@@ -28292,12 +28292,31 @@ html body #app #browse > .card.inventory-card .acervo-empty p { color:#607994; }
   html body #app #browse > .card.inventory-card :is(.export-menu > summary,#moreFilters,.record-row > td:last-child > button)::before { animation:none !important; }
 }
 
-/* Movimentações: apenas a operação, a busca e o resultado. */
-#app #movements .movement-start { margin:18px 0 16px; }
-#app #movements .movement-task-summary { margin:0 0 14px; padding:0; border:0; gap:10px; }
-#app #movements #movementTaskTitle.sr-only,
+/* Movimentações: orientação curta e seleção integrada à busca. */
+#app #movements .movement-start { margin:18px 0 20px; }
+#app #movements .movement-start > p { margin:0 0 12px; font:400 13px/1.5 var(--font-ui); }
+#app #movements .movement-search-area { display:grid; gap:10px; }
+#app #movements .movement-search-area > .scanrow { margin:0; }
+#app #movements .movement-search-area > .movement-task-summary {
+  justify-self:start; justify-content:flex-start; flex-wrap:nowrap; max-width:100%; gap:0; margin:0; padding:0 5px 0 12px;
+  border:1px solid #6088b4; border-radius:12px; background:linear-gradient(120deg,#244970,#285b99); color:#fff;
+  box-shadow:inset 0 1px #ffffff55; overflow:hidden;
+}
+#app #movements .movement-task-summary > div { display:flex; align-items:center; flex-wrap:wrap; flex:0 1 auto; gap:3px 9px; padding:9px 12px 9px 0; }
+#app #movements #movementTaskTitle { margin:0; color:#fff; font:500 12px/1.5 var(--font-ui); }
+#app #movements #movementTaskCount { margin:0; color:#fff; opacity:.85; font:400 11px/1.5 var(--font-ui); }
 #app #movements #moveSearchLabel.sr-only { position:absolute; width:1px; height:1px; margin:0; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-#app #movements #movementTaskCount { margin:0; font-size:12px; }
-#app #movements #movementAll { min-height:34px; padding:7px 11px; font-size:11px; border-radius:10px; }
+#app #movements #movementAll { display:inline-flex; align-items:center; gap:5px; flex:0 0 auto; min-height:32px; margin:4px 0; padding:6px 9px; border:0; border-left:1px solid #ffffff5c; border-radius:0 8px 8px 0; color:#fff; background:transparent; box-shadow:none; font:500 11px/1.5 var(--font-ui); white-space:nowrap; }
+#app #movements #movementAll > .icon { width:13px; height:13px; color:inherit; }
+#app #movements #movementAll:focus-visible { outline:2px solid #fff; outline-offset:-2px; }
 #app #movements .movement-search-help { display:none; }
+@media (hover:hover) and (pointer:fine) {
+  #app #movements #movementAll:hover { color:#fff; background:#ffffff20; box-shadow:inset 0 1px #ffffff55; }
+}
+@media (max-width:640px), (hover:none) and (pointer:coarse) and (max-width:1024px) {
+  #app #movements .movement-start > p { color:#fff; font-size:12px; }
+  #app #movements .movement-search-area > .movement-task-summary { border-color:#99b6d7; }
+  #app #movements #movementAll { min-height:36px; }
+  #app #movements.mobile-movement-selected .movement-search-area { display:none; }
+}
 

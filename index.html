@@ -49,7 +49,7 @@
     ></script>
     <link rel="preload" href="./acervo-inter-latin.woff2?v=3.5.78" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./acervo-sora-latin.woff2?v=3.5.79" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./estilos.css?v=3.5.83" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.84" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
@@ -2633,7 +2633,7 @@
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-search" />
             </svg>
-            Consultar</button
+            Inventário</button
           ><button data-tab="dashboard">
             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
               <use href="#i-chart" />
@@ -2838,31 +2838,34 @@
               >Movimentações
             </h2>
             <div id="movementStart" class="movement-start">
+              <p id="movementIntro">Escolha uma operação ou busque um item.</p>
               <div id="movementTasks" class="movement-tasks" role="group" aria-label="Escolher movimentação"></div>
             </div>
-            <div id="movementTaskSummary" class="movement-task-summary" hidden>
-              <div><strong id="movementTaskTitle" class="sr-only"></strong><span id="movementTaskCount"></span></div>
-              <button id="movementAll" type="button">Limpar seleção</button>
-            </div>
-            <label id="moveSearchLabel" class="sr-only" for="moveSearch">Buscar item</label>
-            <div class="scanrow">
-              <input
-                id="moveSearch"
-                type="search"
-                autocomplete="off"
-                maxlength="120"
-                placeholder="Buscar item ou código"
-              />
-              <button
-                id="moveScan"
-                class="primary"
-                type="button"
-                aria-label="Ler código para movimentar"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#i-scan" />
-                </svg>
-              </button>
+            <div class="movement-search-area">
+              <label id="moveSearchLabel" class="sr-only" for="moveSearch">Buscar item</label>
+              <div class="scanrow">
+                <input
+                  id="moveSearch"
+                  type="search"
+                  autocomplete="off"
+                  maxlength="120"
+                  placeholder="Buscar item ou código"
+                />
+                <button
+                  id="moveScan"
+                  class="primary"
+                  type="button"
+                  aria-label="Ler código para movimentar"
+                >
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <use href="#i-scan" />
+                  </svg>
+                </button>
+              </div>
+              <div id="movementTaskSummary" class="movement-task-summary" hidden>
+                <div><strong id="movementTaskTitle"></strong><span id="movementTaskCount"></span></div>
+                <button id="movementAll" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close" /></svg>Limpar seleção</button>
+              </div>
             </div>
             <p id="movementSearchHelp" class="movement-search-help" hidden></p>
             <div id="moveResults" class="spaced" aria-live="polite"></div>
@@ -2884,7 +2887,7 @@
                   <span class="title-mark" aria-hidden="true"
                     ><svg class="icon" viewBox="0 0 24 24">
                       <use href="#i-search" /></svg></span
-                  >Consultar inventário
+                  >Inventário
                 </h2>
               </div>
               <div class="query-tools">
@@ -3676,7 +3679,7 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.83"></script>
+    <script src="./aplicacao.js?v=3.5.84"></script>
   </body>
 </html>
 

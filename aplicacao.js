@@ -2150,6 +2150,12 @@ function syncMovementTasks() {
   if (role === "leitor") journey.movementTask = "";
   const task = journey.movementTask;
   $("movementStart").hidden = role === "leitor";
+  $("movementIntro").textContent = {
+    emprestar: "Escolha o bem que será emprestado.",
+    devolver: "Escolha o bem que será devolvido.",
+    entrada: "Escolha o material que recebeu uma entrada.",
+    saida: "Escolha o material que será retirado.",
+  }[task] || "Escolha uma operação ou busque um item.";
   if (!host.children.length) {
     for (const [name, config] of Object.entries(MOVEMENT_TASKS)) {
       const control = button("", () => {
@@ -2181,7 +2187,7 @@ function syncMovementTasks() {
   $("movements").dataset.movementTask = task;
   $("movementTaskSummary").hidden = !task;
   if (task) {
-    $("movementTaskTitle").textContent = MOVEMENT_TASKS[task].title;
+    $("movementTaskTitle").textContent = MOVEMENT_TASKS[task].label;
     const config = MOVEMENT_TASKS[task];
     $("movementTaskCount").textContent = counts[task].toLocaleString("pt-BR") + " " + (counts[task] === 1 ? config.unit : config.plural);
   }
@@ -8159,7 +8165,7 @@ function initMobileIdentity() {
       credit.before($("draftInfo"));
       queryMenu.append(queryTools);
       queryTools.append(exportOptions);
-      queryTitleText.textContent = "Consultar";
+      queryTitleText.textContent = "Inventário";
     } else {
       reviewActions.removeAttribute("id");
       $("registrationSave").append(reviewBack, reviewActions);
@@ -11880,7 +11886,7 @@ function initDesktopExperience() {
     } else {
       saveParent.append(savebar);
       side.replaceChildren(...originalSide);
-      queryText.textContent = mobileAcervo() ? "Consultar" : originalQueryText;
+      queryText.textContent = originalQueryText;
       exportText.textContent = originalExportText;
       exportSummary.querySelector("use")?.setAttribute("href", "#i-download");
       labelButton($("moreFilters"), "Mais filtros", "filter");

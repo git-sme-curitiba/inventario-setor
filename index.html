@@ -49,7 +49,7 @@
     ></script>
     <link rel="preload" href="./acervo-inter-latin.woff2?v=3.5.78" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./acervo-sora-latin.woff2?v=3.5.79" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="./estilos.css?v=3.5.82" />
+    <link rel="stylesheet" href="./estilos.css?v=3.5.83" />
   </head>
   <body class="auth-screen">
     <div id="brandIntro" class="brand-intro" aria-hidden="true">
@@ -2838,22 +2838,20 @@
               >Movimentações
             </h2>
             <div id="movementStart" class="movement-start">
-              <p>O que você precisa registrar?</p>
               <div id="movementTasks" class="movement-tasks" role="group" aria-label="Escolher movimentação"></div>
             </div>
             <div id="movementTaskSummary" class="movement-task-summary" hidden>
-              <div><strong id="movementTaskTitle"></strong><span id="movementTaskCount"></span></div>
-              <button id="movementAll" type="button">Todas as ações</button>
+              <div><strong id="movementTaskTitle" class="sr-only"></strong><span id="movementTaskCount"></span></div>
+              <button id="movementAll" type="button">Limpar seleção</button>
             </div>
-            <label id="moveSearchLabel" for="moveSearch">Buscar item · todas as ações</label>
+            <label id="moveSearchLabel" class="sr-only" for="moveSearch">Buscar item</label>
             <div class="scanrow">
               <input
                 id="moveSearch"
                 type="search"
                 autocomplete="off"
                 maxlength="120"
-                placeholder="Nome ou código PMC, ICI ou ACV"
-                aria-describedby="movementSearchHelp"
+                placeholder="Buscar item ou código"
               />
               <button
                 id="moveScan"
@@ -2866,7 +2864,7 @@
                 </svg>
               </button>
             </div>
-            <p id="movementSearchHelp" class="movement-search-help">Escolha uma ação acima ou busque diretamente pelo nome ou código.</p>
+            <p id="movementSearchHelp" class="movement-search-help" hidden></p>
             <div id="moveResults" class="spaced" aria-live="polite"></div>
             <div id="moveMissing" class="notice" hidden>
               <strong>Ainda não encontramos por aqui.</strong
@@ -2894,7 +2892,7 @@
                   <summary>
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                       <use href="#i-download" /></svg
-                    >Exportar <span class="inventory-export-extension" aria-hidden="true">.xlsx</span>
+                    >Exportar
                   </summary>
                   <div class="export-options">
                     <button id="exportFiltered">
@@ -3678,7 +3676,8 @@
       </form></template
     >
 
-    <script src="./aplicacao.js?v=3.5.82"></script>
+    <script src="./aplicacao.js?v=3.5.83"></script>
   </body>
 </html>
+
 

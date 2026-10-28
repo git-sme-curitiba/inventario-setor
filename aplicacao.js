@@ -2182,11 +2182,11 @@ function syncMovementTasks() {
   $("movementTaskSummary").hidden = !task;
   if (task) {
     $("movementTaskTitle").textContent = MOVEMENT_TASKS[task].title;
-    $("movementTaskCount").textContent = counts[task].toLocaleString("pt-BR") + (counts[task] === 1 ? " disponível" : " disponíveis");
+    const config = MOVEMENT_TASKS[task];
+    $("movementTaskCount").textContent = counts[task].toLocaleString("pt-BR") + " " + (counts[task] === 1 ? config.unit : config.plural);
   }
-  $("moveSearchLabel").textContent = task === "devolver" ? "Buscar item ou responsável" : task ? "Encontrar nesta operação" : "Buscar item · todas as ações";
-  $("moveSearch").placeholder = task === "devolver" ? "Item, responsável, destino ou código" : "Nome ou código PMC, ICI ou ACV";
-  $("movementSearchHelp").textContent = task ? "Selecione um item para conferir os dados e confirmar." : "Escolha uma ação acima ou busque diretamente pelo nome ou código.";
+  $("moveSearchLabel").textContent = task === "devolver" ? "Buscar item ou responsável" : "Buscar item";
+  $("moveSearch").placeholder = task === "devolver" ? "Buscar item, código ou responsável" : "Buscar item ou código";
 }
 
 function syncMovementMissing(query, found) {
@@ -3258,8 +3258,8 @@ function renderList() {
           ? "Fora da lista corrente"
           : stock
             ? "Mínimo: " + quantityText(r.minimo, r.unidade)
-            : "Sem empréstimo ativo";
-    status.append(el("small", statusHint, "inventory-record-context"));
+            : "";
+    if (statusHint) status.append(el("small", statusHint, "inventory-record-context"));
     tr.append(
       status,
       el("td", d.observacao || "—", "note"),
@@ -13359,4 +13359,5 @@ function initAcervoSplitDialogs() {
 }
 
 initAcervoSplitDialogs();
+
 
